@@ -1,4 +1,5 @@
 ﻿using System;
+using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.Values.Abstract;
 using FastUnityCreationKit.Core.Values.Abstract.Modifiers;
@@ -6,11 +7,10 @@ using FastUnityCreationKit.Core.Values.Abstract.Modifiers;
 namespace FastUnityCreationKit.Core.Values.Modifiers
 {
     /// <summary>
-    /// Represents a modifier that adds a flat amount to the value.
-    /// Flat modifiers are always added before percentage modifiers and
-    /// modify base value at the beginning of the calculation.
+    /// Represents a modifier that multiplies the value by an amount.
+    /// Also known as percentage modifier and executed between flat and regular add modifiers.
     /// </summary>
-    public abstract class FlatAddModifier<TNumber> : IModifier, IEarlyModifier
+    public abstract class MultiplyModifier<TNumber> : IModifier
         where TNumber : INumber
     {
         /// <summary>
@@ -18,7 +18,7 @@ namespace FastUnityCreationKit.Core.Values.Modifiers
         /// </summary>
         public readonly TNumber amount;
 
-        public FlatAddModifier(TNumber amount)
+        public MultiplyModifier(TNumber amount)
         {
             this.amount = amount;
         }
@@ -26,8 +26,12 @@ namespace FastUnityCreationKit.Core.Values.Modifiers
         public void Apply<TNumberType>(IModifiableValue<TNumberType> value) 
             where TNumberType : struct, INumber
         {
-            if(amount is TNumberType valueToAdd)
-                value.Add(valueToAdd);
+            if(amount is TNumberType multiplier0)
+                value.Multiply(multiplier0);
+            else if(amount is float32 multiplier1)
+                value.Multiply(multiplier1);
+            else if(amount is float64 multiplier2)
+                value.Multiply(multiplier2);
             else
                 throw new NotSupportedException("Number type of the amount is not supported.");
         }
@@ -35,8 +39,12 @@ namespace FastUnityCreationKit.Core.Values.Modifiers
         public void Remove<TNumberType>(IModifiableValue<TNumberType> value) 
             where TNumberType : struct, INumber
         {
-            if(amount is TNumberType valueToAdd)
-                value.Subtract(valueToAdd);
+            if(amount is TNumberType multiplier0)
+                value.Divide(multiplier0);
+            else if(amount is float32 multiplier1)
+                value.Divide(multiplier1);
+            else if(amount is float64 multiplier2)
+                value.Divide(multiplier2);
             else
                 throw new NotSupportedException("Number type of the amount is not supported.");
         }

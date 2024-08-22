@@ -6,11 +6,11 @@ using FastUnityCreationKit.Core.Values.Abstract.Modifiers;
 namespace FastUnityCreationKit.Core.Values.Modifiers
 {
     /// <summary>
-    /// Represents a modifier that adds a flat amount to the value.
-    /// Flat modifiers are always added before percentage modifiers and
-    /// modify base value at the beginning of the calculation.
+    /// Represents a modifier that adds an amount to the value.
+    /// This modifier is always added after percentage modifiers and
+    /// modify result value at the end of the calculation.
     /// </summary>
-    public abstract class FlatAddModifier<TNumber> : IModifier, IEarlyModifier
+    public abstract class AddModifier<TNumber> : IModifier, ILateModifier
         where TNumber : INumber
     {
         /// <summary>
@@ -18,7 +18,7 @@ namespace FastUnityCreationKit.Core.Values.Modifiers
         /// </summary>
         public readonly TNumber amount;
 
-        public FlatAddModifier(TNumber amount)
+        public AddModifier(TNumber amount)
         {
             this.amount = amount;
         }

@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+﻿using FastUnityCreationKit.Core.Numerics;
+using FastUnityCreationKit.Core.Numerics.Abstract;
 
 namespace FastUnityCreationKit.Core.Values.Abstract
 {
@@ -23,5 +24,40 @@ namespace FastUnityCreationKit.Core.Values.Abstract
         /// Add the amount to the current value.
         /// </summary>
         public void Add(TNumberType amount);
+        
+        /// <summary>
+        /// Subtract the amount from the current value.
+        /// </summary>
+        public void Subtract(TNumberType amount);
+        
+        /// <summary>
+        /// Multiply the current value by the amount.
+        /// </summary>
+        public void Multiply(TNumberType amount);
+        
+        /// <summary>
+        /// Multiply the current value by the amount.
+        /// </summary>
+        public void Multiply(float32 amount);
+        
+        /// <summary>
+        /// Multiply the current value by the amount.
+        /// </summary>
+        public void Multiply(float64 amount);
+        
+        /// <summary>
+        /// Divide the current value by the amount.
+        /// </summary>
+        public void Divide(TNumberType amount);
+        
+        /// <summary>
+        /// Divide the current value by the amount.
+        /// </summary>
+        public void Divide(float32 amount);
+        
+        /// <summary>
+        /// Divide the current value by the amount.
+        /// </summary>
+        public void Divide(float64 amount);
     }
 }

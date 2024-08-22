@@ -14,7 +14,7 @@ namespace FastUnityCreationKit.Core.Numerics
     [StructLayout(LayoutKind.Explicit)]
     [BurstCompile]
     [Serializable]
-    public struct uint8 : IUnsignedNumber,
+    public struct uint8 : IUnsignedNumber, ISupportsFloatConversion<uint8>,
         IAddOperationSupport<uint8, uint8>, IAddOperationSupport<uint16, uint16>,
         IAddOperationSupport<uint32, uint32>, IAddOperationSupport<uint64, uint64>,
         IAddOperationSupport<float32, float32>, IAddOperationSupport<float64, float64>,
@@ -41,6 +41,18 @@ namespace FastUnityCreationKit.Core.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe implicit operator byte(uint8 number) => *(byte*) &number;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static explicit operator float32(uint8 number) => number._value;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static explicit operator float64(uint8 number) => number._value;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public uint8 FromFloat(float value) => _value = (byte) value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public uint8 FromDouble(double value) => _value = (byte) value;
+        
 #region OP_ADDITION
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

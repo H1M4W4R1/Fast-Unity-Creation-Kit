@@ -6,6 +6,12 @@ namespace FastUnityCreationKit.Core.Values.Abstract
     /// Represents a modifier that can be applied to a value.
     /// Modifiers are used to modify values in a way that can be changed during the game.
     /// </summary>
+    /// <remarks>
+    /// Modifiers should be designed as classes to make it easy to create custom modifiers
+    /// with nice naming syntax like 'AddFlatHealthModifier' or 'AddFlatFireDamageModifier'.
+    /// This would easily allow developer to handle checking if modifier of specified type
+    /// exists on desired value or if value even supports it.
+    /// </remarks>
     public interface IModifier
     {
         /// <summary>
