@@ -16,12 +16,13 @@ namespace FastUnityCreationKit.Core.Numerics
     [StructLayout(LayoutKind.Explicit)]
     [BurstCompile]
     [Serializable]
-    public struct v128 : INumber, IVectorizedNumber
+    public struct v128 : IVectorizedNumber, IEquatable<v128>
     {
         /// <summary>
         /// Current value of the number.
         /// </summary>
-        [FieldOffset(0)] [SerializeField]
+        [FieldOffset(0)]
+        [SerializeField]
         private uint4 _value;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,5 +30,13 @@ namespace FastUnityCreationKit.Core.Numerics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe implicit operator uint4(v128 number) => *(uint4*) &number;
+
+        public static bool operator ==(v128 left, v128 right) => math.all(left._value == right._value);
+
+        public static bool operator !=(v128 left, v128 right) => !(left == right);
+
+        public bool Equals(v128 other) => this == other;
+        public override bool Equals(object obj) => obj is v128 other && Equals(other);
+        public override int GetHashCode() => _value.GetHashCode();
     }
 }

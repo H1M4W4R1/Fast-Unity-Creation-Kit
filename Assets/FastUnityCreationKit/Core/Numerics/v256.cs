@@ -16,7 +16,7 @@ namespace FastUnityCreationKit.Core.Numerics
     [StructLayout(LayoutKind.Explicit)]
     [BurstCompile] 
     [Serializable]
-    public struct v256 : INumber, IVectorizedNumber
+    public struct v256 : IVectorizedNumber, IEquatable<v256>
     {
         /// <summary>
         /// Current value of the number.
@@ -29,5 +29,13 @@ namespace FastUnityCreationKit.Core.Numerics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe implicit operator uint4x2(v256 number) => *(uint4x2*) &number;
+        
+        public static bool operator ==(v256 left, v256 right) => math.all(left._value.c0 == right._value.c0) && math.all(left._value.c1 == right._value.c1);
+        
+        public static bool operator !=(v256 left, v256 right) => !(left == right);
+        
+        public bool Equals(v256 other) => this == other;
+        public override bool Equals(object obj) => obj is v256 other && Equals(other);
+        public override int GetHashCode() => _value.GetHashCode();
     }
 }
