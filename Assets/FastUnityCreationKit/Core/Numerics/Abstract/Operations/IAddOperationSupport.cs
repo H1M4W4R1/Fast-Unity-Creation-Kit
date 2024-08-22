@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.Core.Numerics.Abstract.Operations
         where TRightHandSide : INumber
     {
         /// <summary>
-        /// Add two numbers together
+        /// Add another number
         /// </summary>
         public TResult Add(TRightHandSide rightHandSide);
     }

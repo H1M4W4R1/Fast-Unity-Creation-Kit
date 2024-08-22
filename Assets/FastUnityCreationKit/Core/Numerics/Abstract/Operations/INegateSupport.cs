@@ -6,6 +6,9 @@
     /// </summary>
     public interface INegateSupport<out TNumber> where TNumber : INumber, ISignedNumber
     {
+        /// <summary>
+        /// Negate the number (change sign)
+        /// </summary>
         public TNumber Negate();
     }
 }
