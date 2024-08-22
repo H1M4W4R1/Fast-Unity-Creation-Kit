@@ -56,88 +56,88 @@ namespace FastUnityCreationKit.Core.Numerics
 #region OP_ADDITION
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Add(uint8 rightHandSide) => _value + rightHandSide;
+        public uint64 Add(in uint8 rightHandSide) => _value + rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Add(uint16 rightHandSide) => _value + rightHandSide;
+        public uint64 Add(in uint16 rightHandSide) => _value + rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Add(uint32 rightHandSide) => _value + rightHandSide;
+        public uint64 Add(in uint32 rightHandSide) => _value + rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Add(uint64 rightHandSide) => _value + rightHandSide;
+        public uint64 Add(in uint64 rightHandSide) => _value + rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float32 Add(float32 rightHandSide) => _value + rightHandSide;
+        public float32 Add(in float32 rightHandSide) => _value + rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float64 Add(float64 rightHandSide) => _value + rightHandSide;
+        public float64 Add(in float64 rightHandSide) => _value + rightHandSide;
 
 #endregion
 
 #region OP_MULTIPLICATION
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Multiply(uint8 rightHandSide) => _value * rightHandSide;
+        public uint64 Multiply(in uint8 rightHandSide) => _value * rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Multiply(uint16 rightHandSide) => _value * rightHandSide;
+        public uint64 Multiply(in uint16 rightHandSide) => _value * rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Multiply(uint32 rightHandSide) => _value * rightHandSide;
+        public uint64 Multiply(in uint32 rightHandSide) => _value * rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Multiply(uint64 rightHandSide) => _value * rightHandSide;
+        public uint64 Multiply(in uint64 rightHandSide) => _value * rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float32 Multiply(float32 rightHandSide) => _value * rightHandSide;
+        public float32 Multiply(in float32 rightHandSide) => _value * rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float64 Multiply(float64 rightHandSide) => _value * rightHandSide;
+        public float64 Multiply(in float64 rightHandSide) => _value * rightHandSide;
 
 #endregion
 
 #region OP_SUBTRACTION
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Subtract(uint8 rightHandSide) => _value - rightHandSide;
+        public uint64 Subtract(in uint8 rightHandSide) => _value - rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Subtract(uint16 rightHandSide) => _value - rightHandSide;
+        public uint64 Subtract(in uint16 rightHandSide) => _value - rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Subtract(uint32 rightHandSide) => _value - rightHandSide;
+        public uint64 Subtract(in uint32 rightHandSide) => _value - rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 Subtract(uint64 rightHandSide) => _value - rightHandSide;
+        public uint64 Subtract(in uint64 rightHandSide) => _value - rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float32 Subtract(float32 rightHandSide) => _value - rightHandSide;
+        public float32 Subtract(in float32 rightHandSide) => _value - rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float64 Subtract(float64 rightHandSide) => _value - rightHandSide;
+        public float64 Subtract(in float64 rightHandSide) => _value - rightHandSide;
 
 #endregion
 
 #region OP_DIVISION
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float32 Divide(uint8 rightHandSide) => (float) _value / rightHandSide;
+        public float32 Divide(in uint8 rightHandSide) => (float) _value / rightHandSide;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float32 Divide(uint16 rightHandSide) => (float) _value / rightHandSide;
+        public float32 Divide(in uint16 rightHandSide) => (float) _value / rightHandSide;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float32 Divide(uint32 rightHandSide) => (float) _value / rightHandSide;
+        public float32 Divide(in uint32 rightHandSide) => (float) _value / rightHandSide;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float32 Divide(uint64 rightHandSide) => (float) _value / rightHandSide;
+        public float32 Divide(in uint64 rightHandSide) => (float) _value / rightHandSide;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float32 Divide(float32 rightHandSide) => _value / rightHandSide;
+        public float32 Divide(in float32 rightHandSide) => _value / rightHandSide;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float64 Divide(float64 rightHandSide) => _value / rightHandSide;
+        public float64 Divide(in float64 rightHandSide) => _value / rightHandSide;
         
 #endregion
     }

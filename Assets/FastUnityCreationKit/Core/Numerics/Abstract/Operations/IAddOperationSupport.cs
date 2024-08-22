@@ -5,12 +5,12 @@ namespace FastUnityCreationKit.Core.Numerics.Abstract.Operations
     /// <summary>
     /// Represents that numbers supports addition operation
     /// </summary>
-    public interface IAddOperationSupport<in TRightHandSide, out TResult>
+    public interface IAddOperationSupport<TRightHandSide, out TResult>
         where TRightHandSide : INumber
     {
         /// <summary>
         /// Add another number
         /// </summary>
-        public TResult Add(TRightHandSide rightHandSide);
+        public TResult Add(in TRightHandSide rightHandSide);
     }
 }
