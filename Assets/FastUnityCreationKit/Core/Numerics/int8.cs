@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Numerics.Abstract;
@@ -60,6 +61,12 @@ namespace FastUnityCreationKit.Core.Numerics
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int8 FromDouble(double value) => _value = (sbyte) value; 
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public float ToFloat() => _value;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double ToDouble() => _value;
         
 #region OP_ADDITION
 
@@ -198,5 +205,7 @@ namespace FastUnityCreationKit.Core.Numerics
 #endregion
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public int8 Negate() => (sbyte) -_value;
+        
+        [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
     }
 }

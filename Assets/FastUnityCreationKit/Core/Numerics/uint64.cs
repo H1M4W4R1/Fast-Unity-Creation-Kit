@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Numerics.Abstract;
@@ -40,19 +41,25 @@ namespace FastUnityCreationKit.Core.Numerics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe implicit operator ulong(uint64 number) => *(ulong*) &number;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator float32(uint64 number) => number._value;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator float64(uint64 number) => number._value;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint64 FromFloat(float value) => _value = (ulong) value;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint64 FromDouble(double value) => _value = (ulong) value;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public float ToFloat() => _value;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double ToDouble() => _value;
+        
 #region OP_ADDITION
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -126,19 +133,21 @@ namespace FastUnityCreationKit.Core.Numerics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float32 Divide(in uint16 rightHandSide) => (float) _value / rightHandSide;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float32 Divide(in uint32 rightHandSide) => (float) _value / rightHandSide;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float32 Divide(in uint64 rightHandSide) => (float) _value / rightHandSide;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float32 Divide(in float32 rightHandSide) => _value / rightHandSide;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float64 Divide(in float64 rightHandSide) => _value / rightHandSide;
-        
+
 #endregion
+
+        [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
     }
 }
