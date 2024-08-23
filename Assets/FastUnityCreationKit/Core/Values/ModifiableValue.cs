@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Abstract;
-using FastUnityCreationKit.Core.Numerics.Abstract.Operations;
 using FastUnityCreationKit.Core.PrioritySystem.Tools;
 using FastUnityCreationKit.Core.Values.Abstract;
 using UnityEngine;
@@ -25,7 +24,7 @@ namespace FastUnityCreationKit.Core.Values
     /// </remarks>
     [Serializable]
     public abstract class ModifiableValue<TNumberType> : IModifiableValue<TNumberType>
-        where TNumberType : struct, INumber
+        where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
     {
         /// <summary>
         /// Indicates whether the value is initialized.
@@ -83,11 +82,15 @@ namespace FastUnityCreationKit.Core.Values
         {
             EnsureValueIsInitialized();
             
-            // Check if number supports addition
-            if (currentValue is not IAddOperationSupport<TNumberType, TNumberType> addOperationSupport) return;
+            // Convert values to floating point numbers
+            float floatValue = currentValue.ToFloat();
+            float amountFloat = amount.ToFloat();
             
-            // Add the amount to the current value            
-            currentValue = addOperationSupport.Add(amount);
+            // Add the amount to the current value
+            floatValue += amountFloat;
+            
+            // Convert the result back to the current number type
+            currentValue = currentValue.FromFloat(floatValue);
         }
         
         /// <inheritdoc/>
@@ -95,11 +98,15 @@ namespace FastUnityCreationKit.Core.Values
         {
             EnsureValueIsInitialized();
             
-            // Check if number supports subtraction
-            if (currentValue is not ISubtractOperationSupport<TNumberType, TNumberType> subtractOperationSupport) return;
+            // Convert values to floating point numbers
+            float floatValue = currentValue.ToFloat();
+            float amountFloat = amount.ToFloat();
             
             // Subtract the amount from the current value
-            currentValue = subtractOperationSupport.Subtract(amount);
+            floatValue -= amountFloat;
+            
+            // Convert the result back to the current number type
+            currentValue = currentValue.FromFloat(floatValue);
         }
         
         /// <inheritdoc/>
@@ -107,12 +114,15 @@ namespace FastUnityCreationKit.Core.Values
         {
             EnsureValueIsInitialized();
             
-            // Check if number supports multiplication
-            if (currentValue is not IMultiplyOperationSupport<TNumberType, TNumberType> multiplyOperationSupport)
-                throw new NotSupportedException("The number type does not support multiplication.");
-                
+            // Convert values to floating point numbers
+            float floatValue = currentValue.ToFloat();
+            float amountFloat = amount.ToFloat();
+            
             // Multiply the current value by the amount
-            currentValue = multiplyOperationSupport.Multiply(amount);
+            floatValue *= amountFloat;
+            
+            // Convert the result back to the current number type
+            currentValue = currentValue.FromFloat(floatValue);
         }
         
         
@@ -121,19 +131,15 @@ namespace FastUnityCreationKit.Core.Values
         {
             EnsureValueIsInitialized();
             
-            // Check if number supports multiplication
-            if (currentValue is not IMultiplyOperationSupport<float32, float32> multiplyOperationSupport)
-                throw new NotSupportedException("The number type does not support multiplication.");
+            // Convert values to floating point numbers
+            float floatValue = currentValue.ToFloat();
             
             // Multiply the current value by the amount
-            float32 result = multiplyOperationSupport.Multiply(amount);
+            floatValue *= amount;
             
-            // Check if the result can be converted to the current number type
-            if (result is not ISupportsFloatConversion<TNumberType> supportsFloatConversion)
-                throw new NotSupportedException("The number type does not support float conversion.");
-            
-            // Convert the result to the current number type
-            currentValue = supportsFloatConversion.FromFloat(result);
+            // Convert the result back to the current number type
+            currentValue = currentValue.FromFloat(floatValue);
+
         }
         
         /// <inheritdoc/>
@@ -141,19 +147,14 @@ namespace FastUnityCreationKit.Core.Values
         {
             EnsureValueIsInitialized();
             
-            // Check if number supports multiplication
-            if (currentValue is not IMultiplyOperationSupport<float64, float64> multiplyOperationSupport) 
-                throw new NotSupportedException("The number type does not support multiplication.");
+            // Convert values to floating point numbers
+            double floatValue = currentValue.ToDouble();
             
             // Multiply the current value by the amount
-            float64 result = multiplyOperationSupport.Multiply(amount);
+            floatValue *= amount;
             
-            // Check if the result can be converted to the current number type
-            if (result is not ISupportsFloatConversion<TNumberType> supportsFloatConversion)
-                throw new NotSupportedException("The number type does not support float conversion.");
-            
-            // Convert the result to the current number type
-            currentValue = supportsFloatConversion.FromDouble(result);
+            // Convert the result back to the current number type
+            currentValue = currentValue.FromDouble(floatValue);
         }
         
         /// <inheritdoc/>
@@ -161,12 +162,15 @@ namespace FastUnityCreationKit.Core.Values
         {
             EnsureValueIsInitialized();
             
-            // Check if number supports division
-            if (currentValue is not IDivideOperationSupport<TNumberType, TNumberType> divideOperationSupport)
-                throw new NotSupportedException("The number type does not support division.");
+            // Convert values to floating point numbers
+            float floatValue = currentValue.ToFloat();
+            float amountFloat = amount.ToFloat();
             
             // Divide the current value by the amount
-            currentValue = divideOperationSupport.Divide(amount);
+            floatValue /= amountFloat;
+            
+            // Convert the result back to the current number type
+            currentValue = currentValue.FromFloat(floatValue);
         }
 
         /// <inheritdoc/>
@@ -174,19 +178,14 @@ namespace FastUnityCreationKit.Core.Values
         {
             EnsureValueIsInitialized();
             
-            // Check if number supports division
-            if (currentValue is not IDivideOperationSupport<float32, float32> divideOperationSupport)
-                throw new NotSupportedException("The number type does not support division.");
+            // Convert values to floating point numbers
+            float floatValue = currentValue.ToFloat();
             
             // Divide the current value by the amount
-            float32 result = divideOperationSupport.Divide(amount);
+            floatValue /= amount;
             
-            // Check if the result can be converted to the current number type
-            if (result is not ISupportsFloatConversion<TNumberType> supportsFloatConversion)
-                throw new NotSupportedException("The number type does not support float conversion.");
-            
-            // Convert the result to the current number type
-            currentValue = supportsFloatConversion.FromFloat(result);
+            // Convert the result back to the current number type
+            currentValue = currentValue.FromFloat(floatValue);
         }
 
         /// <inheritdoc/>
@@ -194,19 +193,14 @@ namespace FastUnityCreationKit.Core.Values
         {
             EnsureValueIsInitialized();
             
-            // Check if number supports division
-            if (currentValue is not IDivideOperationSupport<float64, float64> divideOperationSupport)
-                throw new NotSupportedException("The number type does not support division.");
+            // Convert values to floating point numbers
+            double floatValue = currentValue.ToDouble();
             
             // Divide the current value by the amount
-            float64 result = divideOperationSupport.Divide(amount);
+            floatValue /= amount;
             
-            // Check if the result can be converted to the current number type
-            if (result is not ISupportsFloatConversion<TNumberType> supportsFloatConversion)
-                throw new NotSupportedException("The number type does not support float conversion.");
-            
-            // Convert the result to the current number type
-            currentValue = supportsFloatConversion.FromDouble(result);
+            // Convert the result back to the current number type
+            currentValue = currentValue.FromDouble(floatValue);
         }
         
         private void RecalculateValue()

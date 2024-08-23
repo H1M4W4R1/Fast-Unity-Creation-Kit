@@ -1,5 +1,4 @@
-﻿using System;
-using FastUnityCreationKit.Core.Identification.Abstract.Identifiers;
+﻿using FastUnityCreationKit.Core.Identification.Abstract.Identifiers;
 
 namespace FastUnityCreationKit.Core.Identification.Abstract.Identifiable
 {

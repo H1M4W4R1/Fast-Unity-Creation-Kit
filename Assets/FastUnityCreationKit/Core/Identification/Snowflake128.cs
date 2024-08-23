@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using FastUnityCreationKit.Core.Identification.Abstract;
 using FastUnityCreationKit.Core.Identification.Abstract.Identifiers;
 using FastUnityCreationKit.Core.Numerics;
 using Unity.Burst;
-using Unity.Mathematics;
 
 namespace FastUnityCreationKit.Core.Identification
 {

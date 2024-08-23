@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using FastUnityCreationKit.Core.PrioritySystem.Abstract;
 using FastUnityCreationKit.Core.PrioritySystem.Tools;
 
