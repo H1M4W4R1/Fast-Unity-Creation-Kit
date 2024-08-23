@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.Numerics.Abstract.Operations;
+using FastUnityCreationKit.Core.PrioritySystem.Tools;
 using FastUnityCreationKit.Core.Values.Abstract;
-using FastUnityCreationKit.Core.Values.Abstract.Modifiers;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Core.Values
@@ -50,7 +50,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <summary>
         /// List of modifiers that are currently applied to the value.
         /// </summary>
-        private List<IModifier> _appliedModifiers;
+        private PrioritizedList<IModifier> _appliedModifiers;
 
         /// <inheritdoc/>
         public TNumberType CurrentValue
@@ -214,32 +214,10 @@ namespace FastUnityCreationKit.Core.Values
             // Reset the value to the base value
             currentValue = baseValue;
             
-            List<IModifier> earlyModifiers = new List<IModifier>();
-            List<IModifier> commonModifiers = new List<IModifier>();
-            List<IModifier> lateModifiers = new List<IModifier>();
-            
-            // Loop through all modifiers and separate them into early, common and late modifiers
-            for (int index = 0; index < _appliedModifiers.Count; index++)
-            {
-                IModifier modifier = _appliedModifiers[index];
-                switch (modifier)
-                {
-                    case IEarlyModifier:
-                        earlyModifiers.Add(modifier);
-                        break;
-                    case ILateModifier:
-                        lateModifiers.Add(modifier);
-                        break;
-                    default:
-                        commonModifiers.Add(modifier);
-                        break;
-                }
-            }
-            
             // Apply all modifiers
-            ApplyModifiers(earlyModifiers);
-            ApplyModifiers(commonModifiers);
-            ApplyModifiers(lateModifiers);
+            // Modifiers are prioritized list, so they are applied in order
+            // of their priority (from the lowest priority value to the highest)
+            ApplyModifiers(_appliedModifiers);
         }
         
         /// <summary>
@@ -261,9 +239,9 @@ namespace FastUnityCreationKit.Core.Values
         private void EnsureValueIsInitialized()
         {
             // If the value is already initialized, return
-            if(_isInitialized) return; 
-            
-            _appliedModifiers ??= new List<IModifier>();
+            if(_isInitialized) return;
+
+            _appliedModifiers ??= new PrioritizedList<IModifier>();
             currentValue = baseValue;
             _isInitialized = true;
         }

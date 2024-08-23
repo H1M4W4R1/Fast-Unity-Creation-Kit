@@ -5,7 +5,10 @@ namespace FastUnityCreationKit.Core.Values.Abstract
 {
     /// <summary>
     /// Represents a modifiable value.
-    /// Modifiable value is a value that can be modified by adding or removing modifiers.
+    /// Modifiable value is a value that can be modified by adding or removing modifiers
+    /// or by performing arithmetic operations on it.
+    /// <br/><br/>
+    /// <i>Only one of those methods should be used to modify the value as they are not compatible with each other.</i>
     /// </summary>
     public interface IModifiableValue<TNumberType> : IValue<TNumberType>
         where TNumberType : struct, INumber

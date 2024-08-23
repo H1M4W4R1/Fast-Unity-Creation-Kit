@@ -1,8 +1,8 @@
 ﻿using System;
 using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Abstract;
+using FastUnityCreationKit.Core.PrioritySystem.Abstract;
 using FastUnityCreationKit.Core.Values.Abstract;
-using FastUnityCreationKit.Core.Values.Abstract.Modifiers;
 
 namespace FastUnityCreationKit.Core.Values.Modifiers
 {
@@ -13,6 +13,8 @@ namespace FastUnityCreationKit.Core.Values.Modifiers
     public abstract class MultiplyModifier<TNumber> : IModifier
         where TNumber : INumber
     {
+        public uint Priority => 2 ^ 30;
+
         /// <summary>
         /// Amount to add to the value.
         /// </summary>
@@ -23,30 +25,32 @@ namespace FastUnityCreationKit.Core.Values.Modifiers
             this.amount = amount;
         }
 
-        public void Apply<TNumberType>(IModifiableValue<TNumberType> value) 
+        public void Apply<TNumberType>(IModifiableValue<TNumberType> value)
             where TNumberType : struct, INumber
         {
-            if(amount is TNumberType multiplier0)
+            if (amount is TNumberType multiplier0)
                 value.Multiply(multiplier0);
-            else if(amount is float32 multiplier1)
+            else if (amount is float32 multiplier1)
                 value.Multiply(multiplier1);
-            else if(amount is float64 multiplier2)
+            else if (amount is float64 multiplier2)
                 value.Multiply(multiplier2);
             else
                 throw new NotSupportedException("Number type of the amount is not supported.");
         }
 
-        public void Remove<TNumberType>(IModifiableValue<TNumberType> value) 
+        public void Remove<TNumberType>(IModifiableValue<TNumberType> value)
             where TNumberType : struct, INumber
         {
-            if(amount is TNumberType multiplier0)
+            if (amount is TNumberType multiplier0)
                 value.Divide(multiplier0);
-            else if(amount is float32 multiplier1)
+            else if (amount is float32 multiplier1)
                 value.Divide(multiplier1);
-            else if(amount is float64 multiplier2)
+            else if (amount is float64 multiplier2)
                 value.Divide(multiplier2);
             else
                 throw new NotSupportedException("Number type of the amount is not supported.");
         }
+
+        public int CompareTo(IPrioritySupport other) => Priority.CompareTo(other.Priority);
     }
 }

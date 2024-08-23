@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+using FastUnityCreationKit.Core.PrioritySystem.Abstract;
 
 namespace FastUnityCreationKit.Core.Values.Abstract
 {
@@ -12,7 +13,7 @@ namespace FastUnityCreationKit.Core.Values.Abstract
     /// This would easily allow developer to handle checking if modifier of specified type
     /// exists on desired value or if value even supports it.
     /// </remarks>
-    public interface IModifier
+    public interface IModifier : IPrioritySupport
     {
         /// <summary>
         /// Apply this modifier to the value.

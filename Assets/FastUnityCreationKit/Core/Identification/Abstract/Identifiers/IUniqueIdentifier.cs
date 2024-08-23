@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Core.Identification.Abstract
+﻿namespace FastUnityCreationKit.Core.Identification.Abstract.Identifiers
 {
     /// <summary>
     /// Represents a unique identifier.

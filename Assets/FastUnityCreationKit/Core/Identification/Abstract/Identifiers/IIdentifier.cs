@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Core.Identification.Abstract
+﻿namespace FastUnityCreationKit.Core.Identification.Abstract.Identifiers
 {
     /// <summary>
     /// Represents an identifier - a value that can be used to identify an object.

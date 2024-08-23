@@ -1,7 +1,7 @@
 ﻿using System;
 using FastUnityCreationKit.Core.Numerics.Abstract;
+using FastUnityCreationKit.Core.PrioritySystem.Abstract;
 using FastUnityCreationKit.Core.Values.Abstract;
-using FastUnityCreationKit.Core.Values.Abstract.Modifiers;
 
 namespace FastUnityCreationKit.Core.Values.Modifiers
 {
@@ -10,9 +10,11 @@ namespace FastUnityCreationKit.Core.Values.Modifiers
     /// This modifier is always added after percentage modifiers and
     /// modify result value at the end of the calculation.
     /// </summary>
-    public abstract class AddModifier<TNumber> : IModifier, ILateModifier
+    public abstract class AddModifier<TNumber> : IModifier
         where TNumber : INumber
     {
+        public uint Priority => 2 ^ 31;
+        
         /// <summary>
         /// Amount to add to the value.
         /// </summary>
@@ -40,5 +42,7 @@ namespace FastUnityCreationKit.Core.Values.Modifiers
             else
                 throw new NotSupportedException("Number type of the amount is not supported.");
         }
+
+        public int CompareTo(IPrioritySupport other) => Priority.CompareTo(other.Priority);
     }
 }

@@ -14,7 +14,7 @@ namespace FastUnityCreationKit.Core.Numerics
     [StructLayout(LayoutKind.Explicit)]
     [BurstCompile]
     [Serializable]
-    public struct float64 : ISignedNumber, INegateSupport<float64>,
+    public struct float64 : ISignedNumber, INegateSupport<float64>, ISupportsFloatConversion<float64>,
         IAddOperationSupport<float64, float64>, IAddOperationSupport<float32, float64>,
         IAddOperationSupport<int8, float64>, IAddOperationSupport<int16, float64>,
         IAddOperationSupport<int32, float64>, IAddOperationSupport<int64, float64>,
@@ -49,6 +49,12 @@ namespace FastUnityCreationKit.Core.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe implicit operator double(float64 number) => *(double*) &number;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public float64 FromFloat(float number) => number;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public float64 FromDouble(double number) => number;
+        
 #region OP_ADDITION
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
