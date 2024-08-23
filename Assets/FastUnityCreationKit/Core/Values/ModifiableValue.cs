@@ -61,6 +61,15 @@ namespace FastUnityCreationKit.Core.Values
             }
         }
         
+        /// <summary>
+        /// Sets the current value of the dynamic value.
+        /// </summary>
+        public void SetCurrentValue(TNumberType value)
+        {
+            EnsureValueIsInitialized();
+            currentValue = value;
+        }
+        
         /// <inheritdoc/>
         public void ApplyModifier(IModifier modifier)
         {
