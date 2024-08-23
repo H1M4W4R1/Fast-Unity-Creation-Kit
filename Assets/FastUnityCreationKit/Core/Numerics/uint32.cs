@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Numerics.Abstract;
 using Unity.Burst;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Core.Numerics
@@ -31,22 +32,22 @@ namespace FastUnityCreationKit.Core.Numerics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator float32(uint32 number) => number._value;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator float64(uint32 number) => number._value;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint32 FromFloat(float value) => _value = (uint) value;
-        
+        public uint32 FromFloat(float value) =>
+            _value = (uint) math.clamp(value, uint.MinValue, uint.MaxValue);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint32 FromDouble(double value) => _value = (uint) value;
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float ToFloat() => _value;
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double ToDouble() => _value;
-            
-            [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
+        public uint32 FromDouble(double value) =>
+            _value = (uint) math.clamp(value, uint.MinValue, uint.MaxValue);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public float ToFloat() => _value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public double ToDouble() => _value;
+
+        [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
     }
 }

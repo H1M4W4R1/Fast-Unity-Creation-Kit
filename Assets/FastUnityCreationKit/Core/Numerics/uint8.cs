@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Numerics.Abstract;
 using Unity.Burst;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Core.Numerics
@@ -35,10 +36,12 @@ namespace FastUnityCreationKit.Core.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator float64(uint8 number) => number._value;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] public uint8 FromFloat(float value) => _value = (byte) value;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public uint8 FromFloat(float value) => 
+            _value = (byte) math.clamp(value, byte.MinValue, byte.MaxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint8 FromDouble(double value) => _value = (byte) value;
+        public uint8 FromDouble(double value) => 
+            _value = (byte) math.clamp(value, byte.MinValue, byte.MaxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public float ToFloat() => _value;
 
