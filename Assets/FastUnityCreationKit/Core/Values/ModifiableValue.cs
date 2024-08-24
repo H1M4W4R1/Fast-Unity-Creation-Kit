@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FastUnityCreationKit.Core.Initialization;
 using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.PrioritySystem.Tools;
@@ -23,14 +24,11 @@ namespace FastUnityCreationKit.Core.Values
     /// and thus the operations you did will be lost (if you want to keep them, you should use modifiers).
     /// </remarks>
     [Serializable]
-    public abstract class ModifiableValue<TNumberType> : IModifiableValue<TNumberType>
+    public abstract class ModifiableValue<TNumberType> : IModifiableValue<TNumberType>, IInitializable
         where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
     {
-        /// <summary>
-        /// Indicates whether the value is initialized.
-        /// If not, the value should be initialized before accessing it.
-        /// </summary>
-        private bool _isInitialized;
+        /// <inheritdoc/>
+        bool IInitializable.InternalInitializationStatusStorage { get; set; } 
         
         /// <summary>
         /// Base value of the dynamic value.
@@ -56,24 +54,30 @@ namespace FastUnityCreationKit.Core.Values
         {
             get
             {
-                EnsureValueIsInitialized();
+                (this as IInitializable).EnsureInitialized();
                 return currentValue;
             }
         }
         
-        /// <summary>
-        /// Sets the current value of the dynamic value.
-        /// </summary>
+        /// <inheritdoc/>
         public void SetCurrentValue(TNumberType value)
         {
-            EnsureValueIsInitialized();
+            (this as IInitializable).EnsureInitialized();
             currentValue = value;
         }
-        
+
+        /// <inheritdoc/>
+        public void SetBaseValue(TNumberType value)
+        {
+            (this as IInitializable).EnsureInitialized();
+            baseValue = value;
+            RecalculateValue();
+        }
+
         /// <inheritdoc/>
         public void ApplyModifier(IModifier modifier)
         {
-            EnsureValueIsInitialized();
+            (this as IInitializable).EnsureInitialized();
             _appliedModifiers.Add(modifier);
             RecalculateValue();
         }
@@ -81,15 +85,15 @@ namespace FastUnityCreationKit.Core.Values
         /// <inheritdoc/>
         public void RemoveModifier(IModifier modifier)
         {
-            EnsureValueIsInitialized();
-            _appliedModifiers.Remove(modifier);
+            (this as IInitializable).EnsureInitialized();
+            _appliedModifiers.RemoveAll(obj => ReferenceEquals(obj, modifier));
             RecalculateValue();
         }
         
         /// <inheritdoc/>
         public void Add(TNumberType amount)
         {
-            EnsureValueIsInitialized();
+            (this as IInitializable).EnsureInitialized();
             
             // Convert values to floating point numbers
             float floatValue = currentValue.ToFloat();
@@ -105,7 +109,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <inheritdoc/>
         public void Subtract(TNumberType amount)
         {
-            EnsureValueIsInitialized();
+            (this as IInitializable).EnsureInitialized();
             
             // Convert values to floating point numbers
             float floatValue = currentValue.ToFloat();
@@ -121,7 +125,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <inheritdoc/>
         public void Multiply(TNumberType amount)
         {
-            EnsureValueIsInitialized();
+            (this as IInitializable).EnsureInitialized();
             
             // Convert values to floating point numbers
             float floatValue = currentValue.ToFloat();
@@ -138,7 +142,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <inheritdoc/>
         public void Multiply(float32 amount)
         {
-            EnsureValueIsInitialized();
+            (this as IInitializable).EnsureInitialized();
             
             // Convert values to floating point numbers
             float floatValue = currentValue.ToFloat();
@@ -154,7 +158,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <inheritdoc/>
         public void Multiply(float64 amount)
         {
-            EnsureValueIsInitialized();
+            (this as IInitializable).EnsureInitialized();
             
             // Convert values to floating point numbers
             double floatValue = currentValue.ToDouble();
@@ -169,7 +173,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <inheritdoc/>
         public void Divide(TNumberType amount)
         {
-            EnsureValueIsInitialized();
+            (this as IInitializable).EnsureInitialized();
             
             // Convert values to floating point numbers
             float floatValue = currentValue.ToFloat();
@@ -185,7 +189,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <inheritdoc/>
         public void Divide(float32 amount)
         {
-            EnsureValueIsInitialized();
+            (this as IInitializable).EnsureInitialized();
             
             // Convert values to floating point numbers
             float floatValue = currentValue.ToFloat();
@@ -200,7 +204,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <inheritdoc/>
         public void Divide(float64 amount)
         {
-            EnsureValueIsInitialized();
+            (this as IInitializable).EnsureInitialized();
             
             // Convert values to floating point numbers
             double floatValue = currentValue.ToDouble();
@@ -236,17 +240,12 @@ namespace FastUnityCreationKit.Core.Values
         }
 
         /// <summary>
-        /// Ensure that the value is initialized.
-        /// Should be called before accessing the value.
+        /// Internal initialization method.
         /// </summary>
-        private void EnsureValueIsInitialized()
+        void IInitializable._Initialize()
         {
-            // If the value is already initialized, return
-            if(_isInitialized) return;
-
             _appliedModifiers ??= new PrioritizedList<IModifier>();
             currentValue = baseValue;
-            _isInitialized = true;
         }
     }
 }

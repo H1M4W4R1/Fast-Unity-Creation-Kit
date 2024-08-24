@@ -10,12 +10,12 @@
         /// <summary>
         /// Converts float to the number.
         /// </summary>
-        public new TNumberType FromFloat(float value);
+        public TNumberType FromFloat(float value);
         
         /// <summary>
         /// Converts double to the number.
         /// </summary>
-        public new TNumberType FromDouble(double value);
+        public TNumberType FromDouble(double value);
         
         INumber ISupportsFloatConversion.NumberFromFloat(float value) => FromFloat(value);
         

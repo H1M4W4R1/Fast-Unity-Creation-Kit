@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.Core.Values.Modifiers
     public abstract class FlatAddModifier<TNumber> : IModifier
         where TNumber : INumber
     {
-        public uint Priority => 2 ^ 29;
+        public uint Priority => 536_870_912;
         
         /// <summary>
         /// Amount to add to the value.

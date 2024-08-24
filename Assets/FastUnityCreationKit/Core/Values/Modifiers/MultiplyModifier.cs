@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.Core.Values.Modifiers
     public abstract class MultiplyModifier<TNumber> : IModifier
         where TNumber : INumber
     {
-        public uint Priority => 2 ^ 30;
+        public uint Priority => 1_073_741_824;
 
         /// <summary>
         /// Amount to add to the value.

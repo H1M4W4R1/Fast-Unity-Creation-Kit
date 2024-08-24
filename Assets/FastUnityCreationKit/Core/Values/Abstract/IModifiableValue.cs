@@ -62,5 +62,16 @@ namespace FastUnityCreationKit.Core.Values.Abstract
         /// Divide the current value by the amount.
         /// </summary>
         public void Divide(float64 amount);
+
+        /// <summary>
+        /// Sets the current value of the dynamic value.
+        /// </summary>
+        public void SetCurrentValue(TNumberType value);
+        
+        /// <summary>
+        /// Sets the base value of the dynamic value.
+        /// It is not recommended to use this method.
+        /// </summary>
+        public void SetBaseValue(TNumberType value);
     }
 }
