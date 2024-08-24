@@ -10,6 +10,16 @@ namespace FastUnityCreationKit.Economy.Abstract
     public interface ILocalEconomy
     {
         /// <summary>
+        /// Checks if object has resource of type <typeparamref name="TResource"/>.
+        /// </summary>
+        public bool HasResource<TResource, TNumberType>()
+            where TResource : ResourceBase<TNumberType>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        {
+            return this is ILocalResource<TResource, TNumberType>;
+        }
+        
+        /// <summary>
         /// Tries to get resource from object (if object supports local resource return true).
         /// If object does not support local resource, logs error and returns false.
         /// </summary>

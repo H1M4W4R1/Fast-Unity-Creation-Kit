@@ -19,7 +19,6 @@ namespace FastUnityCreationKit.Economy
         /// Instance of the global resource, use this to access the resource.
         /// </summary>
         [NotNull] public static TSelf Instance { get; } = new TSelf();
-
         
         /// <inheritdoc />
         public TSelf GetGlobalReference() => Instance;

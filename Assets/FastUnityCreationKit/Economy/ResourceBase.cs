@@ -32,6 +32,49 @@ namespace FastUnityCreationKit.Economy
         public TNumberType Amount => _storage.CurrentValue;
         
         /// <summary>
+        /// Checks if resource is global.
+        /// </summary>
+        public bool IsGlobalResource => this is IGlobalResource;
+        
+        /// <summary>
+        /// Checks if resource is local.
+        /// </summary>
+        public bool IsLocalResource => this is ILocalResource;
+        
+        /// <summary>
+        /// Checks if resource has default amount.
+        /// </summary>
+        public bool HasDefaultAmount => this is IResourceWithDefaultAmount<TNumberType>;
+        
+        /// <summary>
+        /// Checks if resource has upper limit.
+        /// </summary>
+        public bool HasMaxLimit => this is IResourceWithMaxLimit<TNumberType>;
+        
+        /// <summary>
+        /// Checks if resource has lower limit.
+        /// </summary>
+        public bool HasMinLimit => this is IResourceWithMinLimit<TNumberType>;
+        
+        /// <summary>
+        /// Gets default amount of the resource.
+        /// If resource does not have default amount, returns default value of TNumberType.
+        /// </summary>
+        public TNumberType DefaultAmount => (this as IResourceWithDefaultAmount<TNumberType>)?.DefaultAmount ?? default;
+        
+        /// <summary>
+        /// Gets maximum amount of the resource.
+        /// If resource does not have maximum amount, returns default value of TNumberType.
+        /// </summary>
+        public TNumberType MaxAmount => (this as IResourceWithMaxLimit<TNumberType>)?.MaxAmount ?? default;
+        
+        /// <summary>
+        /// Gets minimum amount of the resource.
+        /// If resource does not have minimum amount, returns default value of TNumberType.
+        /// </summary>
+        public TNumberType MinAmount => (this as IResourceWithMinLimit<TNumberType>)?.MinAmount ?? default;
+        
+        /// <summary>
         /// Reinterprets resource to another type.
         /// Used for casting resource to its derived type.
         /// </summary>
@@ -104,6 +147,8 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         public void Reset()
         {
+            // This does not use properties to avoid unnecessary checks.
+            // Also, it's safer in case somebody would f-k up something in properties.
             if (this is IResourceWithDefaultAmount<TNumberType> defaultAmountResource)
                 _storage.SetCurrentValue(defaultAmountResource.DefaultAmount);
             else
@@ -127,6 +172,9 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         private void ValidateResourceData()
         {
+            // This does not use properties to avoid unnecessary checks.
+            // Also, it's safer in case somebody would f-k up something in properties.
+            
             // Check if resource has upper limit.
             if(this is IResourceWithMaxLimit<TNumberType> upperLimitedResource)
             {

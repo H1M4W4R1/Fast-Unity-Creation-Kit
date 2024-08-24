@@ -7,7 +7,7 @@ namespace FastUnityCreationKit.Economy.Abstract
     /// Represents that object supports local resource.
     /// Automatically supports local economy.
     /// </summary>
-    public interface ILocalResource<out TResource, TNumberType> : ILocalEconomy 
+    public interface ILocalResource<out TResource, TNumberType> : ILocalResource, ILocalEconomy
         where TResource : ResourceBase<TNumberType>, new()
         where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
     {
@@ -18,5 +18,10 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// Always assign to new instance of <see cref="ResourceBase{TNumberType}"/>.
         /// </remarks>
         [NotNull] public TResource ResourceStorage { get; }
+    }
+    
+    public interface ILocalResource
+    {
+        
     }
 }
