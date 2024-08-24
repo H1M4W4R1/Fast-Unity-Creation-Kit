@@ -24,7 +24,7 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Internal storage of the resource.
         /// </summary>
-        private ResourceStorageModifiableValue _storage = new ResourceStorageModifiableValue();
+        private readonly ResourceStorageModifiableValue _storage = new ResourceStorageModifiableValue();
 
         /// <summary>
         /// Current amount of the resource.
