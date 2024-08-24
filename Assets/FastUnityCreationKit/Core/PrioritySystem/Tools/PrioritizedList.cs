@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FastUnityCreationKit.Core.PrioritySystem.Abstract;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.PrioritySystem.Tools
 {
@@ -12,7 +13,7 @@ namespace FastUnityCreationKit.Core.PrioritySystem.Tools
     public class PrioritizedList<TPriorityObject> : List<TPriorityObject> where TPriorityObject : IPrioritySupport
     {
         /// <inheritdoc cref="List{T}.Add"/>
-        public new void Add(TPriorityObject item)
+        public new void Add([NotNull] TPriorityObject item)
         {
             // Loop through the list and insert the object at the correct position.
             for(int i = 0; i < Count; i++)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Events.Abstract
 {
@@ -11,12 +12,12 @@ namespace FastUnityCreationKit.Core.Events.Abstract
         /// <summary>
         /// List of all listeners that are registered to the event channel.
         /// </summary>
-        protected List<TListenerCallback> listeners = new List<TListenerCallback>();
+        [NotNull] [ItemNotNull] protected readonly List<TListenerCallback> listeners = new List<TListenerCallback>();
 
         /// <summary>
         /// Register the listener to the event channel.
         /// </summary>
-        public virtual void RegisterListener(TListenerCallback listener)
+        public virtual void RegisterListener([NotNull] TListenerCallback listener)
         {
             // Ensure that the listener is not already registered.
             if (!listeners.Contains(listener))
@@ -26,7 +27,7 @@ namespace FastUnityCreationKit.Core.Events.Abstract
         /// <summary>
         /// Unregister the listener from the event channel.
         /// </summary>
-        public virtual void UnregisterListener(TListenerCallback listener)
+        public virtual void UnregisterListener([NotNull] TListenerCallback listener)
         {
             // Ensure that the listener is registered.
             if (listeners.Contains(listener))

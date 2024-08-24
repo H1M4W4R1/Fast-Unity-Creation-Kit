@@ -24,7 +24,7 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Internal storage of the resource.
         /// </summary>
-        private readonly ResourceStorageModifiableValue _storage = new ResourceStorageModifiableValue();
+        [NotNull] private readonly ResourceStorageModifiableValue _storage = new ResourceStorageModifiableValue();
 
         /// <summary>
         /// Current amount of the resource.
@@ -35,8 +35,7 @@ namespace FastUnityCreationKit.Economy
         /// Reinterprets resource to another type.
         /// Used for casting resource to its derived type.
         /// </summary>
-        [CanBeNull]
-        public TResourceType As<TResourceType>() where TResourceType : ResourceBase<TNumberType>
+        [CanBeNull] public TResourceType As<TResourceType>() where TResourceType : ResourceBase<TNumberType>
         {
             // If in editor, log error if resource is not of type TResourceType.
             if (this is TResourceType) return this as TResourceType;

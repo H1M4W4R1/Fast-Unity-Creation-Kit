@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.PrioritySystem.Abstract;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Values.Abstract
 {
@@ -18,13 +19,13 @@ namespace FastUnityCreationKit.Core.Values.Abstract
         /// <summary>
         /// Apply this modifier to the value.
         /// </summary>
-        public void Apply<TNumberType>(IModifiableValue<TNumberType> value)
+        public void Apply<TNumberType>([NotNull] IModifiableValue<TNumberType> value)
             where TNumberType : struct, INumber;
 
         /// <summary>
         /// Remove this modifier from the value.
         /// </summary>
-        public void Remove<TNumberType>(IModifiableValue<TNumberType> value)
+        public void Remove<TNumberType>([NotNull] IModifiableValue<TNumberType> value)
             where TNumberType : struct, INumber;
     }
 }

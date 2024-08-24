@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Economy.Abstract;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy
 {
@@ -17,7 +18,7 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Instance of the global resource, use this to access the resource.
         /// </summary>
-        public static TSelf Instance { get; } = new TSelf();
+        [NotNull] public static TSelf Instance { get; } = new TSelf();
 
         
         /// <inheritdoc />

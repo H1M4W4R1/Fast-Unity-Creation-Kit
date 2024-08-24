@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Economy.Abstract
+﻿using JetBrains.Annotations;
+
+namespace FastUnityCreationKit.Economy.Abstract
 {
     /// <summary>
     /// Represents a global resource.
@@ -8,6 +10,6 @@
         /// <summary>
         /// Get a global reference to the resource from instance point of view.
         /// </summary>
-        public TSelf GetGlobalReference();
+        [NotNull] public TSelf GetGlobalReference();
     }
 }

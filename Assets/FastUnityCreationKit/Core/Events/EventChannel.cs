@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Events.Abstract;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Events
 {
@@ -21,7 +22,7 @@ namespace FastUnityCreationKit.Core.Events
         /// <summary>
         /// Trigger the event channel with the data.
         /// </summary>
-        public virtual void Trigger(TChannelData data)
+        public virtual void Trigger([NotNull] TChannelData data)
         {
             // Loops through all listeners and invokes them.
             for (int index = 0; index < listeners.Count; index++)

@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Abstract;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Values.Abstract
 {
@@ -16,12 +17,12 @@ namespace FastUnityCreationKit.Core.Values.Abstract
         /// <summary>
         /// Apply the modifier to the value.
         /// </summary>
-        public void ApplyModifier(IModifier modifier);
+        public void ApplyModifier([NotNull] IModifier modifier);
         
         /// <summary>
         /// Remove the modifier from the value.
         /// </summary>
-        public void RemoveModifier(IModifier modifier);
+        public void RemoveModifier([NotNull] IModifier modifier);
 
         /// <summary>
         /// Add the amount to the current value.

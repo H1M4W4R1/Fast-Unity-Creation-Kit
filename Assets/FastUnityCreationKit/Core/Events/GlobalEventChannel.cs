@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Events.Abstract;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Events
 {
@@ -42,24 +43,24 @@ namespace FastUnityCreationKit.Core.Events
         /// <summary>
         /// Instance of the event channel.
         /// </summary>
-        public static readonly TSelf Instance = new TSelf();
+        [NotNull] public static readonly TSelf Instance = new TSelf();
         
         /// <summary>
         /// Trigger the event channel with the data.
         /// </summary>
         /// <param name="data"></param>
-        public static void TriggerEvent(TChannelData data) => Instance.Trigger(data);
+        public static void TriggerEvent([NotNull] TChannelData data) => Instance.Trigger(data);
         
         /// <summary>
         /// Register the listener to the event channel.
         /// </summary>
         /// <param name="listener"></param>
-        public static void RegisterEventListener(EventChannelCallback<TChannelData> listener) => Instance.RegisterListener(listener);
+        public static void RegisterEventListener([NotNull] EventChannelCallback<TChannelData> listener) => Instance.RegisterListener(listener);
         
         /// <summary>
         /// Unregister the listener from the event channel.
         /// </summary>
         /// <param name="listener"></param>
-        public static void UnregisterEventListener(EventChannelCallback<TChannelData> listener) => Instance.UnregisterListener(listener);
+        public static void UnregisterEventListener([NotNull] EventChannelCallback<TChannelData> listener) => Instance.UnregisterListener(listener);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FastUnityCreationKit.Core.PrioritySystem.Abstract;
 using FastUnityCreationKit.Core.PrioritySystem.Tools;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.PrioritySystem
 {
@@ -12,7 +13,7 @@ namespace FastUnityCreationKit.Core.PrioritySystem
         /// <summary>
         /// Sorts objects in list using their priority.
         /// </summary>
-        public static void SortByPriority<TPriorityObject>(this IList<TPriorityObject> objects) 
+        public static void SortByPriority<TPriorityObject>([NotNull] [ItemNotNull] this IList<TPriorityObject> objects) 
             where TPriorityObject : IPrioritySupport
         {
             // Do not sort if the list is already a prioritized list.

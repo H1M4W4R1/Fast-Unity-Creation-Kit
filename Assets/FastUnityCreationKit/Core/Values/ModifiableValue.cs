@@ -5,6 +5,7 @@ using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.PrioritySystem.Tools;
 using FastUnityCreationKit.Core.Values.Abstract;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Core.Values
@@ -47,7 +48,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <summary>
         /// List of modifiers that are currently applied to the value.
         /// </summary>
-        private PrioritizedList<IModifier> _appliedModifiers;
+        [NotNull] [ItemNotNull] private PrioritizedList<IModifier> _appliedModifiers = new();
 
         /// <inheritdoc/>
         public TNumberType CurrentValue
@@ -230,7 +231,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <summary>
         /// Applies all modifiers in the list to the value.
         /// </summary>
-        private void ApplyModifiers(IReadOnlyList<IModifier> modifiers)
+        private void ApplyModifiers([NotNull] [ItemNotNull] IReadOnlyList<IModifier> modifiers)
         {
             for (int index = 0; index < modifiers.Count; index++)
             {

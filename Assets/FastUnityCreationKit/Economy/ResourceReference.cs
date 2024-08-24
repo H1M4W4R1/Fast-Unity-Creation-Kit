@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Economy.Abstract;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy
 {
@@ -14,9 +15,9 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Pointer to the resource object.
         /// </summary>
-        public readonly TResource refPointer;
+        [NotNull] public readonly TResource refPointer;
         
-        public ResourceReference(TResource resource)
+        public ResourceReference([NotNull] TResource resource)
         {
             refPointer = resource;
         }
