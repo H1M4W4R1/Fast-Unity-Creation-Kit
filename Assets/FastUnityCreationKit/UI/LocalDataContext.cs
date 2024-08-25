@@ -19,7 +19,7 @@ namespace FastUnityCreationKit.UI
     
     public abstract class LocalDataContext : MonoBehaviour, IDataContext
     {
-        public virtual void OnBind(UIObject uiObject)
+        public virtual void OnBind(IUIObjectWithDataContext uiObject)
         {
             // Do nothing
         }

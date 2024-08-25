@@ -14,22 +14,30 @@ namespace FastUnityCreationKit.UI.Abstract
         public void PassDataContextToChildren()
         {
             // Ensure this is a UI object with data context
-            if (this is not UIObjectWithData<TData> uiObjectWithData)
+            if (this is not IUIObjectWithDataContext<TData> uiObjectWithData)
             {
                 // Log error
-                Debug.LogError("This object does not have proper data context."); return;
+                Debug.LogError("This object does not have proper data context."); 
+                return;
+            }
+            
+            if(this is not UIObject uiObject)
+            {
+                // Log error
+                Debug.LogError("This object does not have proper data context.");
+                return;
             }
             
             // Pass the data context to the children
             // Get all components that are UIObjectWithData
-            UIObjectWithData<TData>[] childrenUIObjects = 
-                uiObjectWithData.GetComponentsInChildren<UIObjectWithData<TData>>();
+            IUIObjectWithDataContext<TData>[] childrenUIObjects = 
+                uiObject.GetComponentsInChildren<IUIObjectWithDataContext<TData>>();
             
             // Iterate through all the children
             for (int index = 0; index < childrenUIObjects.Length; index++)
             {
                 // Pass the data context to the child
-                UIObjectWithData<TData> child = childrenUIObjects[index];
+                IUIObjectWithDataContext<TData> child = childrenUIObjects[index];
                 child.BindDataContext(uiObjectWithData.DataContext);
             }
         }

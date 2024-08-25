@@ -15,7 +15,7 @@ namespace FastUnityCreationKit.UI
         [NotNull] public static TSelf Instance { get; } = new TSelf();
         
         /// <inheritdoc/>
-        public virtual void OnBind(UIObject uiObject)
+        public virtual void OnBind(IUIObjectWithDataContext uiObject)
         {
             // Do nothing
         }

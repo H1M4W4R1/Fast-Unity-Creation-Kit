@@ -10,7 +10,6 @@ namespace FastUnityCreationKit.UI.Abstract
         /// <summary>
         /// Executed when data context is bound to the UI object.
         /// </summary>
-        public void OnBind([NotNull] UIObject uiObject);
-        
+        public void OnBind([NotNull] IUIObjectWithDataContext uiObject);
     }
 }

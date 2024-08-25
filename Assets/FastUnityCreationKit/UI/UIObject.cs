@@ -40,6 +40,10 @@ namespace FastUnityCreationKit.UI
             // Unregister from the refresh event channel
             if (this is IRefreshable refreshable)
                 RefreshUIEventChannel.UnregisterEventListener(refreshable.Refresh);
+            
+            // Unregister from the data context events
+            if (this is IUIObjectWithDataContext uiObjectWithData)
+                uiObjectWithData.DetachDataContextEvents();
         }
 
         void IInitializable._Initialize()
@@ -49,8 +53,11 @@ namespace FastUnityCreationKit.UI
                 uiObjectWithSetup.Setup();
             
             // Try to bind the data context
-            if(this is UIObjectWithData uiObjectWithData)
+            if (this is IUIObjectWithDataContext uiObjectWithData)
+            {
                 uiObjectWithData.TryAutomaticContextBinding();
+                uiObjectWithData.AttachDataContextEvents();
+            }
 
             // If the object is refreshable, install event bindings
             if (this is IRefreshable refreshable)
