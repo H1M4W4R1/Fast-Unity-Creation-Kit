@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.Core.Initialization;
 using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Events;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI
@@ -25,6 +26,31 @@ namespace FastUnityCreationKit.UI
         
         /// <inheritdoc/>
         bool IInitializable.InternalInitializationStatusStorage { get; set; }
+        
+        /// <summary>
+        /// Get the data context of the specified type.
+        /// If the object does not have a data context of the specified type, returns null.
+        /// </summary>
+        [CanBeNull] protected TDataContext GetDataContext<TDataContext>() 
+            where TDataContext : class, IDataContext, new()
+        {
+            if (this is IUIObjectWithDataContext<TDataContext> uiObjectWithDataContext)
+                return uiObjectWithDataContext.DataContext;
+            
+            Debug.LogError($"The object {name} does not have a data context of type {typeof(TDataContext).Name}.");
+            return null;
+        }
+        
+        /// <summary>
+        /// Tries to get the data context of the specified type.
+        /// Returns true if the data context is found, false otherwise.
+        /// </summary>
+        protected bool TryGetDataContext<TDataContext>([CanBeNull] out TDataContext dataContext) 
+            where TDataContext : class, IDataContext, new()
+        {
+            dataContext = GetDataContext<TDataContext>();
+            return dataContext != null;
+        }
         
         /// <summary>
         /// Ensures that the object is initialized.
