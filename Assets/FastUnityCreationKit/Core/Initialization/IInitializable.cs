@@ -7,7 +7,7 @@
         /// Used to determine if the object is initialized.
         /// To get this state please use <see cref="IsInitialized"/>
         /// </summary>
-        protected bool InternalInitializationStatusStorage { get; set; }
+        public bool InternalInitializationStatusStorage { get; protected set; }
 
         /// <summary>
         /// Returns true if the object is initialized.

@@ -14,6 +14,9 @@ namespace FastUnityCreationKit.Economy.Abstract
         [NotNull] public TSelf GetGlobalReference();
     }
 
+    /// <summary>
+    /// Internal interface for global resources.
+    /// </summary>
     public interface IGlobalResource
     {
         

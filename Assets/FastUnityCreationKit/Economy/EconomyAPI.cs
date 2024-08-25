@@ -10,6 +10,16 @@ namespace FastUnityCreationKit.Economy
     public static class EconomyAPI
     {
         /// <summary>
+        /// Gets global resource of type <typeparamref name="TResource"/>.
+        /// </summary>
+        public static GlobalResource<TResource, TNumberType> GetGlobalResource<TResource, TNumberType>()
+            where TResource : GlobalResource<TResource, TNumberType>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        {
+            return GlobalResource<TResource, TNumberType>.Instance;
+        }
+        
+        /// <summary>
         /// Returns true if object supports local economy.
         /// </summary>
         public static bool SupportsLocalEconomy(this object obj) => obj is ILocalEconomy;
