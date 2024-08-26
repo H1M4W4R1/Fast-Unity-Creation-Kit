@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Identification.Abstract.Identifiers;
 using FastUnityCreationKit.Core.Numerics;
@@ -46,21 +47,26 @@ namespace FastUnityCreationKit.Core.Identification
             created = 1;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Snowflake128 other) =>
              other.vectorized == vectorized;
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Equals(object obj)
         {
             return obj is Snowflake128 other && Equals(other);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int GetHashCode() => vectorized.GetHashCode();
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Snowflake128 left, Snowflake128 right) => left.Equals(right);
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Snowflake128 left, Snowflake128 right) => !left.Equals(right);
 
-        [BurstDiscard]
+        [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString() =>
              $"{timestamp:X16}-{identifierData:X8}-{additionalData:X4}";
         

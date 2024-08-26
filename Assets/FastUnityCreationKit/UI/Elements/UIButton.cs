@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Elements.Events;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,8 +15,9 @@ namespace FastUnityCreationKit.UI.Elements
     {
         /// <summary>
         /// Reference to the Unity button.
+        /// Should be automatically assigned in the <see cref="Setup"/> method.
         /// </summary>
-        protected Button unityButton;
+        [NotNull] protected Button unityButton = default!;
         
         /// <summary>
         /// Set up of the button.

@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.Core.Events
         /// <summary>
         /// Instance of the event channel.
         /// </summary>
-        public static readonly TSelf Instance = new TSelf();
+        [NotNull] public static readonly TSelf Instance = new TSelf();
         
         /// <summary>
         /// Trigger the event channel.
@@ -24,13 +24,13 @@ namespace FastUnityCreationKit.Core.Events
         /// Register the listener to the event channel.
         /// </summary>
         /// <param name="listener"></param>
-        public static void RegisterEventListener(EventChannelCallback listener) => Instance.RegisterListener(listener);
+        public static void RegisterEventListener([NotNull] EventChannelCallback listener) => Instance.RegisterListener(listener);
         
         /// <summary>
         /// Unregister the listener from the event channel.
         /// </summary>
         /// <param name="listener"></param>
-        public static void UnregisterEventListener(EventChannelCallback listener) => Instance.UnregisterListener(listener);
+        public static void UnregisterEventListener([NotNull] EventChannelCallback listener) => Instance.UnregisterListener(listener);
     }
     
     /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using FastUnityCreationKit.Core.Identification.Abstract.Identifiers;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Identification.Abstract.Identifiable
 {
@@ -14,6 +15,6 @@ namespace FastUnityCreationKit.Core.Identification.Abstract.Identifiable
         /// <summary>
         /// Identifier of the object.
         /// </summary>
-        public TIdentifierType Identifier { get; }
+        [NotNull] public TIdentifierType Identifier { get; }
     }
 }

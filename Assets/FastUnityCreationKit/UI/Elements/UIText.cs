@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 
@@ -13,8 +14,9 @@ namespace FastUnityCreationKit.UI.Elements
     {
         /// <summary>
         /// Reference to the Unity text element.
+        /// Should be automatically assigned in the <see cref="Setup"/> method.
         /// </summary>
-        protected TextMeshProUGUI unityText;
+        [NotNull] protected TextMeshProUGUI unityText = default!;
         
         /// <summary>
         /// Local setup of the text element.
