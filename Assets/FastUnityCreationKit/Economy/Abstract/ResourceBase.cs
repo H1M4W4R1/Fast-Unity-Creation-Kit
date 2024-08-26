@@ -1,10 +1,10 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+using FastUnityCreationKit.Core.Utility;
 using FastUnityCreationKit.Core.Values;
-using FastUnityCreationKit.Economy.Abstract;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace FastUnityCreationKit.Economy
+namespace FastUnityCreationKit.Economy.Abstract
 {
     /// <summary>
     /// Represents a resource in the game.
@@ -16,10 +16,16 @@ namespace FastUnityCreationKit.Economy
     /// <br/><br/>
     /// This is not intended to be used to store inventory items.
     /// </summary>
-    public abstract class ResourceBase<TNumberType>
+    /// <remarks>
+    /// <b>It is not recommended to use this class directly. See <see cref="LocalResource{TNumberType}"/> and <see cref="GlobalResource{TSelf, TNumberType}"/> instead.</b>
+    /// </remarks>
+    public abstract class ResourceBase<TNumberType> : INamed
         where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
     {
-        // TODO: Link resource to its scriptable object configuration file.
+        /// <summary>
+        /// Name of the resource e.g. "Coins", "Wood", "Stone".
+        /// </summary>
+        public abstract string Name { get; }
         
         /// <summary>
         /// Internal storage of the resource.
@@ -205,5 +211,7 @@ namespace FastUnityCreationKit.Economy
         {
             
         }
+
+        
     }
 }
