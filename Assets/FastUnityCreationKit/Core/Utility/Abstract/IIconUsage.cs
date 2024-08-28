@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Represents usage of an icon.
-    /// Used with <see cref="IWithIcon"/> to define how an icon is used.
+    /// Used with <see cref="IWithIcon{TIconUsage}"/> to define how an icon is used.
     /// </summary>
     public interface IIconUsage
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using FastUnityCreationKit.Core.Numerics.Types;
 
 namespace FastUnityCreationKit.Core.Numerics.Abstract
 {

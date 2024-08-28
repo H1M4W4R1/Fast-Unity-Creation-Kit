@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Numerics.Abstract;
+using FastUnityCreationKit.Core.Numerics.Types;
 using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;

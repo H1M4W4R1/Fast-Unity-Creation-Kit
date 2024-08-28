@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Core.Numerics.Abstract
+﻿namespace FastUnityCreationKit.Core.Numerics.Types
 {
     /// <summary>
     /// Marker interface for floating point numbers.

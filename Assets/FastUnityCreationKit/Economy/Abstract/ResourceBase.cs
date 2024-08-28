@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+using FastUnityCreationKit.Core.Numerics.Limits;
 using FastUnityCreationKit.Core.Utility;
 using FastUnityCreationKit.Core.Values;
 using JetBrains.Annotations;
@@ -50,35 +51,35 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Checks if resource has default amount.
         /// </summary>
-        public bool HasDefaultAmount => this is IResourceWithDefaultAmount<TNumberType>;
+        public bool HasDefaultAmount => this is IWithDefaultValue<TNumberType>;
         
         /// <summary>
         /// Checks if resource has upper limit.
         /// </summary>
-        public bool HasMaxLimit => this is IResourceWithMaxLimit<TNumberType>;
+        public bool HasMaxLimit => this is IWithMaxLimit<TNumberType>;
         
         /// <summary>
         /// Checks if resource has lower limit.
         /// </summary>
-        public bool HasMinLimit => this is IResourceWithMinLimit<TNumberType>;
+        public bool HasMinLimit => this is IWithMinLimit<TNumberType>;
         
         /// <summary>
         /// Gets default amount of the resource.
         /// If resource does not have default amount, returns default value of TNumberType.
         /// </summary>
-        public TNumberType DefaultAmount => (this as IResourceWithDefaultAmount<TNumberType>)?.DefaultAmount ?? default;
+        public TNumberType DefaultAmount => (this as IWithDefaultValue<TNumberType>)?.DefaultValue ?? default;
         
         /// <summary>
         /// Gets maximum amount of the resource.
         /// If resource does not have maximum amount, returns default value of TNumberType.
         /// </summary>
-        public TNumberType MaxAmount => (this as IResourceWithMaxLimit<TNumberType>)?.MaxAmount ?? default;
+        public TNumberType MaxAmount => (this as IWithMaxLimit<TNumberType>)?.MaxLimit ?? default;
         
         /// <summary>
         /// Gets minimum amount of the resource.
         /// If resource does not have minimum amount, returns default value of TNumberType.
         /// </summary>
-        public TNumberType MinAmount => (this as IResourceWithMinLimit<TNumberType>)?.MinAmount ?? default;
+        public TNumberType MinAmount => (this as IWithMinLimit<TNumberType>)?.MinLimit ?? default;
         
         /// <summary>
         /// Reinterprets resource to another type.
@@ -155,8 +156,8 @@ namespace FastUnityCreationKit.Economy.Abstract
         {
             // This does not use properties to avoid unnecessary checks.
             // Also, it's safer in case somebody would f-k up something in properties.
-            if (this is IResourceWithDefaultAmount<TNumberType> defaultAmountResource)
-                _storage.SetCurrentValue(defaultAmountResource.DefaultAmount);
+            if (this is IWithDefaultValue<TNumberType> defaultAmountResource)
+                _storage.SetCurrentValue(defaultAmountResource.DefaultValue);
             else
             {
                 // Log warning if resource does not have default amount.
@@ -182,25 +183,25 @@ namespace FastUnityCreationKit.Economy.Abstract
             // Also, it's safer in case somebody would f-k up something in properties.
             
             // Check if resource has upper limit.
-            if(this is IResourceWithMaxLimit<TNumberType> upperLimitedResource)
+            if(this is IWithMaxLimit<TNumberType> upperLimitedResource)
             {
-                double upperLimit = upperLimitedResource.MaxAmount.ToFloat();
+                double upperLimit = upperLimitedResource.MaxLimit.ToFloat();
                 double currentAmount = _storage.CurrentValue.ToFloat();
                 
                 // If current amount is greater than upper limit, set it to upper limit.
                 if (currentAmount > upperLimit)
-                    _storage.SetCurrentValue(upperLimitedResource.MaxAmount);
+                    _storage.SetCurrentValue(upperLimitedResource.MaxLimit);
             }
             
             // Check if resource has lower limit.
-            if(this is IResourceWithMinLimit<TNumberType> lowerLimitedResource)
+            if(this is IWithMinLimit<TNumberType> lowerLimitedResource)
             {
-                double lowerLimit = lowerLimitedResource.MinAmount.ToFloat();
+                double lowerLimit = lowerLimitedResource.MinLimit.ToFloat();
                 double currentAmount = _storage.CurrentValue.ToFloat();
                 
                 // If current amount is less than lower limit, set it to lower limit.
                 if (currentAmount < lowerLimit)
-                    _storage.SetCurrentValue(lowerLimitedResource.MinAmount);
+                    _storage.SetCurrentValue(lowerLimitedResource.MinLimit);
             }
         }
         
