@@ -46,7 +46,7 @@ namespace FastUnityCreationKit.Status
             for (int i = Statuses.Count - 1; i >= 0; i--)
             {
                 // If the status is stackable and has 0 stack count, remove it.
-                if (Statuses[i] is IStackableStatus {StackCount: 0})
+                if (Statuses[i] is IStackableStatus stackableStatus && stackableStatus.StackCount == 0)
                     Statuses.RemoveAt(i);
             }
 
