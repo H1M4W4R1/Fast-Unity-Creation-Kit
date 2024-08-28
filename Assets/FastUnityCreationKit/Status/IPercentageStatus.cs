@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using JetBrains.Annotations;
+using Unity.Mathematics;
 
 namespace FastUnityCreationKit.Status
 {
@@ -16,38 +17,47 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// Triggered when the percentage value reaches 100%.
         /// </summary>
-        public void OnMaxPercentageReached();
+        public void OnMaxPercentageReached([NotNull] IObjectWithStatus objectWithStatus);
         
         /// <summary>
         /// Triggered when the percentage value reaches 0%.
         /// </summary>
-        public void OnMinPercentageReached();
+        public void OnMinPercentageReached([NotNull] IObjectWithStatus objectWithStatus);
         
         /// <summary>
         /// Increases the percentage value by the given amount where 1.0 is 100%.
         /// </summary>
-        public void IncreasePercentage(float amount) => ChangePercentage(amount);
+        public void IncreasePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount) =>
+            ChangePercentage(objectWithStatus, amount);
         
         /// <summary>
         /// Decreases the percentage value by the given amount where 1.0 is 100%.
         /// </summary>
-        public void DecreasePercentage(float amount) => ChangePercentage(-amount);
+        public void DecreasePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount) => 
+            ChangePercentage(objectWithStatus, -amount);
         
         /// <summary>
         /// Increases the percentage value by the given amount.
         /// </summary>
-        private void ChangePercentage(float amount)
+        private void ChangePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount)
         {
             float previousPercentage = Percentage;
             
             // Increase the percentage value by the given amount.
             Percentage += amount;
-            
+
             // Trigger events based on the percentage value.
-            if (Percentage >= 100f && previousPercentage < 100f)
-                OnMaxPercentageReached();
-            else if (Percentage <= 0f && previousPercentage > 0f)
-                OnMinPercentageReached();
+            // Warning: this may trigger multiple times if the percentage is decreased
+            // to minimum value and status is instantly removed from the object.
+            switch (Percentage)
+            {
+                case >= 100f when previousPercentage < 100f:
+                    OnMaxPercentageReached(objectWithStatus);
+                    break;
+                case <= 0f when previousPercentage > 0f:
+                    OnMinPercentageReached(objectWithStatus);
+                    break;
+            }
             
             // Clamp the percentage value between 0 and 100 to prevent graphical issues.
             Percentage = math.clamp(Percentage, 0f, 100f);

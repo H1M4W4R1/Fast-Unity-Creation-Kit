@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Limits;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Status
 {
@@ -21,43 +22,75 @@ namespace FastUnityCreationKit.Status
         public int32 StackCount { get; protected set; }
         
         /// <summary>
+        /// Called when the stack count is increased.
+        /// </summary>
+        public void OnStackCountIncreased([NotNull] IObjectWithStatus objectWithStatus);
+        
+        /// <summary>
+        /// Called when the stack count is decreased.
+        /// </summary>
+        public void OnStackCountDecreased([NotNull] IObjectWithStatus objectWithStatus);
+        
+        /// <summary>
+        /// Called when the stack count reaches the maximum limit.
+        /// This is called each time the stack count is increased and reaches the maximum limit,
+        /// even if it is already at the maximum limit.
+        /// </summary>
+        public void OnMaxStackCountReached([NotNull] IObjectWithStatus objectWithStatus);
+        
+        /// <summary>
+        /// Called when the stack count reaches the minimum limit.
+        /// This is called each time the stack count is decreased and reaches the minimum limit,
+        /// even if it is already at the minimum limit.
+        /// </summary>
+        public void OnMinStackCountReached([NotNull] IObjectWithStatus objectWithStatus);
+
+        /// <summary>
         /// Increases the stack count by the given amount.
         /// </summary>
-        public void IncreaseStackCount(int amount = 1) => ChangeStackCount(amount);
-        
+        public void IncreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
+        {
+            ChangeStackCount(objectWithStatus, amount);
+            OnStackCountIncreased(objectWithStatus);
+        }
+
         /// <summary>
         /// Decreases the stack count by the given amount.
         /// </summary>
-        public void DecreaseStackCount(int amount = 1) => ChangeStackCount(-amount);
-        
+        public void DecreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
+        {
+            ChangeStackCount(objectWithStatus, -amount);
+            OnStackCountDecreased(objectWithStatus);
+        }
+
         /// <summary>
         /// Changes the stack count by the given amount.
         /// You need to call increase/decrease stack count methods instead of this method
         /// events should be manually added after calling method wrappers.
         /// </summary>
-        private void ChangeStackCount(int amount)
+        private void ChangeStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount)
         {
             StackCount += amount;
-            CheckLimits();
+            CheckLimits(objectWithStatus);
         }
 
         /// <summary>
         /// Checks if the stack count is within the limits.
         /// </summary>
-        private void CheckLimits()
+        private void CheckLimits([NotNull] IObjectWithStatus objectWithStatus)
         {
             // Check if the stack count is within the minimum limit.
-            if (this is IWithMinLimit<int32> minLimit)
+            if (this is IWithMinLimit<int32> minLimit && StackCount < minLimit.MinLimit)
             {
-                if (StackCount < minLimit.MinLimit)
-                    StackCount = minLimit.MinLimit;
+                StackCount = minLimit.MinLimit;
+                OnMinStackCountReached(objectWithStatus);
             }
             
             // Check if the stack count is within the maximum limit.
-            if (this is IWithMaxLimit<int32> maxLimit)
+            if (this is IWithMaxLimit<int32> maxLimit && StackCount > maxLimit.MaxLimit)
             {
-                if (StackCount > maxLimit.MaxLimit)
-                    StackCount = maxLimit.MaxLimit;
+                StackCount = maxLimit.MaxLimit;
+                OnMaxStackCountReached(objectWithStatus);
             }
         }
     }

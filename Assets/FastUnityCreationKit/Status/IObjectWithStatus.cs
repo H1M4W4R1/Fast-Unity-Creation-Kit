@@ -7,12 +7,10 @@ namespace FastUnityCreationKit.Status
 {
     /// <summary>
     /// Represents that an object can have specific status.
+    /// This is a marker interface and should be used with a generic type to specify the status type.
+    /// For more reference see <see cref="IObjectWithStatus.IsStatusSupported{T}"/>.
     /// </summary>
-    /// <remarks>
-    /// <see cref="TStatus"/> should be an abstract class or interface that represents the status as
-    /// ...
-    /// </remarks>
-    public interface IObjectWithStatus<TStatus> : IObjectWithStatus
+    public interface IObjectWithStatus<[UsedImplicitly] TStatus> : IObjectWithStatus
         where TStatus : IStatus
     {
     }
@@ -45,20 +43,66 @@ namespace FastUnityCreationKit.Status
             // In reverse order to prevent index out of range exception.
             for (int i = Statuses.Count - 1; i >= 0; i--)
             {
-                // If the status is stackable and has 0 stack count, remove it.
-                if (Statuses[i] is IStackableStatus stackableStatus && stackableStatus.StackCount == 0)
-                    Statuses.RemoveAt(i);
+                IStatus status = Statuses[i];
+
+                // Check if the status is stackable and has 0 stack count.
+                // If not skip to the next status.
+                if (status is not IStackableStatus stackableStatus || stackableStatus.StackCount != 0) continue;
+
+                // Remove if the status is percentage and has 0 percentage.
+                if (status is IPercentageStatus {Percentage: <= math.EPSILON})
+                    RemoveStatus(i);
+                else if (status is not IPercentageStatus)
+                    RemoveStatus(i);
+
+                // Otherwise skip to the next status - stack count is 0 and status still has percentage.
+                // This is to support status with both stack count and percentage.
+                // Don't ask me why you would need that, but it's supported.
             }
 
             // Loop through all statuses and remove the ones that have 0 percentage.
             // In reverse order to prevent index out of range exception.
             for (int i = Statuses.Count - 1; i >= 0; i--)
             {
-                // If the status is percentage and has 0 percentage, remove it.
+                IStatus status = Statuses[i];
+
+                // Check if the status is percentage and has 0 percentage.
                 // Comparing with math.EPSILON to prevent floating point errors.
-                if (Statuses[i] is IPercentageStatus {Percentage: <= math.EPSILON})
-                    Statuses.RemoveAt(i);
+                if (status is not IPercentageStatus {Percentage: <= math.EPSILON} percentageStatus) continue;
+
+                // Check if status is stackable 
+                if (status is IStackableStatus stackableStatus)
+                {
+                    // Check if the stack count is 0.
+                    if (stackableStatus.StackCount == 0)
+                        RemoveStatus(i);
+                    else
+                    {
+                        // Reduce stack count and set percentage to 100%.
+                        stackableStatus.DecreaseStackCount(this, stackableStatus.StackCount);
+                        percentageStatus.IncreasePercentage(this, 1f);
+                    }
+                }
+                else
+                    RemoveStatus(i);
             }
+        }
+
+        /// <summary>
+        /// Removes the status at the given index.
+        /// </summary>
+        private void RemoveStatus(int index)
+        {
+            EnsureInitialized();
+
+            // Check if the index is valid.
+            if (index < 0 || index >= Statuses.Count) return;
+
+            // Remove the status at the given index.
+            Statuses[index].OnStatusRemoved(this);
+
+            // Remove the status from the list.
+            Statuses.RemoveAt(index);
         }
 
         /// <summary>
@@ -101,13 +145,28 @@ namespace FastUnityCreationKit.Status
         {
             EnsureInitialized();
 
+#if UNITY_EDITOR
+            switch (status)
+            {
+                // Check if is stackable or percentage status.
+                case IStackableStatus:
+                    Debug.LogWarning(
+                        "Adding stackable status to the object. Use IncreaseStatusStackCount method instead for better safety.");
+                    break;
+                case IPercentageStatus:
+                    Debug.LogWarning(
+                        "Adding percentage status to the object. Use IncreaseStatusPercentage method instead for better safety.");
+                    break;
+            }
+#endif
+
             // Check if the object already has the status.
             if (HasStatus<TStatusType>())
             {
                 // If status is stackable, increase the stack count.
                 if (status is IStackableStatus stackableStatus)
                 {
-                    stackableStatus.IncreaseStackCount();
+                    stackableStatus.IncreaseStackCount(this);
                     return;
                 }
 
@@ -115,17 +174,36 @@ namespace FastUnityCreationKit.Status
                 if (status is IPercentageStatus percentageStatus)
                 {
                     Debug.LogWarning("The object already has the status. Increasing the percentage to 100%.");
-                    percentageStatus.IncreasePercentage(100f);
+                    percentageStatus.IncreasePercentage(this, 1f);
                     ClearZeroLevelStatuses();
                     return;
                 }
+                
+                // Otherwise, just return as the status is already added.
+                // This is to prevent adding the same status multiple times.
+                // If you want to have multiple instances of the same status,
+                // you need to implement IStackableStatus interface.
+            }
+            else
+            {
+                // Add the status to the list.
+                Statuses.Add(status);
+
+                // Check if the status is stackable and add single stack.
+                if (status is IStackableStatus stackableStatus)
+                    stackableStatus.IncreaseStackCount(this);
+
+                // Check if the status is percentage and set it to 100%.
+                if (status is IPercentageStatus percentageStatus)
+                    percentageStatus.IncreasePercentage(this, 1f);
+
+                status.OnStatusAdded(this);
             }
 
-            // Add the status to the list.
-            Statuses.Add(status);
+            // Clear the statuses that have 0 stack count or 0 percentage.
             ClearZeroLevelStatuses();
         }
-        
+
         /// <summary>
         /// Remove the status of the given type from the object.
         /// </summary>
@@ -138,13 +216,22 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    Statuses.RemoveAt(i);
+                    // Check if status is percentage and trigger the event.
+                    // This prevents logic issues when the status is removed.
+                    // As this is considered to instantly change the status to 0%
+                    // and thus the OnMinPercentageReached event won't be triggered
+                    // automatically as method ChangePercentage is not called.
+                    if (status is IPercentageStatus percentageStatus)
+                        percentageStatus.OnMinPercentageReached(this);
+
+                    // Proceed with removing the status.
+                    RemoveStatus(i);
                     ClearZeroLevelStatuses();
                     return;
                 }
             }
         }
-        
+
         /// <summary>
         /// Decrease the stack count of the status of the given type.
         /// </summary>
@@ -157,7 +244,7 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    status.DecreaseStackCount(amount);
+                    status.DecreaseStackCount(this, amount);
                     ClearZeroLevelStatuses();
                     return;
                 }
@@ -165,10 +252,10 @@ namespace FastUnityCreationKit.Status
 
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
-            newStatus.DecreaseStackCount(amount);
+            newStatus.DecreaseStackCount(this, amount);
             AddStatus(newStatus);
         }
-        
+
         /// <summary>
         /// Increase the stack count of the status of the given type.
         /// </summary>
@@ -181,22 +268,23 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    status.IncreaseStackCount(amount);
+                    status.IncreaseStackCount(this, amount);
                     ClearZeroLevelStatuses();
                     return;
                 }
             }
-            
+
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
-            newStatus.IncreaseStackCount(amount);
+            newStatus.IncreaseStackCount(this, amount);
             AddStatus(newStatus);
         }
-        
+
         /// <summary>
         /// Increase the percentage of the status of the given type.
         /// </summary>
-        public void IncreaseStatusPercentage<TStatusType>(float amount = 1f) where TStatusType : IPercentageStatus, new()
+        public void IncreaseStatusPercentage<TStatusType>(float amount = 1f)
+            where TStatusType : IPercentageStatus, new()
         {
             EnsureInitialized();
 
@@ -205,22 +293,23 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    status.IncreasePercentage(amount);
+                    status.IncreasePercentage(this, amount);
                     ClearZeroLevelStatuses();
                     return;
                 }
             }
-            
+
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
-            newStatus.IncreasePercentage(amount);
+            newStatus.IncreasePercentage(this, amount);
             AddStatus(newStatus);
         }
-        
+
         /// <summary>
         /// Decrease the percentage of the status of the given type.
         /// </summary>
-        public void DecreaseStatusPercentage<TStatusType>(float amount = 1f) where TStatusType : IPercentageStatus, new()
+        public void DecreaseStatusPercentage<TStatusType>(float amount = 1f)
+            where TStatusType : IPercentageStatus, new()
         {
             EnsureInitialized();
 
@@ -229,24 +318,24 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    status.DecreasePercentage(amount);
+                    status.DecreasePercentage(this, amount);
                     ClearZeroLevelStatuses();
                     return;
                 }
             }
-            
+
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
-            newStatus.DecreasePercentage(amount);
+            newStatus.DecreasePercentage(this, amount);
             AddStatus(newStatus);
         }
-        
+
         /// <summary>
         /// Checks if the object supports the given status type.
         /// </summary>
         public bool IsStatusSupported<TStatusType>() where TStatusType : IStatus =>
             this is IObjectWithStatus<TStatusType>;
-        
+
         /// <summary>
         /// Gets the stack count of the status of the given type.
         /// </summary>
@@ -262,7 +351,7 @@ namespace FastUnityCreationKit.Status
 
             return 0;
         }
-        
+
         /// <summary>
         /// Gets the percentage of the status of the given type.
         /// </summary>
@@ -278,6 +367,5 @@ namespace FastUnityCreationKit.Status
 
             return 0f;
         }
-        
     }
 }
