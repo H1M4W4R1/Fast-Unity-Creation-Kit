@@ -51,7 +51,7 @@ namespace FastUnityCreationKit.Status
             // to minimum value and status is instantly removed from the object.
             switch (Percentage)
             {
-                case >= 100f when previousPercentage < 100f:
+                case >= 1f when previousPercentage < 1f:
                     OnMaxPercentageReached(objectWithStatus);
                     break;
                 case <= 0f when previousPercentage > 0f:
@@ -59,8 +59,8 @@ namespace FastUnityCreationKit.Status
                     break;
             }
             
-            // Clamp the percentage value between 0 and 100 to prevent graphical issues.
-            Percentage = math.clamp(Percentage, 0f, 100f);
+            // Clamp the percentage value between 0 and 1 to prevent graphical issues.
+            Percentage = math.clamp(Percentage, 0f, 1f);
         }
         
     }

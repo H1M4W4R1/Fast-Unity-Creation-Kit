@@ -137,7 +137,7 @@ namespace FastUnityCreationKit.Status
 
             return default;
         }
-
+        
         /// <summary>
         /// Add the given status to the object.
         /// </summary>
@@ -203,6 +203,21 @@ namespace FastUnityCreationKit.Status
             // Clear the statuses that have 0 stack count or 0 percentage.
             ClearZeroLevelStatuses();
         }
+        
+        /// <summary>
+        /// Used internally to add the status to the object.
+        /// </summary>
+        private void _AddStatus<TStatusType>([NotNull] TStatusType status) where TStatusType : IStatus
+        {
+            EnsureInitialized();
+
+            // Check if the object already has the status.
+            if (HasStatus<TStatusType>()) return;
+            
+            // Add the status to the list.
+            Statuses.Add(status);
+            status.OnStatusAdded(this);
+        }
 
         /// <summary>
         /// Remove the status of the given type from the object.
@@ -216,13 +231,21 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    // Check if status is percentage and trigger the event.
-                    // This prevents logic issues when the status is removed.
-                    // As this is considered to instantly change the status to 0%
-                    // and thus the OnMinPercentageReached event won't be triggered
-                    // automatically as method ChangePercentage is not called.
+                    // Decrease percentage to 0% if the status is percentage.
+                    // This is to prevent graphical issues and UI errors.
                     if (status is IPercentageStatus percentageStatus)
-                        percentageStatus.OnMinPercentageReached(this);
+                    {
+                        // Decrease the percentage to 0%.
+                        percentageStatus.DecreasePercentage(this, 1f);
+                    }
+                    
+                    // Decrease stack count to 0 if the status is stackable.
+                    // Order of those operations matters as the status may be both stackable and percentage.
+                    if (status is IStackableStatus stackableStatus)
+                    {
+                        // Decrease the stack count to 0.
+                        stackableStatus.DecreaseStackCount(this, stackableStatus.StackCount);
+                    }
 
                     // Proceed with removing the status.
                     RemoveStatus(i);
@@ -253,7 +276,7 @@ namespace FastUnityCreationKit.Status
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
             newStatus.DecreaseStackCount(this, amount);
-            AddStatus(newStatus);
+            _AddStatus(newStatus);
         }
 
         /// <summary>
@@ -277,7 +300,7 @@ namespace FastUnityCreationKit.Status
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
             newStatus.IncreaseStackCount(this, amount);
-            AddStatus(newStatus);
+            _AddStatus(newStatus);
         }
 
         /// <summary>
@@ -301,8 +324,8 @@ namespace FastUnityCreationKit.Status
 
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
+            _AddStatus(newStatus);
             newStatus.IncreasePercentage(this, amount);
-            AddStatus(newStatus);
         }
 
         /// <summary>
@@ -327,7 +350,7 @@ namespace FastUnityCreationKit.Status
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
             newStatus.DecreasePercentage(this, amount);
-            AddStatus(newStatus);
+            _AddStatus(newStatus);
         }
 
         /// <summary>
@@ -366,6 +389,34 @@ namespace FastUnityCreationKit.Status
             }
 
             return 0f;
+        }
+        
+        /// <summary>
+        /// Gets the amount of times the status of the given type is added to the object.
+        /// In case the status is stackable, it will return the total stack count.
+        /// </summary>
+        public int GetAmountOfTimesStatusIsAdded<TStatusType>() where TStatusType : IStatus
+        {
+            EnsureInitialized();
+
+            int count = 0;
+            
+            // Loop through all statuses and check if the object has the status.
+            for (int i = 0; i < Statuses.Count; i++)
+            {
+                // Check if the status is stackable
+                if(Statuses[i] is IStackableStatus stackableStatus and TStatusType)
+                {
+                    count += stackableStatus.StackCount;
+                    continue;
+                }
+                
+                // Check if the status is of the given type
+                if (Statuses[i] is TStatusType)
+                    count++;
+            }
+
+            return count;
         }
     }
 }

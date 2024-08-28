@@ -24,12 +24,12 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// Called when the stack count is increased.
         /// </summary>
-        public void OnStackCountIncreased([NotNull] IObjectWithStatus objectWithStatus);
+        public void OnStackCountIncreased([NotNull] IObjectWithStatus objectWithStatus, int amount);
         
         /// <summary>
         /// Called when the stack count is decreased.
         /// </summary>
-        public void OnStackCountDecreased([NotNull] IObjectWithStatus objectWithStatus);
+        public void OnStackCountDecreased([NotNull] IObjectWithStatus objectWithStatus, int amount);
         
         /// <summary>
         /// Called when the stack count reaches the maximum limit.
@@ -51,7 +51,7 @@ namespace FastUnityCreationKit.Status
         public void IncreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
         {
             ChangeStackCount(objectWithStatus, amount);
-            OnStackCountIncreased(objectWithStatus);
+            OnStackCountIncreased(objectWithStatus, amount);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace FastUnityCreationKit.Status
         public void DecreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
         {
             ChangeStackCount(objectWithStatus, -amount);
-            OnStackCountDecreased(objectWithStatus);
+            OnStackCountDecreased(objectWithStatus, amount);
         }
 
         /// <summary>
