@@ -7,7 +7,7 @@
         /// Used to determine if the object is initialized.
         /// To get this state please use <see cref="IsInitialized"/>
         /// </summary>
-        public bool InternalInitializationStatusStorage { get; protected set; }
+        protected bool InternalInitializationStatusStorage { get; set; }
 
         /// <summary>
         /// Returns true if the object is initialized.
@@ -19,14 +19,9 @@
         }
 
         /// <summary>
-        /// Initializes the object.
-        /// </summary>
-        public void Initialize() => EnsureInitialized();
-        
-        /// <summary>
         /// Internal initialization method.
         /// </summary>
-        protected void _Initialize();
+        protected void OnInitialize();
         
         /// <summary>
         /// Ensures that the object is initialized.
@@ -36,7 +31,7 @@
         {
             if(IsInitialized) return;
             
-            _Initialize();
+            OnInitialize();
             IsInitialized = true;
         }
     }

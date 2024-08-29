@@ -243,7 +243,7 @@ namespace FastUnityCreationKit.Core.Values
         /// <summary>
         /// Internal initialization method.
         /// </summary>
-        void IInitializable._Initialize()
+        void IInitializable.OnInitialize()
         {
             _appliedModifiers ??= new PrioritizedList<IModifier>();
             currentValue = baseValue;

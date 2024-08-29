@@ -19,11 +19,6 @@ namespace FastUnityCreationKit.UI
     /// </remarks>
     public abstract class UIObject : MonoBehaviour, IInitializable
     {
-        /// <summary>
-        /// True if the object has been initialized.
-        /// </summary>
-        public bool IsInitialized => ((IInitializable) this).InternalInitializationStatusStorage;
-        
         /// <inheritdoc/>
         bool IInitializable.InternalInitializationStatusStorage { get; set; }
         
@@ -51,11 +46,11 @@ namespace FastUnityCreationKit.UI
             dataContext = GetDataContext<TDataContext>();
             return dataContext != null;
         }
-        
+
         /// <summary>
         /// Ensures that the object is initialized.
         /// </summary>
-        private void Awake() => ((IInitializable) this).EnsureInitialized();
+        private void Awake() => this.Initialize();
 
         private void OnDestroy()
         {
@@ -72,7 +67,7 @@ namespace FastUnityCreationKit.UI
                 uiObjectWithData.DetachDataContextEvents();
         }
 
-        void IInitializable._Initialize()
+        void IInitializable.OnInitialize()
         {
             // Set up the object
             if (this is IUIObjectWithSetup uiObjectWithSetup)
