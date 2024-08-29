@@ -16,7 +16,9 @@ namespace FastUnityCreationKit.Core.Numerics
     [StructLayout(LayoutKind.Explicit)]
     [BurstCompile]
     [Serializable]
-    public struct int16 : ISignedNumber, ISupportsFloatConversion<int16>
+    public struct int16 : ISignedNumber, ISupportsFloatConversion<int16>, IEquatable<short>, IEquatable<int16>,
+        IEquatable<float>, IEquatable<double>, IEquatable<byte>, IEquatable<int>, IEquatable<uint>, IEquatable<long>,
+        IEquatable<ulong>, IEquatable<sbyte>, IEquatable<ushort>
     {
         /// <summary>
         /// Current value of the number.
@@ -52,5 +54,29 @@ namespace FastUnityCreationKit.Core.Numerics
         public double ToDouble() => _value;
    
         [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
+        
+        public bool Equals(float other) => _value.Equals(other);
+        public bool Equals(double other) => _value.Equals(other);
+        public bool Equals(byte other) => _value.Equals(other);
+        public bool Equals(sbyte other) => _value.Equals(other);
+        public bool Equals(short other) => _value.Equals(other);
+        public bool Equals(ushort other) => _value.Equals(other);
+        public bool Equals(int other) => _value.Equals(other);
+        public bool Equals(uint other) => _value.Equals(other);
+        public bool Equals(long other) => _value.Equals(other);
+        public bool Equals(ulong other) => _value.Equals(other);
+        public bool Equals(int16 other) => _value.Equals(other._value);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(int16 left, short right) => left._value == right;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(int16 left, short right) => left._value != right;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(short left, int16 right) => left == right._value;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(short left, int16 right) => left != right._value;
     }
 }

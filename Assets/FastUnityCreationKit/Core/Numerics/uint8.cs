@@ -16,7 +16,9 @@ namespace FastUnityCreationKit.Core.Numerics
     [StructLayout(LayoutKind.Explicit)]
     [BurstCompile]
     [Serializable]
-    public struct uint8 : IUnsignedNumber, ISupportsFloatConversion<uint8>
+    public struct uint8 : IUnsignedNumber, ISupportsFloatConversion<uint8>, IEquatable<byte>, IEquatable<uint8>,
+        IEquatable<float>, IEquatable<double>, IEquatable<sbyte>, IEquatable<short>, IEquatable<ushort>, IEquatable<int>,
+        IEquatable<uint>, IEquatable<long>, IEquatable<ulong>
     {
         /// <summary>
         /// Current value of the number.
@@ -49,5 +51,29 @@ namespace FastUnityCreationKit.Core.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public double ToDouble() => _value;
 
         [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
+        
+        public bool Equals(float other) => _value.Equals(other);
+        public bool Equals(double other) => _value.Equals(other);
+        public bool Equals(byte other) => _value.Equals(other);
+        public bool Equals(sbyte other) => _value.Equals(other);
+        public bool Equals(short other) => _value.Equals(other);
+        public bool Equals(ushort other) => _value.Equals(other);
+        public bool Equals(int other) => _value.Equals(other);
+        public bool Equals(uint other) => _value.Equals(other);
+        public bool Equals(long other) => _value.Equals(other);
+        public bool Equals(ulong other) => _value.Equals(other);
+        public bool Equals(uint8 other) => _value.Equals(other._value);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(uint8 left, sbyte right) => left._value == right;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(uint8 left, sbyte right) => left._value != right;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(sbyte left, uint8 right) => left == right._value;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(sbyte left, uint8 right) => left != right._value;
     }
 }

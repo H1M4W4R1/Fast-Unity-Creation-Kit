@@ -16,7 +16,9 @@ namespace FastUnityCreationKit.Core.Numerics
     [StructLayout(LayoutKind.Explicit)]
     [BurstCompile]
     [Serializable]
-    public struct int32 : ISignedNumber, ISupportsFloatConversion<int32>
+    public struct int32 : ISignedNumber, ISupportsFloatConversion<int32>, IEquatable<int>, IEquatable<int32>,
+        IEquatable<float>, IEquatable<double>, IEquatable<byte>, IEquatable<sbyte>, IEquatable<short>, IEquatable<ushort>,
+        IEquatable<uint>, IEquatable<long>, IEquatable<ulong>
     {
         /// <summary>
         /// Current value of the number.
@@ -50,42 +52,25 @@ namespace FastUnityCreationKit.Core.Numerics
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double ToDouble() => _value;
-        
-#region OP_ADDITION
-
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int32 Add(in int8 rightHandSide) => _value + rightHandSide;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int32 Add(in int16 rightHandSide) => _value + rightHandSide;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int32 Add(in int32 rightHandSide) => _value + rightHandSide;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int64 Add(in int64 rightHandSide) => _value + rightHandSide;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int32 Add(in uint8 rightHandSide) => _value + rightHandSide;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int32 Add(in uint16 rightHandSide) => _value + rightHandSide;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int64 Add(in uint32 rightHandSide) => (int64) (_value + rightHandSide);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float32 Add(in uint64 rightHandSide) => (float32) ((double) _value + rightHandSide);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float32 Add(in float32 rightHandSide) => _value + rightHandSide;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float64 Add(in float64 rightHandSide) => _value + rightHandSide;
-        
-        #endregion
 
         [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
+        
+        public bool Equals(float other) => _value.Equals(other);
+        public bool Equals(double other) => _value.Equals(other);
+        public bool Equals(byte other) => _value.Equals(other);
+        public bool Equals(sbyte other) => _value.Equals(other);
+        public bool Equals(short other) => _value.Equals(other);
+        public bool Equals(ushort other) => _value.Equals(other);
+        public bool Equals(int other) => _value.Equals(other);
+        public bool Equals(uint other) => _value.Equals(other);
+        public bool Equals(long other) => _value.Equals(other);
+        public bool Equals(ulong other) => _value.Equals(other);
+        public bool Equals(int32 other) => _value.Equals(other._value);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(int32 left, int right) => left._value == right;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(int32 left, int right) => left._value != right;
     }
 }

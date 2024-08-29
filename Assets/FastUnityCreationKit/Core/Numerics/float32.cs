@@ -15,7 +15,10 @@ namespace FastUnityCreationKit.Core.Numerics
     [StructLayout(LayoutKind.Explicit)]
     [BurstCompile]
     [Serializable]
-    public struct float32 : ISignedNumber, ISupportsFloatConversion<float32>, IFloatingPointNumber
+    public struct float32 : ISignedNumber, ISupportsFloatConversion<float32>, IFloatingPointNumber,
+        IEquatable<float>, IEquatable<byte>, IEquatable<sbyte>, IEquatable<short>, IEquatable<ushort>,
+        IEquatable<int>, IEquatable<uint>, IEquatable<long>, IEquatable<ulong>, IEquatable<double>,
+        IEquatable<float32>
     {
         /// <summary>
         /// Current value of the number.
@@ -43,6 +46,28 @@ namespace FastUnityCreationKit.Core.Numerics
         public double ToDouble() => _value;
         
         [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
+        public bool Equals(float other) => _value.Equals(other);
+        public bool Equals(byte other) => _value.Equals(other);
+        public bool Equals(sbyte other) => _value.Equals(other);
+        public bool Equals(short other) => _value.Equals(other);
+        public bool Equals(ushort other) => _value.Equals(other);
+        public bool Equals(int other) => _value.Equals(other);
+        public bool Equals(uint other) => _value.Equals(other);
+        public bool Equals(long other) => _value.Equals(other);
+        public bool Equals(ulong other) => _value.Equals(other);
+        public bool Equals(double other) => _value.Equals(other);
+        public bool Equals(float32 other) => _value.Equals(other._value);
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(float32 left, float right) => left.Equals(right);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(float32 left, float right) => !left.Equals(right);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(float left, float32 right) => right.Equals(left);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(float left, float32 right) => !right.Equals(left);
     }
 }
