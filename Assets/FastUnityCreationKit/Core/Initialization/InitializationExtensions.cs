@@ -3,7 +3,7 @@
     /// <summary>
     /// Extensions for the initialization system.
     /// </summary>
-    public static class Extensions 
+    public static class InitializationExtensions 
     {
         /// <summary>
         /// Initializes the object.

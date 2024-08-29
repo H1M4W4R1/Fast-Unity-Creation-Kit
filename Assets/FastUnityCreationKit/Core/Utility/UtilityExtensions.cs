@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.Core.Utility
     /// It uses <see cref="object"/> as the input type to allow any object to use these functions.
     /// This makes it way easier to handle interface casting in case object implements multiple interfaces.
     /// </summary>
-    public static class Extensions
+    public static class UtilityExtensions
     {
         /// <summary>
         /// Gets the name of the object.

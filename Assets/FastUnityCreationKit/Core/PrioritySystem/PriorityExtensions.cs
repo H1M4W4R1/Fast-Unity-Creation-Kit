@@ -8,7 +8,7 @@ namespace FastUnityCreationKit.Core.PrioritySystem
     /// <summary>
     /// An extension class used to provide priority support to objects.
     /// </summary>
-    public static class Extensions
+    public static class PriorityExtensions
     {
         /// <summary>
         /// Sorts objects in list using their priority.
