@@ -27,9 +27,8 @@ namespace FastUnityCreationKit.Status.Tests
             Assert.GreaterOrEqual(percentage, 1f - math.EPSILON);
             Assert.LessOrEqual(percentage, 1f + math.EPSILON);
             
-            // Assert that the max percentage event was triggered
-            Assert.IsTrue(status.wasMaxPercentageReached);
-            Assert.IsFalse(status.wasMinPercentageReached);
+            // Assert that the max percentage event was triggered once
+            Assert.AreEqual(1, status.wasMaxPercentageReached);
         }
 
         [Test]
@@ -54,11 +53,7 @@ namespace FastUnityCreationKit.Status.Tests
             Assert.LessOrEqual(percentage, 1f + math.EPSILON);
             
             // Assert that the max percentage event was triggered
-            Assert.IsTrue(status.wasMaxPercentageReached);
-            Assert.IsFalse(status.wasMinPercentageReached);
-            
-            // Assert that status was not removed
-            Assert.IsFalse(status.wasStatusRemoved);
+            Assert.AreEqual(1, status.wasMaxPercentageReached);
             
             // Assert that only one status was added
             Assert.AreEqual(1, objectWithStatus.GetAmountOfTimesStatusIsAdded<PercentageStatus>());
@@ -86,11 +81,7 @@ namespace FastUnityCreationKit.Status.Tests
             Assert.LessOrEqual(percentage, 0f + math.EPSILON);
             
             // Assert that the min percentage event was triggered
-            Assert.IsTrue(status.wasMaxPercentageReached);
-            Assert.IsTrue(status.wasMinPercentageReached);
-            
-            // Assert that status was removed
-            Assert.IsTrue(status.wasStatusRemoved);
+            Assert.AreEqual(1, status.wasMinPercentageReached);
             
             // Assert that status no longer exists
             Assert.IsFalse(objectWithStatus.HasStatus<PercentageStatus>());
@@ -117,8 +108,7 @@ namespace FastUnityCreationKit.Status.Tests
             Assert.LessOrEqual(percentage, 0.5f + math.EPSILON);
             
             // Assert that the max percentage event was not triggered
-            Assert.IsFalse(status.wasMaxPercentageReached);
-            Assert.IsFalse(status.wasMinPercentageReached);
+            Assert.AreEqual(0, status.wasMaxPercentageReached);
         }
 
         [Test]
@@ -143,8 +133,7 @@ namespace FastUnityCreationKit.Status.Tests
             Assert.LessOrEqual(percentage, 1f + math.EPSILON);
             
             // Assert that the max percentage event was triggered
-            Assert.IsTrue(status.wasMaxPercentageReached);
-            Assert.IsFalse(status.wasMinPercentageReached);
+            Assert.AreEqual(1, status.wasMaxPercentageReached);
         }
 
         [Test]
@@ -169,11 +158,36 @@ namespace FastUnityCreationKit.Status.Tests
             Assert.LessOrEqual(percentage, 0.25f + math.EPSILON);
           
             // Assert that the min percentage event was not triggered
-            Assert.IsFalse(status.wasMaxPercentageReached);
-            Assert.IsFalse(status.wasMinPercentageReached);
+            Assert.AreEqual(0, status.wasMinPercentageReached);
+            Assert.AreEqual(0, status.wasMaxPercentageReached);
             
             // Assert that status was not removed
-            Assert.IsFalse(status.wasStatusRemoved);
+            Assert.AreEqual(0, status.wasStatusRemoved);
+        }
+
+        [Test]
+        public void IncreasePercentage_IncreasesStatusPercentage_Once_IfLargeValueIsUsed()
+        {
+            // Arrange
+            EntityWithStatus entity = new EntityWithStatus();
+            PercentageStatus status = new PercentageStatus();
+            
+            // Cast to IObjectWithStatus to access the Statuses property
+            IObjectWithStatus objectWithStatus = entity;
+            
+            // Act
+            objectWithStatus.AddStatus(status);
+            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(1000f);
+            
+            // Assert
+            float percentage = status.GetPercentage();
+            
+            // Assert that the percentage is 100%
+            Assert.GreaterOrEqual(percentage, 1f - math.EPSILON);
+            Assert.LessOrEqual(percentage, 1f + math.EPSILON);
+            
+            // Assert that the max percentage event was triggered
+            Assert.AreEqual(1, status.wasMaxPercentageReached);
         }
         
         [Test]
@@ -198,11 +212,11 @@ namespace FastUnityCreationKit.Status.Tests
             Assert.LessOrEqual(percentage, 0.25f + math.EPSILON);
             
             // Assert that the min percentage event was not triggered
-            Assert.IsFalse(status.wasMaxPercentageReached);
-            Assert.IsFalse(status.wasMinPercentageReached);
+            Assert.AreEqual(0, status.wasMinPercentageReached);
+            Assert.AreEqual(0, status.wasMaxPercentageReached);
             
             // Assert that status was not removed
-            Assert.IsFalse(status.wasStatusRemoved);
+            Assert.AreEqual(0, status.wasStatusRemoved);
         }
         
         [Test]
@@ -227,8 +241,34 @@ namespace FastUnityCreationKit.Status.Tests
             Assert.LessOrEqual(percentage, 1f + math.EPSILON);
             
             // Assert that the max percentage event was triggered
-            Assert.IsTrue(status.wasMaxPercentageReached);
-            Assert.IsFalse(status.wasMinPercentageReached);
+            Assert.AreEqual(1, status.wasMaxPercentageReached);
+            Assert.AreEqual(0, status.wasMinPercentageReached);
+        }
+
+        [Test]
+        public void DecreasePercentage_DecreasesPercentage_Once_IfLargeValueIsUsed()
+        {
+            // Arrange
+            EntityWithStatus entity = new EntityWithStatus();
+            PercentageStatus status = new PercentageStatus();
+            
+            // Cast to IObjectWithStatus to access the Statuses property
+            IObjectWithStatus objectWithStatus = entity;
+            
+            // Act
+            objectWithStatus.AddStatus(status);
+            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(0.5f);
+            objectWithStatus.DecreaseStatusPercentage<PercentageStatus>(1000f);
+            
+            // Assert
+            float percentage = status.GetPercentage();
+            
+            // Assert that the percentage is 0%
+            Assert.GreaterOrEqual(percentage, 0f - math.EPSILON);
+            Assert.LessOrEqual(percentage, 0f + math.EPSILON);
+            
+            // Assert that the min percentage event was triggered
+            Assert.AreEqual(1, status.wasMinPercentageReached);
         }
         
         [Test]
@@ -289,7 +329,54 @@ namespace FastUnityCreationKit.Status.Tests
             // Assert that the status was added once
             Assert.AreEqual(1, amount);
         }
-        
+
+        [Test]
+        public void IncreasePercentage_DoesNotTrigger_MaxAmountReachedEvent_MultipleTimes()
+        {
+            // Arrange
+            EntityWithStatus entity = new EntityWithStatus();
+            
+            // Cast to IObjectWithStatus to access the Statuses property
+            IObjectWithStatus objectWithStatus = entity;
+            
+            // Act
+            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(1f);
+            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(1f);
+            
+            // Assert
+            PercentageStatus status = objectWithStatus.GetStatus<PercentageStatus>();
+            
+            // Assert that the max percentage event was triggered once
+            Assert.AreEqual(1, status!.wasMaxPercentageReached);
+            
+            // Assert that the percentage is 100%
+            Assert.GreaterOrEqual(status.GetPercentage(), 1f - math.EPSILON);
+            Assert.LessOrEqual(status.GetPercentage(), 1f + math.EPSILON);
+            
+            // Assert that the status was not removed
+            Assert.AreEqual(0, status.wasStatusRemoved);
+        }
+
+        [Test]
+        public void DecreasePercentage_DoesNotTrigger_MinAmountReachedEvent_WhenStatusDoesNotExist()
+        {
+            // Arrange
+            EntityWithStatus entity = new EntityWithStatus();
+            
+            // Cast to IObjectWithStatus to access the Statuses property
+            IObjectWithStatus objectWithStatus = entity;
+            
+            // Act
+            objectWithStatus.DecreaseStatusPercentage<PercentageStatus>(1f);
+            
+            // Assert
+
+            // Assert that the min percentage event was not triggered
+            Assert.AreEqual(0, entity.statusPercentageReachedZeroTimes);
+            
+            // Assert that status does not exist on the object
+            Assert.IsFalse(objectWithStatus.HasStatus<PercentageStatus>());
+        }
         
     }
 }

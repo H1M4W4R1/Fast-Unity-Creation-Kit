@@ -19,7 +19,9 @@ namespace FastUnityCreationKit.Status.Tests
             objectWithStatus.AddStatus(status);
             
             // Assert
+            Assert.AreEqual(1, status.wasStatusAdded);
             Assert.AreEqual(1, status.CurrentStack);
+            Assert.AreEqual(1, status.wasStackCountChanged);
         }
         
         [Test]
@@ -38,6 +40,7 @@ namespace FastUnityCreationKit.Status.Tests
             
             // Assert
             Assert.AreEqual(2, status.CurrentStack);
+            Assert.AreEqual(2, status.wasStackCountChanged);
         }
         
         [Test]
@@ -52,15 +55,13 @@ namespace FastUnityCreationKit.Status.Tests
             
             // Act
             objectWithStatus.AddStatus(status);
-            objectWithStatus.AddStatus(status);
             objectWithStatus.RemoveStatus<StackableStatus>();
             
             // Assert
             Assert.AreEqual(0, status.CurrentStack);
             
-            // Assert that the status was removed
-            Assert.IsTrue(status.wasStatusRemoved);
-            Assert.IsTrue(status.wasStackCountDecreased);
+            // Assert that the status was removed from the list once
+            Assert.AreEqual(1, status.wasStatusRemoved);
             
             // Assert that the stack count was decreased
             Assert.AreEqual(0, objectWithStatus.GetAmountOfTimesStatusIsAdded<StackableStatus>());
@@ -85,7 +86,8 @@ namespace FastUnityCreationKit.Status.Tests
             
             // Assert
             Assert.AreEqual(2, status.CurrentStack);
-            Assert.IsTrue(status.wasStackCountIncreased);
+            Assert.AreEqual(1, status.wasStatusAdded);
+            Assert.AreEqual(2, status.wasStackCountChanged);
         }
 
         [Test]
@@ -99,17 +101,18 @@ namespace FastUnityCreationKit.Status.Tests
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(2);
+            objectWithStatus.AddStatus(status); // +1
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(2); // +2
             
             // Assert
             Assert.AreEqual(3, status.CurrentStack);
     
             // Assert that the stack count was increased
-            Assert.IsTrue(status.wasStackCountIncreased);
+            // The stack count is increased by 2 so check for 2 events
+            Assert.AreEqual(3, status.wasStackCountChanged);
             
-            // Assert that the status was added
-            Assert.IsTrue(status.wasStatusAdded);
+            // Assert that the status was added once
+            Assert.AreEqual(1, status.wasStatusAdded);
         }
         
         [Test]
@@ -127,7 +130,7 @@ namespace FastUnityCreationKit.Status.Tests
             
             // Assert
             Assert.AreEqual(1, status!.CurrentStack);
-            Assert.IsTrue(status.wasStatusAdded);
+            Assert.AreEqual(1, status.wasStatusAdded);
         }
         
         [Test]
@@ -141,13 +144,13 @@ namespace FastUnityCreationKit.Status.Tests
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(2);
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
+            objectWithStatus.AddStatus(status); // +1
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(2); // +2
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(); // -1
             
             // Assert
             Assert.AreEqual(2, status.CurrentStack);
-            Assert.IsTrue(status.wasStackCountDecreased);
+            Assert.AreEqual(2, status.wasStackCountChanged);
         }
         
         [Test]
@@ -161,18 +164,18 @@ namespace FastUnityCreationKit.Status.Tests
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(3);
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(2);
+            objectWithStatus.AddStatus(status); // +1
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(3); // +3 (+2 due to limit)
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(2); // -2
             
             // Assert
             Assert.AreEqual(1, status.CurrentStack);
     
-            // Assert that the stack count was decreased
-            Assert.IsTrue(status.wasStackCountDecreased);
+            // Assert that the stack count was decreased 
+            Assert.AreEqual(1, status.wasStackCountChanged);
             
             // Assert that the status was added
-            Assert.IsTrue(status.wasStatusAdded);
+            Assert.AreEqual(1, status.wasStatusAdded);
         }
         
         [Test]
@@ -191,7 +194,7 @@ namespace FastUnityCreationKit.Status.Tests
             
             // Assert
             Assert.AreEqual(0, status.CurrentStack);
-            Assert.IsTrue(status.wasStatusRemoved);
+            Assert.AreEqual(1, status.wasStatusRemoved);
         }
         
         [Test]
@@ -211,7 +214,7 @@ namespace FastUnityCreationKit.Status.Tests
             
             // Assert
             Assert.AreEqual(1, status.CurrentStack);
-            Assert.IsFalse(status.wasStatusRemoved);
+            Assert.AreEqual(0, status.wasStatusRemoved);
         }
         
         [Test]
@@ -251,7 +254,7 @@ namespace FastUnityCreationKit.Status.Tests
             Assert.AreEqual(-3, status.CurrentStack);
             
             // Assert that the min stack count was reached
-            Assert.IsTrue(status.wasMinStackCountReached);
+            Assert.AreEqual(1, status.wasMinStackCountReached);
         }
         
         [Test]
@@ -272,7 +275,7 @@ namespace FastUnityCreationKit.Status.Tests
             Assert.AreEqual(3, status.CurrentStack);
             
             // Assert that the max stack count was reached
-            Assert.IsTrue(status.wasMaxStackCountReached);
+            Assert.AreEqual(1, status.wasMaxStackCountReached);
         }
         
         [Test]

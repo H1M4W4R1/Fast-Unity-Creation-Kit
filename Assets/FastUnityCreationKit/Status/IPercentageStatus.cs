@@ -62,6 +62,20 @@ namespace FastUnityCreationKit.Status
             // Clamp the percentage value between 0 and 1 to prevent graphical issues.
             Percentage = math.clamp(Percentage, 0f, 1f);
         }
-        
+
+        /// <summary>
+        /// Sets the percentage value to the given value.
+        /// </summary>
+        internal void SetPercentage([NotNull] IObjectWithStatus obj, float amount)
+        {
+            float previousPercentage = Percentage;
+            Percentage = amount;
+            
+            if(previousPercentage < amount && amount >= 1f)
+                OnMaxPercentageReached(obj);
+            else if(previousPercentage > amount && amount <= 0f)
+                OnMinPercentageReached(obj);
+            
+        }
     }
 }

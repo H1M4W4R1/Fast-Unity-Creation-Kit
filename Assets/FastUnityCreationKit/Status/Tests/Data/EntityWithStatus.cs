@@ -7,6 +7,8 @@ namespace FastUnityCreationKit.Status.Tests.Data
     /// </summary>
     public sealed class EntityWithStatus : IObjectWithStatus<RegularStatus>
     {
+        public int statusPercentageReachedZeroTimes;
+        
         /// <summary>
         /// Internal list of statuses.
         /// </summary>

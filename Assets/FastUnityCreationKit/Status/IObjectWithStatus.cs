@@ -75,13 +75,11 @@ namespace FastUnityCreationKit.Status
                 {
                     // Check if the stack count is 0.
                     if (stackableStatus.StackCount == 0)
+                    if (stackableStatus.StackCount == 0)
                         RemoveStatus(i);
-                    else
-                    {
-                        // Reduce stack count and set percentage to 100%.
-                        stackableStatus.DecreaseStackCount(this, stackableStatus.StackCount);
-                        percentageStatus.IncreasePercentage(this, 1f);
-                    }
+                    
+                    // Alternative should be handled automatically
+                    // by percentage change events.
                 }
                 else
                     RemoveStatus(i);
@@ -163,19 +161,21 @@ namespace FastUnityCreationKit.Status
             // Check if the object already has the status.
             if (HasStatus<TStatusType>())
             {
-                // If status is stackable, increase the stack count.
-                if (status is IStackableStatus stackableStatus)
-                {
-                    stackableStatus.IncreaseStackCount(this);
-                    return;
-                }
-
                 // If status is percentage, set the percentage to 100%.
                 if (status is IPercentageStatus percentageStatus)
                 {
                     Debug.LogWarning("The object already has the status. Increasing the percentage to 100%.");
-                    percentageStatus.IncreasePercentage(this, 1f);
+                    percentageStatus.SetPercentage(this, 1f);
                     ClearZeroLevelStatuses();
+                    return;
+                }
+                // If status is stackable, increase the stack count.
+                // This needs to be done after percentage check
+                // as the percentage status might be stackable and thus
+                // the stack count would be increased multiple times.
+                else if (status is IStackableStatus stackableStatus)
+                {
+                    stackableStatus.IncreaseStackCount(this);
                     return;
                 }
                 
@@ -189,13 +189,16 @@ namespace FastUnityCreationKit.Status
                 // Add the status to the list.
                 Statuses.Add(status);
 
-                // Check if the status is stackable and add single stack.
-                if (status is IStackableStatus stackableStatus)
-                    stackableStatus.IncreaseStackCount(this);
-
                 // Check if the status is percentage and set it to 100%.
+                // This should be done before stackable status check
+                // as the percentage status might be stackable and thus
+                // the stack count would be increased multiple times.
                 if (status is IPercentageStatus percentageStatus)
-                    percentageStatus.IncreasePercentage(this, 1f);
+                    _IncreasePercentage(percentageStatus, 1f);
+                
+                // Check if the status is stackable and add single stack.
+                else if (status is IStackableStatus stackableStatus)
+                    stackableStatus.IncreaseStackCount(this);
 
                 status.OnStatusAdded(this);
             }
@@ -231,22 +234,26 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    // Decrease percentage to 0% if the status is percentage.
-                    // This is to prevent graphical issues and UI errors.
-                    if (status is IPercentageStatus percentageStatus)
+                    // Support for stackable percentage status
+                    // This needs to be done in a loop to ensure that all stacks are removed and
+                    // all events are triggered.
+                    if (status is IStackablePercentageStatus stackablePercentageStatus)
                     {
-                        // Decrease the percentage to 0%.
-                        percentageStatus.DecreasePercentage(this, 1f);
+                        // When stack count is greater than zero or percentage is greater than zero
+                        while (stackablePercentageStatus.StackCount > 0 || stackablePercentageStatus.Percentage > 0)
+                            _DecreasePercentage(stackablePercentageStatus, stackablePercentageStatus.Percentage);
+                        
+                        // Now status should have 0 stack count and 0 percentage
                     }
                     
+                    // Decrease percentage to 0% if the status is percentage.
+                    else if (status is IPercentageStatus percentageStatus)
+                        percentageStatus.DecreasePercentage(this, 1f);
+                    
                     // Decrease stack count to 0 if the status is stackable.
-                    // Order of those operations matters as the status may be both stackable and percentage.
-                    if (status is IStackableStatus stackableStatus)
-                    {
-                        // Decrease the stack count to 0.
+                    else if (status is IStackableStatus stackableStatus)
                         stackableStatus.DecreaseStackCount(this, stackableStatus.StackCount);
-                    }
-
+                    
                     // Proceed with removing the status.
                     RemoveStatus(i);
                     ClearZeroLevelStatuses();
@@ -316,7 +323,7 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    status.IncreasePercentage(this, amount);
+                    _IncreasePercentage(status, amount);
                     ClearZeroLevelStatuses();
                     return;
                 }
@@ -325,7 +332,54 @@ namespace FastUnityCreationKit.Status
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
             _AddStatus(newStatus);
-            newStatus.IncreasePercentage(this, amount);
+            _IncreasePercentage(newStatus, amount);
+        }
+
+        private void _IncreasePercentage([NotNull] IPercentageStatus status, float amount)
+        {
+            while (true)
+            {
+                // Check if status is stackable
+                if (status is IStackableStatus stackableStatus)
+                {
+                    // Compute difference to 100%
+                    float difference = 1f - status.Percentage;
+
+                    // If the percentage is 100%, increase the stack count and set the percentage to 0%.
+                    if (amount >= difference)
+                    {
+                        // Increase percentage by the remaining amount.
+                        status.IncreasePercentage(this, difference);
+                        
+                        // Stack count and percentage should be set to ++ and 0% respectively
+                        // using automated events, this is kept here for reference of events
+                        // that happen in background.
+                        //
+                        // stackableStatus.IncreaseStackCount(this);
+                        // status.SetPercentage(0f);
+
+                        // Decrease the amount by the remaining percentage.
+                        amount -= difference;
+
+                        // If the amount is still greater than 0, increase the percentage.
+                        if (amount > 0f) continue;
+                    }
+                    else
+                    {
+                        // Increase the percentage by the given amount.
+                        status.IncreasePercentage(this, amount);
+                        ClearZeroLevelStatuses();
+                        return;
+                    }
+
+                    return;
+                }
+
+                // Increase the percentage value by the given amount.
+                status.IncreasePercentage(this, amount);
+                ClearZeroLevelStatuses();
+                break;
+            }
         }
 
         /// <summary>
@@ -341,7 +395,7 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    status.DecreasePercentage(this, amount);
+                    _DecreasePercentage(status, amount);
                     ClearZeroLevelStatuses();
                     return;
                 }
@@ -349,8 +403,55 @@ namespace FastUnityCreationKit.Status
 
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
-            newStatus.DecreasePercentage(this, amount);
             _AddStatus(newStatus);
+            _DecreasePercentage(newStatus, amount);
+        }
+        
+        private void _DecreasePercentage([NotNull] IPercentageStatus status, float amount)
+        {
+            while (true)
+            {
+                // Check if status is stackable
+                if (status is IStackableStatus stackableStatus)
+                {
+                    // Compute difference to 0%
+                    float difference = status.Percentage;
+
+                    // If the percentage is 0%, decrease the stack count and set the percentage to 100%.
+                    if (amount >= difference)
+                    {
+                        // Decrease percentage by the remaining amount.
+                        status.DecreasePercentage(this, difference);
+                        
+                        // Stack count and percentage should be set to -- and 100% respectively
+                        // using automated events, this is kept here for reference of events
+                        // that happen in background.
+                        //
+                        // stackableStatus.DecreaseStackCount(this);
+                        // status.SetPercentage(1f);
+
+                        // Decrease the amount by the remaining percentage.
+                        amount -= difference;
+
+                        // If the amount is still greater than 0, decrease the percentage.
+                        if (amount > 0f) continue;
+                    }
+                    else
+                    {
+                        // Decrease the percentage by the given amount.
+                        status.DecreasePercentage(this, amount);
+                        ClearZeroLevelStatuses();
+                        return;
+                    }
+
+                    return;
+                }
+
+                // Decrease the percentage value by the given amount.
+                status.DecreasePercentage(this, amount);
+                ClearZeroLevelStatuses();
+                break;
+            }
         }
 
         /// <summary>

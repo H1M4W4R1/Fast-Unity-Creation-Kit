@@ -22,14 +22,9 @@ namespace FastUnityCreationKit.Status
         public int32 StackCount { get; protected set; }
         
         /// <summary>
-        /// Called when the stack count is increased.
+        /// Called when the stack count is changes.
         /// </summary>
-        public void OnStackCountIncreased([NotNull] IObjectWithStatus objectWithStatus, int amount);
-        
-        /// <summary>
-        /// Called when the stack count is decreased.
-        /// </summary>
-        public void OnStackCountDecreased([NotNull] IObjectWithStatus objectWithStatus, int amount);
+        public void OnStackCountChanged([NotNull] IObjectWithStatus objectWithStatus, int amount);
         
         /// <summary>
         /// Called when the stack count reaches the maximum limit.
@@ -50,8 +45,10 @@ namespace FastUnityCreationKit.Status
         /// </summary>
         public void IncreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
         {
+            int currentStackCount = StackCount;
             ChangeStackCount(objectWithStatus, amount);
-            OnStackCountIncreased(objectWithStatus, amount);
+            int change = StackCount - currentStackCount;
+            OnStackCountChanged(objectWithStatus, change);
         }
 
         /// <summary>
@@ -59,8 +56,10 @@ namespace FastUnityCreationKit.Status
         /// </summary>
         public void DecreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
         {
+            int currentStackCount = StackCount;
             ChangeStackCount(objectWithStatus, -amount);
-            OnStackCountDecreased(objectWithStatus, amount);
+            int change = StackCount - currentStackCount;
+            OnStackCountChanged(objectWithStatus, change);
         }
 
         /// <summary>
