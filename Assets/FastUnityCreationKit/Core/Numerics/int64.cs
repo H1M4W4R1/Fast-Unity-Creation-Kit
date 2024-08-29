@@ -16,9 +16,9 @@ namespace FastUnityCreationKit.Core.Numerics
     [StructLayout(LayoutKind.Explicit)]
     [BurstCompile]
     [Serializable]
-    public struct int64 : ISignedNumber, ISupportsFloatConversion<int64>, IEquatable<long>, IEquatable<int64>,
-        IEquatable<float>, IEquatable<double>, IEquatable<byte>, IEquatable<sbyte>, IEquatable<short>, IEquatable<ushort>,
-        IEquatable<int>, IEquatable<uint>, IEquatable<ulong>
+    public struct int64 : ISignedNumber, INumber<long>, ISupportsFloatConversion<int64>, IEquatable<int64>,
+        IEquatable<float>, IEquatable<double>, IEquatable<byte>, IEquatable<sbyte>, IEquatable<short>,
+        IEquatable<ushort>, IEquatable<int>, IEquatable<uint>, IEquatable<ulong>
     {
         /// <summary>
         /// Current value of the number.
@@ -26,6 +26,12 @@ namespace FastUnityCreationKit.Core.Numerics
         [FieldOffset(0)]
         [SerializeField]
         private long _value;
+
+        long INumber<long>.Value
+        {
+            get => _value;
+            set => _value = value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe implicit operator int64(long number) => *(int64*) &number;
@@ -35,26 +41,24 @@ namespace FastUnityCreationKit.Core.Numerics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator float32(int64 number) => number._value;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator float64(int64 number) => number._value;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int64 FromFloat(float value) =>
             _value = (long) math.clamp(value, long.MinValue, long.MaxValue);
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int64 FromDouble(double value) 
+        public int64 FromDouble(double value)
             => _value = (long) math.clamp(value, long.MinValue, long.MaxValue);
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float ToFloat() => _value;
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double ToDouble() => _value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public float ToFloat() => _value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public double ToDouble() => _value;
 
         [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
-        
+
         public bool Equals(float other) => _value.Equals(other);
         public bool Equals(double other) => _value.Equals(other);
         public bool Equals(byte other) => _value.Equals(other);
@@ -66,17 +70,40 @@ namespace FastUnityCreationKit.Core.Numerics
         public bool Equals(long other) => _value.Equals(other);
         public bool Equals(ulong other) => _value.Equals(other);
         public bool Equals(int64 other) => _value.Equals(other._value);
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(int64 left, long right) => left._value == right;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(int64 left, long right) => left._value != right;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(long left, int64 right) => left == right._value;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(long left, int64 right) => left != right._value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object obj)
+        {
+            return obj switch
+            {
+                float32 number => Equals(number),
+                float number => Equals(number),
+                byte number => Equals(number),
+                sbyte number => Equals(number),
+                short number => Equals(number),
+                ushort number => Equals(number),
+                int number => Equals(number),
+                uint number => Equals(number),
+                long number => Equals(number),
+                ulong number => Equals(number),
+                double number => Equals(number),
+                _ => false
+            };
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public override int GetHashCode() => _value.GetHashCode();
     }
 }

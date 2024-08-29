@@ -16,9 +16,9 @@ namespace FastUnityCreationKit.Core.Numerics
     [StructLayout(LayoutKind.Explicit)]
     [BurstCompile]
     [Serializable]
-    public struct uint64 : IUnsignedNumber, ISupportsFloatConversion<uint64>, IEquatable<ulong>, IEquatable<uint64>,
-        IEquatable<float>, IEquatable<double>, IEquatable<byte>, IEquatable<sbyte>, IEquatable<short>, IEquatable<ushort>,
-        IEquatable<int>, IEquatable<uint>, IEquatable<long>
+    public struct uint64 : IUnsignedNumber, INumber<ulong>, ISupportsFloatConversion<uint64>, IEquatable<uint64>,
+        IEquatable<float>, IEquatable<double>, IEquatable<byte>, IEquatable<sbyte>, IEquatable<short>,
+        IEquatable<ushort>, IEquatable<int>, IEquatable<uint>, IEquatable<long>
     {
         /// <summary>
         /// Current value of the number.
@@ -26,6 +26,12 @@ namespace FastUnityCreationKit.Core.Numerics
         [FieldOffset(0)]
         [SerializeField]
         private ulong _value;
+
+        ulong INumber<ulong>.Value
+        {
+            get => _value;
+            set => _value = value;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe implicit operator uint64(ulong number) => *(uint64*) &number;
@@ -44,17 +50,15 @@ namespace FastUnityCreationKit.Core.Numerics
             _value = (ulong) math.clamp(value, ulong.MinValue, ulong.MaxValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint64 FromDouble(double value) => 
+        public uint64 FromDouble(double value) =>
             _value = (ulong) math.clamp(value, ulong.MinValue, ulong.MaxValue);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float ToFloat() => _value;
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double ToDouble() => _value;
-        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public float ToFloat() => _value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public double ToDouble() => _value;
+
         [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
-        
+
         public bool Equals(float other) => _value.Equals(other);
         public bool Equals(double other) => _value.Equals(other);
         public bool Equals(byte other) => _value.Equals(other);
@@ -66,17 +70,40 @@ namespace FastUnityCreationKit.Core.Numerics
         public bool Equals(long other) => _value.Equals(other);
         public bool Equals(ulong other) => _value.Equals(other);
         public bool Equals(uint64 other) => _value.Equals(other._value);
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(uint64 left, ulong right) => left._value == right;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(uint64 left, ulong right) => left._value != right;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(ulong left, uint64 right) => left == right._value;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(ulong left, uint64 right) => left != right._value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object obj)
+        {
+            return obj switch
+            {
+                float32 number => Equals(number),
+                float number => Equals(number),
+                byte number => Equals(number),
+                sbyte number => Equals(number),
+                short number => Equals(number),
+                ushort number => Equals(number),
+                int number => Equals(number),
+                uint number => Equals(number),
+                long number => Equals(number),
+                ulong number => Equals(number),
+                double number => Equals(number),
+                _ => false
+            };
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public override int GetHashCode() => _value.GetHashCode();
     }
 }
