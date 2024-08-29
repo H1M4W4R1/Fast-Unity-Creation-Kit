@@ -4,7 +4,8 @@ using FastUnityCreationKit.Status.Enums;
 
 namespace FastUnityCreationKit.Status.Tests.Data
 {
-    public sealed class StackableStatus : IStackableStatus, IWithMaxLimit<int32>, IWithMinLimit<int32>
+    public sealed class MultipleNotificationStackableStatus : IStackableStatus, IWithMaxLimit<int32>,
+        IWithMinLimit<int32>
     {
         public int wasStatusAdded;
         public int wasStatusRemoved;
@@ -24,7 +25,12 @@ namespace FastUnityCreationKit.Status.Tests.Data
 
         int32 IStackableStatus.StackCount { get; set; }
 
-        public MaxStackLimitReachedNotificationMode MaxStackLimitReachedNotificationMode => MaxStackLimitReachedNotificationMode.Once;
+        MaxStackLimitReachedNotificationMode IStackableStatus.MaxStackLimitReachedNotificationMode =>
+            MaxStackLimitReachedNotificationMode.EveryTime;
+
+        MinStackLimitReachedNotificationMode IStackableStatus.MinStackLimitReachedNotificationMode =>
+            MinStackLimitReachedNotificationMode.EveryTime;
+
 
         public void OnStackCountChanged(IObjectWithStatus objectWithStatus, int amount)
         {

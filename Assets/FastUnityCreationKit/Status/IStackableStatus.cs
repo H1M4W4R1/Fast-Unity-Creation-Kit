@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Limits;
+using FastUnityCreationKit.Status.Enums;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Status
@@ -20,6 +21,18 @@ namespace FastUnityCreationKit.Status
         /// Number of times this status is stacked on an object.
         /// </summary>
         public int32 StackCount { get; protected set; }
+
+        /// <summary>
+        /// Type of notification when the maximum stack count is reached.
+        /// See <see cref="MaxStackLimitReachedNotificationMode"/> for more information.
+        /// </summary>
+        public MaxStackLimitReachedNotificationMode MaxStackLimitReachedNotificationMode => MaxStackLimitReachedNotificationMode.Once;
+        
+        /// <summary>
+        /// Type of notification when the minimum stack count is reached.
+        /// See <see cref="MinStackLimitReachedNotificationMode"/> for more information.
+        /// </summary>
+        public MinStackLimitReachedNotificationMode MinStackLimitReachedNotificationMode => MinStackLimitReachedNotificationMode.Once;
         
         /// <summary>
         /// Called when the stack count is changes.
@@ -40,13 +53,18 @@ namespace FastUnityCreationKit.Status
         /// </summary>
         public void OnMinStackCountReached([NotNull] IObjectWithStatus objectWithStatus);
 
+        
+        
         /// <summary>
         /// Increases the stack count by the given amount.
         /// </summary>
         public void IncreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
         {
             int currentStackCount = StackCount;
-            ChangeStackCount(objectWithStatus, amount);
+            
+            for (int times = 0; times < amount; times++)
+                ChangeStackCount(objectWithStatus, 1);
+            
             int change = StackCount - currentStackCount;
             OnStackCountChanged(objectWithStatus, change);
         }
@@ -57,7 +75,9 @@ namespace FastUnityCreationKit.Status
         public void DecreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
         {
             int currentStackCount = StackCount;
-            ChangeStackCount(objectWithStatus, -amount);
+            for (int times = 0; times < amount; times++)
+                ChangeStackCount(objectWithStatus, -1);
+            
             int change = StackCount - currentStackCount;
             OnStackCountChanged(objectWithStatus, change);
         }
@@ -69,27 +89,41 @@ namespace FastUnityCreationKit.Status
         /// </summary>
         private void ChangeStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount)
         {
+            // Acquire the previous stack count before changing it.
+            int previousStackCount = StackCount;
+            
+            // Change the stack count.
             StackCount += amount;
-            CheckLimits(objectWithStatus);
+            
+            // Check if the stack count is within the limits.
+            CheckLimits(objectWithStatus, previousStackCount);
         }
 
         /// <summary>
         /// Checks if the stack count is within the limits.
         /// </summary>
-        private void CheckLimits([NotNull] IObjectWithStatus objectWithStatus)
+        private void CheckLimits([NotNull] IObjectWithStatus objectWithStatus, int previousStackCount)
         {
             // Check if the stack count is within the minimum limit.
-            if (this is IWithMinLimit<int32> minLimit && StackCount < minLimit.MinLimit)
+            if (this is IWithMinLimit<int32> minLimit && StackCount <= minLimit.MinLimit)
             {
                 StackCount = minLimit.MinLimit;
-                OnMinStackCountReached(objectWithStatus);
+                
+                // Check if the stack count is changed.
+                // This is to prevent calling the event multiple times when the stack count is already at the minimum limit.
+                if(previousStackCount != StackCount || MaxStackLimitReachedNotificationMode != MaxStackLimitReachedNotificationMode.Once)
+                    OnMinStackCountReached(objectWithStatus);
             }
             
             // Check if the stack count is within the maximum limit.
-            if (this is IWithMaxLimit<int32> maxLimit && StackCount > maxLimit.MaxLimit)
+            if (this is IWithMaxLimit<int32> maxLimit && StackCount >= maxLimit.MaxLimit)
             {
                 StackCount = maxLimit.MaxLimit;
-                OnMaxStackCountReached(objectWithStatus);
+                
+                // Check if the stack count is changed.
+                // This is to prevent calling the event multiple times when the stack count is already at the maximum limit.
+                if(previousStackCount != StackCount || MaxStackLimitReachedNotificationMode != MaxStackLimitReachedNotificationMode.Once)
+                    OnMaxStackCountReached(objectWithStatus);
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace FastUnityCreationKit.Status.Tests.Data
 {
-    public class PercentageStatus : IPercentageStatus
+    public sealed class PercentageStatus : IPercentageStatus
     {
         float IPercentageStatus.Percentage { get; set; }
         

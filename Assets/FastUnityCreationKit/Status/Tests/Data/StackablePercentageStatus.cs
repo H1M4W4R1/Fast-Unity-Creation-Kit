@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Numerics;
+using FastUnityCreationKit.Status.Enums;
 
 namespace FastUnityCreationKit.Status.Tests.Data
 {
@@ -9,7 +10,7 @@ namespace FastUnityCreationKit.Status.Tests.Data
         public int stackCountChanged = 0;
         public int maxStackCountReached = 0;
         public int minStackCountReached = 0;
-        
+
         public void OnStatusAdded(IObjectWithStatus objectWithStatus)
         {
             statusWasAdded++;
@@ -23,6 +24,8 @@ namespace FastUnityCreationKit.Status.Tests.Data
         float IPercentageStatus.Percentage { get; set; }
 
         int32 IStackableStatus.StackCount { get; set; }
+
+        public MaxStackLimitReachedNotificationMode MaxStackLimitReachedNotificationMode => MaxStackLimitReachedNotificationMode.Once;
 
         public void OnStackCountChanged(IObjectWithStatus objectWithStatus, int amount)
         {
