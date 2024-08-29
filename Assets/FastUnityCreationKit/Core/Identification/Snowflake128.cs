@@ -19,15 +19,15 @@ namespace FastUnityCreationKit.Core.Identification
     /// <li> 8 bits representing that identifier was created</li>
     /// </ul>
     /// </summary>
-    [BurstCompile] [StructLayout(LayoutKind.Explicit)]
-    public struct Snowflake128 : IUniqueIdentifier, IEquatable<Snowflake128>
+    [StructLayout(LayoutKind.Explicit)]
+    public readonly struct Snowflake128 : IUniqueIdentifier, IEquatable<Snowflake128>
     {
-        [FieldOffset(0)] public v128 vectorized;
-        [FieldOffset(0)] public long timestamp;
-        [FieldOffset(8)] public uint identifierData;
-        [FieldOffset(12)] public ushort additionalData;
-        [FieldOffset(14)] public byte reserved;
-        [FieldOffset(15)] public byte created;
+        [FieldOffset(0)] public readonly v128 vectorized;
+        [FieldOffset(0)] public readonly long timestamp;
+        [FieldOffset(8)] public readonly uint identifierData;
+        [FieldOffset(12)] public readonly ushort additionalData;
+        [FieldOffset(14)] public readonly byte reserved;
+        [FieldOffset(15)] public readonly byte created;
 
         /// <inheritdoc/>
         public bool IsCreated => created == 1;
@@ -66,7 +66,7 @@ namespace FastUnityCreationKit.Core.Identification
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Snowflake128 left, Snowflake128 right) => !left.Equals(right);
 
-        [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString() =>
              $"{timestamp:X16}-{identifierData:X8}-{additionalData:X4}";
         
