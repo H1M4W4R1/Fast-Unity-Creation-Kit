@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Status.Tests.Data
+﻿using FastUnityCreationKit.Status;
+
+namespace FastUnityCreationKit.Tests.Status.Data
 {
     /// <summary>
     /// Represents a regular status that does not have any additional properties.

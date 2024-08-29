@@ -1,7 +1,8 @@
-﻿using FastUnityCreationKit.Status.Tests.Data;
+﻿using FastUnityCreationKit.Status;
+using FastUnityCreationKit.Tests.Status.Data;
 using NUnit.Framework;
 
-namespace FastUnityCreationKit.Status.Tests
+namespace FastUnityCreationKit.Tests.Status
 {
     public class StackableStatusTests
     {

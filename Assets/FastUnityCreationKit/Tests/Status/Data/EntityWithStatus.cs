@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using FastUnityCreationKit.Status;
 
-namespace FastUnityCreationKit.Status.Tests.Data
+namespace FastUnityCreationKit.Tests.Status.Data
 {
     /// <summary>
     /// Represents an entity that has a status.

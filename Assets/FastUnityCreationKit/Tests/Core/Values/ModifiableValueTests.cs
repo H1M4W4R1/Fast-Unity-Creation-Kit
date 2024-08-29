@@ -1,14 +1,13 @@
 ﻿// ReSharper disable file ConditionIsAlwaysTrueOrFalse
 // ReSharper disable file ConvertTypeCheckToNullCheck
 
-using System;
 using FastUnityCreationKit.Core.Initialization;
 using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Values.Abstract;
-using FastUnityCreationKit.Core.Values.Tests.Data;
+using FastUnityCreationKit.Tests.Core.Values.Data;
 using NUnit.Framework;
 
-namespace FastUnityCreationKit.Core.Values.Tests
+namespace FastUnityCreationKit.Tests.Core.Values
 {
     [TestFixture]
     public class ModifiableValueTests

@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Status.Tests.Data
+﻿using FastUnityCreationKit.Status;
+
+namespace FastUnityCreationKit.Tests.Status.Data
 {
     public sealed class PercentageStatus : IPercentageStatus
     {

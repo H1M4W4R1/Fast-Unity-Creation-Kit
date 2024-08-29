@@ -1,7 +1,8 @@
 ﻿using FastUnityCreationKit.Core.Numerics;
+using FastUnityCreationKit.Status;
 using FastUnityCreationKit.Status.Enums;
 
-namespace FastUnityCreationKit.Status.Tests.Data
+namespace FastUnityCreationKit.Tests.Status.Data
 {
     public sealed class StackablePercentageStatus : IStackablePercentageStatus
     {

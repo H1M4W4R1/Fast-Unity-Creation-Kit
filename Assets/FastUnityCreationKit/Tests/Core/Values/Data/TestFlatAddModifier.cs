@@ -1,7 +1,7 @@
 ﻿using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Values.Modifiers;
 
-namespace FastUnityCreationKit.Core.Values.Tests.Data
+namespace FastUnityCreationKit.Tests.Core.Values.Data
 {
     public sealed class TestFlatAddModifier : FlatAddModifier<float32>
     {
