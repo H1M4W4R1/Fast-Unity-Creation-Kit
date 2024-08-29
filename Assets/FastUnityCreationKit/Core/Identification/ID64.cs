@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Identification.Abstract.Identifiers;
+using FastUnityCreationKit.Core.Numerics;
 using Unity.Burst;
 using Unity.Mathematics;
 
@@ -12,7 +13,7 @@ namespace FastUnityCreationKit.Core.Identification
     /// </summary>
     [BurstCompile]
     [StructLayout(LayoutKind.Explicit)]
-    public readonly struct ID64 : IIdentifier, IEquatable<ID64>
+    public readonly struct ID64 : INumberIdentifier<uint64>, IEquatable<ID64>
     {
         [FieldOffset(0)] public readonly uint4 vectorized; // 16B
         
@@ -52,5 +53,8 @@ namespace FastUnityCreationKit.Core.Identification
 
         [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString() => value.ToString();
+        
+        /// <inheritdoc/>
+        public uint64 Value => value;
     }
 }

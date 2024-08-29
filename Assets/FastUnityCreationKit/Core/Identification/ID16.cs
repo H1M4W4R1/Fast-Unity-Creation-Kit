@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Identification.Abstract.Identifiers;
+using FastUnityCreationKit.Core.Numerics;
 using Unity.Burst;
 
 namespace FastUnityCreationKit.Core.Identification
@@ -10,7 +11,7 @@ namespace FastUnityCreationKit.Core.Identification
     /// Represents 16-bit non-unique identifier.
     /// </summary>
     [BurstCompile] [StructLayout(LayoutKind.Explicit)]
-    public readonly struct ID16 : IIdentifier, IEquatable<ID16>
+    public readonly struct ID16 : INumberIdentifier<uint16>, IEquatable<ID16>
     {
         [FieldOffset(0)] public readonly ushort value;
         [FieldOffset(2)] public readonly byte isCreated;
@@ -47,5 +48,8 @@ namespace FastUnityCreationKit.Core.Identification
 
         [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString() => value.ToString();
+        
+        /// <inheritdoc/>
+        public uint16 Value => value;
     }
 }
