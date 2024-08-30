@@ -4,6 +4,7 @@ using FastUnityCreationKit.Core.Initialization;
 using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.PrioritySystem.Tools;
+using FastUnityCreationKit.Core.Utility;
 using FastUnityCreationKit.Core.Values.Abstract;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -55,7 +56,17 @@ namespace FastUnityCreationKit.Core.Values
         {
             get
             {
+                // Ensure the value is initialized
                 (this as IInitializable).EnsureInitialized();
+                
+                // Remove all removable modifiers
+                int nCount = CheckRemovableModifiers();
+                if(nCount > 0)
+                {
+                    // Recalculate the value if any modifiers were removed
+                    RecalculateValue();
+                }
+                
                 return currentValue;
             }
         }
@@ -219,6 +230,9 @@ namespace FastUnityCreationKit.Core.Values
         
         private void RecalculateValue()
         {
+            // Remove all removable modifiers
+            CheckRemovableModifiers();
+            
             // Reset the value to the base value
             currentValue = baseValue;
             
@@ -247,6 +261,29 @@ namespace FastUnityCreationKit.Core.Values
         {
             _appliedModifiers ??= new PrioritizedList<IModifier>();
             currentValue = baseValue;
+        }
+
+        /// <summary>
+        /// Checks if any modifiers can be removed.
+        /// </summary>
+        private int CheckRemovableModifiers()
+        {
+            int removedCount = 0;
+            
+            // Loop through all applied modifiers
+            // In reverse order to avoid issues with removing elements
+            for (int index = _appliedModifiers.Count - 1; index >= 0; index--)
+            {
+                // Check if the modifier is conditionally removable
+                IModifier modifier = _appliedModifiers[index];
+                if (modifier is not IConditionallyRemovable removable || !removable.IsRemovalConditionMet()) continue;
+                
+                // Remove the modifier
+                _appliedModifiers.RemoveAt(index);
+                removedCount++;
+            }
+            
+            return removedCount;
         }
     }
 }

@@ -472,8 +472,35 @@ namespace FastUnityCreationKit.Tests.Core.Values
             // Assert
             Assert.AreEqual(expected, actual);
         }
-        
-        
-        
+
+        [Test]
+        public void RemovableModifiers_AreChecked_WhenGettingCurrentValue()
+        {
+            // Arrange
+            TestModifiableValue testValue = new TestModifiableValue();
+            testValue.SetBaseValue(10);
+            
+            float32 amount = 5;
+            float32 expected0 = 20;
+            float32 expected1 = 15;
+
+            var removableModifier = new TestRemovableModifier(amount);
+            
+            // Act
+            testValue.ApplyModifier(removableModifier);
+            testValue.ApplyModifier(new TestFlatAddModifier(amount));
+            
+            float32 actual0 = testValue.CurrentValue;
+            
+            // Assert that both modifiers are applied
+            Assert.AreEqual(expected0, actual0);
+            
+            // Mark modifier to be removed
+            removableModifier.toRemove = true;
+            float32 actual1 = testValue.CurrentValue;
+            
+            // Assert that modifier was automatically removed
+            Assert.AreEqual(expected1, actual1);
+        }
     }
 }
