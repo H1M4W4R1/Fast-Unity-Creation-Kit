@@ -12,4 +12,8 @@
         </description>
         <accepts>starter-topic.html</accepts>
     </rule>
+    <rule id="21e03097">
+        <description>Created after removal of "Introduction" from Fast Unity Creation Kit Manual</description>
+        <accepts>SystemsIntroduction.html</accepts>
+    </rule>
 </rules>

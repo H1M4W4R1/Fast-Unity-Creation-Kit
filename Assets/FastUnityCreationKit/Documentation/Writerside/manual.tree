@@ -8,12 +8,11 @@
 
     <toc-element topic="Introduction.md"/>
     <toc-element topic="Systems.md">
-        <toc-element topic="SystemsIntroduction.md"/>
         <toc-element topic="SystemCore.md">
-            <toc-element topic="SystemCoreEvents.md">
-            </toc-element>
+            <toc-element topic="SystemCoreEvents.md"/>
             <toc-element topic="SystemCoreIdentification.md"/>
             <toc-element topic="SystemCoreInitialization.md"/>
+            <toc-element topic="SystemCoreNumerics.md"/>
         </toc-element>
     </toc-element>
 </instance-profile>
