@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Core.Utility
+﻿namespace FastUnityCreationKit.Core.Utility.Properties
 {
     /// <summary>
     /// Represents that an object has a description.

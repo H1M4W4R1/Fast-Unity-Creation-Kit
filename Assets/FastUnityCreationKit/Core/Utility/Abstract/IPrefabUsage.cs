@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Core.Utility.Abstract
+﻿using FastUnityCreationKit.Core.Utility.Properties;
+
+namespace FastUnityCreationKit.Core.Utility.Abstract
 {
     /// <summary>
     /// Represents a usage of a prefab.

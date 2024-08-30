@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Core.Utility.Abstract
+﻿using FastUnityCreationKit.Core.Utility.Properties;
+
+namespace FastUnityCreationKit.Core.Utility.Abstract
 {
     /// <summary>
     /// Represents usage of an icon.

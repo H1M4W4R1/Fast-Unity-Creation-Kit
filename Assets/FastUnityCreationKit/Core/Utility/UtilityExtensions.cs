@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Utility.Abstract;
+using FastUnityCreationKit.Core.Utility.Properties;
 using JetBrains.Annotations;
 using UnityEngine;
 

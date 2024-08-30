@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.Numerics.Limits;
 using FastUnityCreationKit.Core.Utility;
+using FastUnityCreationKit.Core.Utility.Properties;
 using FastUnityCreationKit.Core.Values;
 using JetBrains.Annotations;
 using UnityEngine;
