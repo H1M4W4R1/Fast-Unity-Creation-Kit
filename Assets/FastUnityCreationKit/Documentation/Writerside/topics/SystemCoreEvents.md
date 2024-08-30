@@ -79,6 +79,8 @@ public class MyGlobalEventChannelWithData : GlobalEventChannel<MyGlobalEventChan
 
 ## Listening to Events
 To listen to an event you need to access the event channel and subscribe to it.
+For global events, you can use the static `RegisterEventListener` method to subscribe to the event.
+But you can also use the instance of the event channel and call `RegisterListener` method directly.
 
 ```C#
 public class MyListener : MonoBehaviour
@@ -119,13 +121,14 @@ public class MyListener : MonoBehaviour
 
 ## Triggering Events
 To trigger an event you need to access the event channel and call the `Trigger` method.
+Global events also have stacic `TriggerEvent` method that can be used to trigger the event from anywhere in the game.
 
 ```C#
 public class MyTrigger : MonoBehaviour
 {
     private void Start()
     {
-        MyGlobalEventChannel.Trigger();
+        MyGlobalEventChannel.TriggerEvent();
     }
 }
 ```
@@ -139,10 +142,17 @@ public class MyTrigger : MonoBehaviour
 {
     private void Start()
     {
-        MyGlobalEventChannelWithData.Trigger(new MyEventData("Hello world!"));
+        MyGlobalEventChannelWithData.TriggerEvent(new MyEventData("Hello world!"));
     }
 }
 ```
+
+## Unsubscribing from Events
+To unsubscribe from an event you can access the instance and use the `UnregisterListener` method or
+when using global events you can use the static `UnregisterEventListener` method.
+
+For more reference go back up to the **_Listening to Events_** section.
+
 
 ## Handling local events
 Local events are events that are only triggered on the object that the event channel is attached to.
