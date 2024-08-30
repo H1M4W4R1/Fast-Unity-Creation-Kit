@@ -15,6 +15,21 @@ namespace FastUnityCreationKit.Core.Events.Abstract
         [NotNull] [ItemNotNull] protected readonly List<TListenerCallback> listeners = new List<TListenerCallback>();
 
         /// <summary>
+        /// Count of the listeners that are registered to the event channel.
+        /// </summary>
+        public int ListenerCount => listeners.Count;
+        
+        /// <summary>
+        /// Check if the event channel has any listeners.
+        /// </summary>
+        public bool HasAnyListeners => listeners.Count > 0;
+        
+        /// <summary>
+        /// Remove all listeners from the event channel.
+        /// </summary>
+        public void RemoveAllListeners() => listeners.Clear();
+        
+        /// <summary>
         /// Register the listener to the event channel.
         /// </summary>
         public virtual void RegisterListener([NotNull] TListenerCallback listener)

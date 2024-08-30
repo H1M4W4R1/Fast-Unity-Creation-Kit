@@ -62,5 +62,10 @@ namespace FastUnityCreationKit.Core.Events
         /// </summary>
         /// <param name="listener"></param>
         public static void UnregisterEventListener([NotNull] EventChannelCallback<TChannelData> listener) => Instance.UnregisterListener(listener);
+        
+        /// <summary>
+        /// Remove all listeners from the event channel.
+        /// </summary>
+        public static void RemoveAllEventListeners() => Instance.RemoveAllListeners();
     }
 }
