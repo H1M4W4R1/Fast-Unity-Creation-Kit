@@ -15,5 +15,6 @@ namespace FastUnityCreationKit.Core.PrioritySystem.Abstract
         /// Priority of the object.
         /// </summary>
         public uint Priority { get; }
+
     }
 }

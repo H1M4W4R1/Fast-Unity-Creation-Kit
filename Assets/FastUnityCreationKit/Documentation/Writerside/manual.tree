@@ -13,6 +13,7 @@
             <toc-element topic="SystemCoreIdentification.md"/>
             <toc-element topic="SystemCoreInitialization.md"/>
             <toc-element topic="SystemCoreNumerics.md"/>
+            <toc-element topic="Priority.md"/>
         </toc-element>
     </toc-element>
 </instance-profile>
