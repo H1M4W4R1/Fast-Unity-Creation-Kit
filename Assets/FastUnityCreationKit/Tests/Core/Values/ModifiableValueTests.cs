@@ -502,5 +502,101 @@ namespace FastUnityCreationKit.Tests.Core.Values
             // Assert that modifier was automatically removed
             Assert.AreEqual(expected1, actual1);
         }
+
+        [Test]
+        public void SetCurrentValue_RespectsLimits()
+        {
+            // Arrange
+            TestModifiableValueWithLimits testValue = new TestModifiableValueWithLimits();
+            testValue.SetBaseValue(0);
+            testValue.SetCurrentValue(50);
+            
+            // Assert that value is set correctly
+            Assert.AreEqual(10, testValue.CurrentValue);
+            
+            // Act
+            testValue.SetCurrentValue(-50);
+            
+            // Assert that value is set to minimum
+            Assert.AreEqual(-10, testValue.CurrentValue);
+        }
+
+        [Test]
+        public void Add_RespectsLimits()
+        {
+            // Arrange
+            TestModifiableValueWithLimits testValue = new TestModifiableValueWithLimits();
+            testValue.SetBaseValue(0);
+            
+            // Act
+            testValue.Add(50);
+            
+            // Assert that value is set correctly
+            Assert.AreEqual(10, testValue.CurrentValue);
+        }
+        
+        [Test]
+        public void Subtract_RespectsLimits()
+        {
+            // Arrange
+            TestModifiableValueWithLimits testValue = new TestModifiableValueWithLimits();
+            testValue.SetBaseValue(0);
+            
+            // Act
+            testValue.Subtract(50);
+            
+            // Assert that value is set correctly
+            Assert.AreEqual(-10, testValue.CurrentValue);
+        }
+        
+        [Test]
+        public void Multiply_RespectsLimits()
+        {
+            // Arrange
+            TestModifiableValueWithLimits testValue = new TestModifiableValueWithLimits();
+            testValue.SetBaseValue(1);
+            
+            // Act
+            testValue.Multiply((float32) 50);
+            
+            // Assert that value is set correctly
+            Assert.AreEqual(10, testValue.CurrentValue);
+        }
+        
+        [Test]
+        public void Modifiers_RespectLimits()
+        {
+            // Arrange
+            TestModifiableValueWithLimits testValue = new TestModifiableValueWithLimits();
+            testValue.SetBaseValue(0);
+            
+            // Act
+            testValue.ApplyModifier(new TestFlatAddModifier(50));
+            
+            // Assert that value is set correctly
+            Assert.AreEqual(10, testValue.CurrentValue);
+        }
+
+        [Test]
+        public void BaseValue_SupportsDefaultValueInterface()
+        {
+            // Arrange
+            TestModifiableValueWithDefaultValue testValue = new TestModifiableValueWithDefaultValue();
+            
+            // Assert that value is set correctly
+            Assert.AreEqual(25f, testValue.CurrentValue);
+        }
+        
+        [Test]
+        public void SetBaseValue_OverridesDefaultValue()
+        {
+            // Arrange
+            TestModifiableValueWithDefaultValue testValue = new TestModifiableValueWithDefaultValue();
+            testValue.SetBaseValue(50);
+            
+            // Assert that value is set correctly
+            Assert.AreEqual(50, testValue.CurrentValue);
+        }
+        
     }
 }
