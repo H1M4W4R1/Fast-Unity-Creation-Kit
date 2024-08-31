@@ -21,14 +21,9 @@ namespace FastUnityCreationKit.Economy.Abstract
     /// <remarks>
     /// <b>It is not recommended to use this class directly. See <see cref="LocalResource{TNumberType}"/> and <see cref="GlobalResource{TSelf, TNumberType}"/> instead.</b>
     /// </remarks>
-    public abstract class ResourceBase<TNumberType> : INamed
+    public abstract class ResourceBase<TNumberType>
         where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
     {
-        /// <summary>
-        /// Name of the resource e.g. "Coins", "Wood", "Stone".
-        /// </summary>
-        public abstract string Name { get; }
-        
         /// <summary>
         /// Internal storage of the resource.
         /// </summary>

@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.Core.Utility.Abstract;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Core.Utility.Properties
@@ -8,7 +7,7 @@ namespace FastUnityCreationKit.Core.Utility.Properties
     /// Represents that an object has an icon.
     /// </summary>
     public interface IWithIcon<[UsedImplicitly] TIconUsage>
-        where TIconUsage : IIconUsage
+        where TIconUsage : IUsageContext
     {
         /// <summary>
         /// Icon of the object.
