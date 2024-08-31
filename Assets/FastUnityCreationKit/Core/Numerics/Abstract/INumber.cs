@@ -110,9 +110,6 @@ namespace FastUnityCreationKit.Core.Numerics.Abstract
         
         /// <summary>
         /// Internal method to check equality of two numbers.
-        /// Warning: do not use this with <see cref="IVectorizedNumber"/> as it will not work properly
-        /// and return false (same as for any other <see cref="INumber"/> that does not implement
-        /// ISupportsFloatConversion).
         /// </summary>
         internal static bool CheckEquality<TNumber>(TNumber self, object other)
             where TNumber : struct, INumber, ISupportsFloatConversion<TNumber>
@@ -125,7 +122,7 @@ namespace FastUnityCreationKit.Core.Numerics.Abstract
             {
                 // Check if other number can be converted to double, if not return false
                 if (otherNumber is not ISupportsFloatConversion otherFloat)
-                    return false;
+                    return self.Equals(other);
                 
                 // Get other value
                 double otherValue = otherFloat.ToDouble();
@@ -147,7 +144,7 @@ namespace FastUnityCreationKit.Core.Numerics.Abstract
                 long otherLong => math.abs(selfValue - otherLong) < math.EPSILON,
                 float otherFloat => math.abs(selfValue - otherFloat) < math.EPSILON,
                 double otherDouble => math.abs(selfValue - otherDouble) < math.EPSILON, // This is just in case
-                _ => false
+                _ => self.Equals(other)
             };
         }
     }
