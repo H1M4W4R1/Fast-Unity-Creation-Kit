@@ -103,7 +103,7 @@ namespace FastUnityCreationKit.Tests.Status
         }
         
         [Test]
-        public void IsStatusSupported_Returns_Correct_Value()
+        public void IsStatusExplicitlySupported_Returns_Correct_Value()
         {
             // Arrange
             EntityWithStatus entity = new EntityWithStatus();
@@ -116,8 +116,49 @@ namespace FastUnityCreationKit.Tests.Status
             objectWithStatus.AddStatus(status);
             
             // Assert
-            Assert.IsTrue(objectWithStatus.IsStatusSupported<RegularStatus>());
-            Assert.IsFalse(objectWithStatus.IsStatusSupported<NotSupportedStatusMockup>());
+            Assert.IsTrue(objectWithStatus.IsStatusExplicitlySupported<RegularStatus>());
+            Assert.IsFalse(objectWithStatus.IsStatusExplicitlySupported<NotSupportedStatusMockup>());
+        }
+        
+        [Test]
+        public void IsStatusSupported_Returns_Correct_Value()
+        {
+            // Arrange
+            EntityWithForbiddenStatus entity = new EntityWithForbiddenStatus();
+
+            // Cast to IObjectWithStatus to access the Statuses property
+            IObjectWithStatus objectWithStatus = entity;
+  
+            // Assert
+            Assert.IsTrue(objectWithStatus.IsStatusSupported<PercentageStatus>());
+            Assert.IsTrue(objectWithStatus.IsStatusSupported<NotSupportedStatusMockup>());
+            Assert.IsFalse(objectWithStatus.IsStatusSupported<RegularStatus>());
+        }
+
+        [Test]
+        public void IsStatusSupported_BannedStatusTakesPriority_OverSupportedStatus()
+        {
+            // Arrange
+            EntityWithForbiddenStatus entity = new EntityWithForbiddenStatus();
+            
+            // Cast to IObjectWithStatus to access the Statuses property
+            IObjectWithStatus objectWithStatus = entity;
+            
+            // Assert
+            Assert.IsFalse(objectWithStatus.IsStatusSupported<StackableStatus>());
+        }
+        
+        [Test]
+        public void IsStatusExplicitlySupported_BannedStatusTakesPriority_OverSupportedStatus()
+        {
+            // Arrange
+            EntityWithForbiddenStatus entity = new EntityWithForbiddenStatus();
+            
+            // Cast to IObjectWithStatus to access the Statuses property
+            IObjectWithStatus objectWithStatus = entity;
+ 
+            // Assert
+            Assert.IsFalse(objectWithStatus.IsStatusExplicitlySupported<StackableStatus>());
         }
         
         [Test]
@@ -138,5 +179,43 @@ namespace FastUnityCreationKit.Tests.Status
             Assert.AreEqual(status,acquiredStatus );
             Assert.IsTrue(ReferenceEquals(status, acquiredStatus));
         }
+        
+        [Test]
+        public void AddStatus_DoesNotAdd_IfIsForbidden()
+        {
+            // Arrange
+            EntityWithForbiddenStatus entity = new EntityWithForbiddenStatus();
+            RegularStatus status = new RegularStatus();
+            
+            // Cast to IObjectWithStatus to access the Statuses property
+            IObjectWithStatus objectWithStatus = entity;
+            
+            // Act
+            objectWithStatus.AddStatus(status);
+            
+            // Assert
+            Assert.IsFalse(objectWithStatus.HasStatus<RegularStatus>());
+            Assert.IsFalse(status.wasStatusAdded);
+        }
+
+        [Test]
+        public void AddStatus_DoesNotAdd_IfIsForbidden_EvenIfSupported()
+        {
+            // Arrange
+            EntityWithForbiddenStatus entity = new EntityWithForbiddenStatus();
+            StackableStatus status = new StackableStatus();
+            
+            // Cast to IObjectWithStatus to access the Statuses property
+            IObjectWithStatus objectWithStatus = entity;
+            
+            // Act
+            objectWithStatus.AddStatus(status);
+            
+            // Assert
+            Assert.IsFalse(objectWithStatus.HasStatus<StackableStatus>());
+            Assert.AreEqual(0, status.wasStatusAdded);
+        }
     }
+    
+    
 }

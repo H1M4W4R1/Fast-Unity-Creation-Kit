@@ -8,7 +8,7 @@ namespace FastUnityCreationKit.Status
     /// <summary>
     /// Represents that an object can have specific status.
     /// This is a marker interface and should be used with a generic type to specify the status type.
-    /// For more reference see <see cref="IObjectWithStatus.IsStatusSupported{T}"/>.
+    /// For more reference see <see cref="IObjectWithStatus.IsStatusExplicitlySupported{TStatusType}"/>.
     /// </summary>
     public interface IObjectWithStatus<[UsedImplicitly] TStatus> : IObjectWithStatus
         where TStatus : IStatus
@@ -75,9 +75,9 @@ namespace FastUnityCreationKit.Status
                 {
                     // Check if the stack count is 0.
                     if (stackableStatus.StackCount == 0)
-                    if (stackableStatus.StackCount == 0)
-                        RemoveStatus(i);
-                    
+                        if (stackableStatus.StackCount == 0)
+                            RemoveStatus(i);
+
                     // Alternative should be handled automatically
                     // by percentage change events.
                 }
@@ -135,13 +135,16 @@ namespace FastUnityCreationKit.Status
 
             return default;
         }
-        
+
         /// <summary>
         /// Add the given status to the object.
         /// </summary>
         public void AddStatus<TStatusType>([NotNull] TStatusType status) where TStatusType : IStatus
         {
             EnsureInitialized();
+            
+            // Check if status is not forbidden
+            if (this is IObjectWithBannedStatus<TStatusType>) return;
 
 #if UNITY_EDITOR
             switch (status)
@@ -178,7 +181,7 @@ namespace FastUnityCreationKit.Status
                     stackableStatus.IncreaseStackCount(this);
                     return;
                 }
-                
+
                 // Otherwise, just return as the status is already added.
                 // This is to prevent adding the same status multiple times.
                 // If you want to have multiple instances of the same status,
@@ -195,7 +198,7 @@ namespace FastUnityCreationKit.Status
                 // the stack count would be increased multiple times.
                 if (status is IPercentageStatus percentageStatus)
                     _IncreasePercentage(percentageStatus, 1f);
-                
+
                 // Check if the status is stackable and add single stack.
                 else if (status is IStackableStatus stackableStatus)
                     stackableStatus.IncreaseStackCount(this);
@@ -206,16 +209,19 @@ namespace FastUnityCreationKit.Status
             // Clear the statuses that have 0 stack count or 0 percentage.
             ClearZeroLevelStatuses();
         }
-        
+
         /// <summary>
         /// Used internally to add the status to the object.
         /// </summary>
         private void _AddStatus<TStatusType>([NotNull] TStatusType status) where TStatusType : IStatus
         {
             EnsureInitialized();
-
+            
             // Check if the object already has the status.
             if (HasStatus<TStatusType>()) return;
+
+            // Check if status is not forbidden
+            if (this is IObjectWithBannedStatus<TStatusType>) return;
             
             // Add the status to the list.
             Statuses.Add(status);
@@ -242,18 +248,18 @@ namespace FastUnityCreationKit.Status
                         // When stack count is greater than zero or percentage is greater than zero
                         while (stackablePercentageStatus.StackCount > 0 || stackablePercentageStatus.Percentage > 0)
                             _DecreasePercentage(stackablePercentageStatus, stackablePercentageStatus.Percentage);
-                        
+
                         // Now status should have 0 stack count and 0 percentage
                     }
-                    
+
                     // Decrease percentage to 0% if the status is percentage.
                     else if (status is IPercentageStatus percentageStatus)
                         percentageStatus.DecreasePercentage(this, 1f);
-                    
+
                     // Decrease stack count to 0 if the status is stackable.
                     else if (status is IStackableStatus stackableStatus)
                         stackableStatus.DecreaseStackCount(this, stackableStatus.StackCount);
-                    
+
                     // Proceed with removing the status.
                     RemoveStatus(i);
                     ClearZeroLevelStatuses();
@@ -350,7 +356,7 @@ namespace FastUnityCreationKit.Status
                     {
                         // Increase percentage by the remaining amount.
                         status.IncreasePercentage(this, difference);
-                        
+
                         // Stack count and percentage should be set to ++ and 0% respectively
                         // using automated events, this is kept here for reference of events
                         // that happen in background.
@@ -406,7 +412,7 @@ namespace FastUnityCreationKit.Status
             _AddStatus(newStatus);
             _DecreasePercentage(newStatus, amount);
         }
-        
+
         private void _DecreasePercentage([NotNull] IPercentageStatus status, float amount)
         {
             while (true)
@@ -422,7 +428,7 @@ namespace FastUnityCreationKit.Status
                     {
                         // Decrease percentage by the remaining amount.
                         status.DecreasePercentage(this, difference);
-                        
+
                         // Stack count and percentage should be set to -- and 100% respectively
                         // using automated events, this is kept here for reference of events
                         // that happen in background.
@@ -455,10 +461,17 @@ namespace FastUnityCreationKit.Status
         }
 
         /// <summary>
+        /// Checks if the object supports the given status type explicitly.
+        /// For more reference see <see cref="IObjectWithStatus{TStatus}"/>.
+        /// </summary>
+        public bool IsStatusExplicitlySupported<TStatusType>() where TStatusType : IStatus =>
+            this is IObjectWithStatus<TStatusType> and not IObjectWithBannedStatus<TStatusType>;
+
+        /// <summary>
         /// Checks if the object supports the given status type.
         /// </summary>
         public bool IsStatusSupported<TStatusType>() where TStatusType : IStatus =>
-            this is IObjectWithStatus<TStatusType>;
+            this is not IObjectWithBannedStatus<TStatusType>;
 
         /// <summary>
         /// Gets the stack count of the status of the given type.
@@ -491,7 +504,7 @@ namespace FastUnityCreationKit.Status
 
             return 0f;
         }
-        
+
         /// <summary>
         /// Gets the amount of times the status of the given type is added to the object.
         /// In case the status is stackable, it will return the total stack count.
@@ -501,17 +514,17 @@ namespace FastUnityCreationKit.Status
             EnsureInitialized();
 
             int count = 0;
-            
+
             // Loop through all statuses and check if the object has the status.
             for (int i = 0; i < Statuses.Count; i++)
             {
                 // Check if the status is stackable
-                if(Statuses[i] is IStackableStatus stackableStatus and TStatusType)
+                if (Statuses[i] is IStackableStatus stackableStatus and TStatusType)
                 {
                     count += stackableStatus.StackCount;
                     continue;
                 }
-                
+
                 // Check if the status is of the given type
                 if (Statuses[i] is TStatusType)
                     count++;
