@@ -90,6 +90,37 @@ namespace FastUnityCreationKit.Tests.Core.Priority
         }
         
         [Test]
+        public void PrioritizedList_AddsFirstObject_WhenListIsEmpty()
+        {
+            // Arrange
+            PrioritizedList<ObjectWithPriority> list = new PrioritizedList<ObjectWithPriority>();
+            ObjectWithPriority firstObject = new ObjectWithPriority(1);
+            
+            // Act
+            list.Add(firstObject);
+            
+            // Assert
+            Assert.AreEqual(firstObject, list[0]);
+        }
+        
+        [Test]
+        public void PrioritizedList_AddsObject_WhenObjectHasLowestPriority()
+        {
+            // Arrange
+            PrioritizedList<ObjectWithPriority> list = new PrioritizedList<ObjectWithPriority>();
+            ObjectWithPriority firstObject = new ObjectWithPriority(0);
+            ObjectWithPriority secondObject = new ObjectWithPriority(1);
+            
+            // Act
+            list.Add(firstObject);
+            list.Add(secondObject);
+            
+            // Assert
+            Assert.AreEqual(firstObject, list[0]);
+            Assert.AreEqual(secondObject, list[1]);
+        }
+        
+        [Test]
         public void List_SortByPriority_SortsObjects_InCorrectOrder()
         {
             // Arrange
