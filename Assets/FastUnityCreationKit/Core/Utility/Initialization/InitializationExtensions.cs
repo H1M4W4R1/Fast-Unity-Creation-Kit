@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Core.Initialization
+﻿namespace FastUnityCreationKit.Core.Utility.Initialization
 {
     /// <summary>
     /// Extensions for the initialization system.

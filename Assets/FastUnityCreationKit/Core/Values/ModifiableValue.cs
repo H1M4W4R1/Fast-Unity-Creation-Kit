@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using FastUnityCreationKit.Core.Initialization;
 using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.PrioritySystem.Tools;
 using FastUnityCreationKit.Core.Utility;
+using FastUnityCreationKit.Core.Utility.Initialization;
+using FastUnityCreationKit.Core.Utility.Properties;
 using FastUnityCreationKit.Core.Values.Abstract;
 using JetBrains.Annotations;
 using UnityEngine;

@@ -3,14 +3,14 @@
 namespace FastUnityCreationKit.Core.Utility.Properties
 {
     /// <summary>
-    /// Represents that an object has a name.
+    /// Represents that an object has a description.
     /// </summary>
-    public interface INamed<[UsedImplicitly] TUsageContext> 
+    public interface IWithDescription<[UsedImplicitly] TUsageContext> 
         where TUsageContext : IUsageContext
     {
         /// <summary>
-        /// Name of the object.
+        /// Description of the object.
         /// </summary>
-        public string Name { get; }
+        public string Description { get; }
     }
 }

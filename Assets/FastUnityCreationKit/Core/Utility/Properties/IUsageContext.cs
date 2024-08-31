@@ -1,6 +1,4 @@
-﻿using FastUnityCreationKit.Core.Utility.Properties;
-
-namespace FastUnityCreationKit.Core.Utility
+﻿namespace FastUnityCreationKit.Core.Utility.Properties
 {
     /// <summary>
     /// Represents usage of a property.

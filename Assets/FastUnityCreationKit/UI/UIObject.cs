@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Core.Initialization;
+﻿using FastUnityCreationKit.Core.Utility.Initialization;
 using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Events;
 using JetBrains.Annotations;

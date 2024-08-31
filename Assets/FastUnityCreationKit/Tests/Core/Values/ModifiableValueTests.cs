@@ -1,8 +1,8 @@
 ﻿// ReSharper disable file ConditionIsAlwaysTrueOrFalse
 // ReSharper disable file ConvertTypeCheckToNullCheck
 
-using FastUnityCreationKit.Core.Initialization;
 using FastUnityCreationKit.Core.Numerics;
+using FastUnityCreationKit.Core.Utility.Initialization;
 using FastUnityCreationKit.Core.Values.Abstract;
 using FastUnityCreationKit.Tests.Core.Values.Data;
 using NUnit.Framework;

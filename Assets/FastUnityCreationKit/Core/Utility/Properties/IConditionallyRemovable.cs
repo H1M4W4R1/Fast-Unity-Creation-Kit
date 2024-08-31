@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Core.Utility
+﻿namespace FastUnityCreationKit.Core.Utility.Properties
 {
     /// <summary>
     /// Represents an object that may be removed if specific conditions are met.
