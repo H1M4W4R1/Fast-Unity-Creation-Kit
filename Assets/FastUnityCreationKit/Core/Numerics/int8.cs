@@ -84,25 +84,7 @@ namespace FastUnityCreationKit.Core.Numerics
         public static bool operator !=(sbyte left, int8 right) => left != right._value;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
-        {
-            return obj switch
-            {
-                float32 number => Equals(number),
-                float number => Equals(number),
-                byte number => Equals(number),
-                sbyte number => Equals(number),
-                short number => Equals(number),
-                ushort number => Equals(number),
-                int number => Equals(number),
-                uint number => Equals(number),
-                long number => Equals(number),
-                ulong number => Equals(number),
-                double number => Equals(number),
-                _ => false
-            };
-        }
-
+        public override bool Equals(object obj) => INumber.CheckEquality(this, obj);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public override int GetHashCode() => _value.GetHashCode();
     }

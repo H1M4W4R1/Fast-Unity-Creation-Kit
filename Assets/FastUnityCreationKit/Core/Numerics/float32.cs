@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.Numerics.Types;
 using Unity.Burst;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Core.Numerics
@@ -49,7 +50,6 @@ namespace FastUnityCreationKit.Core.Numerics
 
         [BurstDiscard] public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
 
-
         public bool Equals(float other) => _value.Equals(other);
         public bool Equals(byte other) => _value.Equals(other);
         public bool Equals(sbyte other) => _value.Equals(other);
@@ -59,7 +59,7 @@ namespace FastUnityCreationKit.Core.Numerics
         public bool Equals(uint other) => _value.Equals(other);
         public bool Equals(long other) => _value.Equals(other);
         public bool Equals(ulong other) => _value.Equals(other);
-        public bool Equals(double other) => _value.Equals(other);
+        public bool Equals(double other) => math.abs(_value - other) < math.EPSILON;
         public bool Equals(float32 other) => _value.Equals(other._value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -75,25 +75,7 @@ namespace FastUnityCreationKit.Core.Numerics
         public static bool operator !=(float left, float32 right) => !right.Equals(left);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
-        {
-            return obj switch
-            {
-                float32 number => Equals(number),
-                float number => Equals(number),
-                byte number => Equals(number),
-                sbyte number => Equals(number),
-                short number => Equals(number),
-                ushort number => Equals(number),
-                int number => Equals(number),
-                uint number => Equals(number),
-                long number => Equals(number),
-                ulong number => Equals(number),
-                double number => Equals(number),
-                _ => false
-            };
-        }
-
+        public override bool Equals(object obj) => INumber.CheckEquality(this, obj);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public override int GetHashCode() => _value.GetHashCode();
     }

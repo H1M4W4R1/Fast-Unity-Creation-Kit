@@ -1,5 +1,6 @@
 ﻿using System;
 using FastUnityCreationKit.Core.Numerics.Types;
+using Unity.Mathematics;
 
 namespace FastUnityCreationKit.Core.Numerics.Abstract
 {
@@ -105,6 +106,49 @@ namespace FastUnityCreationKit.Core.Numerics.Abstract
             
             // Return new number with value of input number
             return newNumber.FromDouble(numberValue);
+        }
+        
+        /// <summary>
+        /// Internal method to check equality of two numbers.
+        /// Warning: do not use this with <see cref="IVectorizedNumber"/> as it will not work properly
+        /// and return false (same as for any other <see cref="INumber"/> that does not implement
+        /// ISupportsFloatConversion).
+        /// </summary>
+        internal static bool CheckEquality<TNumber>(TNumber self, object other)
+            where TNumber : struct, INumber, ISupportsFloatConversion<TNumber>
+        {
+            // Get self value
+            double selfValue = self.ToDouble();
+            
+            // Check if other is INumber
+            if (other is INumber otherNumber)
+            {
+                // Check if other number can be converted to double, if not return false
+                if (otherNumber is not ISupportsFloatConversion otherFloat)
+                    return false;
+                
+                // Get other value
+                double otherValue = otherFloat.ToDouble();
+                
+                // Return equality of two numbers
+                return selfValue.Equals(otherValue);
+            }
+            
+            // Check remaining types
+            return other switch
+            {
+                byte otherByte => math.abs(selfValue - otherByte) < math.EPSILON,
+                sbyte otherSByte => math.abs(selfValue - otherSByte) < math.EPSILON,
+                ushort otherUShort => math.abs(selfValue - otherUShort) < math.EPSILON,
+                short otherShort => math.abs(selfValue - otherShort) < math.EPSILON,
+                uint otherUInt => math.abs(selfValue - otherUInt) < math.EPSILON,
+                int otherInt => math.abs(selfValue - otherInt) < math.EPSILON,
+                ulong otherULong => math.abs(selfValue - otherULong) < math.EPSILON,
+                long otherLong => math.abs(selfValue - otherLong) < math.EPSILON,
+                float otherFloat => math.abs(selfValue - otherFloat) < math.EPSILON,
+                double otherDouble => math.abs(selfValue - otherDouble) < math.EPSILON, // This is just in case
+                _ => false
+            };
         }
     }
 }
