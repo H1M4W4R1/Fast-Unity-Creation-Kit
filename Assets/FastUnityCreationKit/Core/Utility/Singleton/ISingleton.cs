@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Core.Utility.Singleton
+﻿using JetBrains.Annotations;
+
+namespace FastUnityCreationKit.Core.Utility.Singleton
 {
     /// <summary>
     /// Represents a singleton object - an object that has only one instance.
@@ -11,9 +13,9 @@
         /// <summary>
         /// The instance of the singleton.
         /// </summary>
-        protected static TSelf Instance { get; set; }
+        [CanBeNull] protected static TSelf Instance { get; set; }
 
-        public static TSelf GetInstance()
+        [NotNull] public static TSelf GetInstance()
         {
             // Check if the instance exists
             if(Instance != null) return Instance;

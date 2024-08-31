@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Events.Abstract;
+using FastUnityCreationKit.Core.Utility.Singleton;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Events
@@ -7,13 +8,13 @@ namespace FastUnityCreationKit.Core.Events
     /// Represents the global event channel.
     /// Global event channels are used to send events between systems and only one instance of the event channel is created.
     /// </summary>
-    public abstract class GlobalEventChannel<TSelf> : EventChannel
+    public abstract class GlobalEventChannel<TSelf> : EventChannel, ISingleton<TSelf>
         where TSelf : GlobalEventChannel<TSelf>, new()
     {
         /// <summary>
         /// Instance of the event channel.
         /// </summary>
-        [NotNull] public static readonly TSelf Instance = new TSelf();
+        [NotNull] public static TSelf Instance => ISingleton<TSelf>.GetInstance();
         
         /// <summary>
         /// Trigger the event channel.
@@ -36,14 +37,14 @@ namespace FastUnityCreationKit.Core.Events
     /// <summary>
     /// Generic version of the <see cref="GlobalEventChannel{TSelf}"/> that is capable of sending data.
     /// </summary>
-    public abstract class GlobalEventChannel<TSelf, TChannelData> : EventChannel<TChannelData>
+    public abstract class GlobalEventChannel<TSelf, TChannelData> : EventChannel<TChannelData>, ISingleton<TSelf>
         where TSelf : GlobalEventChannel<TSelf, TChannelData>, new()
         where TChannelData : IEventChannelData
     {
         /// <summary>
         /// Instance of the event channel.
         /// </summary>
-        [NotNull] public static readonly TSelf Instance = new TSelf();
+        [NotNull] public static TSelf Instance => ISingleton<TSelf>.GetInstance();
         
         /// <summary>
         /// Trigger the event channel with the data.
