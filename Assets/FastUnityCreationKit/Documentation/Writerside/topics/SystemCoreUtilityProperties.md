@@ -38,7 +38,7 @@ Of course there are way more properties that you can use.
 ## Properties
 The properties system contains the following properties:
 * IWithName - Interface that allows you to get the name of the object.
-* IWithLocalizedNames - Interface that allows you to get the localized names of the object (compatible with Unity.Localization package)
+* IWithLocalizedName - Interface that allows you to get the localized name of the object (compatible with Unity.Localization package)
 * IWithDescription - Interface that allows you to get the description of the object.
 * IWithLocalizedDescription - Interface that allows you to get the localized description of the object (compatible with Unity.Localization package)
 * IWithIcon - Interface that allows you to get the icon of the object.
@@ -116,3 +116,78 @@ Property calls are often inlined by the compiler (JIT or IL2CPP), so there shoul
 this is not guaranteed as it was not properly tested (it is just an assumption based on
 the observation and analysis of the generated code).
 </note>
+
+## Custom properties
+If you need to create a custom property, you can do it by creating a new interface that inherits from the `IWithProperty` interface.
+
+```C#
+public interface IWithCustomProperty<TResultType, TUsageContext> : IWithProperty<IWithCustomProperty<TResultType, TUsageContext>, 
+IWithCustomProperty<TResultType, AnyUsageContext>, TResultType, TUsageContext>
+{
+    TResultType CustomProperty { get; }
+    
+    TResultType IWithProperty<IWithCustomProperty<TResultType, TUsageContext>, IWithCustomProperty<TResultType, AnyUsageContext>, TResultType, TUsageContext>.Property => CustomProperty;
+}
+
+public interface IWithCustomProperty
+{
+    [CanBeNull]
+    public string GetCustomValue<TResultType, TUsageContext>()
+        where TUsageContext : IUsageContext =>
+        IWithProperty<IWithCustomProperty<TResultType, TUsageContext>, IWithCustomProperty<TResultType, AnyUsageContext>, TResultType, TUsageContext>
+            .GetProperty(this);
+    }
+}
+
+public static class Extensions
+{
+    [CanBeNull]
+    public static TResultType GetObjectCustomProperty<TResultType, TUsageContext>([NotNull] this object obj)
+        where TUsageContext : IUsageContext =>
+        obj is IWithCustomProperty withCustomProperty
+            ? withCustomProperty.GetCustomValue<TResultType, TUsageContext>()
+            : default;
+}
+```
+
+<note>
+It is recommended to take a look at already implemented properties for reference on creating own ones as it
+is a bit complicated to handle all the generic parameters and explicit interface implementations.
+
+Also known as: just copy it and change the names ;)
+</note>
+
+This interface requires a few generic parameters: first one is interface type itself,
+second one is interface type itself, however context is set to `AnyUsageContext` (this is used to allow for
+easy implementation of getting data if context is not found on the object), third one is the type of the property,
+and the last one is the context in which the property exists.
+
+<note>
+Property type can be hardcoded or passed as a generic parameter depending on usage requirements.
+</note>
+
+Then you can use it in your class.
+```C#
+public class Enemy : MonoBehaviour, IWithCustomProperty<int, BestiaryContext>
+{
+    int IWithCustomProperty<int, BestiaryContext>.CustomProperty => 10;
+}
+```
+
+## AnyUsageContext
+The `AnyUsageContext` is a special context that is used to allow for easy implementation of getting data for
+any context if specified context is not found on the object. This is useful when you want to get data from
+the object but context existence is not guaranteed.
+
+```C#
+public class Enemy : MonoBehaviour, IWithCustomProperty<int, AnyUsageContext>
+{
+    int IWithCustomProperty<int, AnyUsageContext>.CustomProperty => 10;
+}
+```
+
+```C#
+Enemy enemy = ...;
+int customProperty = enemy.GetObjectCustomProperty<int, BestiaryContext>(); 
+// This will return 10 as the context is not found on the object and the `AnyUsageContext` is used.
+```
