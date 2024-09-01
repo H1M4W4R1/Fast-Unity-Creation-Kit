@@ -6,7 +6,9 @@ namespace FastUnityCreationKit.Core.Utility.Properties
     /// <summary>
     /// Represents that an object has a configuration.
     /// </summary>
-    public interface IWithConfiguration<out TConfigurationType, [UsedImplicitly] TUsageContext>
+    public interface IWithConfiguration<TConfigurationType, [UsedImplicitly] TUsageContext> : IWithConfiguration,
+        IWithProperty<IWithConfiguration<TConfigurationType, TUsageContext>,
+            IWithConfiguration<TConfigurationType, AnyUsageContext>, TConfigurationType, TUsageContext>
         where TConfigurationType : ScriptableObject
         where TUsageContext : IUsageContext
     {
@@ -16,5 +18,24 @@ namespace FastUnityCreationKit.Core.Utility.Properties
         /// or from local serialized field.
         /// </summary>
         public TConfigurationType Configuration { get; }
+        
+        TConfigurationType IWithProperty<IWithConfiguration<TConfigurationType, TUsageContext>,
+            IWithConfiguration<TConfigurationType, AnyUsageContext>, TConfigurationType, TUsageContext>.Property
+            => Configuration;
+    }
+
+    public interface IWithConfiguration
+    {
+        /// <summary>
+        /// Tries to get the configuration of the specified type and usage context.
+        /// </summary>
+        [CanBeNull]
+        public TConfigurationType GetConfiguration<TConfigurationType, TUsageContext>()
+            where TConfigurationType : ScriptableObject
+            where TUsageContext : IUsageContext =>
+            IWithProperty<IWithConfiguration<TConfigurationType, TUsageContext>,
+                IWithConfiguration<TConfigurationType, AnyUsageContext>, TConfigurationType, TUsageContext>
+                .GetProperty(this);
+        
     }
 }
