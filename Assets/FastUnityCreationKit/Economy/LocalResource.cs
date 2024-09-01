@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.Economy
     /// <br/><br/>
     /// For more information, see <see cref="ResourceBase{TNumberType}"/>.
     /// </summary>
-    public abstract class LocalResource<TNumberType> : ResourceBase<TNumberType>
+    public abstract class LocalResource<TNumberType> : ResourceBase<TNumberType>, ILocalResource
         where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
     {
         

@@ -12,22 +12,20 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Checks if object has resource of type <typeparamref name="TResource"/>.
         /// </summary>
-        public bool HasResource<TResource, TNumberType>()
-            where TResource : ResourceBase<TNumberType>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public bool HasResource<TResource>()
+            where TResource : ILocalResource, new()
         {
-            return this is ILocalResource<TResource, TNumberType>;
+            return this is IWithLocalResource<TResource>;
         }
         
         /// <summary>
         /// Tries to get resource from object (if object supports local resource return true).
         /// If object does not support local resource, logs error and returns false.
         /// </summary>
-        public bool TryGetResource<TResource, TNumberType>([CanBeNull] out TResource resource)
-            where TResource : ResourceBase<TNumberType>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public bool TryGetResource<TResource>([CanBeNull] out TResource resource)
+            where TResource : ILocalResource, new()
         {
-            if (this is ILocalResource<TResource, TNumberType> localResource)
+            if (this is IWithLocalResource<TResource> localResource)
             {
                 resource = localResource.ResourceStorage;
                 return true;

@@ -6,7 +6,7 @@ namespace FastUnityCreationKit.Tests.Core.Numerics
     /// <summary>
     /// Represents a test suite for numeric equality.
     /// </summary>
-    public class NumericEqualityTests<TNumber> 
+    public class NumericEqualityTests<TNumber> : TestFixtureBase
         where TNumber : struct, ISupportsFloatConversion<TNumber>, INumber
     {
         

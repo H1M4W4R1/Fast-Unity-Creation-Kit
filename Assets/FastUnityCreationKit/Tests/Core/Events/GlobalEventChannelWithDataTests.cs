@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace FastUnityCreationKit.Tests.Core.Events
 {
     [TestFixture]
-    public class GlobalEventChannelWithDataTests
+    public class GlobalEventChannelWithDataTests : TestFixtureBase
     {
         public int callbackCounter = 0;
         

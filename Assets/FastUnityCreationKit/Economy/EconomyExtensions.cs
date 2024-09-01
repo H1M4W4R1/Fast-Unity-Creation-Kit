@@ -15,22 +15,20 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Checks if object has local resource of type <typeparamref name="TResource"/>.
         /// </summary>
-        public static bool HasLocalResource<TResource, TNumberType>(this ILocalEconomy localEconomy)
-            where TResource : ResourceBase<TNumberType>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static bool HasLocalResource<TResource>(this ILocalEconomy localEconomy)
+            where TResource : ILocalResource, new()
         {
-            return localEconomy.HasResource<TResource, TNumberType>();
+            return localEconomy.HasResource<TResource>();
         }
 
         /// <summary>
         /// Gets local resource from object if object supports local economy.
         /// </summary>
-        public static bool TryGetLocalResource<TResource, TNumberType>([NotNull] this ILocalEconomy localEconomy,
+        public static bool TryGetLocalResource<TResource>([NotNull] this ILocalEconomy localEconomy,
             [CanBeNull] out TResource resource)
-            where TResource : ResourceBase<TNumberType>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+            where TResource : ILocalResource, new()
         {
-            return localEconomy.TryGetResource<TResource, TNumberType>(out resource);
+            return localEconomy.TryGetResource<TResource>(out resource);
         }
     }
 }

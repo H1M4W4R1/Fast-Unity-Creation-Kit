@@ -6,7 +6,7 @@ using Unity.Mathematics;
 namespace FastUnityCreationKit.Tests.Status
 {
     [TestFixture]
-    public class StackablePercentageStatusTests
+    public class StackablePercentageStatusTests : TestFixtureBase
     {
 
         [Test]

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace FastUnityCreationKit.Tests.Core.Utility
 {
     [TestFixture]
-    public class PropertiesTests
+    public sealed class PropertiesTests : TestFixtureBase
     {
         [Test]
         public void GetProperty_WorksCorrectly()

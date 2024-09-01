@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace FastUnityCreationKit.Tests.Core.Utility
 {
     [TestFixture]
-    public sealed class InitializationTests
+    public sealed class InitializationTests : TestFixtureBase
     {
         [Test]
         public void Initialization_EnsureInitialized_Initializes()

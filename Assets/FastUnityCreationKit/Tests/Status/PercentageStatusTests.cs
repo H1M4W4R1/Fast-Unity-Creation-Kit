@@ -6,7 +6,7 @@ using Unity.Mathematics;
 namespace FastUnityCreationKit.Tests.Status
 {
     [TestFixture]
-    public class PercentageStatusTests
+    public class PercentageStatusTests : TestFixtureBase
     {
         [Test]
         public void AddStatus_SetsMaxPercentage()

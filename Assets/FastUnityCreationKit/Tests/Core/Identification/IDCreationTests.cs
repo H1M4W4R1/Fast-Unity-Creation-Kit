@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace FastUnityCreationKit.Tests.Core.Identification
 {
     [TestFixture]
-    public class IDCreationTests
+    public class IDCreationTests : TestFixtureBase
     {
         [Test]
         public void ID8_IsCreated_Correctly()

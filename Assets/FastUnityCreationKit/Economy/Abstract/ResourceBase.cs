@@ -112,6 +112,13 @@ namespace FastUnityCreationKit.Economy.Abstract
         }
         
         /// <summary>
+        /// Takes resource from the storage.
+        /// Alias for <see cref="Take"/>.
+        /// </summary>
+        public void Subtract(TNumberType amount) => Take(amount);
+        
+        
+        /// <summary>
         /// Checks if resource storage has enough amount of resource.
         /// </summary>
         public bool HasEnough(TNumberType amount)
@@ -120,8 +127,11 @@ namespace FastUnityCreationKit.Economy.Abstract
             double currentAmount = _storage.CurrentValue.ToFloat();
             double amountToCheck = amount.ToFloat();
             
+            // Get minimum amount
+            double minAmount = MinAmount.ToFloat();
+            
             // Check if current amount is greater or equal to amount to check.
-            return currentAmount >= amountToCheck;
+            return currentAmount - minAmount >= amountToCheck;
         }
         
         /// <summary>

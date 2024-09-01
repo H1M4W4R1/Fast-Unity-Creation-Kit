@@ -7,7 +7,7 @@ using UnityEngine;
 namespace FastUnityCreationKit.Tests.Core.Utility
 {
     [TestFixture]
-    public class SingletonTests
+    public sealed class SingletonTests : TestFixtureBase
     {
 
         [Test]

@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace FastUnityCreationKit.Tests.Core.Identification
 {
     [TestFixture]
-    public class IDComparisonTests
+    public class IDComparisonTests : TestFixtureBase
     {
         
         [Test]

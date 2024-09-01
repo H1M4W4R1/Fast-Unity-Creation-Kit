@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+using FastUnityCreationKit.Economy.Abstract;
 
 namespace FastUnityCreationKit.Economy
 {
@@ -10,11 +11,13 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Gets global resource of type <typeparamref name="TResource"/>.
         /// </summary>
-        public static GlobalResource<TResource, TNumberType> GetGlobalResource<TResource, TNumberType>()
-            where TResource : GlobalResource<TResource, TNumberType>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static TResource GetGlobalResource<TResource>()
+            where TResource : IGlobalResource, new()
         {
-            return GlobalResource<TResource, TNumberType>.Instance;
+            TResource resource = new();
+            
+            // Acquire reference via internal instance method
+            return resource.GetGlobalResourceReference<TResource>();
         }
 
     }

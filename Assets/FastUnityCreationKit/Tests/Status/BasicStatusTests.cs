@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace FastUnityCreationKit.Tests.Status
 {
     [TestFixture]
-    public class BasicStatusTests
+    public class BasicStatusTests : TestFixtureBase
     {
         [Test]
         public void GetAmountOfTimesStatusIsAdded_Returns_Correct_Amount()

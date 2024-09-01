@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace FastUnityCreationKit.Tests.Status
 {
-    public class StackableStatusTests
+    public class StackableStatusTests : TestFixtureBase
     {
         [Test]
         public void AddStatus_AddsFirstStack_ToStackableStatus()
