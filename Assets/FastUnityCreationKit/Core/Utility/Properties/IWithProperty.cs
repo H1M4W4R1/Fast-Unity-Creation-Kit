@@ -1,8 +1,14 @@
 ﻿using JetBrains.Annotations;
-using UnityEngine;
 
 namespace FastUnityCreationKit.Core.Utility.Properties
 {
+    /// <summary>
+    /// Represents that an object has a property.
+    /// </summary>
+    /// <typeparam name="TSelfInterface">Inheritor of this interface</typeparam>
+    /// <typeparam name="TAnyInterface">Inheritor of this interface with TUsageContext as AnyUsageContext</typeparam>
+    /// <typeparam name="TResultType">Property type</typeparam>
+    /// <typeparam name="TUsageContext">Proxypass of usage context, should be a generic parameter at inheritor</typeparam>
     public interface IWithProperty<TSelfInterface, TAnyInterface, out TResultType, TUsageContext>
         where TSelfInterface : IWithProperty<TSelfInterface, TAnyInterface, TResultType, TUsageContext>
         where TAnyInterface : IWithProperty<TAnyInterface, TAnyInterface, TResultType, AnyUsageContext>

@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Identification.Abstract.Identifiers;
 using FastUnityCreationKit.Core.Numerics;
-using Unity.Burst;
 
 namespace FastUnityCreationKit.Core.Identification
 {
