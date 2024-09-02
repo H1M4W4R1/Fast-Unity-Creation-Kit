@@ -56,6 +56,8 @@ namespace FastUnityCreationKit.Tests.Economy
             Assert.AreSame(actual2, actual3);
         }
         
+        // TODO: Add tests for AddGlobalResource, TakeGlobalResource, SetGlobalResource etc.
+        
         
     }
 }

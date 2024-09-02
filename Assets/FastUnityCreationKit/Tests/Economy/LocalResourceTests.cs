@@ -50,5 +50,7 @@ namespace FastUnityCreationKit.Tests.Economy
             // Assert
             Assert.IsFalse(found);
         }
+        
+        // TODO: Add tests for AddLocalResource, TakeLocalResource, SetLocalResource etc.
     }
 }

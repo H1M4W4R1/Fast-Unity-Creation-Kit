@@ -98,35 +98,44 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Adds resource to the storage.
         /// </summary>
-        public void Add(TNumberType amount)
+        internal void Add(TNumberType amount) => Add(null, amount);
+        
+        /// <summary>
+        /// Adds resource to the storage.
+        /// </summary>
+        internal void Add([CanBeNull] ILocalEconomy economyReference, TNumberType amount)
         {
             _storage.Add(amount);
-            OnResourceChanged(amount.ToFloat());
-            OnResourceAdded(amount.ToFloat());
+            OnResourceChanged(economyReference, amount.ToFloat());
+            OnResourceAdded(economyReference, amount.ToFloat());
             ValidateResourceData();
         }
 
         /// <summary>
         /// Takes resource from the storage.
         /// </summary>
-        public void Take(TNumberType amount)
+        internal void Take(TNumberType amount) => Take(null, amount);
+        
+        /// <summary>
+        /// Takes resource from the storage.
+        /// </summary>
+        internal void Take([CanBeNull] ILocalEconomy economyReference, TNumberType amount)
         {
             _storage.Subtract(amount);
-            OnResourceChanged(-amount.ToFloat());
-            OnResourceTaken(amount.ToFloat());
+            OnResourceChanged(economyReference, -amount.ToFloat());
+            OnResourceTaken(economyReference, amount.ToFloat());
             ValidateResourceData();
         }
         
         /// <summary>
         /// Takes resource from the storage.
-        /// Alias for <see cref="Take"/>.
         /// </summary>
-        public void Subtract(TNumberType amount) => Take(amount);
+        internal void Subtract(TNumberType amount) => Take(amount);
         
         /// <summary>
         /// Checks if resource storage has enough amount of resource.
         /// </summary>
-        public bool HasEnough(TNumberType amount)
+        internal bool HasEnough(TNumberType amount)
         {
             // Convert to floats
             double currentAmount = _storage.CurrentValue.ToFloat();
@@ -142,7 +151,12 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Sets amount of the resource.
         /// </summary>
-        public void SetAmount(TNumberType amount)
+        internal void SetAmount(TNumberType amount) => SetAmount(null, amount);
+        
+        /// <summary>
+        /// Sets amount of the resource.
+        /// </summary>
+        internal void SetAmount([CanBeNull] ILocalEconomy economyReference, TNumberType amount)
         {
             // Compute difference between current and new amount.
             float difference = amount.ToFloat() - _storage.CurrentValue.ToFloat();
@@ -150,19 +164,24 @@ namespace FastUnityCreationKit.Economy.Abstract
             _storage.SetCurrentValue(amount);
             
             // Call events
-            OnResourceChanged(difference);
+            OnResourceChanged(economyReference, difference);
             ValidateResourceData();
         }
         
         /// <summary>
         /// Try to take resource from the storage.
         /// </summary>
-        public bool TryTake(TNumberType amount)
+        internal bool TryTake(TNumberType amount) => TryTake(null, amount);
+        
+        /// <summary>
+        /// Try to take resource from the storage.
+        /// </summary>
+        internal bool TryTake(ILocalEconomy economyReference, TNumberType amount)
         {
             if (!HasEnough(amount))
                 return false;
             
-            Take(amount);
+            Take(economyReference, amount);
             return true;
         }
         
@@ -222,9 +241,9 @@ namespace FastUnityCreationKit.Economy.Abstract
             }
         }
         
-        internal abstract void OnResourceChanged(float amount);
-        internal abstract void OnResourceAdded(float amount);
-        internal abstract void OnResourceTaken(float amount);
+        internal abstract void OnResourceChanged([CanBeNull] ILocalEconomy localEconomy, float amount);
+        internal abstract void OnResourceAdded([CanBeNull] ILocalEconomy localEconomy, float amount);
+        internal abstract void OnResourceTaken([CanBeNull] ILocalEconomy localEconomy, float amount);
         
         /// <summary>
         /// Storage of the resource.

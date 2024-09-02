@@ -37,5 +37,117 @@ namespace FastUnityCreationKit.Economy.Abstract
             resource = default;
             return false;
         }
+        
+        /// <summary>
+        /// Adds resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
+        public void AddResource<TResource, TNumberType>(TNumberType amount)
+            where TResource : LocalResource<TResource, TNumberType>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        {
+            if (this is IWithLocalResource<TResource> localResource)
+            {
+                // Get resource
+                TResource resource = localResource.ResourceStorage;
+                
+                // Add resource
+                resource.Add(this, amount);
+            }
+            else
+            {
+                // Log error
+                Debug.LogError($"Object {this} does not support local resource of type {nameof(TResource)}.");
+            }
+        }
+        
+        /// <summary>
+        /// Takes resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
+        public void TakeResource<TResource, TNumberType>(TNumberType amount)
+            where TResource : LocalResource<TResource, TNumberType>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        {
+            if (this is IWithLocalResource<TResource> localResource)
+            {
+                // Get resource
+                TResource resource = localResource.ResourceStorage;
+                
+                // Take resource
+                resource.Take(this, amount);
+            }
+            else
+            {
+                // Log error
+                Debug.LogError($"Object {this} does not support local resource of type {nameof(TResource)}.");
+            }
+        }
+        
+        /// <summary>
+        /// Sets resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
+        public void SetResource<TResource, TNumberType>(TNumberType amount)
+            where TResource : LocalResource<TResource, TNumberType>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        {
+            if (this is IWithLocalResource<TResource> localResource)
+            {
+                // Get resource
+                TResource resource = localResource.ResourceStorage;
+                
+                // Set resource
+                resource.SetAmount(this, amount);
+            }
+            else
+            {
+                // Log error
+                Debug.LogError($"Object {this} does not support local resource of type {nameof(TResource)}.");
+            }
+        }
+        
+        /// <summary>
+        /// Checks if object has enough resource of type <typeparamref name="TResource"/>.
+        /// </summary>
+        public bool HasEnoughResource<TResource, TNumberType>(TNumberType amount)
+            where TResource : LocalResource<TResource, TNumberType>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        {
+            if (this is IWithLocalResource<TResource> localResource)
+            {
+                // Get resource
+                TResource resource = localResource.ResourceStorage;
+                
+                // Check if resource has enough
+                return resource.HasEnough(amount);
+            }
+            
+            // Log error
+            Debug.LogError($"Object {this} does not support local resource of type {nameof(TResource)}.");
+            
+            return false;
+        }
+        
+        /// <summary>
+        /// Tries to take resource from object 
+        /// </summary>
+        public bool TryTakeResource<TResource, TNumberType>(TNumberType amount)
+            where TResource : LocalResource<TResource, TNumberType>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        {
+            if (this is IWithLocalResource<TResource> localResource)
+            {
+                // Get resource
+                TResource resource = localResource.ResourceStorage;
+                
+                // Try take resource
+                return resource.TryTake(this, amount);
+            }
+            else
+            {
+                // Log error
+                Debug.LogError($"Object {this} does not support local resource of type {nameof(TResource)}.");
+
+                return false;
+            }
+        }
     }
 }

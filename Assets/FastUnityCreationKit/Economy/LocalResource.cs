@@ -15,15 +15,16 @@ namespace FastUnityCreationKit.Economy
         where TSelf : LocalResource<TSelf, TNumberType>
         where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
     {
-        internal override void OnResourceAdded(float amount) =>
+        // TODO: Fix this
+        internal override void OnResourceAdded(ILocalEconomy economyReference, float amount) =>
             OnLocalResourceAddedEvent<TSelf>.TriggerEvent(
                 new LocalResourceEventData<TSelf>(amount));
 
-        internal override void OnResourceTaken(float amount) =>
+        internal override void OnResourceTaken(ILocalEconomy economyReference, float amount) =>
             OnLocalResourceTakenEvent<TSelf>.TriggerEvent(
                 new LocalResourceEventData<TSelf>(amount));
 
-        internal override void OnResourceChanged(float amount) =>
+        internal override void OnResourceChanged(ILocalEconomy economyReference, float amount) =>
             OnLocalResourceChangedEvent<TSelf>.TriggerEvent(
                 new LocalResourceEventData<TSelf>(amount));
     }

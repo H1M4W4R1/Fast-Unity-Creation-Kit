@@ -14,7 +14,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// Storage for resource. 
         /// </summary>
         /// <remarks>
-        /// Always assign to new instance of <see cref="ResourceBase{TNumberType}"/>.
+        /// Always assign to new instance of <see cref="ResourceBase{TSelf, TNumberType}"/>.
         /// </remarks>
         [NotNull] public TResource ResourceStorage { get; }
     }
