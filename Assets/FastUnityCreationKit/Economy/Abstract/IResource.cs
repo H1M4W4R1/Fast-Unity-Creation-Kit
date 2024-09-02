@@ -11,11 +11,11 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// Used for casting resource to its derived type.
         /// </summary>
         [CanBeNull] public TResourceType As<TResourceType, TNumberType>()
-            where TResourceType : ResourceBase<TNumberType>
+            where TResourceType : ResourceBase<TResourceType, TNumberType>
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             // Try to convert this to base resource
-            if (this is ResourceBase<TNumberType> resourceBase)
+            if (this is ResourceBase<TResourceType, TNumberType> resourceBase)
                 return resourceBase.As<TResourceType>();
 
             // Log error if resource is not of type TResourceType

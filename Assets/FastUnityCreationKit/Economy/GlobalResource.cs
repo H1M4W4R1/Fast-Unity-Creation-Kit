@@ -1,6 +1,8 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.Utility.Singleton;
 using FastUnityCreationKit.Economy.Abstract;
+using FastUnityCreationKit.Economy.Events;
+using FastUnityCreationKit.Economy.Events.Data;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy
@@ -12,7 +14,7 @@ namespace FastUnityCreationKit.Economy
     /// By default, most resources will be global - an example of a non-global resource
     /// could be entity's health, which is unique to each entity. 
     /// </summary>
-    public abstract class GlobalResource<TSelf, TNumberType> : ResourceBase<TNumberType>, IGlobalResource<TSelf>,
+    public abstract class GlobalResource<TSelf, TNumberType> : ResourceBase<TSelf, TNumberType>, IGlobalResource<TSelf>,
         ISingleton<TSelf>
         where TSelf : GlobalResource<TSelf, TNumberType>, IGlobalResource<TSelf>, new()
         where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
@@ -24,5 +26,14 @@ namespace FastUnityCreationKit.Economy
         
         /// <inheritdoc />
         public TSelf GetGlobalReference() => Instance;
+
+        internal override void OnResourceAdded(float amount) =>
+            OnGlobalResourceAddedEvent<TSelf>.TriggerEvent(new GlobalResourceEventData<TSelf>(amount));
+        
+        internal override void OnResourceTaken(float amount) =>
+            OnGlobalResourceTakenEvent<TSelf>.TriggerEvent(new GlobalResourceEventData<TSelf>(amount));
+        
+        internal override void OnResourceChanged(float amount) =>
+            OnGlobalResourceChangedEvent<TSelf>.TriggerEvent(new GlobalResourceEventData<TSelf>(amount));
     }
 }

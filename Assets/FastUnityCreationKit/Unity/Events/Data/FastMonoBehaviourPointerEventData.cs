@@ -4,11 +4,11 @@ using UnityEngine.EventSystems;
 
 namespace FastUnityCreationKit.Unity.Events.Data
 {
-    public struct FastMonoBehaviourPointerEventData<TFastMonoBehaviour> : IEventChannelData
+    public readonly struct FastMonoBehaviourPointerEventData<TFastMonoBehaviour> : IEventChannelData
         where TFastMonoBehaviour : FastMonoBehaviour<TFastMonoBehaviour>, new()
     {
-        [CanBeNull] public PointerEventData pointerEventData;
-        [NotNull] public TFastMonoBehaviour fastMonoBehaviour;
+        [CanBeNull] public readonly PointerEventData pointerEventData;
+        [NotNull] public readonly TFastMonoBehaviour fastMonoBehaviour;
         
         public FastMonoBehaviourPointerEventData([CanBeNull] PointerEventData pointerEventData, [NotNull] TFastMonoBehaviour fastMonoBehaviour)
         {

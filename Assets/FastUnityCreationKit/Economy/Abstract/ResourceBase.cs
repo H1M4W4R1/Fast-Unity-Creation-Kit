@@ -3,6 +3,7 @@ using FastUnityCreationKit.Core.Numerics.Limits;
 using FastUnityCreationKit.Core.Utility;
 using FastUnityCreationKit.Core.Utility.Properties;
 using FastUnityCreationKit.Core.Values;
+using FastUnityCreationKit.Economy.Events;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -19,9 +20,10 @@ namespace FastUnityCreationKit.Economy.Abstract
     /// This is not intended to be used to store inventory items.
     /// </summary>
     /// <remarks>
-    /// <b>It is not recommended to use this class directly. See <see cref="LocalResource{TNumberType}"/> and <see cref="GlobalResource{TSelf, TNumberType}"/> instead.</b>
+    /// <b>It is not recommended to use this class directly. See <see cref="LocalResource{TSelf, TNumberType}"/> and <see cref="GlobalResource{TSelf, TNumberType}"/> instead.</b>
     /// </remarks>
-    public abstract class ResourceBase<TNumberType>
+    public abstract class ResourceBase<TSelf, TNumberType>
+        where TSelf : ResourceBase<TSelf, TNumberType>
         where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
     {
         /// <summary>
@@ -81,7 +83,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// Reinterprets resource to another type.
         /// Used for casting resource to its derived type.
         /// </summary>
-        [CanBeNull] public TResourceType As<TResourceType>() where TResourceType : ResourceBase<TNumberType>
+        [CanBeNull] public TResourceType As<TResourceType>() where TResourceType : ResourceBase<TSelf, TNumberType>
         {
             // If in editor, log error if resource is not of type TResourceType.
             if (this is TResourceType) return this as TResourceType;
@@ -99,6 +101,8 @@ namespace FastUnityCreationKit.Economy.Abstract
         public void Add(TNumberType amount)
         {
             _storage.Add(amount);
+            OnResourceChanged(amount.ToFloat());
+            OnResourceAdded(amount.ToFloat());
             ValidateResourceData();
         }
 
@@ -108,6 +112,8 @@ namespace FastUnityCreationKit.Economy.Abstract
         public void Take(TNumberType amount)
         {
             _storage.Subtract(amount);
+            OnResourceChanged(-amount.ToFloat());
+            OnResourceTaken(amount.ToFloat());
             ValidateResourceData();
         }
         
@@ -116,7 +122,6 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// Alias for <see cref="Take"/>.
         /// </summary>
         public void Subtract(TNumberType amount) => Take(amount);
-        
         
         /// <summary>
         /// Checks if resource storage has enough amount of resource.
@@ -139,7 +144,13 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// </summary>
         public void SetAmount(TNumberType amount)
         {
+            // Compute difference between current and new amount.
+            float difference = amount.ToFloat() - _storage.CurrentValue.ToFloat();
+            
             _storage.SetCurrentValue(amount);
+            
+            // Call events
+            OnResourceChanged(difference);
             ValidateResourceData();
         }
         
@@ -210,6 +221,10 @@ namespace FastUnityCreationKit.Economy.Abstract
                     _storage.SetCurrentValue(lowerLimitedResource.MinLimit);
             }
         }
+        
+        internal abstract void OnResourceChanged(float amount);
+        internal abstract void OnResourceAdded(float amount);
+        internal abstract void OnResourceTaken(float amount);
         
         /// <summary>
         /// Storage of the resource.
