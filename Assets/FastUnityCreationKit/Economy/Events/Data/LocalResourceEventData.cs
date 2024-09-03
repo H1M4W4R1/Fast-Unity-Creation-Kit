@@ -10,10 +10,12 @@ namespace FastUnityCreationKit.Economy.Events.Data
     public readonly struct LocalResourceEventData<TResource> : IEventChannelData
         where TResource : ILocalResource
     {
+        [CanBeNull] public readonly IWithLocalEconomy entity;
         public readonly float amount;
         
-        public LocalResourceEventData(float amount)
+        public LocalResourceEventData(IWithLocalEconomy entity, float amount)
         {
+            this.entity = entity;
             this.amount = amount;
         }
     }

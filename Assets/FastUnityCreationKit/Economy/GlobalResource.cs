@@ -27,13 +27,13 @@ namespace FastUnityCreationKit.Economy
         /// <inheritdoc />
         public TSelf GetGlobalReference() => Instance;
 
-        internal override void OnResourceAdded(ILocalEconomy economyReference, float amount) =>
+        internal override void OnResourceAdded(IWithLocalEconomy economyReference, float amount) =>
             OnGlobalResourceAddedEvent<TSelf>.TriggerEvent(new GlobalResourceEventData<TSelf>(amount));
         
-        internal override void OnResourceTaken(ILocalEconomy economyReference, float amount) =>
+        internal override void OnResourceTaken(IWithLocalEconomy economyReference, float amount) =>
             OnGlobalResourceTakenEvent<TSelf>.TriggerEvent(new GlobalResourceEventData<TSelf>(amount));
         
-        internal override void OnResourceChanged(ILocalEconomy economyReference, float amount) =>
+        internal override void OnResourceChanged(IWithLocalEconomy economyReference, float amount) =>
             OnGlobalResourceChangedEvent<TSelf>.TriggerEvent(new GlobalResourceEventData<TSelf>(amount));
     }
 }

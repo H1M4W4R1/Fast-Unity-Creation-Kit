@@ -7,7 +7,7 @@ namespace FastUnityCreationKit.Economy.Abstract
     /// <summary>
     /// Represents that object supports local economy.
     /// </summary>
-    public interface ILocalEconomy
+    public interface IWithLocalEconomy
     {
         /// <summary>
         /// Checks if object has resource of type <typeparamref name="TResource"/>.
@@ -15,7 +15,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         public bool HasResource<TResource>()
             where TResource : ILocalResource, new()
         {
-            return this is IWithLocalResource<TResource>;
+            return this is IWithWithLocalResource<TResource>;
         }
         
         /// <summary>
@@ -25,7 +25,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         public bool TryGetResource<TResource>([CanBeNull] out TResource resource)
             where TResource : ILocalResource, new()
         {
-            if (this is IWithLocalResource<TResource> localResource)
+            if (this is IWithWithLocalResource<TResource> localResource)
             {
                 resource = localResource.ResourceStorage;
                 return true;
@@ -45,7 +45,7 @@ namespace FastUnityCreationKit.Economy.Abstract
             where TResource : LocalResource<TResource, TNumberType>, new()
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
-            if (this is IWithLocalResource<TResource> localResource)
+            if (this is IWithWithLocalResource<TResource> localResource)
             {
                 // Get resource
                 TResource resource = localResource.ResourceStorage;
@@ -67,7 +67,7 @@ namespace FastUnityCreationKit.Economy.Abstract
             where TResource : LocalResource<TResource, TNumberType>, new()
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
-            if (this is IWithLocalResource<TResource> localResource)
+            if (this is IWithWithLocalResource<TResource> localResource)
             {
                 // Get resource
                 TResource resource = localResource.ResourceStorage;
@@ -89,7 +89,7 @@ namespace FastUnityCreationKit.Economy.Abstract
             where TResource : LocalResource<TResource, TNumberType>, new()
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
-            if (this is IWithLocalResource<TResource> localResource)
+            if (this is IWithWithLocalResource<TResource> localResource)
             {
                 // Get resource
                 TResource resource = localResource.ResourceStorage;
@@ -111,7 +111,7 @@ namespace FastUnityCreationKit.Economy.Abstract
             where TResource : LocalResource<TResource, TNumberType>, new()
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
-            if (this is IWithLocalResource<TResource> localResource)
+            if (this is IWithWithLocalResource<TResource> localResource)
             {
                 // Get resource
                 TResource resource = localResource.ResourceStorage;
@@ -133,7 +133,7 @@ namespace FastUnityCreationKit.Economy.Abstract
             where TResource : LocalResource<TResource, TNumberType>, new()
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
-            if (this is IWithLocalResource<TResource> localResource)
+            if (this is IWithWithLocalResource<TResource> localResource)
             {
                 // Get resource
                 TResource resource = localResource.ResourceStorage;

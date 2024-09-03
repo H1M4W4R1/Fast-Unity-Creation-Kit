@@ -5,6 +5,7 @@ using FastUnityCreationKit.Core.Utility.Properties;
 using FastUnityCreationKit.Core.Values;
 using FastUnityCreationKit.Economy.Events;
 using JetBrains.Annotations;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Economy.Abstract
@@ -103,12 +104,36 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Adds resource to the storage.
         /// </summary>
-        internal void Add([CanBeNull] ILocalEconomy economyReference, TNumberType amount)
+        internal void Add([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
         {
+            // Get old value
+            float oldValue = _storage.CurrentValue.ToFloat();
+            
             _storage.Add(amount);
-            OnResourceChanged(economyReference, amount.ToFloat());
-            OnResourceAdded(economyReference, amount.ToFloat());
+            
             ValidateResourceData();
+            
+            // Get current value
+            float currentValue = _storage.CurrentValue.ToFloat();
+            
+            // Compute difference (positive or zero)
+            float difference = currentValue - oldValue;
+            
+            // Call events
+            if (difference > math.EPSILON || difference < -math.EPSILON)
+            {
+                OnResourceChanged(economyReference, difference);
+
+                switch (difference)
+                {
+                    case > 0:
+                        OnResourceAdded(economyReference, difference);
+                        break;
+                    case < 0:
+                        OnResourceTaken(economyReference, -difference); // Double negative to get positive value.
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -119,12 +144,36 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Takes resource from the storage.
         /// </summary>
-        internal void Take([CanBeNull] ILocalEconomy economyReference, TNumberType amount)
+        internal void Take([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
         {
+            // Get old value
+            float oldValue = _storage.CurrentValue.ToFloat();
+            
             _storage.Subtract(amount);
-            OnResourceChanged(economyReference, -amount.ToFloat());
-            OnResourceTaken(economyReference, amount.ToFloat());
             ValidateResourceData();
+            
+            // Get current value
+            float currentValue = _storage.CurrentValue.ToFloat();
+            
+            // Compute difference
+            float difference = currentValue - oldValue;
+            
+            // Call events
+            if (difference > math.EPSILON || difference < -math.EPSILON)
+            {
+                OnResourceChanged(economyReference, difference);
+                
+                switch (difference)
+                {
+                    case > 0:
+                        OnResourceAdded(economyReference, difference);
+                        break;
+                    case < 0:
+                        OnResourceTaken(economyReference, -difference); // Double negative to get positive value.
+                        break;
+                }
+            }
+
         }
         
         /// <summary>
@@ -156,16 +205,25 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Sets amount of the resource.
         /// </summary>
-        internal void SetAmount([CanBeNull] ILocalEconomy economyReference, TNumberType amount)
+        internal void SetAmount([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
         {
-            // Compute difference between current and new amount.
-            float difference = amount.ToFloat() - _storage.CurrentValue.ToFloat();
+            // Get old value
+            float oldValue = _storage.CurrentValue.ToFloat();
             
             _storage.SetCurrentValue(amount);
             
             // Call events
-            OnResourceChanged(economyReference, difference);
             ValidateResourceData();
+            
+            // Get current value
+            float currentValue = _storage.CurrentValue.ToFloat();
+            
+            // Compute difference
+            float difference = currentValue - oldValue;
+            
+            // Call events
+            if(difference > math.EPSILON || difference < -math.EPSILON)
+                OnResourceChanged(economyReference, difference);
         }
         
         /// <summary>
@@ -176,7 +234,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Try to take resource from the storage.
         /// </summary>
-        internal bool TryTake(ILocalEconomy economyReference, TNumberType amount)
+        internal bool TryTake(IWithLocalEconomy economyReference, TNumberType amount)
         {
             if (!HasEnough(amount))
                 return false;
@@ -241,9 +299,9 @@ namespace FastUnityCreationKit.Economy.Abstract
             }
         }
         
-        internal abstract void OnResourceChanged([CanBeNull] ILocalEconomy localEconomy, float amount);
-        internal abstract void OnResourceAdded([CanBeNull] ILocalEconomy localEconomy, float amount);
-        internal abstract void OnResourceTaken([CanBeNull] ILocalEconomy localEconomy, float amount);
+        internal abstract void OnResourceChanged([CanBeNull] IWithLocalEconomy withLocalEconomy, float amount);
+        internal abstract void OnResourceAdded([CanBeNull] IWithLocalEconomy withLocalEconomy, float amount);
+        internal abstract void OnResourceTaken([CanBeNull] IWithLocalEconomy withLocalEconomy, float amount);
         
         /// <summary>
         /// Storage of the resource.
