@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Utility.Properties;
+using FastUnityCreationKit.Core.Utility.Properties.Data;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -58,6 +59,11 @@ namespace FastUnityCreationKit.Core.Utility
             where TUsageContext : IUsageContext => obj.AssetReference;
         
         [CanBeNull]
+        public static TLock GetLock<TWithLock, TLock>([NotNull] this TWithLock obj)
+            where TWithLock : IWithLock<TLock> 
+            where TLock : class, ILock, new() => obj.LockRepresentation;
+        
+        [CanBeNull]
         public static string GetObjectName<TUsageContext>([NotNull] this object obj)
             where TUsageContext : IUsageContext =>
             obj is IWithName name ? name.GetName<TUsageContext>() : null;
@@ -99,5 +105,10 @@ namespace FastUnityCreationKit.Core.Utility
             where TAssetType : Object
             where TUsageContext : IUsageContext =>
             obj is IWithAssetReference assetReference ? assetReference.GetAssetReference<TAssetType, TUsageContext>() : null;
+        
+        [CanBeNull]
+        public static TLock GetLock<TLock>([NotNull] this object obj)
+            where TLock : class, ILock, new() =>
+            obj is IWithLock<TLock> lockable ? lockable.LockRepresentation : null;
     }
 }

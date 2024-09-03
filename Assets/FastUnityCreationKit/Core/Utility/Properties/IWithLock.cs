@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Utility.Properties.Data;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Utility.Properties
 {
@@ -14,8 +15,9 @@ namespace FastUnityCreationKit.Core.Utility.Properties
     {
         /// <summary>
         /// Lock object used to lock the object.
+        /// Must be set in the constructor.
         /// </summary>
-        public TLock LockRepresentation { get; protected set; }
+        [NotNull] public TLock LockRepresentation { get; protected set; }
         
         /// <summary>
         /// Checks if the object is locked.
