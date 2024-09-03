@@ -143,6 +143,7 @@ namespace FastUnityCreationKit.Tests.Core.Utility
             // Arrange
             ExampleLockableObject lockableObject = new ExampleLockableObject();
             IWithLock<ExamplePickableLock> lockable = lockableObject;
+            ExamplePickableLock exampleLockObject = lockable.LockRepresentation;
             IJammableLock exampleLock = lockable.LockRepresentation;
             
             // Act
@@ -150,6 +151,7 @@ namespace FastUnityCreationKit.Tests.Core.Utility
             
             // Assert
             Assert.IsTrue(exampleLock.IsJammed);
+            Assert.AreEqual(1, exampleLockObject.jammedTimes);
         }
         
         [Test]
@@ -158,6 +160,7 @@ namespace FastUnityCreationKit.Tests.Core.Utility
             // Arrange
             ExampleLockableObject lockableObject = new ExampleLockableObject();
             IWithLock<ExamplePickableLock> lockable = lockableObject;
+            ExamplePickableLock exampleLockObject = lockable.LockRepresentation;
             IJammableLock exampleLock = lockable.LockRepresentation;
             
             // Act
@@ -166,6 +169,7 @@ namespace FastUnityCreationKit.Tests.Core.Utility
             
             // Assert
             Assert.IsFalse(exampleLock.IsJammed);
+            Assert.AreEqual(1, exampleLockObject.unjammedTimes);
         }
 
         [Test]
