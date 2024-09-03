@@ -39,12 +39,8 @@ public sealed class HealthResource : LocalResource<int32>
 To use a global resource you can use the following code:
 
 ```C#
-CoinsResource.Instance.Value.Add(10);
-```
-
-or
-```C#
 EconomyAPI.GetGlobalResource<CoinsResource>().Add(10);
+EconomyAPI.GetGlobalResource<CoinsResource>().Take(5);
 ```
 
 To use a local resource you have to inform the system that specified object supports the resource:
@@ -62,10 +58,8 @@ Then you can use the resource like this:
 
 ```C#
 var entity = new EntityWithHealth();
-if(entity.TryGetLocalResource<HealthResource>(out HealthResource health))
-{
-    health.SetValue(100);
-}
+entity.AddLocalResource<HealthResource, int32>(100); // Unfortunately we need to provide the numeric type of the resource
+entity.TakeLocalResource<HealthResource, int32>(10);
 ```
 
 ## Supported resource operations

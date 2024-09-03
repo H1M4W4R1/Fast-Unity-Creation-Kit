@@ -45,6 +45,7 @@ The properties system contains the following properties:
 * IWithPrefab - Interface that allows you to get the prefab of the object - this one requires to specify prefab type in the generic parameter.
 * IWithConfiguration - Interface that allows you to get the configuration of the object.
 * IWithAssetReference - Interface that allows you to get the asset reference for the object - compatible with Unity.Addressables package.
+* IWithLock - Interface that allows you to check if the object is locked. Can support multiple lock types.
 
 There are also some additional interfaces that require implementation of custom logic:
 * IConditionallyRemovable - Interface that allows you to check if the object should be removed.
@@ -190,4 +191,76 @@ public class Enemy : MonoBehaviour, IWithCustomProperty<int, AnyUsageContext>
 Enemy enemy = ...;
 int customProperty = enemy.GetObjectCustomProperty<int, BestiaryContext>(); 
 // This will return 10 as the context is not found on the object and the `AnyUsageContext` is used.
+```
+
+## Locks
+The `IWithLock` interface allows you to check if the object is locked. This is useful when you want to
+check if the object is locked and display a lock icon or a lock message.
+
+You need to define a lock type that implements the `ILock` interface.
+```C#
+public struct KeyLock : ILock
+{
+    public int lockedTimes;
+    public int unlockedTimes;
+       
+    bool ILockable.IsLocked { get; set; }
+
+    public void OnLocked()
+    {
+        lockedTimes++;
+    }
+
+    public void OnUnlocked()
+    {
+        unlockedTimes++;
+    }
+}
+```
+
+and then you can use it in your class as follows:
+```C#
+public sealed class LockableDoor : IWithLock<KeyLock>
+{
+    KeyLock IWithLock<KeyLock>.LockRepresentation { get; set; } = new KeyLock();
+}
+```
+
+With this, you can easily check if the object is locked and display a lock icon or a lock message or
+access lock to call events on player interaction.
+
+There are also `IPickableLock` and `IJammableLock` interfaces that allow you to easily create
+pickable and jammable locks. For more information see the interfaces source code. An example implementation
+is shown below.
+
+```C#
+    public sealed class ExamplePickableLock : IPickableLock, IJammableLock
+    {
+        bool ILockable.IsLocked { get; set; }
+        bool IJammableLock.IsJammed { get; set; }
+
+        public void OnLocked()
+        {
+            
+        }
+
+        public void OnUnlocked()
+        {
+        }
+
+        public void OnLockpickingSuccess()
+        {
+            // This should be called from the lockpicking minigame
+            // when the player successfully unlocks the lock.
+            // It should also unlock the lock.
+        }
+
+        public void OnLockpickingFailure()
+        {
+            // This should be called from the lockpicking minigame
+            // when the player fails to unlock the lock.
+            // It can jam the lock by percentage chance.            
+        }
+
+    }
 ```
