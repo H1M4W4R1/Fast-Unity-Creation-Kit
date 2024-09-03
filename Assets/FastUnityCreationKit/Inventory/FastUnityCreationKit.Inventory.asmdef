@@ -1,0 +1,10 @@
+{
+	"name": "FastUnityCreationKit.Inventory",
+	"allowUnsafeCode": true,
+	"references": [
+		"GUID:d8b63aba1907145bea998dd612889d6b",		
+		"GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+		"GUID:073b3eb3f1a67e64399bd59e9e28db00"
+	]
+	
+}
