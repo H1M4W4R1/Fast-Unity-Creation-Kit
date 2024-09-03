@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.Inventory.Abstract;
 using FastUnityCreationKit.Inventory.Data;
 using FastUnityCreationKit.Inventory.Stacking;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Inventory
 {
@@ -10,14 +11,75 @@ namespace FastUnityCreationKit.Inventory
     /// <br/><br/>
     /// If you don't want to stack your items <see cref="SingleItemStack"/>
     /// </summary>
-    public abstract class InventoryItem<TStackType>
+    public abstract class InventoryItem<TStackType> : InventoryItem
         where TStackType : ItemStackCounterValue, new()
     {
         /// <summary>
         /// Stack counter for the item.
         /// </summary>
         public TStackType StackCounter { get; protected set; } = new TStackType();
-        
+       
+        /// <summary>
+        /// Maximum amount of items that can be stacked.
+        /// </summary>
+        public sealed override int MaxStack => StackCounter.MaxLimit;
+
+        /// <summary>
+        /// Gets the amount of items in the stack.
+        /// </summary>
+        public sealed override int AmountInStack => StackCounter.CurrentValue;
+
+        public sealed override void ReduceStack(int amountToRemove)
+        {
+            // Check if the amount to remove is valid
+            if (amountToRemove <= 0) return;
+            
+            // Check if the stack has enough items
+            if (StackCounter.CurrentValue < amountToRemove)
+            {
+                // If not log an error
+                Debug.LogError($"Tried to remove {amountToRemove} items from the stack, but there are only {StackCounter.CurrentValue} items in the stack.");
+                
+                // Remove all items
+                StackCounter.Subtract(StackCounter.CurrentValue);
+            }
+            else
+            {
+                // Reduce the stack
+                StackCounter.Subtract(amountToRemove);
+            }
+        }
+
+        public sealed override void IncreaseStack(int amountToAdd)
+        {
+            // Check if the amount to add is valid
+            if (amountToAdd <= 0) return;
+            
+            // Check if the stack has enough space
+            if (StackCounter.CurrentValue + amountToAdd > StackCounter.MaxLimit)
+            {
+                // If not log an error
+                Debug.LogError($"Tried to add {amountToAdd} items to the stack, but there is only space for {StackCounter.MaxLimit - StackCounter.CurrentValue} items.");
+                
+                // Fill the stack
+                StackCounter.Add(StackCounter.MaxLimit - StackCounter.CurrentValue);
+            }
+            else
+            {
+                // Increase the stack
+                StackCounter.Add(amountToAdd);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents an item in the inventory, this is the base class for all items' logic.
+    /// </summary>
+    /// <remarks>
+    /// Do not use directly, use <see cref="InventoryItem{TStackType}"/> instead.
+    /// </remarks>
+    public abstract class InventoryItem
+    {
         /// <summary>
         /// Checks if the item is usable.
         /// </summary>
@@ -27,11 +89,6 @@ namespace FastUnityCreationKit.Inventory
         /// Checks if the item is equippable.
         /// </summary>
         public bool IsEquippable => this is IEquippableItem;
-
-        /// <summary>
-        /// Maximum amount of items that can be stacked.
-        /// </summary>
-        public int MaxStack => StackCounter.MaxLimit;
         
         /// <summary>
         /// Uses the item if it's usable.
@@ -86,6 +143,37 @@ namespace FastUnityCreationKit.Inventory
         protected virtual void OnDropped(IItemInteractionContext interactionContext)
         {
             // Implement your logic here
+        }
+        
+        /// <summary>
+        /// Amount of items in the stack.
+        /// </summary>
+        public abstract int AmountInStack { get; }
+
+        /// <summary>
+        /// Maximum amount of items that can be stacked.
+        /// </summary>
+        public abstract int MaxStack { get; }
+        
+        /// <summary>
+        /// Reduces the stack by the specified amount.
+        /// </summary>
+        public abstract void ReduceStack(int amountToRemove);
+        
+        /// <summary>
+        /// Increases the stack by the specified amount.
+        /// </summary>
+        public abstract void IncreaseStack(int amountToAdd);
+
+        /// <summary>
+        /// Gets the maximum stack size for the specified item type.
+        /// </summary>
+        public static int GetMaxStack<TItemType>() where TItemType : InventoryItem, new()
+        {
+            // Create a temporary item reference (unfortunately this is required to get the max stack as
+            // Unity version of C# does not support static abstract members)
+            TItemType tempItemReference = new TItemType();
+            return tempItemReference.MaxStack;
         }
     }
 }
