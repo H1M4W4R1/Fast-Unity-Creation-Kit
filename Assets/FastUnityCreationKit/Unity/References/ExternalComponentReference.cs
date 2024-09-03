@@ -27,7 +27,7 @@ namespace FastUnityCreationKit.Unity.References
         /// </summary>
         public bool IsNull => _isNull;
         
-        public ExternalComponentReference([NotNull] GameObject gameObject, bool automaticallyAddComponent = false)
+        public ExternalComponentReference([NotNull] GameObject gameObject, bool automaticallyAddComponent = true)
         {
             // Set fields (required for proper C# struct initialization).
             _gameObject = gameObject;
@@ -41,7 +41,7 @@ namespace FastUnityCreationKit.Unity.References
         /// <summary>
         /// Used to update the reference.
         /// </summary>
-        public void SetReference([NotNull] GameObject gameObject, bool automaticallyAddComponent = false)
+        public void SetReference([NotNull] GameObject gameObject, bool automaticallyAddComponent = true)
         {
             // Check if the reference is the same.
             if (ReferenceEquals(_gameObject, gameObject)) return;
@@ -64,7 +64,7 @@ namespace FastUnityCreationKit.Unity.References
         /// <summary>
         /// Call this from constructor to initialize the reference.
         /// </summary>
-        private void Initialize(bool automaticallyAddComponent)
+        private void Initialize(bool automaticallyAddComponent = true)
         {
             // Find the component on the game object.
             _component = _gameObject.GetComponent<TComponentType>();
