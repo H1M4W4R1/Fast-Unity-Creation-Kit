@@ -36,6 +36,12 @@ namespace FastUnityCreationKit.Unity
                 Debug.LogWarning("Object is both clickable and selectable. This may cause unexpected behavior.");
         }
 
+        protected void OnDestroy()
+        {
+            // Trigger the OnObjectDestroyed event.
+            OnObjectDestroyedEvent<TSelf>.TriggerEvent(new FastMonoBehaviourDestroyedData<TSelf>((this as TSelf)!));
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (this is IHoverable hoverable)
