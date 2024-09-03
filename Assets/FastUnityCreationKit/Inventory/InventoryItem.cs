@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Inventory.Abstract;
+using FastUnityCreationKit.Inventory.Data;
 using FastUnityCreationKit.Inventory.Stacking;
 
 namespace FastUnityCreationKit.Inventory
@@ -26,25 +27,7 @@ namespace FastUnityCreationKit.Inventory
         /// Checks if the item is equippable.
         /// </summary>
         public bool IsEquippable => this is IEquippableItem;
-        
-        /// <summary>
-        /// Checks if the item can be used.
-        /// If not usable, this will always return true.
-        /// </summary>
-        public bool CanBeUsed => IsUsable && ((this as IUsableItem)?.CanBeUsed ?? true);
-        
-        /// <summary>
-        /// Checks if the item can be equipped.
-        /// If not equippable, this will always return false.
-        /// </summary>
-        public bool CanBeEquipped => IsEquippable && ((this as IEquippableItem)?.CanBeEquipped ?? false);
-        
-        /// <summary>
-        /// Checks if the item can be removed.
-        /// If not equippable, this will always return false.
-        /// </summary>
-        public bool CanBeUnequipped => IsEquippable && ((this as IEquippableItem)?.CanBeUnequipped ?? false);
-        
+
         /// <summary>
         /// Maximum amount of items that can be stacked.
         /// </summary>
@@ -54,24 +37,45 @@ namespace FastUnityCreationKit.Inventory
         /// Uses the item if it's usable.
         /// Returns true if the item was used.
         /// </summary>
-        public bool Use() => (this as IUsableItem)?.UseItem() ?? false;
+        public bool Use(IItemInteractionContext interactionContext) 
+            => (this as IUsableItem)?.UseItem(interactionContext) ?? false;
+        
+        /// <summary>
+        /// Checks if the item can be used.
+        /// </summary>
+        public bool CanBeUsed(IItemInteractionContext interactionContext) 
+            => (this as IUsableItem)?.IsItemUsableInContext(interactionContext) ?? true;
         
         /// <summary>
         /// Equips the item if it's equippable.
         /// Returns true if the item was equipped.
         /// </summary>
-        public bool Equip() => (this as IEquippableItem)?.EquipItem() ?? false;
+        public bool Equip(IItemInteractionContext interactionContext) 
+            => (this as IEquippableItem)?.EquipItem(interactionContext) ?? false;
+        
+        /// <summary>
+        /// Checks if the item can be equipped.
+        /// </summary>
+        public bool CanBeEquipped(IItemInteractionContext interactionContext) 
+            => (this as IEquippableItem)?.IsItemEquippableInContext(interactionContext) ?? false;
         
         /// <summary>
         /// Un-equips the item if it's equippable.
         /// Returns true if the item was unequipped.
         /// </summary>
-        public bool Unequip() => (this as IEquippableItem)?.UnequipItem() ?? false;
+        public bool Unequip(IItemInteractionContext interactionContext) 
+            => (this as IEquippableItem)?.UnequipItem(interactionContext) ?? false;
+        
+        /// <summary>
+        /// Checks if the item can be unequipped.
+        /// </summary>
+        public bool CanBeUnequipped(IItemInteractionContext interactionContext) 
+            => (this as IEquippableItem)?.IsItemUnequippableInContext(interactionContext) ?? false;
         
         /// <summary>
         /// Called when the item is picked up.
         /// </summary>
-        protected virtual void OnPickedUp()
+        protected virtual void OnPickedUp(IItemInteractionContext interactionContext)
         {
             // Implement your logic here
         }
@@ -79,7 +83,7 @@ namespace FastUnityCreationKit.Inventory
         /// <summary>
         /// Called when the item is dropped.
         /// </summary>
-        protected virtual void OnDropped()
+        protected virtual void OnDropped(IItemInteractionContext interactionContext)
         {
             // Implement your logic here
         }

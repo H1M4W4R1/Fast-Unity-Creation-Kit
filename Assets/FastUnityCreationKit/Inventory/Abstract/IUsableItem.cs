@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Inventory.Abstract
+﻿using FastUnityCreationKit.Inventory.Data;
+
+namespace FastUnityCreationKit.Inventory.Abstract
 {
     /// <summary>
     /// Represents an item that can be used.
@@ -8,17 +10,17 @@
         /// <summary>
         /// Checks if the item can be used.
         /// </summary>
-        public bool CanBeUsed { get; }
+        public bool IsItemUsableInContext(IItemInteractionContext interactionContext);
 
         /// <summary>
         /// Uses the item.
         /// </summary>
-        public bool UseItem()
+        public bool UseItem(IItemInteractionContext interactionContext)
         {
             // If the item can't be used, return false.
-            if (!CanBeUsed) return false;
+            if (!IsItemUsableInContext(interactionContext)) return false;
             
-            OnUsed();
+            OnUsed(interactionContext);
             return true;
 
         }
@@ -26,6 +28,6 @@
         /// <summary>
         /// Called when the item is used.
         /// </summary>
-        protected void OnUsed();
+        protected void OnUsed(IItemInteractionContext interactionContext);
     }
 }
