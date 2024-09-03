@@ -32,9 +32,11 @@
         /// </summary>
         void ILockable.Lock()
         {
+            // Check if the lock is not already locked
+            if(IsLocked) return;
+            
             // Check if the lock is jammed
-            if(this is IJammableLock {IsJammed: true})
-                return;
+            if(this is IJammableLock {IsJammed: true}) return;
             
             // Lock the object
             IsLocked = true;
@@ -46,6 +48,9 @@
         /// </summary>
         void ILockable.Unlock()
         {
+            // Check if the lock is not already unlocked
+            if(!IsLocked) return;
+            
             // Check if the lock is jammed
             if(this is IJammableLock {IsJammed: true})
                 return;

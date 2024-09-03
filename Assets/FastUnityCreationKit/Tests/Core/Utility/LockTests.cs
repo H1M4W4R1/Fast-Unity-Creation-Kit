@@ -43,6 +43,41 @@ namespace FastUnityCreationKit.Tests.Core.Utility
         }
         
         [Test]
+        public void Lock_DoesNotLock_AlreadyLockedLock()
+        {
+            // Arrange
+            ExampleLockableObject lockableObject = new ExampleLockableObject();
+            IWithLock<ExampleLock> lockable = lockableObject;
+            ExampleLock exampleLock = lockable.LockRepresentation;
+            
+            // Act
+            lockable.Lock();
+            lockable.Lock();
+            
+            // Assert
+            Assert.IsTrue(lockable.IsLocked);
+            Assert.AreEqual(1, exampleLock.lockedTimes);
+        }
+        
+        [Test]
+        public void Unlock_DoesNotUnlock_AlreadyUnlockedLock()
+        {
+            // Arrange
+            ExampleLockableObject lockableObject = new ExampleLockableObject();
+            IWithLock<ExampleLock> lockable = lockableObject;
+            ExampleLock exampleLock = lockable.LockRepresentation;
+            
+            // Act
+            lockable.Lock();
+            lockable.Unlock();
+            lockable.Unlock();
+            
+            // Assert
+            Assert.IsFalse(lockable.IsLocked);
+            Assert.AreEqual(1, exampleLock.unlockedTimes);
+        }
+        
+        [Test]
         public void CanBeLockpicked_ReturnsFalse_IfLockIsNotPickable()
         {
             // Arrange
