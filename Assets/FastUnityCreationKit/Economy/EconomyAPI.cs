@@ -30,7 +30,7 @@ namespace FastUnityCreationKit.Economy
             TResource reference = resource.GetGlobalResourceReference<TResource>();
 
             IResource resourceInterface = reference;
-            resourceInterface!.AddValue(amount);
+            resourceInterface!.AddValue(null, amount);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace FastUnityCreationKit.Economy
             TResource reference = resource.GetGlobalResourceReference<TResource>();
 
             IResource resourceInterface = reference;
-            resourceInterface!.TakeValue(amount);
+            resourceInterface!.TakeValue(null, amount);
         }
         
         /// <summary>
@@ -88,7 +88,7 @@ namespace FastUnityCreationKit.Economy
             TResource reference = resource.GetGlobalResourceReference<TResource>();
 
             IResource resourceInterface = reference;
-            resourceInterface!.SetValue(amount);
+            resourceInterface!.SetValue(null, amount);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace FastUnityCreationKit.Economy
             TResource reference = resource.GetGlobalResourceReference<TResource>();
 
             IResource resourceInterface = reference;
-            return resourceInterface!.HasEnoughValue(amount);
+            return resourceInterface!.HasEnoughValue(null, amount);
         }
         
         /// <summary>
@@ -146,7 +146,7 @@ namespace FastUnityCreationKit.Economy
             TResource reference = resource.GetGlobalResourceReference<TResource>();
 
             IResource resourceInterface = reference;
-            return resourceInterface!.TryTakeValue(amount);
+            return resourceInterface!.TryTakeValue(null, amount);
         }
         
         /// <summary>

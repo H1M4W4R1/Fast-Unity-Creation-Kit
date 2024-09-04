@@ -34,51 +34,46 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Adds local resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static void AddLocalResource<TResource, TNumberType>(this IWithLocalEconomy withLocalEconomy, TNumberType amount)
-            where TResource : LocalResource<TResource, TNumberType>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static void AddLocalResource<TResource>(this IWithLocalEconomy withLocalEconomy, float amount)
+            where TResource : ILocalResource, IResource
         {
-            withLocalEconomy.AddResource<TResource, TNumberType>(amount);
+            withLocalEconomy.AddResource<TResource>(amount);
         }
         
         /// <summary>
         /// Takes local resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static void TakeLocalResource<TResource, TNumberType>(this IWithLocalEconomy withLocalEconomy, TNumberType amount)
-            where TResource : LocalResource<TResource, TNumberType>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static void TakeLocalResource<TResource>(this IWithLocalEconomy withLocalEconomy, float amount)
+            where TResource : ILocalResource, IResource
         {
-            withLocalEconomy.TakeResource<TResource, TNumberType>(amount);
+            withLocalEconomy.TakeResource<TResource>(amount);
         }
         
         /// <summary>
         /// Sets local resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static void SetLocalResource<TResource, TNumberType>(this IWithLocalEconomy withLocalEconomy, TNumberType amount)
-            where TResource : LocalResource<TResource, TNumberType>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static void SetLocalResource<TResource>(this IWithLocalEconomy withLocalEconomy, float amount)
+            where TResource : ILocalResource, IResource
         {
-            withLocalEconomy.SetResource<TResource, TNumberType>(amount);
+            withLocalEconomy.SetResource<TResource>(amount);
         }
         
         /// <summary>
         /// Try to take local resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static bool TryTakeLocalResource<TResource, TNumberType>(this IWithLocalEconomy withLocalEconomy, TNumberType amount)
-            where TResource : LocalResource<TResource, TNumberType>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static bool TryTakeLocalResource<TResource>(this IWithLocalEconomy withLocalEconomy, float amount)
+            where TResource : ILocalResource, IResource
         {
-            return withLocalEconomy.TryTakeResource<TResource, TNumberType>(amount);
+            return withLocalEconomy.TryTakeResource<TResource>(amount);
         }
-        
+
         /// <summary>
         /// Checks if object has enough local resource of type <typeparamref name="TResource"/>.
         /// </summary>
-        public static bool HasEnoughLocalResource<TResource, TNumberType>(this IWithLocalEconomy withLocalEconomy, TNumberType amount)
-            where TResource : LocalResource<TResource, TNumberType>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static bool HasEnoughLocalResource<TResource>(this IWithLocalEconomy withLocalEconomy, float amount)
+            where TResource : ILocalResource, IResource
         {
-            return withLocalEconomy.HasEnoughResource<TResource, TNumberType>(amount);
+            return withLocalEconomy.HasEnoughResource<TResource>(amount);
         }
     }
 }

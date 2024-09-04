@@ -1,9 +1,6 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.Numerics.Limits;
-using FastUnityCreationKit.Core.Utility;
-using FastUnityCreationKit.Core.Utility.Properties;
 using FastUnityCreationKit.Core.Values;
-using FastUnityCreationKit.Economy.Events;
 using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEngine;
@@ -95,16 +92,11 @@ namespace FastUnityCreationKit.Economy.Abstract
             // Return null otherwise.
             return null;
         }
-        
+
         /// <summary>
         /// Adds resource to the storage.
         /// </summary>
-        void IResource<TNumberType>.Add(TNumberType amount) => Add(null, amount);
-        
-        /// <summary>
-        /// Adds resource to the storage.
-        /// </summary>
-        internal void Add([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
+        void IResource<TNumberType>.Add([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
         {
             // Get old value
             float oldValue = _storage.CurrentValue.ToFloat();
@@ -135,16 +127,11 @@ namespace FastUnityCreationKit.Economy.Abstract
                 }
             }
         }
-
-        /// <summary>
-        /// Takes resource from the storage.
-        /// </summary>
-        void IResource<TNumberType>.Take(TNumberType amount) => Take(null, amount);
         
         /// <summary>
         /// Takes resource from the storage.
         /// </summary>
-        internal void Take([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
+        void IResource<TNumberType>.Take([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
         {
             // Get old value
             float oldValue = _storage.CurrentValue.ToFloat();
@@ -191,7 +178,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Checks if resource storage has enough amount of resource.
         /// </summary>
-        bool IResource<TNumberType>.HasEnough(TNumberType amount)
+        bool IResource<TNumberType>.HasEnough(IWithLocalEconomy localEconomy, TNumberType amount)
         {
             // Convert to floats
             double currentAmount = _storage.CurrentValue.ToFloat();
@@ -203,16 +190,11 @@ namespace FastUnityCreationKit.Economy.Abstract
             // Check if current amount is greater or equal to amount to check.
             return currentAmount - minAmount >= amountToCheck;
         }
-        
+
         /// <summary>
         /// Sets amount of the resource.
         /// </summary>
-        void IResource<TNumberType>.SetAmount(TNumberType amount) => SetAmount(null, amount);
-        
-        /// <summary>
-        /// Sets amount of the resource.
-        /// </summary>
-        internal void SetAmount([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
+        void IResource<TNumberType>.SetAmount([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
         {
             // Get old value
             float oldValue = _storage.CurrentValue.ToFloat();
@@ -232,23 +214,18 @@ namespace FastUnityCreationKit.Economy.Abstract
             if(difference > math.EPSILON || difference < -math.EPSILON)
                 OnResourceChanged(economyReference, difference);
         }
-        
+
         /// <summary>
         /// Try to take resource from the storage.
         /// </summary>
-        bool IResource<TNumberType>.TryTake(TNumberType amount) => TryTake(null, amount);
-        
-        /// <summary>
-        /// Try to take resource from the storage.
-        /// </summary>
-        internal bool TryTake(IWithLocalEconomy economyReference, TNumberType amount)
+        bool IResource<TNumberType>.TryTake(IWithLocalEconomy economyReference, TNumberType amount)
         {
             // Convert to interface and check if resource has enough.
             IResource<TNumberType> resource = this;
             if (!resource.HasEnough(amount))
                 return false;
             
-            Take(economyReference, amount);
+            resource.Take(economyReference, amount);
             return true;
         }
         

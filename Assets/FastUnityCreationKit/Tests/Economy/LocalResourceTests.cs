@@ -61,7 +61,7 @@ namespace FastUnityCreationKit.Tests.Economy
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
             
             // Act
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             // Assert
             Assert.IsTrue(entity.TryGetLocalResource(out ExampleHealthLocalResource actual));
@@ -74,10 +74,10 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             // Act
-            entity.TakeLocalResource<ExampleHealthLocalResource, int32>(50);
+            entity.TakeLocalResource<ExampleHealthLocalResource>(50);
             
             // Assert
             Assert.IsTrue(entity.TryGetLocalResource(out ExampleHealthLocalResource actual));
@@ -92,10 +92,10 @@ namespace FastUnityCreationKit.Tests.Economy
             
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             // Act
-            bool result = entity.TryTakeLocalResource<ExampleHealthLocalResource, int32>(150);
+            bool result = entity.TryTakeLocalResource<ExampleHealthLocalResource>(150);
             
             // Assert
             Assert.IsTrue(entity.TryGetLocalResource(out ExampleHealthLocalResource actual));
@@ -109,10 +109,10 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             // Act
-            entity.SetLocalResource<ExampleHealthLocalResource, int32>(50);
+            entity.SetLocalResource<ExampleHealthLocalResource>(50);
             
             // Assert
             Assert.IsTrue(entity.TryGetLocalResource(out ExampleHealthLocalResource actual));
@@ -125,10 +125,10 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             // Act
-            entity.TakeLocalResource<ExampleHealthLocalResource, int32>(150);
+            entity.TakeLocalResource<ExampleHealthLocalResource>(150);
             
             // Assert
             Assert.IsTrue(entity.TryGetLocalResource(out ExampleHealthLocalResource actual));
@@ -141,10 +141,10 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             // Act
-            bool result = entity.HasEnoughLocalResource<ExampleHealthLocalResource, int32>(50);
+            bool result = entity.HasEnoughLocalResource<ExampleHealthLocalResource>(50);
             
             // Assert
             Assert.IsTrue(result);
@@ -155,10 +155,10 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             // Act
-            bool result = entity.HasEnoughLocalResource<ExampleHealthLocalResource, int32>(150);
+            bool result = entity.HasEnoughLocalResource<ExampleHealthLocalResource>(150);
             
             // Assert
             Assert.IsFalse(result);
@@ -169,10 +169,10 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             // Act
-            bool result = entity.HasEnoughLocalResource<ExampleHealthLocalResource, int32>(100);
+            bool result = entity.HasEnoughLocalResource<ExampleHealthLocalResource>(100);
             
             // Assert
             Assert.IsTrue(result);
@@ -191,7 +191,7 @@ namespace FastUnityCreationKit.Tests.Economy
             OnLocalResourceChangedEvent<ExampleHealthLocalResource>.RegisterEventListener(OnLocalResourceChanged);
       
             // Act
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             // Assert
             Assert.AreEqual(100, valueAdded);
@@ -224,13 +224,13 @@ namespace FastUnityCreationKit.Tests.Economy
 
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             OnLocalResourceTakenEvent<ExampleHealthLocalResource>.RegisterEventListener(OnLocalResourceTaken);
             OnLocalResourceChangedEvent<ExampleHealthLocalResource>.RegisterEventListener(OnLocalResourceChanged);
       
             // Act
-            entity.TakeLocalResource<ExampleHealthLocalResource, int32>(50);
+            entity.TakeLocalResource<ExampleHealthLocalResource>(50);
             
             // Assert
             Assert.AreEqual(50, valueTaken);
@@ -263,13 +263,13 @@ namespace FastUnityCreationKit.Tests.Economy
 
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             OnLocalResourceTakenEvent<ExampleHealthLocalResource>.RegisterEventListener(OnLocalResourceTaken);
             OnLocalResourceChangedEvent<ExampleHealthLocalResource>.RegisterEventListener(OnLocalResourceChanged);
       
             // Act
-            entity.TryTakeLocalResource<ExampleHealthLocalResource, int32>(50);
+            entity.TryTakeLocalResource<ExampleHealthLocalResource>(50);
             
             // Assert
             Assert.AreEqual(50, valueTaken);
@@ -301,12 +301,12 @@ namespace FastUnityCreationKit.Tests.Economy
 
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             OnLocalResourceChangedEvent<ExampleHealthLocalResource>.RegisterEventListener(OnLocalResourceChanged);
       
             // Act
-            entity.SetLocalResource<ExampleHealthLocalResource, int32>(50);
+            entity.SetLocalResource<ExampleHealthLocalResource>(50);
             
             // Assert
             Assert.AreEqual(-50, valueChanged); // -50 because the value was changed from 100 to 50
@@ -329,12 +329,12 @@ namespace FastUnityCreationKit.Tests.Economy
 
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             OnLocalResourceChangedEvent<ExampleHealthLocalResource>.RegisterEventListener(OnLocalResourceChanged);
       
             // Act
-            entity.SetLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.SetLocalResource<ExampleHealthLocalResource>(100);
             
             // Assert
             Assert.AreEqual(0, valueChanged);
@@ -358,13 +358,13 @@ namespace FastUnityCreationKit.Tests.Economy
 
             // Arrange
             ExampleEntityWithWithLocalHealth entity = new ExampleEntityWithWithLocalHealth();
-            entity.AddLocalResource<ExampleHealthLocalResource, int32>(100);
+            entity.AddLocalResource<ExampleHealthLocalResource>(100);
             
             OnLocalResourceTakenEvent<ExampleHealthLocalResource>.RegisterEventListener(OnLocalResourceTaken);
             OnLocalResourceChangedEvent<ExampleHealthLocalResource>.RegisterEventListener(OnLocalResourceChanged);
       
             // Act
-            entity.TryTakeLocalResource<ExampleHealthLocalResource, int32>(150);
+            entity.TryTakeLocalResource<ExampleHealthLocalResource>(150);
             
             // Assert
             Assert.AreEqual(0, valueTaken);

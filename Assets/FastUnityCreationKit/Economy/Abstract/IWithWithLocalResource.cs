@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy.Abstract
 {
