@@ -136,7 +136,7 @@ namespace FastUnityCreationKit.Inventory
         /// Removes an item of a specific type with a specific amount from the container.
         /// Returns true if the item was removed, false otherwise (e.g. not enough items in the container).
         /// </summary>
-        public bool TryTakeItem<TItemType>(int amount = 1) where TItemType : InventoryItem, new()
+        public bool TryTakeItem<TItemType>(int amount = 1) where TItemType : InventoryItem
         {
             // Check if amount is valid
             if (amount <= 0) return true;
