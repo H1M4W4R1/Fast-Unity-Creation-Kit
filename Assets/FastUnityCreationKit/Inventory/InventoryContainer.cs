@@ -66,7 +66,7 @@ namespace FastUnityCreationKit.Inventory
         /// <summary>
         /// Get list of all items of a specific type.
         /// </summary>
-        protected List<InventoryItem> GetItemsByType<TItemType>() where TItemType : InventoryItem
+        internal List<InventoryItem> GetItemsByType<TItemType>() where TItemType : InventoryItem
         {
             List<InventoryItem> items = new List<InventoryItem>();
             for (int index = 0; index < inventoryItems.Count; index++)
@@ -100,6 +100,22 @@ namespace FastUnityCreationKit.Inventory
 
             // Check if the amount of items is greater than the required amount
             return itemCount >= amount;
+        }
+        
+        /// <summary>
+        /// Count the amount of items of a specific type in the container.
+        /// </summary>
+        public int CountItem<TItemType>() where TItemType : InventoryItem
+        {
+            int itemCount = 0;
+            for (int index = 0; index < inventoryItems.Count; index++)
+            {
+                InventoryItem inventoryItem = inventoryItems[index];
+                if (inventoryItem is TItemType)
+                    itemCount += inventoryItem.AmountInStack;
+            }
+
+            return itemCount;
         }
         
         /// <summary>
