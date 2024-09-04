@@ -39,10 +39,8 @@ public sealed class HealthResource : LocalResource<int32>
 To use a global resource you can use the following code:
 
 ```C#
-EconomyAPI.GetGlobalResource<CoinsResource>().Add(10);
-EconomyAPI.GetGlobalResource<CoinsResource>().Take(5);
+EconomyAPI.AddGlobalResource<CoinsResource>(10);
 ```
-
 To use a local resource you have to inform the system that specified object supports the resource:
 
 ```C#
@@ -58,19 +56,25 @@ Then you can use the resource like this:
 
 ```C#
 var entity = new EntityWithHealth();
-entity.AddLocalResource<HealthResource, int32>(100); // Unfortunately we need to provide the numeric type of the resource
-entity.TakeLocalResource<HealthResource, int32>(10);
+entity.AddLocalResource<HealthResource>(100);
+entity.TakeLocalResource<HealthResource>(10);
 ```
+
+
+<note>
+All values provided in add/take etc. resource functions are floats and automatically converted to
+the type of the resource. API assumes that resource underlying type is a number that implements
+ISupportsFloatConversion interface.
+</note>
 
 ## Supported resource operations
 * Add(value) - adds specified value to the resource
 * Take(value) - takes specified value from the resource
-* Subtract(value) - subtracts specified value from the resource (same as Take)
 * SetValue(value) - sets the value of the resource to specified value
-* Amount - returns the current value of the resource
+* Amount - returns the current value of the resource (placed in the resource object, you need to get it first)
 * TryTake(value) - tries to take specified value from the resource and returns true if the operation was successful
 * HasEnough(value) - returns true if the resource has enough value to take specified amount
-* Reset() - resets the resource to its default value
+* Reset() - resets the resource to its default value (placed in the resource object, you need to get it first)
 
 ## Support for IWithMinLimit, IWitMaxLimit and IWithDefaultValue
 Numeric interfaces are fully supported by the resource system. You can simply implement them onto your

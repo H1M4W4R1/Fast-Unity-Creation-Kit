@@ -15,7 +15,6 @@ namespace FastUnityCreationKit.Economy
         where TSelf : LocalResource<TSelf, TNumberType>
         where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
     {
-        // TODO: Fix this
         internal override void OnResourceAdded(IWithLocalEconomy economyReference, float amount) =>
             OnLocalResourceAddedEvent<TSelf>.TriggerEvent(
                 new LocalResourceEventData<TSelf>(economyReference, amount));
