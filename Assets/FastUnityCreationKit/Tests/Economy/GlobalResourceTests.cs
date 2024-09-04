@@ -14,8 +14,8 @@ namespace FastUnityCreationKit.Tests.Economy
         [TearDown]
         public void TearDown()
         {
-            ExampleCoinsGlobalResource.Instance.SetAmount(0);
-            ExampleDiamondsGlobalResource.Instance.SetAmount(0);
+            EconomyAPI.SetGlobalResource<ExampleCoinsGlobalResource>(0);
+            EconomyAPI.SetGlobalResource<ExampleDiamondsGlobalResource>(0);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace FastUnityCreationKit.Tests.Economy
         public void EconomyAPI_AddGlobalResource_WorksCorrectly()
         {
             // Act
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
             ExampleCoinsGlobalResource actual =
                 EconomyAPI.GetGlobalResource<ExampleCoinsGlobalResource>();
 
@@ -76,10 +76,10 @@ namespace FastUnityCreationKit.Tests.Economy
         public void EconomyAPI_TakeGlobalResource_WorksCorrectly()
         {
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
 
             // Act
-            EconomyAPI.TakeGlobalResource<ExampleCoinsGlobalResource, int32>(5);
+            EconomyAPI.TakeGlobalResource<ExampleCoinsGlobalResource>(5);
             ExampleCoinsGlobalResource actual =
                 EconomyAPI.GetGlobalResource<ExampleCoinsGlobalResource>();
 
@@ -91,7 +91,7 @@ namespace FastUnityCreationKit.Tests.Economy
         public void EconomyAPI_SetGlobalResource_WorksCorrectly()
         {
             // Act
-            EconomyAPI.SetGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.SetGlobalResource<ExampleCoinsGlobalResource>(10);
             ExampleCoinsGlobalResource actual =
                 EconomyAPI.GetGlobalResource<ExampleCoinsGlobalResource>();
 
@@ -103,10 +103,10 @@ namespace FastUnityCreationKit.Tests.Economy
         public void EconomyAPI_TryTakeGlobalResource_WorksCorrectly()
         {
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
 
             // Act
-            bool result = EconomyAPI.TryTakeGlobalResource<ExampleCoinsGlobalResource, int32>(5);
+            bool result = EconomyAPI.TryTakeGlobalResource<ExampleCoinsGlobalResource>(5);
             ExampleCoinsGlobalResource actual =
                 EconomyAPI.GetGlobalResource<ExampleCoinsGlobalResource>();
 
@@ -119,10 +119,10 @@ namespace FastUnityCreationKit.Tests.Economy
         public void EconomyAPI_TryTakeGlobalResource_ReturnsFalse_IfResourceAmountIsTooLow()
         {
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
 
             // Act
-            bool result = EconomyAPI.TryTakeGlobalResource<ExampleCoinsGlobalResource, int32>(15);
+            bool result = EconomyAPI.TryTakeGlobalResource<ExampleCoinsGlobalResource>(15);
             ExampleCoinsGlobalResource actual =
                 EconomyAPI.GetGlobalResource<ExampleCoinsGlobalResource>();
 
@@ -135,10 +135,10 @@ namespace FastUnityCreationKit.Tests.Economy
         public void EconomyAPI_HasEnoughGlobalResource_ReturnsTrue_IfResourceAmountIsEnough()
         {
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
 
             // Act
-            bool result = EconomyAPI.HasEnoughGlobalResource<ExampleCoinsGlobalResource, int32>(5);
+            bool result = EconomyAPI.HasEnoughGlobalResource<ExampleCoinsGlobalResource>(5);
 
             // Assert
             Assert.IsTrue(result);
@@ -148,10 +148,10 @@ namespace FastUnityCreationKit.Tests.Economy
         public void EconomyAPI_HasEnoughGlobalResource_ReturnsFalse_IfResourceAmountIsTooLow()
         {
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
 
             // Act
-            bool result = EconomyAPI.HasEnoughGlobalResource<ExampleCoinsGlobalResource, int32>(15);
+            bool result = EconomyAPI.HasEnoughGlobalResource<ExampleCoinsGlobalResource>(15);
 
             // Assert
             Assert.IsFalse(result);
@@ -161,10 +161,10 @@ namespace FastUnityCreationKit.Tests.Economy
         public void EconomyAPI_HasEnoughGlobalResource_ReturnsTrue_IfResourceAmountIsEqual()
         {
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
 
             // Act
-            bool result = EconomyAPI.HasEnoughGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            bool result = EconomyAPI.HasEnoughGlobalResource<ExampleCoinsGlobalResource>(10);
 
             // Assert
             Assert.IsTrue(result);
@@ -181,7 +181,7 @@ namespace FastUnityCreationKit.Tests.Economy
             OnGlobalResourceChangedEvent<ExampleCoinsGlobalResource>.RegisterEventListener(OnGlobalResourceChanged);
 
             // Act
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
 
             // Assert
             Assert.AreEqual(10f, valueAdded);
@@ -211,12 +211,12 @@ namespace FastUnityCreationKit.Tests.Economy
             float valueChanged = 0f;
 
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
             OnGlobalResourceTakenEvent<ExampleCoinsGlobalResource>.RegisterEventListener(OnGlobalResourceTaken);
             OnGlobalResourceChangedEvent<ExampleCoinsGlobalResource>.RegisterEventListener(OnGlobalResourceChanged);
 
             // Act
-            EconomyAPI.TakeGlobalResource<ExampleCoinsGlobalResource, int32>(5);
+            EconomyAPI.TakeGlobalResource<ExampleCoinsGlobalResource>(5);
 
             // Assert
             Assert.AreEqual(5f, valueTaken);
@@ -245,11 +245,11 @@ namespace FastUnityCreationKit.Tests.Economy
             float valueChanged = 0f;
 
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
             OnGlobalResourceChangedEvent<ExampleCoinsGlobalResource>.RegisterEventListener(OnGlobalResourceChanged);
 
             // Act
-            EconomyAPI.SetGlobalResource<ExampleCoinsGlobalResource, int32>(5);
+            EconomyAPI.SetGlobalResource<ExampleCoinsGlobalResource>(5);
 
             // Assert
             Assert.AreEqual(-5f, valueChanged); // Amount is set to 5, so the change is -5
@@ -271,11 +271,11 @@ namespace FastUnityCreationKit.Tests.Economy
             float valueChanged = 0f;
 
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
             OnGlobalResourceChangedEvent<ExampleCoinsGlobalResource>.RegisterEventListener(OnGlobalResourceChanged);
 
             // Act
-            EconomyAPI.SetGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.SetGlobalResource<ExampleCoinsGlobalResource>(10);
 
             // Assert
             Assert.AreEqual(0f, valueChanged);
@@ -298,12 +298,12 @@ namespace FastUnityCreationKit.Tests.Economy
             float valueChanged = 0f;
 
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
             OnGlobalResourceTakenEvent<ExampleCoinsGlobalResource>.RegisterEventListener(OnGlobalResourceTaken);
             OnGlobalResourceChangedEvent<ExampleCoinsGlobalResource>.RegisterEventListener(OnGlobalResourceChanged);
 
             // Act
-            bool result = EconomyAPI.TryTakeGlobalResource<ExampleCoinsGlobalResource, int32>(5);
+            bool result = EconomyAPI.TryTakeGlobalResource<ExampleCoinsGlobalResource>(5);
 
             // Assert
             Assert.IsTrue(result);
@@ -334,12 +334,12 @@ namespace FastUnityCreationKit.Tests.Economy
             float valueChanged = 0f;
             
             // Arrange
-            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource, int32>(10);
+            EconomyAPI.AddGlobalResource<ExampleCoinsGlobalResource>(10);
             OnGlobalResourceTakenEvent<ExampleCoinsGlobalResource>.RegisterEventListener(OnGlobalResourceTaken);
             OnGlobalResourceChangedEvent<ExampleCoinsGlobalResource>.RegisterEventListener(OnGlobalResourceChanged);
 
             // Act
-            bool result = EconomyAPI.TryTakeGlobalResource<ExampleCoinsGlobalResource, int32>(15);
+            bool result = EconomyAPI.TryTakeGlobalResource<ExampleCoinsGlobalResource>(15);
 
             // Assert
             Assert.IsFalse(result);
@@ -370,13 +370,13 @@ namespace FastUnityCreationKit.Tests.Economy
             float valueChanged = 0f;
             
             // Arrange
-            EconomyAPI.SetGlobalResource<ExampleDiamondsGlobalResource, int32>(100);
+            EconomyAPI.SetGlobalResource<ExampleDiamondsGlobalResource>(100);
             
             OnGlobalResourceAddedEvent<ExampleDiamondsGlobalResource>.RegisterEventListener(OnGlobalResourceAdded);
             OnGlobalResourceChangedEvent<ExampleDiamondsGlobalResource>.RegisterEventListener(OnGlobalResourceChanged);
             
             // Act
-            EconomyAPI.AddGlobalResource<ExampleDiamondsGlobalResource, int32>(5);
+            EconomyAPI.AddGlobalResource<ExampleDiamondsGlobalResource>(5);
             
             // Assert
             Assert.AreEqual(0f, valueAdded);
@@ -406,12 +406,12 @@ namespace FastUnityCreationKit.Tests.Economy
             float valueChanged = 0f;
             
             // Arrange
-            EconomyAPI.SetGlobalResource<ExampleDiamondsGlobalResource, int32>(0);
+            EconomyAPI.SetGlobalResource<ExampleDiamondsGlobalResource>(0);
             OnGlobalResourceTakenEvent<ExampleDiamondsGlobalResource>.RegisterEventListener(OnGlobalResourceTaken);
             OnGlobalResourceChangedEvent<ExampleDiamondsGlobalResource>.RegisterEventListener(OnGlobalResourceChanged);
             
             // Act
-            EconomyAPI.TakeGlobalResource<ExampleDiamondsGlobalResource, int32>(15);
+            EconomyAPI.TakeGlobalResource<ExampleDiamondsGlobalResource>(15);
             
             // Assert
             Assert.AreEqual(0f, valueTaken);

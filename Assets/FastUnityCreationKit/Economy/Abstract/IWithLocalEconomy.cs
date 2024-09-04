@@ -116,8 +116,9 @@ namespace FastUnityCreationKit.Economy.Abstract
                 // Get resource
                 TResource resource = localResource.ResourceStorage;
                 
-                // Check if resource has enough
-                return resource.HasEnough(amount);
+                // Convert resource to interface
+                IResource<TNumberType> resourceInterface = resource;
+                return resourceInterface.HasEnough(amount);
             }
             
             // Log error

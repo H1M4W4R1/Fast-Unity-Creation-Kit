@@ -23,7 +23,7 @@ namespace FastUnityCreationKit.Economy.Abstract
     /// <remarks>
     /// <b>It is not recommended to use this class directly. See <see cref="LocalResource{TSelf, TNumberType}"/> and <see cref="GlobalResource{TSelf, TNumberType}"/> instead.</b>
     /// </remarks>
-    public abstract class ResourceBase<TSelf, TNumberType>
+    public abstract class ResourceBase<TSelf, TNumberType> : IResource<TNumberType>
         where TSelf : ResourceBase<TSelf, TNumberType>
         where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
     {
@@ -99,7 +99,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Adds resource to the storage.
         /// </summary>
-        internal void Add(TNumberType amount) => Add(null, amount);
+        void IResource<TNumberType>.Add(TNumberType amount) => Add(null, amount);
         
         /// <summary>
         /// Adds resource to the storage.
@@ -139,7 +139,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Takes resource from the storage.
         /// </summary>
-        internal void Take(TNumberType amount) => Take(null, amount);
+        void IResource<TNumberType>.Take(TNumberType amount) => Take(null, amount);
         
         /// <summary>
         /// Takes resource from the storage.
@@ -175,16 +175,23 @@ namespace FastUnityCreationKit.Economy.Abstract
             }
 
         }
-        
+
         /// <summary>
         /// Takes resource from the storage.
         /// </summary>
-        internal void Subtract(TNumberType amount) => Take(amount);
+        internal void Subtract(TNumberType amount)
+        {
+            // Convert to interface and take resource.
+            IResource<TNumberType> resource = this;
+            
+            // Take resource
+            resource.Take(amount);
+        }
         
         /// <summary>
         /// Checks if resource storage has enough amount of resource.
         /// </summary>
-        internal bool HasEnough(TNumberType amount)
+        bool IResource<TNumberType>.HasEnough(TNumberType amount)
         {
             // Convert to floats
             double currentAmount = _storage.CurrentValue.ToFloat();
@@ -200,7 +207,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Sets amount of the resource.
         /// </summary>
-        internal void SetAmount(TNumberType amount) => SetAmount(null, amount);
+        void IResource<TNumberType>.SetAmount(TNumberType amount) => SetAmount(null, amount);
         
         /// <summary>
         /// Sets amount of the resource.
@@ -229,14 +236,16 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Try to take resource from the storage.
         /// </summary>
-        internal bool TryTake(TNumberType amount) => TryTake(null, amount);
+        bool IResource<TNumberType>.TryTake(TNumberType amount) => TryTake(null, amount);
         
         /// <summary>
         /// Try to take resource from the storage.
         /// </summary>
         internal bool TryTake(IWithLocalEconomy economyReference, TNumberType amount)
         {
-            if (!HasEnough(amount))
+            // Convert to interface and check if resource has enough.
+            IResource<TNumberType> resource = this;
+            if (!resource.HasEnough(amount))
                 return false;
             
             Take(economyReference, amount);

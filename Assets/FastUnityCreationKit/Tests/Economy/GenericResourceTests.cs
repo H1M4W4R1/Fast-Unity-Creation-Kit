@@ -1,4 +1,7 @@
-﻿using FastUnityCreationKit.Tests.Economy.Data;
+﻿using FastUnityCreationKit.Core.Numerics;
+using FastUnityCreationKit.Economy;
+using FastUnityCreationKit.Economy.Abstract;
+using FastUnityCreationKit.Tests.Economy.Data;
 using NUnit.Framework;
 
 namespace FastUnityCreationKit.Tests.Economy
@@ -9,8 +12,8 @@ namespace FastUnityCreationKit.Tests.Economy
         [TearDown]
         public void TearDown()
         {
-            ExampleCoinsGlobalResource.Instance.SetAmount(0);
-            ExampleDiamondsGlobalResource.Instance.SetAmount(0);
+            EconomyAPI.SetGlobalResource<ExampleCoinsGlobalResource>(0);
+            EconomyAPI.SetGlobalResource<ExampleDiamondsGlobalResource>(10);
         }
         
         [Test]
@@ -18,9 +21,10 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
+            IResource<int32> resource = coins;
             
             // Act
-            coins.Add(10);
+            resource.Add(10);
             
             // Assert
             Assert.AreEqual(10, coins.Amount);
@@ -31,10 +35,12 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            coins.Add(10);
+            IResource<int32> resource = coins;
+            
+            resource.Add(10);
             
             // Act
-            coins.Take(5);
+            resource.Take(5);
             
             // Assert
             Assert.AreEqual(5, coins.Amount);
@@ -45,10 +51,12 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            coins.Add(10);
+            IResource<int32> resource = coins;
+            
+            resource.Add(10);
             
             // Act
-            bool hasEnough = coins.HasEnough(5);
+            bool hasEnough = resource.HasEnough(5);
             
             // Assert
             Assert.IsTrue(hasEnough);
@@ -59,10 +67,10 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            coins.Add(10);
+            IResource<int32> resource = coins;
             
             // Act
-            bool hasEnough = coins.HasEnough(15);
+            bool hasEnough = resource.HasEnough(15);
             
             // Assert
             Assert.IsFalse(hasEnough);
@@ -73,10 +81,12 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            coins.Add(10);
+            IResource<int32> resource = coins;
+            
+            resource.Add(10);
             
             // Act
-            bool hasEnough = coins.HasEnough(10);
+            bool hasEnough = resource.HasEnough(10);
             
             // Assert
             Assert.IsTrue(hasEnough);
@@ -87,9 +97,10 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
+            IResource<int32> resource = coins;
             
             // Act
-            coins.SetAmount(10);
+            resource.SetAmount(10);
             
             // Assert
             Assert.AreEqual(10, coins.Amount);
@@ -100,10 +111,12 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            coins.Add(10);
+            IResource<int32> resource = coins;
+            
+            resource.Add(10);
             
             // Act
-            bool taken = coins.TryTake(5);
+            bool taken = resource.TryTake(5);
             
             // Assert
             Assert.IsTrue(taken);
@@ -115,10 +128,12 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            coins.Add(10);
+            IResource<int32> resource = coins;
+            
+            resource.Add(10);
             
             // Act
-            bool taken = coins.TryTake(15);
+            bool taken = resource.TryTake(15);
             
             // Assert
             Assert.IsFalse(taken);
@@ -130,10 +145,12 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            coins.Add(10);
+            IResource<int32> resource = coins;
+            
+            resource.Add(10);
             
             // Act
-            bool taken = coins.TryTake(10);
+            bool taken = resource.TryTake(10);
             
             // Assert
             Assert.IsTrue(taken);
@@ -145,7 +162,9 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            coins.Add(10);
+            IResource<int32> resource = coins;
+            
+            resource.Add(10);
             
             // Act
             coins.Reset();
@@ -159,43 +178,49 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleDiamondsGlobalResource diamonds = ExampleDiamondsGlobalResource.Instance;
-            diamonds.SetAmount(50);
+            IResource<int32> resource = diamonds;
+            
+            resource.SetAmount(50);
             
             // Act
-            diamonds.Take(10000);
+            resource.Take(10000);
             
             // Assert
             Assert.AreEqual(0, diamonds.Amount);
         }
         
         [Test]
-        public void Add_AddsLimitsIntoAccount()
+        public void Add_TakesLimitsIntoAccount()
         {
             // Arrange
             ExampleDiamondsGlobalResource diamonds = ExampleDiamondsGlobalResource.Instance;
-            diamonds.SetAmount(50);
+            IResource<int32> resource = diamonds;
+            
+            resource.SetAmount(50);
             
             // Act
-            diamonds.Add(10000);
+            resource.Add(10000);
             
             // Assert
             Assert.AreEqual(100, diamonds.Amount);
         }
         
         [Test]
-        public void SetAmount_SetsLimitsIntoAccount()
+        public void SetAmount_TakesLimitsIntoAccount()
         {
             // Arrange
             ExampleDiamondsGlobalResource diamonds = ExampleDiamondsGlobalResource.Instance;
+            IResource<int32> resource = diamonds;
+            
             
             // Act
-            diamonds.SetAmount(10000);
+            resource.SetAmount(10000);
             
             // Assert
             Assert.AreEqual(100, diamonds.Amount);
             
             // Act
-            diamonds.SetAmount(-10000);
+            resource.SetAmount(-10000);
             
             // Assert
             Assert.AreEqual(0, diamonds.Amount);
@@ -206,7 +231,9 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleDiamondsGlobalResource diamonds = ExampleDiamondsGlobalResource.Instance;
-            diamonds.SetAmount(100);
+            IResource<int32> resource = diamonds;
+            
+            resource.SetAmount(100);
             
             // Act
             diamonds.Reset();

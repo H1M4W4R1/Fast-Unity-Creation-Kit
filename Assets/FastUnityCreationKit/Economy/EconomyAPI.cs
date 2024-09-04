@@ -15,7 +15,7 @@ namespace FastUnityCreationKit.Economy
             where TResource : IGlobalResource, new()
         {
             TResource resource = new();
-            
+
             // Acquire reference via internal instance method
             return resource.GetGlobalResourceReference<TResource>();
         }
@@ -23,72 +23,146 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Adds a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
+        public static void AddGlobalResource<TResource>(float amount)
+            where TResource : IResource, IGlobalResource, new()
+        {
+            TResource resource = new();
+            TResource reference = resource.GetGlobalResourceReference<TResource>();
+
+            IResource resourceInterface = reference;
+            resourceInterface!.AddValue(amount);
+        }
+
+        /// <summary>
+        /// Adds a global resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
         public static void AddGlobalResource<TResource, TNumberType>(TNumberType amount)
-            where TResource : GlobalResource<TResource, TNumberType>, new() 
+            where TResource : GlobalResource<TResource, TNumberType>, new()
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             // Acquire reference via internal instance method
             TResource resource = new();
             TResource reference = resource.GetGlobalReference();
-            
-            reference.Add(amount);
+
+            // Convert the number to interface
+            IResource<TNumberType> resourceInterface = reference;
+            resourceInterface.Add(amount);
+        }
+
+        /// <summary>
+        /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
+        public static void TakeGlobalResource<TResource>(float amount)
+            where TResource : IResource, IGlobalResource, new()
+        {
+            TResource resource = new();
+            TResource reference = resource.GetGlobalResourceReference<TResource>();
+
+            IResource resourceInterface = reference;
+            resourceInterface!.TakeValue(amount);
         }
         
         /// <summary>
         /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
         public static void TakeGlobalResource<TResource, TNumberType>(TNumberType amount)
-            where TResource : GlobalResource<TResource, TNumberType>, new() 
+            where TResource : GlobalResource<TResource, TNumberType>, new()
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             // Acquire reference via internal instance method
             TResource resource = new();
             TResource reference = resource.GetGlobalReference();
-            
-            reference.Take(amount);
+
+            // Convert the number to interface
+            IResource<TNumberType> resourceInterface = reference;
+            resourceInterface.Take(amount);
         }
         
         /// <summary>
         /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
+        public static void SetGlobalResource<TResource>(float amount)
+            where TResource : IResource, IGlobalResource, new()
+        {
+            TResource resource = new();
+            TResource reference = resource.GetGlobalResourceReference<TResource>();
+
+            IResource resourceInterface = reference;
+            resourceInterface!.SetValue(amount);
+        }
+
+        /// <summary>
+        /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
         public static void SetGlobalResource<TResource, TNumberType>(TNumberType amount)
-            where TResource : GlobalResource<TResource, TNumberType>, new() 
+            where TResource : GlobalResource<TResource, TNumberType>, new()
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             // Acquire reference via internal instance method
             TResource resource = new();
             TResource reference = resource.GetGlobalReference();
             
-            reference.SetAmount(amount);
+            // Convert the number to interface
+            IResource<TNumberType> resourceInterface = reference;
+            resourceInterface.SetAmount(amount);
+        }
+
+        /// <summary>
+        /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
+        /// </summary>
+        public static bool HasEnoughGlobalResource<TResource>(float amount)
+            where TResource : IResource, IGlobalResource, new()
+        {
+            TResource resource = new();
+            TResource reference = resource.GetGlobalResourceReference<TResource>();
+
+            IResource resourceInterface = reference;
+            return resourceInterface!.HasEnoughValue(amount);
         }
         
         /// <summary>
         /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
         /// </summary>
         public static bool HasEnoughGlobalResource<TResource, TNumberType>(TNumberType amount)
-            where TResource : GlobalResource<TResource, TNumberType>, new() 
+            where TResource : GlobalResource<TResource, TNumberType>, new()
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             // Acquire reference via internal instance method
             TResource resource = new();
             TResource reference = resource.GetGlobalReference();
-            
-            return reference.HasEnough(amount);
+
+            // Convert the number to interface
+            IResource<TNumberType> resourceInterface = reference;
+            return resourceInterface.HasEnough(amount);
+        }
+
+        /// <summary>
+        /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
+        public static bool TryTakeGlobalResource<TResource>(float amount)
+            where TResource : IResource, IGlobalResource, new()
+        {
+            TResource resource = new();
+            TResource reference = resource.GetGlobalResourceReference<TResource>();
+
+            IResource resourceInterface = reference;
+            return resourceInterface!.TryTakeValue(amount);
         }
         
         /// <summary>
         /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
         public static bool TryTakeGlobalResource<TResource, TNumberType>(TNumberType amount)
-            where TResource : GlobalResource<TResource, TNumberType>, new() 
+            where TResource : GlobalResource<TResource, TNumberType>, new()
             where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             // Acquire reference via internal instance method
             TResource resource = new();
             TResource reference = resource.GetGlobalReference();
-            
-            return reference.TryTake(amount);
+
+            // Convert the number to interface
+            IResource<TNumberType> resourceInterface = reference;
+            return resourceInterface.TryTake(amount);
         }
-        
     }
 }
