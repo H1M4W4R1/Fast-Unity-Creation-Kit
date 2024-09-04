@@ -9,7 +9,6 @@ namespace FastUnityCreationKit.Inventory
 {
     /// <summary>
     /// Represents a container for items - this can be an inventory, a chest, a shop, etc.
-    /// TODO: Inventory Container events?
     /// </summary>
     public abstract class InventoryContainer
     {
