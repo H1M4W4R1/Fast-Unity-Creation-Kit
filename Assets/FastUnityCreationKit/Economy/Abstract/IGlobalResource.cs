@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using FastUnityCreationKit.Core.Utility.Singleton;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy.Abstract
 {
@@ -8,18 +9,6 @@ namespace FastUnityCreationKit.Economy.Abstract
     public interface IGlobalResource<out TSelf> : IGlobalResource
         where TSelf : IGlobalResource<TSelf>
     {
-        /// <summary>
-        /// Get a global reference to the resource from instance point of view.
-        /// </summary>
-        [NotNull] public TSelf GetGlobalReference();
-
-        ///<inheritdoc/>
-        TResource IGlobalResource.GetGlobalResourceReference<TResource>()
-        {
-            TSelf reference = GetGlobalReference();
-            if(reference is not TResource convertedResourceType) return default;
-            return convertedResourceType;
-        }
     }
 
     /// <summary>
@@ -30,11 +19,10 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Used to acquire reference of specific resource
         /// </summary>
-        [CanBeNull] internal TResource GetGlobalResourceReference<TResource>()
-            where TResource : IGlobalResource
+        [CanBeNull] internal static TResource GetGlobalResourceReference<TResource>()
+            where TResource : IGlobalResource, ISingleton<TResource>, new()
         {
-            if(this is not TResource) return default;
-            return (TResource) this;
+            return ISingleton<TResource>.GetInstance();
         }
     }
 }

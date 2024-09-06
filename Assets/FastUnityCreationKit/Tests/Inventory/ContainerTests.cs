@@ -28,6 +28,7 @@ namespace FastUnityCreationKit.Tests.Inventory
             Assert.AreEqual(thirdContainerMaxItems, int.MaxValue);
         }
         
+        [Test]
         public void CurrentItemsInContainer_ReturnsCorrectValue()
         {
             // Arrange

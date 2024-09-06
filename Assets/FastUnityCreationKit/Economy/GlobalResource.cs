@@ -23,9 +23,6 @@ namespace FastUnityCreationKit.Economy
         /// Instance of the global resource, use this to access the resource.
         /// </summary>
         [NotNull] public static TSelf Instance => ISingleton<TSelf>.GetInstance();
-        
-        /// <inheritdoc />
-        public TSelf GetGlobalReference() => Instance;
 
         internal override void OnResourceAdded(IWithLocalEconomy economyReference, float amount) =>
             OnGlobalResourceAddedEvent<TSelf>.TriggerEvent(new GlobalResourceEventData<TSelf>(amount));

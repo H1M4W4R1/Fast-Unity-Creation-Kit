@@ -43,24 +43,6 @@ namespace FastUnityCreationKit.Tests.Economy
         }
 
         [Test]
-        public void IGlobalResource_ReturnsCorrectReference_AndMatchesTheInstance()
-        {
-            // Arrange
-            ExampleCoinsGlobalResource virtual0 =
-                new ExampleCoinsGlobalResource();
-
-            // Act
-            ExampleCoinsGlobalResource actual2 =
-                ((IGlobalResource) virtual0).GetGlobalResourceReference<ExampleCoinsGlobalResource>();
-
-            ExampleCoinsGlobalResource actual3 =
-                ExampleCoinsGlobalResource.Instance;
-
-            // Assert
-            Assert.AreSame(actual2, actual3);
-        }
-
-        [Test]
         public void EconomyAPI_AddGlobalResource_WorksCorrectly()
         {
             // Act
