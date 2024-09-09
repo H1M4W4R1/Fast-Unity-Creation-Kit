@@ -6,7 +6,7 @@ namespace FastUnityCreationKit.Core.Utility.Singleton
     /// Represents a singleton that is a <see cref="MonoBehaviour"/>.
     /// Use this interface to mark a MonoBehaviour as a singleton.
     /// </summary>
-    public interface IMonoBehaviourSingleton<out TSelf> : ISingleton<TSelf>
+    public interface IMonoBehaviourSingleton<TSelf> : ISingleton<TSelf>
         where TSelf : MonoBehaviour, IMonoBehaviourSingleton<TSelf>, new()
     {
         /// <summary>

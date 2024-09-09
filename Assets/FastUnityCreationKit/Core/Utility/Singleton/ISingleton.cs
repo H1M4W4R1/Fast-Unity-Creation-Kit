@@ -7,8 +7,18 @@ namespace FastUnityCreationKit.Core.Utility.Singleton
     /// This should be only used with regular C# classes. For MonoBehaviours
     /// see <see cref="IMonoBehaviourSingleton{TSelf}"/>.
     /// </summary>
-    public interface ISingleton<out TSelf> : ISingleton
+    public interface ISingleton<TSelf> : IUnsafeSingleton<TSelf>
         where TSelf : ISingleton<TSelf>, new()
+    {
+       
+    }
+    
+    /// <summary>
+    /// This represents a singleton object that is not type-safe.
+    /// It is strongly recommended to use <see cref="ISingleton{TSelf}"/> instead as
+    /// this implementation may cause significant issues if not used properly.
+    /// </summary>
+    public interface IUnsafeSingleton<TSelf> : ISingleton where TSelf : new()
     {
         /// <summary>
         /// The instance of the singleton.
@@ -24,7 +34,7 @@ namespace FastUnityCreationKit.Core.Utility.Singleton
             Instance = new TSelf();
             
             // Return the instance
-            return Instance;
+            return Instance!;
         }
     }
 

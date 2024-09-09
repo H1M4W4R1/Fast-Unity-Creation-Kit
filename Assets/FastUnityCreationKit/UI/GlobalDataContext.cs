@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.UI.Abstract;
+﻿using FastUnityCreationKit.Core.Utility.Singleton;
+using FastUnityCreationKit.UI.Abstract;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.UI
@@ -6,7 +7,7 @@ namespace FastUnityCreationKit.UI
     /// <summary>
     /// Represents a global data context.
     /// </summary>
-    public abstract class GlobalDataContext<TSelf> : GlobalDataContext, IDataContext
+    public abstract class GlobalDataContext<TSelf> : GlobalDataContext, IDataContext, ISingleton<TSelf>
         where TSelf : GlobalDataContext<TSelf>, new()
     {
         /// <summary>
