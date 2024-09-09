@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.UI.Abstract
+﻿using Cysharp.Threading.Tasks;
+
+namespace FastUnityCreationKit.UI.Abstract
 {
     /// <summary>
     /// Represents a renderable object.
@@ -11,6 +13,6 @@
         /// <summary>
         /// Renders the object.
         /// </summary>
-        public void Render();
+        public UniTask Render();
     }
 }

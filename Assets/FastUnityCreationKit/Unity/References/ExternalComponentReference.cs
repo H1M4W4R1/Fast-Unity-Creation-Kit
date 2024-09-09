@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Events.Data;
 using JetBrains.Annotations;
@@ -87,10 +88,10 @@ namespace FastUnityCreationKit.Unity.References
         /// This might get called even if the owner of this reference is destroyed,
         /// but it's heavily recommended to dispose the reference when the owner is destroyed.
         /// </summary>
-        private void OnObjectDestroyed(FastMonoBehaviourDestroyedData<TComponentType> data)
+        private UniTask OnObjectDestroyed(FastMonoBehaviourDestroyedData<TComponentType> data)
         {
             // Check if the reference is the same.
-            if (!ReferenceEquals(data.reference, _component)) return;
+            if (!ReferenceEquals(data.reference, _component)) return UniTask.CompletedTask;
             
             // Clear the reference.
             _component = null;
@@ -99,6 +100,8 @@ namespace FastUnityCreationKit.Unity.References
             if(!_isNull) OnObjectDestroyedEvent<TComponentType>.UnregisterEventListener(OnObjectDestroyed);
             
             _isNull = true;
+            
+            return UniTask.CompletedTask;
         }
 
         public void Dispose()

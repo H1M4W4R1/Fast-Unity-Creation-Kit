@@ -7,19 +7,19 @@ namespace FastUnityCreationKit.Crafting.Data
     /// <summary>
     /// Represents the context of a crafting operation.
     /// </summary>
-    public struct BasicCraftingContext : ICraftingContext<BasicCraftingContext>
+    public readonly struct BasicCraftingContext : ICraftingContext<BasicCraftingContext>
     {
         /// <summary>
         /// Workstation used to craft the item.
         /// </summary>
-        public readonly List<ICraftingWorkstation> workstationsNearby;
+        private readonly List<ICraftingWorkstation> _workstationsNearby;
 
         /// <inheritdoc/>
-        public List<ICraftingWorkstation> WorkstationsNearby => workstationsNearby;
+        public List<ICraftingWorkstation> WorkstationsNearby => _workstationsNearby;
 
         public BasicCraftingContext([CanBeNull] List<ICraftingWorkstation> workstationsNearby)
         {
-            this.workstationsNearby = workstationsNearby;
+            _workstationsNearby = workstationsNearby;
         }
     }
 }

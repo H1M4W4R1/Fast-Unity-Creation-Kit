@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.UI.Abstract;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.UI.Abstract;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
@@ -48,6 +49,6 @@ namespace FastUnityCreationKit.UI.Elements
         /// <summary>
         /// Text must be rendered.
         /// </summary>
-        public abstract void Render();
+        public abstract UniTask Render();
     }
 }

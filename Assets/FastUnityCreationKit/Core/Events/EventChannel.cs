@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Core.Events.Abstract;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Core.Events.Abstract;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Events
@@ -51,6 +52,19 @@ namespace FastUnityCreationKit.Core.Events
             {
                 EventChannelCallback listener = listeners[index];
                 listener.Invoke();
+            }
+        }
+        
+        /// <summary>
+        /// Trigger the event channel asynchronously.
+        /// </summary>
+        public virtual async UniTask TriggerAsync()
+        {
+            // Loops through all listeners and invokes them.
+            for (int index = 0; index < listeners.Count; index++)
+            {
+                EventChannelCallback listener = listeners[index];
+                await listener.Invoke();
             }
         }
     }

@@ -1,7 +1,9 @@
-﻿using FastUnityCreationKit.UI.Abstract;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.UI.Abstract;
 using Sirenix.OdinInspector;
 using UnityEngine.Localization;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace FastUnityCreationKit.UI.Elements
 {
@@ -24,13 +26,14 @@ namespace FastUnityCreationKit.UI.Elements
         /// If string is set automatically use a predefined empty key to fix
         /// [Required] attribute error.
         /// </summary>
-        [Required] public LocalizedString localizedString;
-        
+        [Required]
+        public LocalizedString localizedString;
+
         /// <inheritdoc/>
         protected sealed override void TextSetup()
         {
             base.TextSetup();
-            
+
             // Register the refresh event
             localizedString.ValueChanged += OnLocalizedStringChanged;
         }
@@ -39,7 +42,7 @@ namespace FastUnityCreationKit.UI.Elements
         protected sealed override void TextTearDown()
         {
             base.TextTearDown();
-            
+
             // Unregister the refresh event
             localizedString.ValueChanged -= OnLocalizedStringChanged;
         }
@@ -54,10 +57,14 @@ namespace FastUnityCreationKit.UI.Elements
             refreshable.Refresh();
         }
 
-        public override void Render()
+        public override async UniTask Render()
         {
-            // Set the text to the localized string
-            unityText.text = localizedString.GetLocalizedString();
+            // Request the localized string
+            AsyncOperationHandle<string> operationHandle = localizedString.GetLocalizedStringAsync();
+            
+            // Wait for the operation to complete and set the text
+            string text = await operationHandle.Task;
+            unityText.text = text;
         }
     }
 }

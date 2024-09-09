@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.UI.Events;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.UI.Events;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Abstract
@@ -74,7 +75,7 @@ namespace FastUnityCreationKit.UI.Abstract
         /// <summary>
         /// Executed when the data context is changed.
         /// </summary>
-        public void OnDataContextChanged();
+        public UniTask OnDataContextChanged();
         
         void IUIObjectWithDataContext.TryAutomaticContextBinding() => _TryAutomaticContextBinding();
         

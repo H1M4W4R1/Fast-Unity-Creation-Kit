@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Tests.Core.Events.Data;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Tests.Core.Events.Data;
 using NUnit.Framework;
 
 namespace FastUnityCreationKit.Tests.Core.Events
@@ -8,9 +9,11 @@ namespace FastUnityCreationKit.Tests.Core.Events
     {
         public int callbackCounter = 0;
         
-        private void OnEvent(ExampleChannelData data)
+        private UniTask OnEvent(ExampleChannelData data)
         {
             callbackCounter += data.digit;
+            
+            return UniTask.CompletedTask;
         }
         
         [SetUp]

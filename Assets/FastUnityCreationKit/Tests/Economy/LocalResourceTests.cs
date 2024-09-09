@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Core.Numerics;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Economy;
 using FastUnityCreationKit.Economy.Events;
 using FastUnityCreationKit.Economy.Events.Data;
@@ -203,16 +204,20 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
 
             // Event handler
-            void OnLocalResourceAdded(LocalResourceEventData<ExampleHealthLocalResource> data)
+            UniTask OnLocalResourceAdded(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
                 Assert.AreEqual(data.entity, entity);
                 valueAdded = data.amount;
+                
+                return UniTask.CompletedTask;
             }
             
-            void OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
+            UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
                 Assert.AreEqual(data.entity, entity);
                 valueChanged = data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
         
@@ -242,16 +247,20 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
 
             // Event handler
-            void OnLocalResourceTaken(LocalResourceEventData<ExampleHealthLocalResource> data)
+            UniTask OnLocalResourceTaken(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
                 Assert.AreEqual(data.entity, entity);
                 valueTaken = data.amount;
+                
+                return UniTask.CompletedTask;
             }
             
-            void OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
+            UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
                 Assert.AreEqual(data.entity, entity);
                 valueChanged = data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
 
@@ -281,16 +290,20 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
 
             // Event handler
-            void OnLocalResourceTaken(LocalResourceEventData<ExampleHealthLocalResource> data)
+            UniTask OnLocalResourceTaken(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
                 Assert.AreEqual(data.entity, entity);
                 valueTaken = data.amount;
+                
+                return UniTask.CompletedTask;
             }
             
-            void OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
+            UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
                 Assert.AreEqual(data.entity, entity);
                 valueChanged = data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
         
@@ -315,10 +328,12 @@ namespace FastUnityCreationKit.Tests.Economy
             OnLocalResourceChangedEvent<ExampleHealthLocalResource>.UnregisterEventListener(OnLocalResourceChanged);
             return;
             
-            void OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
+            UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
                 Assert.AreEqual(data.entity, entity);
                 valueChanged = data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
         
@@ -343,10 +358,12 @@ namespace FastUnityCreationKit.Tests.Economy
             OnLocalResourceChangedEvent<ExampleHealthLocalResource>.UnregisterEventListener(OnLocalResourceChanged);
             return;
             
-            void OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
+            UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
                 Assert.AreEqual(data.entity, entity);
                 valueChanged = data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
         
@@ -376,16 +393,20 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
             
             // Event handler
-            void OnLocalResourceTaken(LocalResourceEventData<ExampleHealthLocalResource> data)
+            UniTask OnLocalResourceTaken(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
                 Assert.AreEqual(data.entity, entity);
                 valueTaken = data.amount;
+                
+                return UniTask.CompletedTask;
             }
             
-            void OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
+            UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
                 Assert.AreEqual(data.entity, entity);
                 valueChanged = data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
     }

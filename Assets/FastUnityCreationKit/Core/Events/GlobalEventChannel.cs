@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Core.Events.Abstract;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Core.Events.Abstract;
 using FastUnityCreationKit.Core.Utility.Singleton;
 using JetBrains.Annotations;
 
@@ -20,6 +21,11 @@ namespace FastUnityCreationKit.Core.Events
         /// Trigger the event channel.
         /// </summary>
         public static void TriggerEvent() => Instance.Trigger();
+        
+        /// <summary>
+        /// Trigger the event channel asynchronously.
+        /// </summary>
+        public static async UniTask TriggerEventAsync() => await Instance.TriggerAsync();
         
         /// <summary>
         /// Register the listener to the event channel.

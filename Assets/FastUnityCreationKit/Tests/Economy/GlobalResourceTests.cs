@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Core.Numerics;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Economy;
 using FastUnityCreationKit.Economy.Abstract;
 using FastUnityCreationKit.Economy.Events;
@@ -175,14 +176,18 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
 
             // Event handler
-            void OnGlobalResourceAdded(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
+            UniTask OnGlobalResourceAdded(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
                 valueAdded = data.amount;
+                
+                return UniTask.CompletedTask;
             }
 
-            void OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
+            UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
                 valueChanged = data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
 
@@ -210,14 +215,18 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
 
             // Event handler
-            void OnGlobalResourceTaken(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
+            UniTask OnGlobalResourceTaken(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
                 valueTaken = data.amount;
+                
+                return UniTask.CompletedTask;
             }
 
-            void OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
+            UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
                 valueChanged = -data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
         
@@ -241,9 +250,11 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
 
             // Event handler
-            void OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
+            UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
                 valueChanged = data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
         
@@ -267,9 +278,11 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
 
             // Event handler
-            void OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
+            UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
                 valueChanged = data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
         
@@ -298,14 +311,18 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
 
             // Event handler
-            void OnGlobalResourceTaken(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
+            UniTask OnGlobalResourceTaken(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
                 valueTaken = data.amount;
+                
+                return UniTask.CompletedTask;
             }
 
-            void OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
+            UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
                 valueChanged = -data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
         
@@ -334,14 +351,18 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
 
             // Event handler
-            void OnGlobalResourceTaken(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
+            UniTask OnGlobalResourceTaken(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
                 valueTaken = data.amount;
+                
+                return UniTask.CompletedTask;
             }
 
-            void OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
+            UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
                 valueChanged = -data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
 
@@ -370,14 +391,18 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
             
             // Event handler
-            void OnGlobalResourceAdded(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
+            UniTask OnGlobalResourceAdded(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
             {
                 valueAdded = data.amount;
+                
+                return UniTask.CompletedTask;   
             }
             
-            void OnGlobalResourceChanged(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
+            UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
             {
                 valueChanged = data.amount;
+                
+                return UniTask.CompletedTask;
             }
         } 
         
@@ -405,14 +430,18 @@ namespace FastUnityCreationKit.Tests.Economy
             return;
             
             // Event handler
-            void OnGlobalResourceTaken(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
+            UniTask OnGlobalResourceTaken(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
             {
                 valueTaken = data.amount;
+                
+                return UniTask.CompletedTask;
             }
             
-            void OnGlobalResourceChanged(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
+            UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
             {
                 valueChanged = -data.amount;
+                
+                return UniTask.CompletedTask;
             }
         }
     }

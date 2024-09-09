@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.UI.Abstract
+﻿using Cysharp.Threading.Tasks;
+
+namespace FastUnityCreationKit.UI.Abstract
 {
     /// <summary>
     /// Represents a refreshable object - an object that can be refreshed by request.
@@ -13,6 +15,6 @@
         /// <summary>
         /// Refreshes the object.
         /// </summary>
-        public void Refresh() => Render();
+        public UniTask Refresh() => Render();
     }
 }
