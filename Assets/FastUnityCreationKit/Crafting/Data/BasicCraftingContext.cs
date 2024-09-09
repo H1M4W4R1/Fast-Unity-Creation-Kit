@@ -17,17 +17,9 @@ namespace FastUnityCreationKit.Crafting.Data
         /// <inheritdoc/>
         public List<ICraftingWorkstation> WorkstationsNearby => workstationsNearby;
 
-        /// <inheritdoc/>
-        public bool WasSuccessful { get; set; }
-        
-        /// <inheritdoc/>
-        public bool WasCompleted { get; set; }
-
         public BasicCraftingContext([CanBeNull] List<ICraftingWorkstation> workstationsNearby)
         {
             this.workstationsNearby = workstationsNearby;
-            WasSuccessful = false;
-            WasCompleted = false;
         }
     }
 }

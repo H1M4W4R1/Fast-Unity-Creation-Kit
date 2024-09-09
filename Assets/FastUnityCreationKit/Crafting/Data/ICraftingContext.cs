@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.Crafting.Data
     /// data required for crafting operations - such as the workstation used to craft the item.
     /// </summary>
     public interface ICraftingContext<out TSelf> : ICraftingContext
-        where TSelf : ICraftingContext<TSelf>
+        where TSelf : struct, ICraftingContext<TSelf>
     {
 
     }
@@ -25,16 +25,5 @@ namespace FastUnityCreationKit.Crafting.Data
         /// This property is required for any given crafting operation.
         /// </summary>
         [NotNull] public List<ICraftingWorkstation> WorkstationsNearby { get; }
-        
-        /// <summary>
-        /// Checks if the crafting operation was successful.
-        /// </summary>
-        public bool WasSuccessful { get; set; }
-        
-        /// <summary>
-        /// Checks if the crafting operation was completed - this will be true even if
-        /// operation has failed. To check if the operation was successful, use <see cref="WasSuccessful"/>.
-        /// </summary>
-        public bool WasCompleted { get; set; }
     }
 }
