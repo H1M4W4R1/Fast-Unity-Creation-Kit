@@ -31,13 +31,13 @@ namespace FastUnityCreationKit.Core.Events
         /// Register the listener to the event channel.
         /// </summary>
         /// <param name="listener"></param>
-        public static void RegisterEventListener([NotNull] EventChannelCallback listener) => Instance.RegisterListener(listener);
+        public static void RegisterEventListener([NotNull] EventChannelCallbackAsync listener) => Instance.RegisterListener(listener);
         
         /// <summary>
         /// Unregister the listener from the event channel.
         /// </summary>
         /// <param name="listener"></param>
-        public static void UnregisterEventListener([NotNull] EventChannelCallback listener) => Instance.UnregisterListener(listener);
+        public static void UnregisterEventListener([NotNull] EventChannelCallbackAsync listener) => Instance.UnregisterListener(listener);
     }
     
     /// <summary>
@@ -62,13 +62,13 @@ namespace FastUnityCreationKit.Core.Events
         /// Register the listener to the event channel.
         /// </summary>
         /// <param name="listener"></param>
-        public static void RegisterEventListener([NotNull] EventChannelCallback<TChannelData> listener) => Instance.RegisterListener(listener);
+        public static void RegisterEventListener([NotNull] EventChannelCallbackAsync<TChannelData> listener) => Instance.RegisterListener(listener);
         
         /// <summary>
         /// Unregister the listener from the event channel.
         /// </summary>
         /// <param name="listener"></param>
-        public static void UnregisterEventListener([NotNull] EventChannelCallback<TChannelData> listener) => Instance.UnregisterListener(listener);
+        public static void UnregisterEventListener([NotNull] EventChannelCallbackAsync<TChannelData> listener) => Instance.UnregisterListener(listener);
         
         /// <summary>
         /// Remove all listeners from the event channel.

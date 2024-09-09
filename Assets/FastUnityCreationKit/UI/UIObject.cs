@@ -60,7 +60,7 @@ namespace FastUnityCreationKit.UI
 
             // Unregister from the refresh event channel
             if (this is IRefreshable refreshable)
-                RefreshUIEventChannel.UnregisterEventListener(refreshable.Refresh);
+                RefreshUIEventChannel.UnregisterEventListener(refreshable.RefreshAsync);
             
             // Unregister from the data context events
             if (this is IUIObjectWithDataContext uiObjectWithData)
@@ -82,10 +82,10 @@ namespace FastUnityCreationKit.UI
 
             // If the object is refreshable, install event bindings
             if (this is IRefreshable refreshable)
-                RefreshUIEventChannel.RegisterEventListener(refreshable.Refresh);
+                RefreshUIEventChannel.RegisterEventListener(refreshable.RefreshAsync);
             
             // If the object is renderable, render it
-            if (this is IRenderable renderable) renderable.Render();
+            if (this is IRenderable renderable) renderable.RenderAsync();
         }
     }
 }

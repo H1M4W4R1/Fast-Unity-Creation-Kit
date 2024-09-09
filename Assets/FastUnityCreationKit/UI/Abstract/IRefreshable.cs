@@ -15,6 +15,11 @@ namespace FastUnityCreationKit.UI.Abstract
         /// <summary>
         /// Refreshes the object.
         /// </summary>
-        public UniTask Refresh() => Render();
+        public void Refresh() => RefreshAsync();
+        
+        /// <summary>
+        /// Refreshes the object.
+        /// </summary>
+        public UniTask RefreshAsync() => RenderAsync();
     }
 }

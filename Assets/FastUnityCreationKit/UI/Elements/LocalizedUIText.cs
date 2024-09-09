@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.UI.Elements
     /// <remarks>
     /// To change the text you need to implement <see cref="IUIObjectWithDataContext{TData}"/>
     /// and change <see cref="localizedString"/> variables within
-    /// <see cref="IUIObjectWithDataContext{TData}.OnDataContextChanged"/>
+    /// <see cref="IUIObjectWithDataContext{TData}.OnDataContextChangedAsync"/>
     /// <br/><br/>
     /// It is possible to use this class directly as UI object, however it is not recommended
     /// and better approach is to inherit from this class and use name that describes a purpose of the text.
@@ -54,10 +54,10 @@ namespace FastUnityCreationKit.UI.Elements
         {
             // Convert this to refreshable object and call the refresh method
             IRefreshable refreshable = this;
-            refreshable.Refresh();
+            refreshable.RefreshAsync();
         }
 
-        public override async UniTask Render()
+        public override async UniTask RenderAsync()
         {
             // Request the localized string
             AsyncOperationHandle<string> operationHandle = localizedString.GetLocalizedStringAsync();

@@ -19,13 +19,13 @@ namespace FastUnityCreationKit.UI.Abstract
         /// Registers the event listeners for the data context.
         /// </summary>
         internal void _AttachDataContextEvents() =>
-            NotifyDataContextHasChanged<TData>.RegisterEventListener(OnDataContextChanged);
+            NotifyDataContextHasChanged<TData>.RegisterEventListener(OnDataContextChangedAsync);
         
         /// <summary>
         /// Unregisters the event listeners for the data context.
         /// </summary>
         internal void _DetachDataContextEvents() =>
-            NotifyDataContextHasChanged<TData>.UnregisterEventListener(OnDataContextChanged);
+            NotifyDataContextHasChanged<TData>.UnregisterEventListener(OnDataContextChangedAsync);
         
         /// <summary>
         /// Internal method to bind the data context to the UI object.
@@ -74,8 +74,9 @@ namespace FastUnityCreationKit.UI.Abstract
 
         /// <summary>
         /// Executed when the data context is changed.
+        /// Called asynchronously.
         /// </summary>
-        public UniTask OnDataContextChanged();
+        public UniTask OnDataContextChangedAsync();
         
         void IUIObjectWithDataContext.TryAutomaticContextBinding() => _TryAutomaticContextBinding();
         

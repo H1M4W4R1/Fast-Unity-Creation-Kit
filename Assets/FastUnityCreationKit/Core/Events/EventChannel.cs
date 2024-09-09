@@ -17,7 +17,7 @@ namespace FastUnityCreationKit.Core.Events
     /// This system will cause a lot of overhead, however it allows for complete decoupling of systems
     /// and thus will make the code more maintainable and easier to understand.
     /// </remarks>
-    public abstract class EventChannel<TChannelData> : EventChannelBase<EventChannelCallback<TChannelData>> 
+    public abstract class EventChannel<TChannelData> : EventChannelBase<EventChannelCallbackAsync<TChannelData>> 
         where TChannelData : IEventChannelData
     {
         /// <summary>
@@ -28,7 +28,7 @@ namespace FastUnityCreationKit.Core.Events
             // Loops through all listeners and invokes them.
             for (int index = 0; index < listeners.Count; index++)
             {
-                EventChannelCallback<TChannelData> listener = listeners[index];
+                EventChannelCallbackAsync<TChannelData> listener = listeners[index];
                 listener.Invoke(data);
             }
         }
@@ -40,7 +40,7 @@ namespace FastUnityCreationKit.Core.Events
     /// <br/><br/>
     /// This channel cannot send data, for that use <see cref="EventChannel{TChannelData}"/>.
     /// </summary>
-    public abstract class EventChannel : EventChannelBase<EventChannelCallback>
+    public abstract class EventChannel : EventChannelBase<EventChannelCallbackAsync>
     {
         /// <summary>
         /// Trigger the event channel.
@@ -50,7 +50,7 @@ namespace FastUnityCreationKit.Core.Events
             // Loops through all listeners and invokes them.
             for (int index = 0; index < listeners.Count; index++)
             {
-                EventChannelCallback listener = listeners[index];
+                EventChannelCallbackAsync listener = listeners[index];
                 listener.Invoke();
             }
         }
@@ -63,7 +63,7 @@ namespace FastUnityCreationKit.Core.Events
             // Loops through all listeners and invokes them.
             for (int index = 0; index < listeners.Count; index++)
             {
-                EventChannelCallback listener = listeners[index];
+                EventChannelCallbackAsync listener = listeners[index];
                 await listener.Invoke();
             }
         }

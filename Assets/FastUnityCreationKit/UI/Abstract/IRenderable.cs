@@ -11,8 +11,13 @@ namespace FastUnityCreationKit.UI.Abstract
     public interface IRenderable
     {
         /// <summary>
+        /// Render the object.
+        /// </summary>
+        public void Render() => RenderAsync();
+        
+        /// <summary>
         /// Renders the object.
         /// </summary>
-        public UniTask Render();
+        public UniTask RenderAsync();
     }
 }

@@ -49,6 +49,6 @@ namespace FastUnityCreationKit.UI.Elements
         /// <summary>
         /// Text must be rendered.
         /// </summary>
-        public abstract UniTask Render();
+        public abstract UniTask RenderAsync();
     }
 }
