@@ -35,11 +35,17 @@ namespace FastUnityCreationKit.Crafting.Recipes
         /// Automatically populated by the recipe system.
         /// </summary>
         private Type[] _requiredWorkstations;
-
+                
         /// <summary>
         /// Checks if the recipe is craftable.
         /// </summary>
-        public async UniTask<bool> IsCraftable([NotNull] ICraftingContext craftingContext)
+        public bool IsCraftable([NotNull] ICraftingContext craftingContext) =>
+            IsCraftableAsync(craftingContext).GetAwaiter().GetResult();
+        
+        /// <summary>
+        /// Checks if the recipe is craftable.
+        /// </summary>
+        public async UniTask<bool> IsCraftableAsync([NotNull] ICraftingContext craftingContext)
         {
             // Ensure the recipe is initialized.
             IInitializable initializable = this;
@@ -52,13 +58,13 @@ namespace FastUnityCreationKit.Crafting.Recipes
             if (lockable.IsLocked) return false;
 
             // Check if the recipe is available to craft.
-            if (!await AvailableToCraft(craftingContext)) return false;
+            if (!await AvailableToCraftAsync(craftingContext)) return false;
 
             // Check if the recipe has required workstations.
             if (!CheckWorkstationsAvailableInContext(craftingContext)) return false;
 
             // Check if the recipe is available to craft.
-            return await HasIngredients(craftingContext);
+            return await HasIngredientsAsync(craftingContext);
         }
 
         bool ILockable.IsLocked { get; set; }
@@ -76,16 +82,30 @@ namespace FastUnityCreationKit.Crafting.Recipes
 
         /// <summary>
         /// Checks if the recipe can be crafted.
-        /// Used internally, do not call this method directly <see cref="IsCraftable"/>.
+        /// <see cref="AvailableToCraftAsync"/> for more information.
+        /// </summary>
+        protected bool AvailableToCraft([NotNull] ICraftingContext craftingContext) =>
+            AvailableToCraftAsync(craftingContext).GetAwaiter().GetResult();
+        
+        /// <summary>
+        /// Checks if the recipe can be crafted.
+        /// Used internally, do not call this method directly <see cref="IsCraftableAsync"/>.
         /// Defaults to true, this can be used to implement custom logic to determine if the recipe can be crafted.
         /// </summary>
-        protected virtual async UniTask<bool> AvailableToCraft([NotNull] ICraftingContext craftingContext) => true;
+        protected virtual async UniTask<bool> AvailableToCraftAsync([NotNull] ICraftingContext craftingContext) => true;
 
+        /// <summary>
+        /// Checks if the recipe has the required ingredients.
+        /// For more information see <see cref="HasIngredientsAsync"/>.
+        /// </summary>
+        protected bool HasIngredients([NotNull] ICraftingContext craftingContext) =>
+            HasIngredientsAsync(craftingContext).GetAwaiter().GetResult();
+        
         /// <summary>
         /// Checks if the recipe has the required ingredients.
         /// Implement your ingredient logic here.
         /// </summary>
-        protected virtual async UniTask<bool> HasIngredients([NotNull] ICraftingContext craftingContext) => true;
+        protected virtual async UniTask<bool> HasIngredientsAsync([NotNull] ICraftingContext craftingContext) => true;
 
         /// <summary>
         /// Executes the crafting logic. This method should take care of removing the ingredients and adding the crafted item.
@@ -105,20 +125,28 @@ namespace FastUnityCreationKit.Crafting.Recipes
         /// <returns>
         /// True if crafting is successful, false if it failed.
         /// </returns>
-        protected virtual async UniTask<bool> OnCraft([NotNull] ICraftingContext craftingContext) => true;
+        protected virtual async UniTask<bool> OnCraftAsync([NotNull] ICraftingContext craftingContext) => true;
 
         /// <summary>
         /// Crafts the item, returns true if the item was crafted successfully, false otherwise.
         /// </summary>
-        public async UniTask<bool> TryCraftingItem([NotNull] ICraftingContext craftingContext)
+        public async UniTask<bool> TryCraftingItemAsync([NotNull] ICraftingContext craftingContext)
         {
             // Check if the recipe is craftable.
-            if (!await IsCraftable(craftingContext))
+            if (!await IsCraftableAsync(craftingContext))
                 return false;
 
             // Craft the item - wait for the coroutine to finish.
-            return await OnCraft(craftingContext);
+            return await OnCraftAsync(craftingContext);
         }
+        
+        /// <summary>
+        /// Try crafting the item synchronously.
+        /// </summary>
+        /// <param name="craftingContext"></param>
+        /// <returns></returns>
+        public bool TryCraftingItem([NotNull] ICraftingContext craftingContext) =>
+            TryCraftingItemAsync(craftingContext).GetAwaiter().GetResult();
 
         /// <summary>
         /// Checks if all required workstations are available in the context.
@@ -133,7 +161,7 @@ namespace FastUnityCreationKit.Crafting.Recipes
 
             // Get all IRequireWorkstation interfaces.
             // We cache required workstations to avoid reflection overhead on each check.
-            if (_requiredWorkstations == null) _requiredWorkstations = type.GetInterfaces();
+            _requiredWorkstations ??= type.GetInterfaces();
 
             // Fast stack memory for results.
             // This is a fast allocation that should reduce GC overhead.
