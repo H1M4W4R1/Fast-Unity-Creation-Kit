@@ -20,7 +20,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
             
             // Assert
             Assert.AreEqual(1, (int)((IStackableStatus) status).StackCount);
@@ -45,7 +45,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(0.5f);
             
             // Acquire the status from the entity
             StackablePercentageStatus status = objectWithStatus.GetStatus<StackablePercentageStatus>();
@@ -76,8 +76,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(0.5f);
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(0.6f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(0.6f);
             
             // Acquire the status from the entity
             StackablePercentageStatus status = objectWithStatus.GetStatus<StackablePercentageStatus>();
@@ -107,7 +107,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(153.12f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(153.12f);
             
             // Acquire the status from the entity
             StackablePercentageStatus status = objectWithStatus.GetStatus<StackablePercentageStatus>();
@@ -138,8 +138,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>();
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>();
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(0.5f);
             
             // Quick assert
             StackablePercentageStatus status = objectWithStatus.GetStatus<StackablePercentageStatus>();
@@ -148,7 +148,7 @@ namespace FastUnityCreationKit.Tests.Status
             Assert.AreEqual(1, stackCount);
             
             // Current status percentage is 1.5f
-            objectWithStatus.DecreaseStatusPercentage<StackablePercentageStatus>(0.6f);
+            objectWithStatus.DecreaseStatusPercentageAsync<StackablePercentageStatus>(0.6f);
             
             // Acquire the status from the entity
             status = objectWithStatus.GetStatus<StackablePercentageStatus>();
@@ -179,8 +179,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(153.12f);
-            objectWithStatus.DecreaseStatusPercentage<StackablePercentageStatus>(101.06f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(153.12f);
+            objectWithStatus.DecreaseStatusPercentageAsync<StackablePercentageStatus>(101.06f);
             
             // Acquire the status from the entity
             StackablePercentageStatus status = objectWithStatus.GetStatus<StackablePercentageStatus>();
@@ -211,8 +211,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>();
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>();
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(0.5f);
             
             // Quick assert
             StackablePercentageStatus status = objectWithStatus.GetStatus<StackablePercentageStatus>();
@@ -221,7 +221,7 @@ namespace FastUnityCreationKit.Tests.Status
             Assert.AreEqual(1, stackCount);
             
             // Current status percentage is 1.5f
-            objectWithStatus.DecreaseStatusPercentage<StackablePercentageStatus>(1.5f);
+            objectWithStatus.DecreaseStatusPercentageAsync<StackablePercentageStatus>(1.5f);
             
             stackCount = ((IStackableStatus) status)!.StackCount;
             float percentage = ((IPercentageStatus) status)!.Percentage;
@@ -252,8 +252,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>();
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>();
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(0.5f);
             
             // Quick assert
             StackablePercentageStatus status = objectWithStatus.GetStatus<StackablePercentageStatus>();
@@ -262,7 +262,7 @@ namespace FastUnityCreationKit.Tests.Status
             Assert.AreEqual(1, stackCount);
             
             // Current status percentage is 1.5f
-            objectWithStatus.RemoveStatus<StackablePercentageStatus>();
+            objectWithStatus.RemoveStatusAsync<StackablePercentageStatus>();
             
             stackCount = ((IStackableStatus) status)!.StackCount;
             float percentage = ((IPercentageStatus) status)!.Percentage;
@@ -293,8 +293,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>();
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>();
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(0.5f);
             
             // Assert
             int stackCount = objectWithStatus.GetStatusStackCount<StackablePercentageStatus>();
@@ -311,8 +311,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>();
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>();
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(0.5f);
             
             // Assert
             float percentage = objectWithStatus.GetStatusPercentage<StackablePercentageStatus>();
@@ -330,10 +330,10 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>();
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>();
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>();
-            objectWithStatus.IncreaseStatusPercentage<StackablePercentageStatus>(0.33f);
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>();
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>();
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>();
+            objectWithStatus.IncreaseStatusPercentageAsync<StackablePercentageStatus>(0.33f);
             
             // Assert
             int amountOfTimesStatusIsAdded = objectWithStatus.GetAmountOfTimesStatusIsAdded<StackablePercentageStatus>();

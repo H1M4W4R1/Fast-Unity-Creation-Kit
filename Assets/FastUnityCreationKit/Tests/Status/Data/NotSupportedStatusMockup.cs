@@ -1,17 +1,18 @@
-﻿using FastUnityCreationKit.Status;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Status;
 
 namespace FastUnityCreationKit.Tests.Status.Data
 {
     public sealed class NotSupportedStatusMockup : IStatus
     {
-        public void OnStatusAdded(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusAddedAsync(IObjectWithStatus objectWithStatus)
         {
-            
+            return UniTask.CompletedTask;
         }
 
-        public void OnStatusRemoved(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusRemovedAsync(IObjectWithStatus objectWithStatus)
         {
-     
+            return UniTask.CompletedTask;
         }
     }
 }

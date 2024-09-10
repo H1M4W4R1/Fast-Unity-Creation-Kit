@@ -21,7 +21,7 @@ namespace FastUnityCreationKit.Tests.Status
             Assert.AreEqual(0, objectWithStatus.GetAmountOfTimesStatusIsAdded<RegularStatus>());
             
             // Act
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
             
             // Assert
             Assert.AreEqual(1, objectWithStatus.GetAmountOfTimesStatusIsAdded<RegularStatus>());
@@ -38,7 +38,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
             
             // Assert
             Assert.IsTrue(objectWithStatus.HasStatus<RegularStatus>());
@@ -56,8 +56,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatusAsync(status);
             
             // Assert
             Assert.IsTrue(objectWithStatus.HasStatus<RegularStatus>());
@@ -76,8 +76,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.RemoveStatus<RegularStatus>();
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.RemoveStatusAsync<RegularStatus>();
             
             // Assert
             Assert.IsFalse(objectWithStatus.HasStatus<RegularStatus>());
@@ -95,7 +95,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.RemoveStatus<RegularStatus>();
+            objectWithStatus.RemoveStatusAsync<RegularStatus>();
             
             // Assert
             Assert.IsFalse(objectWithStatus.HasStatus<RegularStatus>());
@@ -113,7 +113,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
             
             // Assert
             Assert.IsTrue(objectWithStatus.IsStatusExplicitlySupported<RegularStatus>());
@@ -172,7 +172,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
             RegularStatus acquiredStatus = objectWithStatus.GetStatus<RegularStatus>();
             
             // Assert
@@ -191,7 +191,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
             
             // Assert
             Assert.IsFalse(objectWithStatus.HasStatus<RegularStatus>());
@@ -209,7 +209,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
             
             // Assert
             Assert.IsFalse(objectWithStatus.HasStatus<StackableStatus>());

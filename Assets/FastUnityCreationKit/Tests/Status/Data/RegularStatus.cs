@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Status;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Status;
 
 namespace FastUnityCreationKit.Tests.Status.Data
 {
@@ -10,14 +11,16 @@ namespace FastUnityCreationKit.Tests.Status.Data
         public bool wasStatusAdded;
         public bool wasStatusRemoved;
         
-        public void OnStatusAdded(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusAddedAsync(IObjectWithStatus objectWithStatus)
         {
             wasStatusAdded = true;
+            return UniTask.CompletedTask;
         }
 
-        public void OnStatusRemoved(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusRemovedAsync(IObjectWithStatus objectWithStatus)
         {
             wasStatusRemoved = true;
+            return UniTask.CompletedTask;
         }
     }
 }

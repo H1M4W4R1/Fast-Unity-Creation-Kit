@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Core.Numerics;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Limits;
 using FastUnityCreationKit.Status.Enums;
 using JetBrains.Annotations;
@@ -37,49 +38,59 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// Called when the stack count is changes.
         /// </summary>
-        public void OnStackCountChanged([NotNull] IObjectWithStatus objectWithStatus, int amount);
+        public UniTask OnStackCountChangedAsync([NotNull] IObjectWithStatus objectWithStatus, int amount);
         
         /// <summary>
         /// Called when the stack count reaches the maximum limit.
         /// This is called each time the stack count is increased and reaches the maximum limit,
         /// even if it is already at the maximum limit.
         /// </summary>
-        public void OnMaxStackCountReached([NotNull] IObjectWithStatus objectWithStatus);
+        public UniTask OnMaxStackCountReachedAsync([NotNull] IObjectWithStatus objectWithStatus);
         
         /// <summary>
         /// Called when the stack count reaches the minimum limit.
         /// This is called each time the stack count is decreased and reaches the minimum limit,
         /// even if it is already at the minimum limit.
         /// </summary>
-        public void OnMinStackCountReached([NotNull] IObjectWithStatus objectWithStatus);
+        public UniTask OnMinStackCountReachedAsync([NotNull] IObjectWithStatus objectWithStatus);
 
-        
+        /// <summary>
+        /// Increases the stack count by the given amount.
+        /// </summary>
+        public void IncreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1) =>
+            IncreaseStackCountAsync(objectWithStatus, amount).GetAwaiter().GetResult();
         
         /// <summary>
         /// Increases the stack count by the given amount.
         /// </summary>
-        public void IncreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
+        public async UniTask IncreaseStackCountAsync([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
         {
             int currentStackCount = StackCount;
             
             for (int times = 0; times < amount; times++)
-                ChangeStackCount(objectWithStatus, 1);
+                await ChangeStackCountAsync(objectWithStatus, 1);
             
             int change = StackCount - currentStackCount;
-            OnStackCountChanged(objectWithStatus, change);
+            await OnStackCountChangedAsync(objectWithStatus, change);
         }
 
         /// <summary>
         /// Decreases the stack count by the given amount.
         /// </summary>
-        public void DecreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
+        public void DecreaseStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount = 1) =>
+            DecreaseStackCountAsync(objectWithStatus, amount).GetAwaiter().GetResult();
+        
+        /// <summary>
+        /// Decreases the stack count by the given amount.
+        /// </summary>
+        public async UniTask DecreaseStackCountAsync([NotNull] IObjectWithStatus objectWithStatus, int amount = 1)
         {
             int currentStackCount = StackCount;
             for (int times = 0; times < amount; times++)
-                ChangeStackCount(objectWithStatus, -1);
+                await ChangeStackCountAsync(objectWithStatus, -1);
             
             int change = StackCount - currentStackCount;
-            OnStackCountChanged(objectWithStatus, change);
+            await OnStackCountChangedAsync(objectWithStatus, change);
         }
 
         /// <summary>
@@ -87,7 +98,7 @@ namespace FastUnityCreationKit.Status
         /// You need to call increase/decrease stack count methods instead of this method
         /// events should be manually added after calling method wrappers.
         /// </summary>
-        private void ChangeStackCount([NotNull] IObjectWithStatus objectWithStatus, int amount)
+        private async UniTask ChangeStackCountAsync([NotNull] IObjectWithStatus objectWithStatus, int amount)
         {
             // Acquire the previous stack count before changing it.
             int previousStackCount = StackCount;
@@ -96,13 +107,13 @@ namespace FastUnityCreationKit.Status
             StackCount += amount;
             
             // Check if the stack count is within the limits.
-            CheckLimits(objectWithStatus, previousStackCount);
+            await CheckLimitsAsync(objectWithStatus, previousStackCount);
         }
 
         /// <summary>
         /// Checks if the stack count is within the limits.
         /// </summary>
-        private void CheckLimits([NotNull] IObjectWithStatus objectWithStatus, int previousStackCount)
+        private async UniTask CheckLimitsAsync([NotNull] IObjectWithStatus objectWithStatus, int previousStackCount)
         {
             // Check if the stack count is within the minimum limit.
             if (this is IWithMinLimit<int32> minLimit && StackCount <= minLimit.MinLimit)
@@ -112,7 +123,7 @@ namespace FastUnityCreationKit.Status
                 // Check if the stack count is changed.
                 // This is to prevent calling the event multiple times when the stack count is already at the minimum limit.
                 if(previousStackCount != StackCount || MaxStackLimitReachedNotificationMode != MaxStackLimitReachedNotificationMode.Once)
-                    OnMinStackCountReached(objectWithStatus);
+                    await OnMinStackCountReachedAsync(objectWithStatus);
             }
             
             // Check if the stack count is within the maximum limit.
@@ -123,7 +134,7 @@ namespace FastUnityCreationKit.Status
                 // Check if the stack count is changed.
                 // This is to prevent calling the event multiple times when the stack count is already at the maximum limit.
                 if(previousStackCount != StackCount || MaxStackLimitReachedNotificationMode != MaxStackLimitReachedNotificationMode.Once)
-                    OnMaxStackCountReached(objectWithStatus);
+                    await OnMaxStackCountReachedAsync(objectWithStatus);
             }
         }
     }

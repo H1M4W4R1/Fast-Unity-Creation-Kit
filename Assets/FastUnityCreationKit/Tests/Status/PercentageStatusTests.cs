@@ -19,7 +19,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
             
             // Assert
             float percentage = status.GetPercentage();
@@ -43,8 +43,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(0.5f);
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(0.5f);
+            objectWithStatus.AddStatusAsync(status);
             
             // Assert
             float percentage = status.GetPercentage();
@@ -71,8 +71,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.RemoveStatus<PercentageStatus>();
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.RemoveStatusAsync<PercentageStatus>();
             
             // Assert
             float percentage = status.GetPercentage();
@@ -98,7 +98,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(0.5f);
             
             // Assert
             PercentageStatus status = objectWithStatus.GetStatus<PercentageStatus>();
@@ -122,8 +122,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(0.5f);
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(0.5f);
             
             // Assert
             PercentageStatus status = objectWithStatus.GetStatus<PercentageStatus>();
@@ -147,8 +147,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(0.5f);
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(-0.25f);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(-0.25f);
             
             // Assert
             PercentageStatus status = objectWithStatus.GetStatus<PercentageStatus>();
@@ -177,8 +177,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(1000f);
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(1000f);
             
             // Assert
             float percentage = status.GetPercentage();
@@ -201,8 +201,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(0.5f);
-            objectWithStatus.DecreaseStatusPercentage<PercentageStatus>(0.25f);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(0.5f);
+            objectWithStatus.DecreaseStatusPercentageAsync<PercentageStatus>(0.25f);
             
             // Assert
             PercentageStatus status = objectWithStatus.GetStatus<PercentageStatus>();
@@ -230,8 +230,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(0.5f);
-            objectWithStatus.DecreaseStatusPercentage<PercentageStatus>(-0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(0.5f);
+            objectWithStatus.DecreaseStatusPercentageAsync<PercentageStatus>(-0.5f);
             
             // Assert
             PercentageStatus status = objectWithStatus.GetStatus<PercentageStatus>();
@@ -257,9 +257,9 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(0.5f);
-            objectWithStatus.DecreaseStatusPercentage<PercentageStatus>(1000f);
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(0.5f);
+            objectWithStatus.DecreaseStatusPercentageAsync<PercentageStatus>(1000f);
             
             // Assert
             float percentage = status.GetPercentage();
@@ -282,7 +282,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(0.5f);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(0.5f);
             
             // Assert
             float percentage = objectWithStatus.GetStatusPercentage<PercentageStatus>();
@@ -322,7 +322,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
             
             // Assert
             int amount = objectWithStatus.GetAmountOfTimesStatusIsAdded<PercentageStatus>();
@@ -341,8 +341,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(1f);
-            objectWithStatus.IncreaseStatusPercentage<PercentageStatus>(1f);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(1f);
+            objectWithStatus.IncreaseStatusPercentageAsync<PercentageStatus>(1f);
             
             // Assert
             PercentageStatus status = objectWithStatus.GetStatus<PercentageStatus>();
@@ -368,7 +368,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.DecreaseStatusPercentage<PercentageStatus>(1f);
+            objectWithStatus.DecreaseStatusPercentageAsync<PercentageStatus>(1f);
             
             // Assert
 

@@ -17,7 +17,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
 
             // Assert
             Assert.AreEqual(1, status.wasStatusAdded);
@@ -36,8 +36,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatusAsync(status);
 
             // Assert
             Assert.AreEqual(2, status.CurrentStack);
@@ -55,8 +55,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.RemoveStatus<StackableStatus>();
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.RemoveStatusAsync<StackableStatus>();
 
             // Assert
             Assert.AreEqual(0, status.CurrentStack);
@@ -82,8 +82,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
 
             // Assert
             Assert.AreEqual(2, status.CurrentStack);
@@ -102,8 +102,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status); // +1
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(2); // +2
+            objectWithStatus.AddStatusAsync(status); // +1
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(2); // +2
 
             // Assert
             Assert.AreEqual(3, status.CurrentStack);
@@ -126,7 +126,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
             StackableStatus status = objectWithStatus.GetStatus<StackableStatus>();
 
             // Assert
@@ -144,14 +144,14 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
 
             // Acquire the status
             StackableStatus status = objectWithStatus.GetStatus<StackableStatus>();
@@ -177,7 +177,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.IncreaseStatusStackCount<MultipleNotificationStackableStatus>(5);
+            objectWithStatus.IncreaseStatusStackCountAsync<MultipleNotificationStackableStatus>(5);
 
             // Acquire the status
             MultipleNotificationStackableStatus status =
@@ -205,9 +205,9 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status); // +1
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(2); // +2
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(); // -1
+            objectWithStatus.AddStatusAsync(status); // +1
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(2); // +2
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>(); // -1
 
             // Assert
             Assert.AreEqual(2, status.CurrentStack);
@@ -225,9 +225,9 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status); // +1
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(3); // +3 (+2 due to limit)
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(2); // -2
+            objectWithStatus.AddStatusAsync(status); // +1
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(3); // +3 (+2 due to limit)
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>(2); // -2
 
             // Assert
             Assert.AreEqual(1, status.CurrentStack);
@@ -250,8 +250,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
 
             // Assert
             Assert.AreEqual(0, status.CurrentStack);
@@ -269,9 +269,9 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
 
             // Assert
             Assert.AreEqual(1, status.CurrentStack);
@@ -289,9 +289,9 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(3);
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(4);
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(3);
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>(4);
 
             // Assert
             Assert.AreEqual(-1, status.CurrentStack);
@@ -307,14 +307,14 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>();
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
 
             // Acquire the status
             StackableStatus status = objectWithStatus.GetStatus<StackableStatus>();
@@ -340,7 +340,7 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.DecreaseStatusStackCount<MultipleNotificationStackableStatus>(5);
+            objectWithStatus.DecreaseStatusStackCountAsync<MultipleNotificationStackableStatus>(5);
 
             // Acquire the status
             MultipleNotificationStackableStatus status =
@@ -368,8 +368,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(40);
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>(40);
 
             // Assert
             Assert.AreEqual(-3, status.CurrentStack);
@@ -389,8 +389,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(40);
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(40);
 
             // Assert
             Assert.AreEqual(3, status.CurrentStack);
@@ -410,8 +410,8 @@ namespace FastUnityCreationKit.Tests.Status
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(2);
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(2);
 
             // Assert
             Assert.AreEqual(3, objectWithStatus.GetStatusStackCount<StackableStatus>());
@@ -443,9 +443,9 @@ namespace FastUnityCreationKit.Tests.Status
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.IncreaseStatusStackCount<StackableStatus>();
-            objectWithStatus.RemoveStatus<StackableStatus>();
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.RemoveStatusAsync<StackableStatus>();
 
             // Act
             int stackCount = objectWithStatus.GetStatusStackCount<StackableStatus>();
@@ -464,8 +464,8 @@ namespace FastUnityCreationKit.Tests.Status
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
-            objectWithStatus.AddStatus(status);
-            objectWithStatus.AddStatus(status);
+            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatusAsync(status);
 
             // Act
             int amountOfTimesStatusIsAdded = objectWithStatus.GetAmountOfTimesStatusIsAdded<StackableStatus>();

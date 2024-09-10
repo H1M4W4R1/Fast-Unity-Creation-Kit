@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Status;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Status;
 
 namespace FastUnityCreationKit.Tests.Status.Data
 {
@@ -11,23 +12,26 @@ namespace FastUnityCreationKit.Tests.Status.Data
         public int wasStatusAdded;
         public int wasStatusRemoved;
         
-        public void OnStatusAdded(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusAddedAsync(IObjectWithStatus objectWithStatus)
         {
             wasStatusAdded++;
+            return UniTask.CompletedTask;
         }
 
-        public void OnStatusRemoved(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusRemovedAsync(IObjectWithStatus objectWithStatus)
         {
             wasStatusRemoved++;
+            return UniTask.CompletedTask;
         }
 
 
-        public void OnMaxPercentageReached(IObjectWithStatus objectWithStatus)
+        public UniTask OnMaxPercentageReachedAsync(IObjectWithStatus objectWithStatus)
         {
             wasMaxPercentageReached++;
+            return UniTask.CompletedTask;
         }
 
-        public void OnMinPercentageReached(IObjectWithStatus objectWithStatus)
+        public UniTask OnMinPercentageReachedAsync(IObjectWithStatus objectWithStatus)
         {
             wasMinPercentageReached++;
             
@@ -35,6 +39,8 @@ namespace FastUnityCreationKit.Tests.Status.Data
             {
                 entityWithStatus.statusPercentageReachedZeroTimes++;
             }
+            
+            return UniTask.CompletedTask;
         }
         
         public float GetPercentage() => (this as IPercentageStatus).Percentage;

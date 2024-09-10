@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using Unity.Mathematics;
 
 namespace FastUnityCreationKit.Status
@@ -17,29 +18,41 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// Triggered when the percentage value reaches 100%.
         /// </summary>
-        public void OnMaxPercentageReached([NotNull] IObjectWithStatus objectWithStatus);
+        public UniTask OnMaxPercentageReachedAsync([NotNull] IObjectWithStatus objectWithStatus);
         
         /// <summary>
         /// Triggered when the percentage value reaches 0%.
         /// </summary>
-        public void OnMinPercentageReached([NotNull] IObjectWithStatus objectWithStatus);
+        public UniTask OnMinPercentageReachedAsync([NotNull] IObjectWithStatus objectWithStatus);
         
         /// <summary>
         /// Increases the percentage value by the given amount where 1.0 is 100%.
         /// </summary>
         public void IncreasePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount) =>
-            ChangePercentage(objectWithStatus, amount);
+            ChangePercentage(objectWithStatus, amount).GetAwaiter().GetResult();
+        
+        /// <summary>
+        /// Increases the percentage value by the given amount where 1.0 is 100%.
+        /// </summary>
+        public async UniTask IncreasePercentageAsync([NotNull] IObjectWithStatus objectWithStatus, float amount) =>
+            await ChangePercentage(objectWithStatus, amount);
+
+        /// <summary>
+        /// Decreases the percentage value by the given amount where 1.0 is 100%.
+        /// </summary>
+        public void DecreasePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount) =>
+            ChangePercentage(objectWithStatus, -amount).GetAwaiter().GetResult();
         
         /// <summary>
         /// Decreases the percentage value by the given amount where 1.0 is 100%.
         /// </summary>
-        public void DecreasePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount) => 
-            ChangePercentage(objectWithStatus, -amount);
+        public async UniTask DecreasePercentageAsync([NotNull] IObjectWithStatus objectWithStatus, float amount) => 
+            await ChangePercentage(objectWithStatus, -amount);
         
         /// <summary>
         /// Increases the percentage value by the given amount.
         /// </summary>
-        private void ChangePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount)
+        private async UniTask ChangePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount)
         {
             float previousPercentage = Percentage;
             
@@ -52,10 +65,10 @@ namespace FastUnityCreationKit.Status
             switch (Percentage)
             {
                 case >= 1f when previousPercentage < 1f:
-                    OnMaxPercentageReached(objectWithStatus);
+                    await OnMaxPercentageReachedAsync(objectWithStatus);
                     break;
                 case <= 0f when previousPercentage > 0f:
-                    OnMinPercentageReached(objectWithStatus);
+                    await OnMinPercentageReachedAsync(objectWithStatus);
                     break;
             }
             
@@ -66,15 +79,15 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// Sets the percentage value to the given value.
         /// </summary>
-        internal void SetPercentage([NotNull] IObjectWithStatus obj, float amount)
+        internal async UniTask SetPercentageAsync([NotNull] IObjectWithStatus obj, float amount)
         {
             float previousPercentage = Percentage;
             Percentage = amount;
             
             if(previousPercentage < amount && amount >= 1f)
-                OnMaxPercentageReached(obj);
+                await OnMaxPercentageReachedAsync(obj);
             else if(previousPercentage > amount && amount <= 0f)
-                OnMinPercentageReached(obj);
+                await OnMinPercentageReachedAsync(obj);
             
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEngine;
@@ -35,7 +36,7 @@ namespace FastUnityCreationKit.Status
         /// Automatically cleans up the status list.
         /// This is used to remove UI errors and prevent graphical issues.
         /// </summary>
-        private void ClearZeroLevelStatuses()
+        private async UniTask ClearZeroLevelStatusesAsync()
         {
             EnsureInitialized();
 
@@ -51,9 +52,9 @@ namespace FastUnityCreationKit.Status
 
                 // Remove if the status is percentage and has 0 percentage.
                 if (status is IPercentageStatus {Percentage: <= math.EPSILON})
-                    RemoveStatus(i);
+                    await RemoveStatusAsync(i);
                 else if (status is not IPercentageStatus)
-                    RemoveStatus(i);
+                    await RemoveStatusAsync(i);
 
                 // Otherwise skip to the next status - stack count is 0 and status still has percentage.
                 // This is to support status with both stack count and percentage.
@@ -76,20 +77,25 @@ namespace FastUnityCreationKit.Status
                     // Check if the stack count is 0.
                     if (stackableStatus.StackCount == 0)
                         if (stackableStatus.StackCount == 0)
-                            RemoveStatus(i);
+                            await RemoveStatusAsync(i);
 
                     // Alternative should be handled automatically
                     // by percentage change events.
                 }
                 else
-                    RemoveStatus(i);
+                    await RemoveStatusAsync(i);
             }
         }
 
         /// <summary>
         /// Removes the status at the given index.
         /// </summary>
-        private void RemoveStatus(int index)
+        private void RemoveStatus(int index) => RemoveStatusAsync(index).GetAwaiter().GetResult();
+        
+        /// <summary>
+        /// Removes the status at the given index.
+        /// </summary>
+        private async UniTask RemoveStatusAsync(int index)
         {
             EnsureInitialized();
 
@@ -97,7 +103,7 @@ namespace FastUnityCreationKit.Status
             if (index < 0 || index >= Statuses.Count) return;
 
             // Remove the status at the given index.
-            Statuses[index].OnStatusRemoved(this);
+            await Statuses[index].OnStatusRemovedAsync(this);
 
             // Remove the status from the list.
             Statuses.RemoveAt(index);
@@ -139,7 +145,13 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// Add the given status to the object.
         /// </summary>
-        public void AddStatus<TStatusType>([NotNull] TStatusType status) where TStatusType : IStatus
+        public void AddStatus<TStatusType>([NotNull] TStatusType status) where TStatusType : IStatus =>
+            AddStatusAsync(status).GetAwaiter().GetResult();
+        
+        /// <summary>
+        /// Add the given status to the object.
+        /// </summary>
+        public async UniTask AddStatusAsync<TStatusType>([NotNull] TStatusType status) where TStatusType : IStatus
         {
             EnsureInitialized();
             
@@ -168,8 +180,8 @@ namespace FastUnityCreationKit.Status
                 if (status is IPercentageStatus percentageStatus)
                 {
                     Debug.LogWarning("The object already has the status. Increasing the percentage to 100%.");
-                    percentageStatus.SetPercentage(this, 1f);
-                    ClearZeroLevelStatuses();
+                    await percentageStatus.SetPercentageAsync(this, 1f);
+                    await ClearZeroLevelStatusesAsync();
                     return;
                 }
                 // If status is stackable, increase the stack count.
@@ -178,7 +190,7 @@ namespace FastUnityCreationKit.Status
                 // the stack count would be increased multiple times.
                 else if (status is IStackableStatus stackableStatus)
                 {
-                    stackableStatus.IncreaseStackCount(this);
+                    await stackableStatus.IncreaseStackCountAsync(this);
                     return;
                 }
 
@@ -197,23 +209,23 @@ namespace FastUnityCreationKit.Status
                 // as the percentage status might be stackable and thus
                 // the stack count would be increased multiple times.
                 if (status is IPercentageStatus percentageStatus)
-                    _IncreasePercentage(percentageStatus, 1f);
+                    await _IncreasePercentageAsync(percentageStatus, 1f);
 
                 // Check if the status is stackable and add single stack.
                 else if (status is IStackableStatus stackableStatus)
-                    stackableStatus.IncreaseStackCount(this);
+                    await stackableStatus.IncreaseStackCountAsync(this);
 
-                status.OnStatusAdded(this);
+                await status.OnStatusAddedAsync(this);
             }
 
             // Clear the statuses that have 0 stack count or 0 percentage.
-            ClearZeroLevelStatuses();
+            await ClearZeroLevelStatusesAsync();
         }
 
         /// <summary>
         /// Used internally to add the status to the object.
         /// </summary>
-        private void _AddStatus<TStatusType>([NotNull] TStatusType status) where TStatusType : IStatus
+        private async UniTask _AddStatusAsync<TStatusType>([NotNull] TStatusType status) where TStatusType : IStatus
         {
             EnsureInitialized();
             
@@ -225,53 +237,64 @@ namespace FastUnityCreationKit.Status
             
             // Add the status to the list.
             Statuses.Add(status);
-            status.OnStatusAdded(this);
+            await status.OnStatusAddedAsync(this);
         }
 
         /// <summary>
         /// Remove the status of the given type from the object.
         /// </summary>
-        public void RemoveStatus<TStatusType>() where TStatusType : IStatus
+        public void RemoveStatus<TStatusType>() where TStatusType : IStatus =>
+            RemoveStatusAsync<TStatusType>().GetAwaiter().GetResult();
+        
+        /// <summary>
+        /// Remove the status of the given type from the object.
+        /// </summary>
+        public async UniTask RemoveStatusAsync<TStatusType>() where TStatusType : IStatus
         {
             EnsureInitialized();
 
             // Loop through all statuses and check if the object has the status.
             for (int i = 0; i < Statuses.Count; i++)
             {
-                if (Statuses[i] is TStatusType status)
+                if (Statuses[i] is not TStatusType status) continue;
+                
+                // Support for stackable percentage status
+                // This needs to be done in a loop to ensure that all stacks are removed and
+                // all events are triggered.
+                if (status is IStackablePercentageStatus stackablePercentageStatus)
                 {
-                    // Support for stackable percentage status
-                    // This needs to be done in a loop to ensure that all stacks are removed and
-                    // all events are triggered.
-                    if (status is IStackablePercentageStatus stackablePercentageStatus)
-                    {
-                        // When stack count is greater than zero or percentage is greater than zero
-                        while (stackablePercentageStatus.StackCount > 0 || stackablePercentageStatus.Percentage > 0)
-                            _DecreasePercentage(stackablePercentageStatus, stackablePercentageStatus.Percentage);
+                    // When stack count is greater than zero or percentage is greater than zero
+                    while (stackablePercentageStatus.StackCount > 0 || stackablePercentageStatus.Percentage > 0)
+                        await _DecreasePercentageAsync(stackablePercentageStatus, stackablePercentageStatus.Percentage);
 
-                        // Now status should have 0 stack count and 0 percentage
-                    }
-
-                    // Decrease percentage to 0% if the status is percentage.
-                    else if (status is IPercentageStatus percentageStatus)
-                        percentageStatus.DecreasePercentage(this, 1f);
-
-                    // Decrease stack count to 0 if the status is stackable.
-                    else if (status is IStackableStatus stackableStatus)
-                        stackableStatus.DecreaseStackCount(this, stackableStatus.StackCount);
-
-                    // Proceed with removing the status.
-                    RemoveStatus(i);
-                    ClearZeroLevelStatuses();
-                    return;
+                    // Now status should have 0 stack count and 0 percentage
                 }
+
+                // Decrease percentage to 0% if the status is percentage.
+                else if (status is IPercentageStatus percentageStatus)
+                    await percentageStatus.DecreasePercentageAsync(this, 1f);
+
+                // Decrease stack count to 0 if the status is stackable.
+                else if (status is IStackableStatus stackableStatus)
+                    await stackableStatus.DecreaseStackCountAsync(this, stackableStatus.StackCount);
+
+                // Proceed with removing the status.
+                await RemoveStatusAsync(i);
+                await ClearZeroLevelStatusesAsync();
+                return;
             }
         }
 
         /// <summary>
         /// Decrease the stack count of the status of the given type.
         /// </summary>
-        public void DecreaseStatusStackCount<TStatusType>(int amount = 1) where TStatusType : IStackableStatus, new()
+        public void DecreaseStatusStackCount<TStatusType>(int amount = 1) where TStatusType : IStackableStatus, new() =>
+            DecreaseStatusStackCountAsync<TStatusType>(amount).GetAwaiter().GetResult();
+        
+        /// <summary>
+        /// Decrease the stack count of the status of the given type.
+        /// </summary>
+        public async UniTask DecreaseStatusStackCountAsync<TStatusType>(int amount = 1) where TStatusType : IStackableStatus, new()
         {
             EnsureInitialized();
 
@@ -280,22 +303,28 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    status.DecreaseStackCount(this, amount);
-                    ClearZeroLevelStatuses();
+                    await status.DecreaseStackCountAsync(this, amount);
+                    await ClearZeroLevelStatusesAsync();
                     return;
                 }
             }
 
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
-            newStatus.DecreaseStackCount(this, amount);
-            _AddStatus(newStatus);
+            await newStatus.DecreaseStackCountAsync(this, amount);
+            await _AddStatusAsync(newStatus);
         }
 
         /// <summary>
         /// Increase the stack count of the status of the given type.
         /// </summary>
-        public void IncreaseStatusStackCount<TStatusType>(int amount = 1) where TStatusType : IStackableStatus, new()
+        public void IncreaseStatusStackCount<TStatusType>(int amount = 1) where TStatusType : IStackableStatus, new() =>
+            IncreaseStatusStackCountAsync<TStatusType>(amount).GetAwaiter().GetResult();
+        
+        /// <summary>
+        /// Increase the stack count of the status of the given type.
+        /// </summary>
+        public async UniTask IncreaseStatusStackCountAsync<TStatusType>(int amount = 1) where TStatusType : IStackableStatus, new()
         {
             EnsureInitialized();
 
@@ -304,22 +333,28 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    status.IncreaseStackCount(this, amount);
-                    ClearZeroLevelStatuses();
+                    await status.IncreaseStackCountAsync(this, amount);
+                    await ClearZeroLevelStatusesAsync();
                     return;
                 }
             }
 
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
-            newStatus.IncreaseStackCount(this, amount);
-            _AddStatus(newStatus);
+            await newStatus.IncreaseStackCountAsync(this, amount);
+            await _AddStatusAsync(newStatus);
         }
 
         /// <summary>
         /// Increase the percentage of the status of the given type.
         /// </summary>
-        public void IncreaseStatusPercentage<TStatusType>(float amount = 1f)
+        public void IncreaseStatusPercentage<TStatusType>(float amount = 1f) where TStatusType : IPercentageStatus, new() =>
+            IncreaseStatusPercentageAsync<TStatusType>(amount).GetAwaiter().GetResult();
+        
+        /// <summary>
+        /// Increase the percentage of the status of the given type.
+        /// </summary>
+        public async UniTask IncreaseStatusPercentageAsync<TStatusType>(float amount = 1f)
             where TStatusType : IPercentageStatus, new()
         {
             EnsureInitialized();
@@ -329,24 +364,24 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    _IncreasePercentage(status, amount);
-                    ClearZeroLevelStatuses();
+                    await _IncreasePercentageAsync(status, amount);
+                    await ClearZeroLevelStatusesAsync();
                     return;
                 }
             }
 
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
-            _AddStatus(newStatus);
-            _IncreasePercentage(newStatus, amount);
+            await _AddStatusAsync(newStatus);
+            await _IncreasePercentageAsync(newStatus, amount);
         }
 
-        private void _IncreasePercentage([NotNull] IPercentageStatus status, float amount)
+        private async UniTask _IncreasePercentageAsync([NotNull] IPercentageStatus status, float amount)
         {
             while (true)
             {
                 // Check if status is stackable
-                if (status is IStackableStatus stackableStatus)
+                if (status is IStackableStatus)
                 {
                     // Compute difference to 100%
                     float difference = 1f - status.Percentage;
@@ -355,7 +390,7 @@ namespace FastUnityCreationKit.Status
                     if (amount >= difference)
                     {
                         // Increase percentage by the remaining amount.
-                        status.IncreasePercentage(this, difference);
+                        await status.IncreasePercentageAsync(this, difference);
 
                         // Stack count and percentage should be set to ++ and 0% respectively
                         // using automated events, this is kept here for reference of events
@@ -373,8 +408,8 @@ namespace FastUnityCreationKit.Status
                     else
                     {
                         // Increase the percentage by the given amount.
-                        status.IncreasePercentage(this, amount);
-                        ClearZeroLevelStatuses();
+                        await status.IncreasePercentageAsync(this, amount);
+                        await ClearZeroLevelStatusesAsync();
                         return;
                     }
 
@@ -382,8 +417,8 @@ namespace FastUnityCreationKit.Status
                 }
 
                 // Increase the percentage value by the given amount.
-                status.IncreasePercentage(this, amount);
-                ClearZeroLevelStatuses();
+                await status.IncreasePercentageAsync(this, amount);
+                await ClearZeroLevelStatusesAsync();
                 break;
             }
         }
@@ -391,7 +426,13 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// Decrease the percentage of the status of the given type.
         /// </summary>
-        public void DecreaseStatusPercentage<TStatusType>(float amount = 1f)
+        public void DecreaseStatusPercentage<TStatusType>(float amount = 1f) where TStatusType : IPercentageStatus, new() =>
+            DecreaseStatusPercentageAsync<TStatusType>(amount).GetAwaiter().GetResult();
+  
+        /// <summary>
+        /// Decrease the percentage of the status of the given type.
+        /// </summary>
+        public async UniTask DecreaseStatusPercentageAsync<TStatusType>(float amount = 1f)
             where TStatusType : IPercentageStatus, new()
         {
             EnsureInitialized();
@@ -401,24 +442,24 @@ namespace FastUnityCreationKit.Status
             {
                 if (Statuses[i] is TStatusType status)
                 {
-                    _DecreasePercentage(status, amount);
-                    ClearZeroLevelStatuses();
+                    await _DecreasePercentageAsync(status, amount);
+                    await ClearZeroLevelStatusesAsync();
                     return;
                 }
             }
 
             // Create status instance and add it to the object.
             TStatusType newStatus = new();
-            _AddStatus(newStatus);
-            _DecreasePercentage(newStatus, amount);
+            await _AddStatusAsync(newStatus);
+            await _DecreasePercentageAsync(newStatus, amount);
         }
 
-        private void _DecreasePercentage([NotNull] IPercentageStatus status, float amount)
+        private async UniTask _DecreasePercentageAsync([NotNull] IPercentageStatus status, float amount)
         {
             while (true)
             {
                 // Check if status is stackable
-                if (status is IStackableStatus stackableStatus)
+                if (status is IStackableStatus)
                 {
                     // Compute difference to 0%
                     float difference = status.Percentage;
@@ -427,7 +468,7 @@ namespace FastUnityCreationKit.Status
                     if (amount >= difference)
                     {
                         // Decrease percentage by the remaining amount.
-                        status.DecreasePercentage(this, difference);
+                        await status.DecreasePercentageAsync(this, difference);
 
                         // Stack count and percentage should be set to -- and 100% respectively
                         // using automated events, this is kept here for reference of events
@@ -445,8 +486,8 @@ namespace FastUnityCreationKit.Status
                     else
                     {
                         // Decrease the percentage by the given amount.
-                        status.DecreasePercentage(this, amount);
-                        ClearZeroLevelStatuses();
+                        await status.DecreasePercentageAsync(this, amount);
+                        await ClearZeroLevelStatusesAsync();
                         return;
                     }
 
@@ -454,8 +495,8 @@ namespace FastUnityCreationKit.Status
                 }
 
                 // Decrease the percentage value by the given amount.
-                status.DecreasePercentage(this, amount);
-                ClearZeroLevelStatuses();
+                await status.DecreasePercentageAsync(this, amount);
+                await ClearZeroLevelStatusesAsync();
                 break;
             }
         }

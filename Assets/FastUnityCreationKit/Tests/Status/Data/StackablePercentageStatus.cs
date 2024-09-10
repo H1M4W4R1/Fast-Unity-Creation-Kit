@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Core.Numerics;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Status;
 using FastUnityCreationKit.Status.Enums;
 
@@ -12,14 +13,16 @@ namespace FastUnityCreationKit.Tests.Status.Data
         public int maxStackCountReached = 0;
         public int minStackCountReached = 0;
 
-        public void OnStatusAdded(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusAddedAsync(IObjectWithStatus objectWithStatus)
         {
             statusWasAdded++;
+            return UniTask.CompletedTask;
         }
 
-        public void OnStatusRemoved(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusRemovedAsync(IObjectWithStatus objectWithStatus)
         {
             statusWasRemoved++;
+            return UniTask.CompletedTask;
         }
 
         float IPercentageStatus.Percentage { get; set; }
@@ -28,19 +31,22 @@ namespace FastUnityCreationKit.Tests.Status.Data
 
         public MaxStackLimitReachedNotificationMode MaxStackLimitReachedNotificationMode => MaxStackLimitReachedNotificationMode.Once;
 
-        public void OnStackCountChanged(IObjectWithStatus objectWithStatus, int amount)
+        public UniTask OnStackCountChangedAsync(IObjectWithStatus objectWithStatus, int amount)
         {
             stackCountChanged += amount;
+            return UniTask.CompletedTask;
         }
 
-        public void OnMaxStackCountReached(IObjectWithStatus objectWithStatus)
+        public UniTask OnMaxStackCountReachedAsync(IObjectWithStatus objectWithStatus)
         {
             maxStackCountReached++;
+            return UniTask.CompletedTask;
         }
 
-        public void OnMinStackCountReached(IObjectWithStatus objectWithStatus)
+        public UniTask OnMinStackCountReachedAsync(IObjectWithStatus objectWithStatus)
         {
             minStackCountReached++;
+            return UniTask.CompletedTask;
         }
     }
 }

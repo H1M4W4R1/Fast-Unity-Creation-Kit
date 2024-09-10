@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Core.Numerics;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Limits;
 using FastUnityCreationKit.Status;
 using FastUnityCreationKit.Status.Enums;
@@ -14,14 +15,16 @@ namespace FastUnityCreationKit.Tests.Status.Data
         public int wasMaxStackCountReached;
         public int wasMinStackCountReached;
 
-        public void OnStatusAdded(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusAddedAsync(IObjectWithStatus objectWithStatus)
         {
             wasStatusAdded++;
+            return UniTask.CompletedTask;
         }
 
-        public void OnStatusRemoved(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusRemovedAsync(IObjectWithStatus objectWithStatus)
         {
             wasStatusRemoved++;
+            return UniTask.CompletedTask;
         }
 
         int32 IStackableStatus.StackCount { get; set; }
@@ -33,19 +36,22 @@ namespace FastUnityCreationKit.Tests.Status.Data
             MinStackLimitReachedNotificationMode.EveryTime;
 
 
-        public void OnStackCountChanged(IObjectWithStatus objectWithStatus, int amount)
+        public UniTask OnStackCountChangedAsync(IObjectWithStatus objectWithStatus, int amount)
         {
             wasStackCountChanged += amount;
+            return UniTask.CompletedTask;
         }
 
-        public void OnMaxStackCountReached(IObjectWithStatus objectWithStatus)
+        public UniTask OnMaxStackCountReachedAsync(IObjectWithStatus objectWithStatus)
         {
             wasMaxStackCountReached++;
+            return UniTask.CompletedTask;
         }
 
-        public void OnMinStackCountReached(IObjectWithStatus objectWithStatus)
+        public UniTask OnMinStackCountReachedAsync(IObjectWithStatus objectWithStatus)
         {
             wasMinStackCountReached++;
+            return UniTask.CompletedTask;
         }
 
         public int32 MaxLimit => 3;

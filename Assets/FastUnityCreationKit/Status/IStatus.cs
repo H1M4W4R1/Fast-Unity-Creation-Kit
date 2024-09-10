@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Status
 {
@@ -11,12 +12,12 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// Called when the status is added to an object.
         /// </summary>
-        public void OnStatusAdded([NotNull] IObjectWithStatus objectWithStatus);
+        public UniTask OnStatusAddedAsync([NotNull] IObjectWithStatus objectWithStatus);
         
         /// <summary>
         /// Called when the status is removed from an object.
         /// </summary>
-        public void OnStatusRemoved([NotNull] IObjectWithStatus objectWithStatus);
+        public UniTask OnStatusRemovedAsync([NotNull] IObjectWithStatus objectWithStatus);
         
     }
 }
