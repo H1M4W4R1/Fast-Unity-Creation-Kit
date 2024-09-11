@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Inventory;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Inventory;
 using FastUnityCreationKit.Inventory.Abstract;
 using FastUnityCreationKit.Inventory.Data;
 using FastUnityCreationKit.Inventory.Stacking;
@@ -30,14 +31,18 @@ namespace FastUnityCreationKit.Tests.Inventory.Data
             return false;
         }
 
-        public void OnEquipped(IItemInteractionContext interactionContext)
+        public UniTask OnEquippedAsync(IItemInteractionContext interactionContext)
         {
             timesEquipped++;
+            
+            return UniTask.CompletedTask;
         }
 
-        public void OnUnequipped(IItemInteractionContext interactionContext)
+        public UniTask OnUnequippedAsync(IItemInteractionContext interactionContext)
         {
             timesUnequipped++;
+            
+            return UniTask.CompletedTask;
         }
     }
 }

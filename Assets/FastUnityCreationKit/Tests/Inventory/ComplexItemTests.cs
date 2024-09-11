@@ -16,7 +16,7 @@ namespace FastUnityCreationKit.Tests.Inventory
             ExampleWearableItem wearable = new ExampleWearableItem();
             
             // Act
-            wearable.Equip(null);
+            wearable.EquipAsync(null);
             
             // Assert
             Assert.IsTrue(wearable.IsEquipped);
@@ -30,7 +30,7 @@ namespace FastUnityCreationKit.Tests.Inventory
             ExampleNonWearableItem item = new ExampleNonWearableItem();
             
             // Act
-            item.Equip(null);
+            item.EquipAsync(null);
             
             // Assert
             Assert.IsFalse(item.IsEquipped);
@@ -44,8 +44,8 @@ namespace FastUnityCreationKit.Tests.Inventory
             ExampleWearableItem wearable = new ExampleWearableItem();
             
             // Act
-            wearable.Equip(null);
-            wearable.Equip(null);
+            wearable.EquipAsync(null);
+            wearable.EquipAsync(null);
             
             // Assert
             Assert.IsTrue(wearable.IsEquipped);
@@ -57,10 +57,10 @@ namespace FastUnityCreationKit.Tests.Inventory
         {
             // Arrange
             ExampleWearableItem wearable = new ExampleWearableItem();
-            wearable.Equip(null);
+            wearable.EquipAsync(null);
             
             // Act
-            wearable.Unequip(null);
+            wearable.UnequipAsync(null);
             
             // Assert
             Assert.IsFalse(wearable.IsEquipped);
@@ -74,7 +74,7 @@ namespace FastUnityCreationKit.Tests.Inventory
             ExampleNonWearableItem item = new ExampleNonWearableItem();
             
             // Act
-            item.Unequip(null);
+            item.UnequipAsync(null);
             
             // Assert
             Assert.IsFalse(item.IsEquipped);
@@ -86,11 +86,11 @@ namespace FastUnityCreationKit.Tests.Inventory
         {
             // Arrange
             ExampleWearableItem wearable = new ExampleWearableItem();
-            wearable.Equip(null);
+            wearable.EquipAsync(null);
             
             // Act
-            wearable.Unequip(null);
-            wearable.Unequip(null);
+            wearable.UnequipAsync(null);
+            wearable.UnequipAsync(null);
             
             // Assert
             Assert.IsFalse(wearable.IsEquipped);
@@ -104,7 +104,7 @@ namespace FastUnityCreationKit.Tests.Inventory
             ExampleUsableItem usableItem = new ExampleUsableItem();
             
             // Act
-            usableItem.Use(null);
+            usableItem.UseAsync(null);
             
             // Assert
             Assert.AreEqual(usableItem.timesUsed, 1);
@@ -117,7 +117,7 @@ namespace FastUnityCreationKit.Tests.Inventory
             ExampleUnusableItem nonUsableItem = new ExampleUnusableItem();
             
             // Act
-            nonUsableItem.Use(null);
+            nonUsableItem.UseAsync(null);
             
             // Assert
             Assert.AreEqual(nonUsableItem.timesUsed, 0);
@@ -135,7 +135,7 @@ namespace FastUnityCreationKit.Tests.Inventory
                 Assert.IsFalse(item is IEquippableItem);
                 
                 // Act
-                item.Equip(null);
+                item.EquipAsync(null);
             });
         }
         
@@ -151,7 +151,7 @@ namespace FastUnityCreationKit.Tests.Inventory
                 Assert.IsFalse(item is IEquippableItem);
                 
                 // Act
-                item.Unequip(null);
+                item.UnequipAsync(null);
             });
         }
 
@@ -167,7 +167,7 @@ namespace FastUnityCreationKit.Tests.Inventory
                 Assert.IsFalse(item is IUsableItem);
                 
                 // Act
-                item.Use(null);
+                item.UseAsync(null);
             });
         }
         

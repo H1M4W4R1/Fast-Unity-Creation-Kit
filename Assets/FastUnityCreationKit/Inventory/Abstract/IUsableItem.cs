@@ -1,4 +1,6 @@
-﻿using FastUnityCreationKit.Inventory.Data;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Inventory.Data;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Inventory.Abstract
 {
@@ -10,24 +12,23 @@ namespace FastUnityCreationKit.Inventory.Abstract
         /// <summary>
         /// Checks if the item can be used.
         /// </summary>
-        public bool IsItemUsableInContext(IItemInteractionContext interactionContext);
+        public bool IsItemUsableInContext([NotNull] IItemInteractionContext interactionContext);
 
         /// <summary>
         /// Uses the item.
         /// </summary>
-        public bool UseItem(IItemInteractionContext interactionContext)
+        public async UniTask<bool> UseItem([NotNull] IItemInteractionContext interactionContext)
         {
             // If the item can't be used, return false.
             if (!IsItemUsableInContext(interactionContext)) return false;
             
-            OnUsed(interactionContext);
+            await OnUsedAsync(interactionContext);
             return true;
-
         }
         
         /// <summary>
         /// Called when the item is used.
         /// </summary>
-        protected void OnUsed(IItemInteractionContext interactionContext);
+        protected UniTask OnUsedAsync([NotNull] IItemInteractionContext interactionContext);
     }
 }

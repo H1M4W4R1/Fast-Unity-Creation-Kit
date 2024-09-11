@@ -1,4 +1,6 @@
-﻿using FastUnityCreationKit.Inventory.Data;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Inventory.Data;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Inventory.Abstract
 {
@@ -15,23 +17,23 @@ namespace FastUnityCreationKit.Inventory.Abstract
         /// <summary>
         /// Checks if the item can be equipped.
         /// </summary>
-        public bool IsItemEquippableInContext(IItemInteractionContext interactionContext);
+        public bool IsItemEquippableInContext([NotNull] IItemInteractionContext interactionContext);
         
         /// <summary>
         /// Checks if the item can be removed.
         /// </summary>
-        public bool IsItemUnequippableInContext(IItemInteractionContext interactionContext);
+        public bool IsItemUnequippableInContext([NotNull] IItemInteractionContext interactionContext);
 
         /// <summary>
         /// Equips the item.
         /// </summary>
-        public bool EquipItem(IItemInteractionContext interactionContext)
+        public async UniTask<bool> EquipItemAsync([NotNull] IItemInteractionContext interactionContext)
         {
             // If the item can't be equipped or it's already equipped, return false.
             if (!IsItemEquippableInContext(interactionContext) || IsEquipped) return false;
             
             IsEquipped = true;
-            OnEquipped(interactionContext);
+            await OnEquippedAsync(interactionContext);
             return true;
 
         }
@@ -39,25 +41,25 @@ namespace FastUnityCreationKit.Inventory.Abstract
         /// <summary>
         /// Removes the item.
         /// </summary>
-        public bool UnequipItem(IItemInteractionContext interactionContext)
+        public async UniTask<bool> UnequipItemAsync([NotNull] IItemInteractionContext interactionContext)
         {
             // If the item can't be unequipped or it's not equipped, return false.
             if (!IsItemUnequippableInContext(interactionContext) || !IsEquipped)
                 return false;
             
             IsEquipped = false;
-            OnUnequipped(interactionContext);
+            await OnUnequippedAsync(interactionContext);
             return true;
         }
         
         /// <summary>
         /// Called when the item is equipped.
         /// </summary>
-        public void OnEquipped(IItemInteractionContext interactionContext);
+        public UniTask OnEquippedAsync([NotNull] IItemInteractionContext interactionContext);
         
         /// <summary>
         /// Called when the item is removed from worn slot.
         /// </summary>
-        public void OnUnequipped(IItemInteractionContext interactionContext);
+        public UniTask OnUnequippedAsync([NotNull] IItemInteractionContext interactionContext);
     }
 }

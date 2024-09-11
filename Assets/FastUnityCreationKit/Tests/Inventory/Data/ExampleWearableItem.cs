@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Inventory;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Inventory;
 using FastUnityCreationKit.Inventory.Abstract;
 using FastUnityCreationKit.Inventory.Data;
 using FastUnityCreationKit.Inventory.Stacking;
@@ -10,13 +11,13 @@ namespace FastUnityCreationKit.Tests.Inventory.Data
         /// <summary>
         /// Wrapper for <see cref="IEquippableItem.IsEquipped"/>.
         /// </summary>
-        public bool IsEquipped => ((IEquippableItem)this).IsEquipped;
-        
+        public bool IsEquipped => ((IEquippableItem) this).IsEquipped;
+
         /// <summary>
         /// Determines if the item is equipped.
         /// </summary>
         bool IEquippableItem.IsEquipped { get; set; }
-        
+
         public int timesEquipped = 0;
         public int timesUnequipped = 0;
 
@@ -30,14 +31,16 @@ namespace FastUnityCreationKit.Tests.Inventory.Data
             return true;
         }
 
-        public void OnEquipped(IItemInteractionContext interactionContext)
+        public UniTask OnEquippedAsync(IItemInteractionContext interactionContext)
         {
             timesEquipped++;
+            return UniTask.CompletedTask;
         }
 
-        public void OnUnequipped(IItemInteractionContext interactionContext)
+        public UniTask OnUnequippedAsync(IItemInteractionContext interactionContext)
         {
             timesUnequipped++;
+            return UniTask.CompletedTask;
         }
     }
 }

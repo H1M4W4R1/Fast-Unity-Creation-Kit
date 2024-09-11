@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Inventory;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Inventory;
 using FastUnityCreationKit.Inventory.Abstract;
 using FastUnityCreationKit.Inventory.Data;
 using FastUnityCreationKit.Inventory.Stacking;
@@ -14,9 +15,10 @@ namespace FastUnityCreationKit.Tests.Inventory.Data
             return true;
         }
 
-        void IUsableItem.OnUsed(IItemInteractionContext interactionContext)
+        UniTask IUsableItem.OnUsedAsync(IItemInteractionContext interactionContext)
         {
             timesUsed++;
+            return UniTask.CompletedTask;
         }
     }
 }

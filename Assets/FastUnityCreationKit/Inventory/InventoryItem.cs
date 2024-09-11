@@ -1,6 +1,8 @@
-﻿using FastUnityCreationKit.Inventory.Abstract;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Inventory.Abstract;
 using FastUnityCreationKit.Inventory.Data;
 using FastUnityCreationKit.Inventory.Stacking;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Inventory
@@ -89,50 +91,73 @@ namespace FastUnityCreationKit.Inventory
         /// Checks if the item is equippable.
         /// </summary>
         public bool IsEquippable => this is IEquippableItem;
-        
+
         /// <summary>
         /// Uses the item if it's usable.
         /// Returns true if the item was used.
         /// </summary>
-        public bool Use(IItemInteractionContext interactionContext) 
-            => (this as IUsableItem)?.UseItem(interactionContext) ?? false;
+        public async UniTask<bool> UseAsync([NotNull] IItemInteractionContext interactionContext)
+        {
+            if(this is not IUsableItem usableItem) return false;
+            return await usableItem.UseItem(interactionContext);
+        }
         
         /// <summary>
         /// Checks if the item can be used.
         /// </summary>
-        public bool CanBeUsed(IItemInteractionContext interactionContext) 
+        public bool CanBeUsed([NotNull] IItemInteractionContext interactionContext) 
             => (this as IUsableItem)?.IsItemUsableInContext(interactionContext) ?? true;
+
+        /// <summary>
+        /// Equips the item if it's equippable.
+        /// Returns true if the item was equipped.
+        /// </summary>
+        public bool Equip([NotNull] IItemInteractionContext interactionContext)
+            => EquipAsync(interactionContext).GetAwaiter().GetResult();
         
         /// <summary>
         /// Equips the item if it's equippable.
         /// Returns true if the item was equipped.
         /// </summary>
-        public bool Equip(IItemInteractionContext interactionContext) 
-            => (this as IEquippableItem)?.EquipItem(interactionContext) ?? false;
+        public async UniTask<bool> EquipAsync([NotNull] IItemInteractionContext interactionContext)
+        {
+            if(this is not IEquippableItem equippableItem) return false;
+            return await equippableItem.EquipItemAsync(interactionContext);
+        }
         
         /// <summary>
         /// Checks if the item can be equipped.
         /// </summary>
-        public bool CanBeEquipped(IItemInteractionContext interactionContext) 
+        public bool CanBeEquipped([NotNull] IItemInteractionContext interactionContext) 
             => (this as IEquippableItem)?.IsItemEquippableInContext(interactionContext) ?? false;
+
+        /// <summary>
+        /// Unequips the item if it's equippable.
+        /// Returns true if the item was unequipped.
+        /// </summary>
+        public bool Unequip([NotNull] IItemInteractionContext interactionContext)
+            => UnequipAsync(interactionContext).GetAwaiter().GetResult();
         
         /// <summary>
         /// Un-equips the item if it's equippable.
         /// Returns true if the item was unequipped.
         /// </summary>
-        public bool Unequip(IItemInteractionContext interactionContext) 
-            => (this as IEquippableItem)?.UnequipItem(interactionContext) ?? false;
+        public async UniTask<bool> UnequipAsync([NotNull] IItemInteractionContext interactionContext)
+        {
+            if(this is not IEquippableItem equippableItem) return false;
+            return await equippableItem.UnequipItemAsync(interactionContext);
+        }
         
         /// <summary>
         /// Checks if the item can be unequipped.
         /// </summary>
-        public bool CanBeUnequipped(IItemInteractionContext interactionContext) 
+        public bool CanBeUnequipped([NotNull] IItemInteractionContext interactionContext) 
             => (this as IEquippableItem)?.IsItemUnequippableInContext(interactionContext) ?? false;
         
         /// <summary>
         /// Called when the item is picked up.
         /// </summary>
-        protected virtual void OnPickedUp(IItemInteractionContext interactionContext)
+        protected virtual void OnPickedUp([NotNull] IItemInteractionContext interactionContext)
         {
             // Implement your logic here
         }
@@ -140,7 +165,7 @@ namespace FastUnityCreationKit.Inventory
         /// <summary>
         /// Called when the item is dropped.
         /// </summary>
-        protected virtual void OnDropped(IItemInteractionContext interactionContext)
+        protected virtual void OnDropped([NotNull] IItemInteractionContext interactionContext)
         {
             // Implement your logic here
         }
