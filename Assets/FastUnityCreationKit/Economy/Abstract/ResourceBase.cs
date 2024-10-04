@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.Numerics.Limits;
 using FastUnityCreationKit.Core.Values;
+using FastUnityCreationKit.Economy.Context;
 using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEngine;
@@ -96,8 +97,12 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Adds resource to the storage.
         /// </summary>
-        void IResource<TNumberType>.Add([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
+        void IResource<TNumberType>.Add(IAddResourceContext<TNumberType> context)
         {
+            // Compat layer
+            TNumberType amount = context.Amount;
+            IWithLocalEconomy economyReference = context.Economy;
+            
             // Get old value
             float oldValue = _storage.CurrentValue.ToFloat();
             
@@ -131,8 +136,12 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Takes resource from the storage.
         /// </summary>
-        void IResource<TNumberType>.Take([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
+        void IResource<TNumberType>.Take(ITakeResourceContext<TNumberType> context)
         {
+            // Compat layer
+            TNumberType amount = context.Amount;
+            IWithLocalEconomy economyReference = context.Economy;
+            
             // Get old value
             float oldValue = _storage.CurrentValue.ToFloat();
             
@@ -178,8 +187,12 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Checks if resource storage has enough amount of resource.
         /// </summary>
-        bool IResource<TNumberType>.HasEnough(IWithLocalEconomy localEconomy, TNumberType amount)
+        bool IResource<TNumberType>.HasEnough(ICompareResourceContext<TNumberType> context)
         {
+            // Compat layer
+            TNumberType amount = context.Amount;
+            IWithLocalEconomy economyReference = context.Economy;
+            
             // Convert to floats
             double currentAmount = _storage.CurrentValue.ToFloat();
             double amountToCheck = amount.ToFloat();
@@ -194,8 +207,12 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Sets amount of the resource.
         /// </summary>
-        void IResource<TNumberType>.SetAmount([CanBeNull] IWithLocalEconomy economyReference, TNumberType amount)
+        void IResource<TNumberType>.SetAmount(IModifyResourceContext<TNumberType> context)
         {
+            // Compat layer
+            TNumberType amount = context.Amount;
+            IWithLocalEconomy economyReference = context.Economy;
+            
             // Get old value
             float oldValue = _storage.CurrentValue.ToFloat();
             
@@ -218,14 +235,18 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Try to take resource from the storage.
         /// </summary>
-        bool IResource<TNumberType>.TryTake(IWithLocalEconomy economyReference, TNumberType amount)
+        bool IResource<TNumberType>.TryTake(ITakeResourceContext<TNumberType> context)
         {
+            // Compat layer
+            TNumberType amount = context.Amount;
+            IWithLocalEconomy economyReference = context.Economy;
+            
             // Convert to interface and check if resource has enough.
             IResource<TNumberType> resource = this;
             if (!resource.HasEnough(amount))
                 return false;
             
-            resource.Take(economyReference, amount);
+            resource.Take(context);
             return true;
         }
         

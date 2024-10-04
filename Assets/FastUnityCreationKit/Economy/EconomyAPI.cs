@@ -1,6 +1,8 @@
 ﻿using FastUnityCreationKit.Core.Numerics.Abstract;
 using FastUnityCreationKit.Core.Utility.Singleton;
 using FastUnityCreationKit.Economy.Abstract;
+using FastUnityCreationKit.Economy.Context;
+using NUnit.Framework.Interfaces;
 
 namespace FastUnityCreationKit.Economy
 {
@@ -22,51 +24,56 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Adds a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static void AddGlobalResource<TResource>(float amount)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+        public static void AddGlobalResource<TResource, TNumberType>(IAddResourceContext<TNumberType> context)
+            where TResource : IResource<TNumberType>, IGlobalResource, ISingleton<TResource>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             TResource resource = ISingleton<TResource>.GetInstance();
-            resource.AddValue(null, amount);
+            resource.AddValue(context);
         }
 
         /// <summary>
         /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static void TakeGlobalResource<TResource>(float amount)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+        public static void TakeGlobalResource<TResource, TNumberType>(ITakeResourceContext<TNumberType> context)
+            where TResource : IResource<TNumberType>, IGlobalResource, ISingleton<TResource>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             TResource resource = ISingleton<TResource>.GetInstance();
-            resource.TakeValue(null, amount);
+            resource.TakeValue(context);
         }
-   
+        
         /// <summary>
         /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static void SetGlobalResource<TResource>(float amount)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+        public static void SetGlobalResource<TResource, TNumberType>(IModifyResourceContext<TNumberType> context)
+            where TResource : IResource<TNumberType>, IGlobalResource, ISingleton<TResource>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             TResource resource = ISingleton<TResource>.GetInstance();
-            resource.SetValue(null, amount);
+            resource.SetValue(context);
         }
 
         /// <summary>
         /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
         /// </summary>
-        public static bool HasEnoughGlobalResource<TResource>(float amount)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+        public static bool HasEnoughGlobalResource<TResource, TNumberType>(ICompareResourceContext<TNumberType> context)
+            where TResource : IResource<TNumberType>, IGlobalResource, ISingleton<TResource>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             TResource resource = ISingleton<TResource>.GetInstance();
-            return resource.HasEnoughValue(null, amount);
+            return resource.HasEnoughValue(context);
         }
 
         /// <summary>
         /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static bool TryTakeGlobalResource<TResource>(float amount)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+        public static bool TryTakeGlobalResource<TResource, TNumberType>(ITakeResourceContext<TNumberType> context)
+            where TResource : IResource<TNumberType>, IGlobalResource, ISingleton<TResource>, new()
+            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
         {
             TResource resource = ISingleton<TResource>.GetInstance();
-            return resource.TryTakeValue(null, amount);
+            return resource.TryTakeValue(context);
         }
     }
 }
