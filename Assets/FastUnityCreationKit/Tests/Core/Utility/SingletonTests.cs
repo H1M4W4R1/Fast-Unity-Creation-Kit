@@ -1,8 +1,9 @@
-﻿using FastUnityCreationKit.Core.Testing;
+﻿using System;
+using FastUnityCreationKit.Core.Testing;
 using FastUnityCreationKit.Core.Utility.Singleton;
 using FastUnityCreationKit.Tests.Core.Utility.Data;
 using NUnit.Framework;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Tests.Core.Utility
 {
@@ -31,6 +32,17 @@ namespace FastUnityCreationKit.Tests.Core.Utility
             
             // Cleanup
             Object.DestroyImmediate(singleton.gameObject);
+        }
+
+        [Test]
+        public void GetInstance_ThrowsError_IfMonoBehaviour_WasRequestedFromRegularSingleton()
+        {
+            // Assert
+            Assert.Throws<ArgumentException>(TestDelegate);
+            return;
+
+            // Act
+            void TestDelegate() => ISingleton<ExampleMonoBehaviourClassSingleton>.GetInstance();
         }
         
         [Test]

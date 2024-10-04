@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using FastUnityCreationKit.Core.Utility.Internal;
+using Sirenix.Utilities;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Core.Utility.Singleton
 {
@@ -15,21 +19,22 @@ namespace FastUnityCreationKit.Core.Utility.Singleton
         /// </summary>
         public new static TSelf GetInstance()
         {
+            Validation.AssertType<TSelf, MonoBehaviour>();
+
             // Check if the instance exists
-            if(Instance) return Instance;
-            
+            if (Instance) return Instance;
+
             // Find the instance
             Instance = Object.FindAnyObjectByType<TSelf>();
-            
+
             // Check if the instance exists
-            if(Instance) return Instance;
-            
+            if (Instance) return Instance;
+
             // Create a new instance
             Instance = new GameObject(nameof(TSelf)).AddComponent<TSelf>();
-            
+
             // Return the instance
             return Instance;
         }
-        
     }
 }

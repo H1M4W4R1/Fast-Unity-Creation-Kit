@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Inventory;
 using FastUnityCreationKit.Inventory.Abstract;
-using FastUnityCreationKit.Inventory.Data;
+using FastUnityCreationKit.Inventory.Context;
 using FastUnityCreationKit.Inventory.Stacking;
 
 namespace FastUnityCreationKit.Tests.Inventory.Data
@@ -10,12 +10,12 @@ namespace FastUnityCreationKit.Tests.Inventory.Data
     {
         public int timesUsed = 0;
         
-        public bool IsItemUsableInContext(IItemInteractionContext interactionContext)
+        public bool IsItemUsableInContext(IUseItemContext interactionContext)
         {
             return true;
         }
 
-        UniTask IUsableItem.OnUsedAsync(IItemInteractionContext interactionContext)
+        UniTask IUsableItem.OnUsedAsync(IUseItemContext interactionContext)
         {
             timesUsed++;
             return UniTask.CompletedTask;

@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using FastUnityCreationKit.Core.Utility.Internal;
+using JetBrains.Annotations;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Core.Utility.Singleton
 {
@@ -27,6 +29,9 @@ namespace FastUnityCreationKit.Core.Utility.Singleton
 
         [NotNull] public static TSelf GetInstance()
         {
+            // Throw if the type is not a regular class, but Unity Object
+            Validation.AssertNotType<TSelf, Object>();
+            
             // Check if the instance exists
             if(Instance != null) return Instance;
             

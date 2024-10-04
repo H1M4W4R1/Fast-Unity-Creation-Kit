@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Inventory;
 using FastUnityCreationKit.Inventory.Abstract;
-using FastUnityCreationKit.Inventory.Data;
+using FastUnityCreationKit.Inventory.Context;
 using FastUnityCreationKit.Inventory.Stacking;
 
 namespace FastUnityCreationKit.Tests.Inventory.Data
@@ -21,24 +21,24 @@ namespace FastUnityCreationKit.Tests.Inventory.Data
         public int timesEquipped = 0;
         public int timesUnequipped = 0;
 
-        public bool IsItemEquippableInContext(IItemInteractionContext interactionContext)
+        public bool IsItemEquippableInContext(IEquipItemContext interactionContext)
         {
             return false;
         }
 
-        public bool IsItemUnequippableInContext(IItemInteractionContext interactionContext)
+        public bool IsItemUnequippableInContext(IUnequipItemContext interactionContext)
         {
             return false;
         }
 
-        public UniTask OnEquippedAsync(IItemInteractionContext interactionContext)
+        public UniTask OnEquippedAsync(IEquipItemContext interactionContext)
         {
             timesEquipped++;
             
             return UniTask.CompletedTask;
         }
 
-        public UniTask OnUnequippedAsync(IItemInteractionContext interactionContext)
+        public UniTask OnUnequippedAsync(IUnequipItemContext interactionContext)
         {
             timesUnequipped++;
             
