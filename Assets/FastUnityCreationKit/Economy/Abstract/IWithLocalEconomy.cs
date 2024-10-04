@@ -42,9 +42,8 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Adds resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public void AddResource<TResource, TNumberType>(IAddResourceContext<TNumberType> context)
-            where TResource : ILocalResource, IResource<TNumberType>
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public void AddResource<TResource>(float amount)
+            where TResource : ILocalResource, IResource
         {
             if (this is IWithWithLocalResource<TResource> localResource)
             {
@@ -52,7 +51,7 @@ namespace FastUnityCreationKit.Economy.Abstract
                 TResource resource = localResource.ResourceStorage;
 
                 // Add resource
-                resource.AddValue(context);
+                resource.AddValue(this, amount);
             }
             else
             {
@@ -64,9 +63,8 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Takes resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public void TakeResource<TResource, TNumberType>(ITakeResourceContext<TNumberType> context)
-            where TResource : ILocalResource, IResource<TNumberType>
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public void TakeResource<TResource>(float amount)
+            where TResource : ILocalResource, IResource
         {
             if (this is IWithWithLocalResource<TResource> localResource)
             {
@@ -74,7 +72,7 @@ namespace FastUnityCreationKit.Economy.Abstract
                 TResource resource = localResource.ResourceStorage;
 
                 // Take resource
-                resource.TakeValue(context);
+                resource.TakeValue(this, amount);
             }
             else
             {
@@ -86,9 +84,8 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Sets resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public void SetResource<TResource, TNumberType>(IModifyResourceContext<TNumberType> context)
-            where TResource : ILocalResource, IResource<TNumberType>
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public void SetResource<TResource>(float amount)
+            where TResource : ILocalResource, IResource
         {
             if (this is IWithWithLocalResource<TResource> localResource)
             {
@@ -96,7 +93,7 @@ namespace FastUnityCreationKit.Economy.Abstract
                 TResource resource = localResource.ResourceStorage;
 
                 // Set resource
-                resource.SetValue(context);
+                resource.SetValue(this, amount);
             }
             else
             {
@@ -109,9 +106,8 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// Checks if object has enough resource of type <typeparamref name="TResource"/>.
         /// </summary>
         /// <returns></returns>
-        public bool HasEnoughResource<TResource, TNumberType>(ICompareResourceContext<TNumberType> context)
-            where TResource : ILocalResource, IResource<TNumberType>
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public bool HasEnoughResource<TResource>(float amount)
+            where TResource : ILocalResource, IResource
         {
             if (this is IWithWithLocalResource<TResource> localResource)
             {
@@ -120,7 +116,7 @@ namespace FastUnityCreationKit.Economy.Abstract
 
                 // Convert resource to interface
                 IResource resourceInterface = resource;
-                return resourceInterface.HasEnoughValue(context);
+                return resourceInterface.HasEnoughValue(this, amount);
             }
 
             // Log error
@@ -132,9 +128,8 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Tries to take resource from object
         /// </summary>
-        public bool TryTakeResource<TResource, TNumberType>(ITakeResourceContext<TNumberType> context)
-            where TResource : ILocalResource, IResource<TNumberType>
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public bool TryTakeResource<TResource>(float amount)
+            where TResource : ILocalResource, IResource
         {
             if (this is IWithWithLocalResource<TResource> localResource)
             {
@@ -142,7 +137,7 @@ namespace FastUnityCreationKit.Economy.Abstract
                 TResource resource = localResource.ResourceStorage;
 
                 // Try take resource
-                return resource.TryTakeValue(context);
+                return resource.TryTakeValue(this, amount);
             }
 
             // Log error

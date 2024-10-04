@@ -24,56 +24,51 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Adds a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static void AddGlobalResource<TResource, TNumberType>(IAddResourceContext<TNumberType> context)
-            where TResource : IResource<TNumberType>, IGlobalResource, ISingleton<TResource>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static void AddGlobalResource<TResource>(float amount)
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
         {
             TResource resource = ISingleton<TResource>.GetInstance();
-            resource.AddValue(context);
+            resource.AddValue(amount);
         }
 
         /// <summary>
         /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static void TakeGlobalResource<TResource, TNumberType>(ITakeResourceContext<TNumberType> context)
-            where TResource : IResource<TNumberType>, IGlobalResource, ISingleton<TResource>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static void TakeGlobalResource<TResource>(float amount)
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
         {
             TResource resource = ISingleton<TResource>.GetInstance();
-            resource.TakeValue(context);
+            resource.TakeValue(amount);
         }
         
         /// <summary>
         /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static void SetGlobalResource<TResource, TNumberType>(IModifyResourceContext<TNumberType> context)
-            where TResource : IResource<TNumberType>, IGlobalResource, ISingleton<TResource>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static void SetGlobalResource<TResource>(float amount)
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
         {
             TResource resource = ISingleton<TResource>.GetInstance();
-            resource.SetValue(context);
+            resource.SetValue(amount);
         }
 
         /// <summary>
         /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
         /// </summary>
-        public static bool HasEnoughGlobalResource<TResource, TNumberType>(ICompareResourceContext<TNumberType> context)
-            where TResource : IResource<TNumberType>, IGlobalResource, ISingleton<TResource>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static bool HasEnoughGlobalResource<TResource>(float amount)
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
         {
             TResource resource = ISingleton<TResource>.GetInstance();
-            return resource.HasEnoughValue(context);
+            return resource.HasEnoughValue(amount);
         }
 
         /// <summary>
         /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public static bool TryTakeGlobalResource<TResource, TNumberType>(ITakeResourceContext<TNumberType> context)
-            where TResource : IResource<TNumberType>, IGlobalResource, ISingleton<TResource>, new()
-            where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        public static bool TryTakeGlobalResource<TResource>(float amount)
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
         {
             TResource resource = ISingleton<TResource>.GetInstance();
-            return resource.TryTakeValue(context);
+            return resource.TryTakeValue(amount);
         }
     }
 }

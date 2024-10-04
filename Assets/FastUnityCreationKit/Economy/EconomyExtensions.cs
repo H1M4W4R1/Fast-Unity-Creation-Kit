@@ -28,7 +28,37 @@ namespace FastUnityCreationKit.Economy
             [CanBeNull] out TResource resource)
             where TResource : ILocalResource, new()
         {
-            return withLocalEconomy.TryGetResource<TResource>(out resource);
+            return withLocalEconomy.TryGetResource(out resource);
+        }
+        
+        public static void AddLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, float amount)
+            where TResource : ILocalResource, IResource
+        {
+            withLocalEconomy.AddResource<TResource>(amount);
+        }
+        
+        public static void TakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, float amount)
+            where TResource : ILocalResource, IResource
+        {
+            withLocalEconomy.TakeResource<TResource>(amount);
+        }
+        
+        public static bool TryTakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, float amount)
+            where TResource : ILocalResource, IResource
+        {
+            return withLocalEconomy.TryTakeResource<TResource>(amount);
+        }
+        
+        public static void SetLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, float amount)
+            where TResource : ILocalResource, IResource
+        {
+            withLocalEconomy.SetResource<TResource>(amount);
+        }
+        
+        public static bool HasEnoughLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, float amount)
+            where TResource : ILocalResource, IResource
+        {
+            return withLocalEconomy.HasEnoughResource<TResource>(amount);
         }
     }
 }
