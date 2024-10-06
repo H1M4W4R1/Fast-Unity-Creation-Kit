@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
-using FastUnityCreationKit.Core.Utility.Singleton;
+﻿using FastUnityCreationKit.Core.Utility.Singleton;
 using FastUnityCreationKit.Economy.Abstract;
 using FastUnityCreationKit.Economy.Events;
 using FastUnityCreationKit.Economy.Events.Data;
@@ -14,10 +13,9 @@ namespace FastUnityCreationKit.Economy
     /// By default, most resources will be global - an example of a non-global resource
     /// could be entity's health, which is unique to each entity. 
     /// </summary>
-    public abstract class GlobalResource<TSelf, TNumberType> : ResourceBase<TSelf, TNumberType>, IGlobalResource<TSelf>,
+    public abstract class GlobalResource<TSelf> : ResourceBase<TSelf>, IGlobalResource<TSelf>,
         ISingleton<TSelf>
-        where TSelf : GlobalResource<TSelf, TNumberType>, IGlobalResource<TSelf>, new()
-        where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+        where TSelf : GlobalResource<TSelf>, IGlobalResource<TSelf>, new()
     {
         /// <summary>
         /// Instance of the global resource, use this to access the resource.

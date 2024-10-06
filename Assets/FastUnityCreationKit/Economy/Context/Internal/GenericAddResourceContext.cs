@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+﻿using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Economy.Abstract;
 
 namespace FastUnityCreationKit.Economy.Context.Internal
@@ -6,14 +6,12 @@ namespace FastUnityCreationKit.Economy.Context.Internal
     /// <summary>
     /// Used to add resource amount.
     /// </summary>
-    /// <typeparam name="TNumberType">Number type.</typeparam>
-    public struct GenericAddResourceContext<TNumberType> : IAddResourceContext<TNumberType>
-        where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+    public struct GenericAddResourceContext : IAddResourceContext
     {
         public IWithLocalEconomy Economy { get; set; }
-        public TNumberType Amount { get; set; }
+        public int32 Amount { get; set; }
         
-        public GenericAddResourceContext(IWithLocalEconomy economy, TNumberType amount)
+        public GenericAddResourceContext(IWithLocalEconomy economy, int32 amount)
         {
             Economy = economy;
             Amount = amount;

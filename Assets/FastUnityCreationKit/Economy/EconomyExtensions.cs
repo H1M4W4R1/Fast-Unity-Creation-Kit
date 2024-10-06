@@ -1,12 +1,12 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+﻿using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Economy.Abstract;
+using FastUnityCreationKit.Economy.Context.Internal;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy
 {
     public static class Extensions
     {
-        
         /// <summary>
         /// Returns true if object supports local economy.
         /// </summary>
@@ -30,35 +30,39 @@ namespace FastUnityCreationKit.Economy
         {
             return withLocalEconomy.TryGetResource(out resource);
         }
-        
-        public static void AddLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, float amount)
+
+        public static void AddLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, int32 amount)
             where TResource : ILocalResource, IResource
         {
-            withLocalEconomy.AddResource<TResource>(amount);
+            withLocalEconomy.AddResource<TResource>(new GenericAddResourceContext(withLocalEconomy, amount));
         }
-        
-        public static void TakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, float amount)
+
+        public static void TakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, int32 amount)
             where TResource : ILocalResource, IResource
         {
-            withLocalEconomy.TakeResource<TResource>(amount);
+            withLocalEconomy.TakeResource<TResource>(new GenericTakeResourceContext(withLocalEconomy, amount));
         }
-        
-        public static bool TryTakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, float amount)
+
+        public static bool TryTakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
+            int32 amount)
             where TResource : ILocalResource, IResource
         {
-            return withLocalEconomy.TryTakeResource<TResource>(amount);
+            return withLocalEconomy.TryTakeResource<TResource>(
+                new GenericTakeResourceContext(withLocalEconomy, amount));
         }
-        
-        public static void SetLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, float amount)
+
+        public static void SetLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, int32 amount)
             where TResource : ILocalResource, IResource
         {
-            withLocalEconomy.SetResource<TResource>(amount);
+            withLocalEconomy.SetResource<TResource>(new GenericModifyResourceContext(withLocalEconomy, amount));
         }
-        
-        public static bool HasEnoughLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, float amount)
+
+        public static bool HasEnoughLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
+            int32 amount)
             where TResource : ILocalResource, IResource
         {
-            return withLocalEconomy.HasEnoughResource<TResource>(amount);
+            return withLocalEconomy.HasEnoughResource<TResource>(
+                new GenericCompareResourceContext(withLocalEconomy, amount));
         }
     }
 }

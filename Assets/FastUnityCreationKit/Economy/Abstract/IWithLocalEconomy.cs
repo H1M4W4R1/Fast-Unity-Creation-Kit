@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
-using FastUnityCreationKit.Economy.Context;
+﻿using FastUnityCreationKit.Economy.Context;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -42,7 +41,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Adds resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public void AddResource<TResource>(float amount)
+        public void AddResource<TResource>(IAddResourceContext context)
             where TResource : ILocalResource, IResource
         {
             if (this is IWithWithLocalResource<TResource> localResource)
@@ -51,7 +50,7 @@ namespace FastUnityCreationKit.Economy.Abstract
                 TResource resource = localResource.ResourceStorage;
 
                 // Add resource
-                resource.AddValue(this, amount);
+                resource.Add(context);
             }
             else
             {
@@ -63,7 +62,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Takes resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public void TakeResource<TResource>(float amount)
+        public void TakeResource<TResource>(ITakeResourceContext context)
             where TResource : ILocalResource, IResource
         {
             if (this is IWithWithLocalResource<TResource> localResource)
@@ -72,7 +71,7 @@ namespace FastUnityCreationKit.Economy.Abstract
                 TResource resource = localResource.ResourceStorage;
 
                 // Take resource
-                resource.TakeValue(this, amount);
+                resource.Take(context);
             }
             else
             {
@@ -84,7 +83,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Sets resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
-        public void SetResource<TResource>(float amount)
+        public void SetResource<TResource>(IModifyResourceContext context)
             where TResource : ILocalResource, IResource
         {
             if (this is IWithWithLocalResource<TResource> localResource)
@@ -93,7 +92,7 @@ namespace FastUnityCreationKit.Economy.Abstract
                 TResource resource = localResource.ResourceStorage;
 
                 // Set resource
-                resource.SetValue(this, amount);
+                resource.SetAmount(context);
             }
             else
             {
@@ -106,7 +105,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// Checks if object has enough resource of type <typeparamref name="TResource"/>.
         /// </summary>
         /// <returns></returns>
-        public bool HasEnoughResource<TResource>(float amount)
+        public bool HasEnoughResource<TResource>(ICompareResourceContext context)
             where TResource : ILocalResource, IResource
         {
             if (this is IWithWithLocalResource<TResource> localResource)
@@ -116,7 +115,7 @@ namespace FastUnityCreationKit.Economy.Abstract
 
                 // Convert resource to interface
                 IResource resourceInterface = resource;
-                return resourceInterface.HasEnoughValue(this, amount);
+                return resourceInterface.HasEnough(context);
             }
 
             // Log error
@@ -128,7 +127,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Tries to take resource from object
         /// </summary>
-        public bool TryTakeResource<TResource>(float amount)
+        public bool TryTakeResource<TResource>(ITakeResourceContext context)
             where TResource : ILocalResource, IResource
         {
             if (this is IWithWithLocalResource<TResource> localResource)
@@ -137,7 +136,7 @@ namespace FastUnityCreationKit.Economy.Abstract
                 TResource resource = localResource.ResourceStorage;
 
                 // Try take resource
-                return resource.TryTakeValue(this, amount);
+                return resource.TryTake(context);
             }
 
             // Log error

@@ -1,7 +1,8 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+﻿using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Limits;
 using FastUnityCreationKit.Core.Values;
 using FastUnityCreationKit.Economy.Context;
+using FastUnityCreationKit.Economy.Context.Internal;
 using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEngine;
@@ -21,9 +22,8 @@ namespace FastUnityCreationKit.Economy.Abstract
     /// <remarks>
     /// <b>It is not recommended to use this class directly. See <see cref="LocalResource{TSelf, TNumberType}"/> and <see cref="GlobalResource{TSelf, TNumberType}"/> instead.</b>
     /// </remarks>
-    public abstract class ResourceBase<TSelf, TNumberType> : IResource<TNumberType>
-        where TSelf : ResourceBase<TSelf, TNumberType>
-        where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+    public abstract class ResourceBase<TSelf> : IResource
+        where TSelf : ResourceBase<TSelf>
     {
         /// <summary>
         /// Internal storage of the resource.
@@ -33,7 +33,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Current amount of the resource.
         /// </summary>
-        public TNumberType Amount => _storage.CurrentValue;
+        public int32 Amount => _storage.CurrentValue;
         
         /// <summary>
         /// Checks if resource is global.
@@ -48,41 +48,41 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Checks if resource has default amount.
         /// </summary>
-        public bool HasDefaultAmount => this is IWithDefaultValue<TNumberType>;
+        public bool HasDefaultAmount => this is IWithDefaultValue<int32>;
         
         /// <summary>
         /// Checks if resource has upper limit.
         /// </summary>
-        public bool HasMaxLimit => this is IWithMaxLimit<TNumberType>;
+        public bool HasMaxLimit => this is IWithMaxLimit<int32>;
         
         /// <summary>
         /// Checks if resource has lower limit.
         /// </summary>
-        public bool HasMinLimit => this is IWithMinLimit<TNumberType>;
+        public bool HasMinLimit => this is IWithMinLimit<int32>;
         
         /// <summary>
         /// Gets default amount of the resource.
         /// If resource does not have default amount, returns default value of TNumberType.
         /// </summary>
-        public TNumberType DefaultAmount => (this as IWithDefaultValue<TNumberType>)?.DefaultValue ?? default;
+        public int32 DefaultAmount => (this as IWithDefaultValue<int32>)?.DefaultValue ?? default;
         
         /// <summary>
         /// Gets maximum amount of the resource.
         /// If resource does not have maximum amount, returns default value of TNumberType.
         /// </summary>
-        public TNumberType MaxAmount => (this as IWithMaxLimit<TNumberType>)?.MaxLimit ?? default;
+        public int32 MaxAmount => (this as IWithMaxLimit<int32>)?.MaxLimit ?? default;
         
         /// <summary>
         /// Gets minimum amount of the resource.
         /// If resource does not have minimum amount, returns default value of TNumberType.
         /// </summary>
-        public TNumberType MinAmount => (this as IWithMinLimit<TNumberType>)?.MinLimit ?? default;
+        public int32 MinAmount => (this as IWithMinLimit<int32>)?.MinLimit ?? default;
         
         /// <summary>
         /// Reinterprets resource to another type.
         /// Used for casting resource to its derived type.
         /// </summary>
-        [CanBeNull] public TResourceType As<TResourceType>() where TResourceType : ResourceBase<TSelf, TNumberType>
+        [CanBeNull] public TResourceType As<TResourceType>() where TResourceType : ResourceBase<TSelf>
         {
             // If in editor, log error if resource is not of type TResourceType.
             if (this is TResourceType) return this as TResourceType;
@@ -97,10 +97,10 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Adds resource to the storage.
         /// </summary>
-        void IResource<TNumberType>.Add(IAddResourceContext<TNumberType> context)
+        void IResource.Add(IAddResourceContext context)
         {
             // Compat layer
-            TNumberType amount = context.Amount;
+            int32 amount = context.Amount;
             IWithLocalEconomy economyReference = context.Economy;
             
             // Get old value
@@ -136,10 +136,10 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Takes resource from the storage.
         /// </summary>
-        void IResource<TNumberType>.Take(ITakeResourceContext<TNumberType> context)
+        void IResource.Take(ITakeResourceContext context)
         {
             // Compat layer
-            TNumberType amount = context.Amount;
+            int32 amount = context.Amount;
             IWithLocalEconomy economyReference = context.Economy;
             
             // Get old value
@@ -171,28 +171,15 @@ namespace FastUnityCreationKit.Economy.Abstract
             }
 
         }
-
-        /// <summary>
-        /// Takes resource from the storage.
-        /// </summary>
-        internal void Subtract(TNumberType amount)
-        {
-            // Convert to interface and take resource.
-            IResource<TNumberType> resource = this;
-            
-            // Take resource
-            resource.Take(amount);
-        }
         
         /// <summary>
         /// Checks if resource storage has enough amount of resource.
         /// </summary>
-        bool IResource<TNumberType>.HasEnough(ICompareResourceContext<TNumberType> context)
+        bool IResource.HasEnough(ICompareResourceContext context)
         {
             // Compat layer
-            TNumberType amount = context.Amount;
-            IWithLocalEconomy economyReference = context.Economy;
-            
+            int32 amount = context.Amount;
+
             // Convert to floats
             double currentAmount = _storage.CurrentValue.ToFloat();
             double amountToCheck = amount.ToFloat();
@@ -207,10 +194,10 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Sets amount of the resource.
         /// </summary>
-        void IResource<TNumberType>.SetAmount(IModifyResourceContext<TNumberType> context)
+        void IResource.SetAmount(IModifyResourceContext context)
         {
             // Compat layer
-            TNumberType amount = context.Amount;
+            int32 amount = context.Amount;
             IWithLocalEconomy economyReference = context.Economy;
             
             // Get old value
@@ -235,15 +222,14 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Try to take resource from the storage.
         /// </summary>
-        bool IResource<TNumberType>.TryTake(ITakeResourceContext<TNumberType> context)
+        bool IResource.TryTake(ITakeResourceContext context)
         {
             // Compat layer
-            TNumberType amount = context.Amount;
-            IWithLocalEconomy economyReference = context.Economy;
-            
+            int32 amount = context.Amount;
+
             // Convert to interface and check if resource has enough.
-            IResource<TNumberType> resource = this;
-            if (!resource.HasEnough(amount))
+            IResource resource = this;
+            if (!resource.HasEnough(new GenericCompareResourceContext(context.Economy, amount)))
                 return false;
             
             resource.Take(context);
@@ -257,7 +243,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         {
             // This does not use properties to avoid unnecessary checks.
             // Also, it's safer in case somebody would f-k up something in properties.
-            if (this is IWithDefaultValue<TNumberType> defaultAmountResource)
+            if (this is IWithDefaultValue<int32> defaultAmountResource)
                 _storage.SetCurrentValue(defaultAmountResource.DefaultValue);
             else
             {
@@ -284,7 +270,7 @@ namespace FastUnityCreationKit.Economy.Abstract
             // Also, it's safer in case somebody would f-k up something in properties.
             
             // Check if resource has upper limit.
-            if(this is IWithMaxLimit<TNumberType> upperLimitedResource)
+            if(this is IWithMaxLimit<int32> upperLimitedResource)
             {
                 double upperLimit = upperLimitedResource.MaxLimit.ToFloat();
                 double currentAmount = _storage.CurrentValue.ToFloat();
@@ -295,7 +281,7 @@ namespace FastUnityCreationKit.Economy.Abstract
             }
             
             // Check if resource has lower limit.
-            if(this is IWithMinLimit<TNumberType> lowerLimitedResource)
+            if(this is IWithMinLimit<int32> lowerLimitedResource)
             {
                 double lowerLimit = lowerLimitedResource.MinLimit.ToFloat();
                 double currentAmount = _storage.CurrentValue.ToFloat();
@@ -313,7 +299,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Storage of the resource.
         /// </summary>
-        private class ResourceStorageModifiableValue : ModifiableValue<TNumberType>
+        private class ResourceStorageModifiableValue : ModifiableValue<int32>
         {
             
         }

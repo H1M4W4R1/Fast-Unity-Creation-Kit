@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+﻿using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Economy.Abstract;
 
 namespace FastUnityCreationKit.Economy.Context.Internal
@@ -7,13 +7,12 @@ namespace FastUnityCreationKit.Economy.Context.Internal
     /// Used to compare resource amount.
     /// </summary>
     /// <typeparam name="TNumberType"></typeparam>
-    public struct GenericCompareResourceContext<TNumberType> : ICompareResourceContext<TNumberType>
-        where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+    public struct GenericCompareResourceContext : ICompareResourceContext
     {
         public IWithLocalEconomy Economy { get; set; }
-        public TNumberType Amount { get; set; }
+        public int32 Amount { get; set; }
         
-        public GenericCompareResourceContext(IWithLocalEconomy economy, TNumberType amount)
+        public GenericCompareResourceContext(IWithLocalEconomy economy, int32 amount)
         {
             Economy = economy;
             Amount = amount;

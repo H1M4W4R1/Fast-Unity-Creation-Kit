@@ -21,7 +21,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            IResource<int32> resource = coins;
+            IResource resource = coins;
             
             // Act
             resource.Add(10);
@@ -35,7 +35,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            IResource<int32> resource = coins;
+            IResource resource = coins;
             
             resource.Add(10);
             
@@ -51,7 +51,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            IResource<int32> resource = coins;
+            IResource resource = coins;
             
             resource.Add(10);
             
@@ -67,7 +67,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            IResource<int32> resource = coins;
+            IResource resource = coins;
             
             // Act
             bool hasEnough = resource.HasEnough(15);
@@ -81,7 +81,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            IResource<int32> resource = coins;
+            IResource resource = coins;
             
             resource.Add(10);
             
@@ -97,7 +97,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            IResource<int32> resource = coins;
+            IResource resource = coins;
             
             // Act
             resource.SetAmount(10);
@@ -111,7 +111,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            IResource<int32> resource = coins;
+            IResource resource = coins;
             
             resource.Add(10);
             
@@ -128,7 +128,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            IResource<int32> resource = coins;
+            IResource resource = coins;
             
             resource.Add(10);
             
@@ -145,7 +145,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            IResource<int32> resource = coins;
+            IResource resource = coins;
             
             resource.Add(10);
             
@@ -162,7 +162,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleCoinsGlobalResource coins = ExampleCoinsGlobalResource.Instance;
-            IResource<int32> resource = coins;
+            IResource resource = coins;
             
             resource.Add(10);
             
@@ -178,7 +178,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleDiamondsGlobalResource diamonds = ExampleDiamondsGlobalResource.Instance;
-            IResource<int32> resource = diamonds;
+            IResource resource = diamonds;
             
             resource.SetAmount(50);
             
@@ -194,7 +194,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleDiamondsGlobalResource diamonds = ExampleDiamondsGlobalResource.Instance;
-            IResource<int32> resource = diamonds;
+            IResource resource = diamonds;
             
             resource.SetAmount(50);
             
@@ -210,7 +210,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleDiamondsGlobalResource diamonds = ExampleDiamondsGlobalResource.Instance;
-            IResource<int32> resource = diamonds;
+            IResource resource = diamonds;
             
             
             // Act
@@ -231,7 +231,7 @@ namespace FastUnityCreationKit.Tests.Economy
         {
             // Arrange
             ExampleDiamondsGlobalResource diamonds = ExampleDiamondsGlobalResource.Instance;
-            IResource<int32> resource = diamonds;
+            IResource resource = diamonds;
             
             resource.SetAmount(100);
             

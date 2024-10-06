@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
-using FastUnityCreationKit.Economy.Abstract;
+﻿using FastUnityCreationKit.Economy.Abstract;
 using FastUnityCreationKit.Economy.Events;
 using FastUnityCreationKit.Economy.Events.Data;
 
@@ -11,9 +10,8 @@ namespace FastUnityCreationKit.Economy
     /// <br/><br/>
     /// For more information, see <see cref="ResourceBase{TSelf, TNumberType}"/>.
     /// </summary>
-    public abstract class LocalResource<TSelf, TNumberType> : ResourceBase<TSelf, TNumberType>, ILocalResource
-        where TSelf : LocalResource<TSelf, TNumberType>
-        where TNumberType : struct, INumber, ISupportsFloatConversion<TNumberType>
+    public abstract class LocalResource<TSelf> : ResourceBase<TSelf>, ILocalResource
+        where TSelf : LocalResource<TSelf>
     {
         internal override void OnResourceAdded(IWithLocalEconomy economyReference, float amount) =>
             OnLocalResourceAddedEvent<TSelf>.TriggerEvent(
