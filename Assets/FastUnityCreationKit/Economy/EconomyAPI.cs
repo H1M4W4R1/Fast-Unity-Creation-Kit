@@ -25,6 +25,15 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Adds a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
+        public static void AddGlobalResource<TResource, TContextType>(int32 amount)
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+            where TContextType : IAddResourceContext, new() =>
+            AddGlobalResource<TResource>(new TContextType {Amount = amount});
+        
+
+        /// <summary>
+        /// Adds a global resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
         public static void AddGlobalResource<TResource>(int32 amount)
             where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
             AddGlobalResource<TResource>(new GenericAddResourceContext(null, amount));
@@ -38,6 +47,14 @@ namespace FastUnityCreationKit.Economy
             TResource resource = ISingleton<TResource>.GetInstance();
             resource.Add(context);
         }
+
+        /// <summary>
+        /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
+        public static void TakeGlobalResource<TResource, TContextType>(int32 amount)
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+            where TContextType : ITakeResourceContext, new() =>
+            TakeGlobalResource<TResource>(new TContextType {Amount = amount});
         
         /// <summary>
         /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
@@ -55,6 +72,14 @@ namespace FastUnityCreationKit.Economy
             TResource resource = ISingleton<TResource>.GetInstance();
             resource.Take(context);
         }
+
+        /// <summary>
+        /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
+        public static void SetGlobalResource<TResource, TContextType>(int32 amount)
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+            where TContextType : IModifyResourceContext, new() =>
+            SetGlobalResource<TResource>(new TContextType {Amount = amount});
         
         /// <summary>
         /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
@@ -72,6 +97,14 @@ namespace FastUnityCreationKit.Economy
             TResource resource = ISingleton<TResource>.GetInstance();
             resource.SetAmount(context);
         }
+
+        /// <summary>
+        /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
+        /// </summary>
+        public static bool HasEnoughGlobalResource<TResource, TContextType>(int32 amount)
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+            where TContextType : ICompareResourceContext, new() =>
+            HasEnoughGlobalResource<TResource>(new TContextType {Amount = amount});
         
         /// <summary>
         /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
@@ -89,6 +122,14 @@ namespace FastUnityCreationKit.Economy
             TResource resource = ISingleton<TResource>.GetInstance();
             return resource.HasEnough(context);
         }
+
+        /// <summary>
+        /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
+        public static bool TryTakeGlobalResource<TResource, TContextType>(int32 amount)
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+            where TContextType : ITakeResourceContext, new() =>
+            TryTakeGlobalResource<TResource>(new TContextType {Amount = amount});
         
         /// <summary>
         /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
