@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy
 {
+    /// TODO: Add HAL methods with context as parameter
     public static class Extensions
     {
         /// <summary>

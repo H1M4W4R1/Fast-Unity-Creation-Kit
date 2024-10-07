@@ -10,6 +10,7 @@ namespace FastUnityCreationKit.Economy
     /// <summary>
     /// API functions and extensions for economy.
     /// </summary>
+    /// TODO: Add HAL methods with context as parameter
     public static class EconomyAPI
     {
         /// <summary>
