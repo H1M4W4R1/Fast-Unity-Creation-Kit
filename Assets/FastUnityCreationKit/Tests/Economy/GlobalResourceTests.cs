@@ -178,14 +178,14 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnGlobalResourceAdded(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
-                valueAdded = data.amount;
+                valueAdded = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
 
             UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
-                valueChanged = data.amount;
+                valueChanged = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -217,14 +217,14 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnGlobalResourceTaken(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
-                valueTaken = data.amount;
+                valueTaken = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
 
             UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
-                valueChanged = -data.amount;
+                valueChanged = -data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -252,7 +252,7 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
-                valueChanged = data.amount;
+                valueChanged = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -280,7 +280,7 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
-                valueChanged = data.amount;
+                valueChanged = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -313,14 +313,14 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnGlobalResourceTaken(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
-                valueTaken = data.amount;
+                valueTaken = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
 
             UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
-                valueChanged = -data.amount;
+                valueChanged = -data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -353,14 +353,14 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnGlobalResourceTaken(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
-                valueTaken = data.amount;
+                valueTaken = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
 
             UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleCoinsGlobalResource> data)
             {
-                valueChanged = -data.amount;
+                valueChanged = -data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -393,14 +393,14 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnGlobalResourceAdded(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
             {
-                valueAdded = data.amount;
+                valueAdded = data.context!.Amount;
                 
                 return UniTask.CompletedTask;   
             }
             
             UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
             {
-                valueChanged = data.amount;
+                valueChanged = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -432,14 +432,14 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnGlobalResourceTaken(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
             {
-                valueTaken = data.amount;
+                valueTaken = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
             
             UniTask OnGlobalResourceChanged(GlobalResourceEventData<ExampleDiamondsGlobalResource> data)
             {
-                valueChanged = -data.amount;
+                valueChanged = -data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }

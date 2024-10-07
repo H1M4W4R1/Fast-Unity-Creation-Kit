@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Core.Events;
 using FastUnityCreationKit.Economy.Abstract;
+using FastUnityCreationKit.Economy.Context;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy.Events.Data
@@ -10,13 +11,11 @@ namespace FastUnityCreationKit.Economy.Events.Data
     public readonly struct LocalResourceEventData<TResource> : IEventChannelData
         where TResource : ILocalResource
     {
-        [CanBeNull] public readonly IWithLocalEconomy entity;
-        public readonly float amount;
+        [CanBeNull] public readonly IModifyResourceContext context;
         
-        public LocalResourceEventData(IWithLocalEconomy entity, float amount)
+        public LocalResourceEventData([CanBeNull] IModifyResourceContext context)
         {
-            this.entity = entity;
-            this.amount = amount;
+            this.context = context;
         }
     }
 }

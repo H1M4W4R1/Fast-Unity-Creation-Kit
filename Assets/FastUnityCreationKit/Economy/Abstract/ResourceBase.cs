@@ -20,7 +20,8 @@ namespace FastUnityCreationKit.Economy.Abstract
     /// This is not intended to be used to store inventory items.
     /// </summary>
     /// <remarks>
-    /// <b>It is not recommended to use this class directly. See <see cref="LocalResource{TSelf, TNumberType}"/> and <see cref="GlobalResource{TSelf, TNumberType}"/> instead.</b>
+    /// <b>It is not recommended to use this class directly. See <see cref="LocalResource{TSelf}"/>
+    /// and <see cref="GlobalResource{TSelf}"/> instead.</b>
     /// </remarks>
     public abstract class ResourceBase<TSelf> : IResource
         where TSelf : ResourceBase<TSelf>
@@ -28,7 +29,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         /// <summary>
         /// Internal storage of the resource.
         /// </summary>
-        [NotNull] private readonly ResourceStorageModifiableValue _storage = new ResourceStorageModifiableValue();
+        [NotNull] private readonly ResourceStorageModifiableValue _storage = new();
 
         /// <summary>
         /// Current amount of the resource.
@@ -101,8 +102,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         {
             // Compat layer
             int32 amount = context.Amount;
-            IWithLocalEconomy economyReference = context.Economy;
-            
+
             // Get old value
             float oldValue = _storage.CurrentValue.ToFloat();
             
@@ -113,21 +113,27 @@ namespace FastUnityCreationKit.Economy.Abstract
             // Get current value
             float currentValue = _storage.CurrentValue.ToFloat();
             
-            // Compute difference (positive or zero)
+            // Compute difference
             float difference = currentValue - oldValue;
             
             // Call events
-            if (difference > math.EPSILON || difference < -math.EPSILON)
+            if (difference is > math.EPSILON or < -math.EPSILON)
             {
-                OnResourceChanged(economyReference, difference);
-
                 switch (difference)
                 {
                     case > 0:
-                        OnResourceAdded(economyReference, difference);
+                        context.Amount = (int) difference;
+                        OnResourceAdded(context);
+                        OnResourceChanged(context);
                         break;
                     case < 0:
-                        OnResourceTaken(economyReference, -difference); // Double negative to get positive value.
+                        // Negative value is sent to change event
+                        context.Amount = (int) difference;
+                        OnResourceChanged(context);
+                        
+                        // Invert value to send positive value to taken event
+                        context.Amount = (int) -difference;
+                        OnResourceTaken(context);
                         break;
                 }
             }
@@ -140,8 +146,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         {
             // Compat layer
             int32 amount = context.Amount;
-            IWithLocalEconomy economyReference = context.Economy;
-            
+
             // Get old value
             float oldValue = _storage.CurrentValue.ToFloat();
             
@@ -155,17 +160,24 @@ namespace FastUnityCreationKit.Economy.Abstract
             float difference = currentValue - oldValue;
             
             // Call events
-            if (difference > math.EPSILON || difference < -math.EPSILON)
+            if (difference is > math.EPSILON or < -math.EPSILON)
             {
-                OnResourceChanged(economyReference, difference);
-                
                 switch (difference)
                 {
                     case > 0:
-                        OnResourceAdded(economyReference, difference);
+                        // Positive value is sent to both added and changed events
+                        context.Amount = (int) difference;
+                        OnResourceAdded(context);
+                        OnResourceChanged(context);
                         break;
                     case < 0:
-                        OnResourceTaken(economyReference, -difference); // Double negative to get positive value.
+                        // Negative value is sent to change event
+                        context.Amount = (int) difference;
+                        OnResourceChanged(context);
+                        
+                        // Invert value to send positive value to taken event
+                        context.Amount = (int) -difference;
+                        OnResourceTaken(context); 
                         break;
                 }
             }
@@ -198,8 +210,7 @@ namespace FastUnityCreationKit.Economy.Abstract
         {
             // Compat layer
             int32 amount = context.Amount;
-            IWithLocalEconomy economyReference = context.Economy;
-            
+
             // Get old value
             float oldValue = _storage.CurrentValue.ToFloat();
             
@@ -215,8 +226,12 @@ namespace FastUnityCreationKit.Economy.Abstract
             float difference = currentValue - oldValue;
             
             // Call events
-            if(difference > math.EPSILON || difference < -math.EPSILON)
-                OnResourceChanged(economyReference, difference);
+            if (difference is > math.EPSILON or < -math.EPSILON)
+            {
+                // Send difference to change event
+                context.Amount = (int) difference;
+                OnResourceChanged(context);
+            }
         }
 
         /// <summary>
@@ -292,9 +307,9 @@ namespace FastUnityCreationKit.Economy.Abstract
             }
         }
         
-        internal abstract void OnResourceChanged([CanBeNull] IWithLocalEconomy withLocalEconomy, float amount);
-        internal abstract void OnResourceAdded([CanBeNull] IWithLocalEconomy withLocalEconomy, float amount);
-        internal abstract void OnResourceTaken([CanBeNull] IWithLocalEconomy withLocalEconomy, float amount);
+        internal abstract void OnResourceChanged(IModifyResourceContext context);
+        internal abstract void OnResourceAdded(IModifyResourceContext context);
+        internal abstract void OnResourceTaken(IModifyResourceContext context);
         
         /// <summary>
         /// Storage of the resource.

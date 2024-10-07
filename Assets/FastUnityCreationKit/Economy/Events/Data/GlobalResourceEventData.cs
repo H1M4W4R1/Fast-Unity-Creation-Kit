@@ -1,5 +1,7 @@
 ﻿using FastUnityCreationKit.Core.Events;
 using FastUnityCreationKit.Economy.Abstract;
+using FastUnityCreationKit.Economy.Context;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy.Events.Data
 {
@@ -9,11 +11,11 @@ namespace FastUnityCreationKit.Economy.Events.Data
     public readonly struct GlobalResourceEventData<TGlobalResource> : IEventChannelData
         where TGlobalResource : IGlobalResource, new()
     {
-        public readonly float amount;
-        
-        public GlobalResourceEventData(float amount)
+        [CanBeNull] public readonly IModifyResourceContext context;
+
+        public GlobalResourceEventData([CanBeNull] IModifyResourceContext context)
         {
-            this.amount = amount;
+            this.context = context;
         }
     }
 }
