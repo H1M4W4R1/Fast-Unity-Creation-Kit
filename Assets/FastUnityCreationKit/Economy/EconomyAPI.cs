@@ -30,8 +30,11 @@ namespace FastUnityCreationKit.Economy
         /// Adds a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
         public static void AddGlobalResource<TResource>(IAddResourceContext context)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+        {
+            context.Economy = null;
             ISingleton<TResource>.GetInstance().Add(context);
+        }
 
         /// <summary>
         /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
@@ -44,8 +47,11 @@ namespace FastUnityCreationKit.Economy
         /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
         public static void TakeGlobalResource<TResource>(ITakeResourceContext context)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+        {
+            context.Economy = null;
             ISingleton<TResource>.GetInstance().Take(context);
+        }
 
         /// <summary>
         /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
@@ -58,8 +64,11 @@ namespace FastUnityCreationKit.Economy
         /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
         public static void SetGlobalResource<TResource>(IModifyResourceContext context)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+        {
+            context.Economy = null;
             ISingleton<TResource>.GetInstance().SetAmount(context);
+        }
 
         /// <summary>
         /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
@@ -72,8 +81,11 @@ namespace FastUnityCreationKit.Economy
         /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
         /// </summary>
         public static bool HasEnoughGlobalResource<TResource>(ICompareResourceContext context)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
-            ISingleton<TResource>.GetInstance().HasEnough(context);
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+        {
+            context.Economy = null;
+            return ISingleton<TResource>.GetInstance().HasEnough(context);
+        }
 
         /// <summary>
         /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
@@ -86,7 +98,10 @@ namespace FastUnityCreationKit.Economy
         /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
         public static bool TryTakeGlobalResource<TResource>(ITakeResourceContext context)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
-            ISingleton<TResource>.GetInstance().TryTake(context);
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
+        {
+            context.Economy = null;
+            return ISingleton<TResource>.GetInstance().TryTake(context);
+        }
     }
 }
