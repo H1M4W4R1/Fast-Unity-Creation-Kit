@@ -9,27 +9,26 @@ Resources are divided into two types: global and local. Global resources are sin
 and are recommended to be used for resources that are shared between all players or for resources that are
 shared between multiple runs in rouge-like games. 
 
-Local resources are resources that are unique per object - for example a local resource could be health of a
+Local resources are resources that are unique per object - for example a local resource could be health of an
 entity or coins available for single vendor.
 
 ## Creating resources
 To create a resource you need to create a new class that extends `Resource`-type class.
 
 ```C#
-public sealed class CoinsResource : GlobalResource<CoinsResource, int32>
+public sealed class CoinsResource : GlobalResource<CoinsResource>
 {
 
 }
 ```
 
-First generic parameter is reference to the class itself (required only for global resources) and the second
-parameter is the type of the resource. In this case it is `int32` which means that the resource is an 32-bit
-integer.
+The generic parameter is reference to the class itself (required only for global resources).
+<note>All resources have base type of int32!</note>
 
 Similarly, you can create a local resource:
 
 ```C#
-public sealed class HealthResource : LocalResource<int32>
+public sealed class HealthResource : LocalResource
 {
 
 }
@@ -60,12 +59,46 @@ entity.AddLocalResource<HealthResource>(100);
 entity.TakeLocalResource<HealthResource>(10);
 ```
 
-
 <note>
 All values provided in add/take etc. resource functions are floats and automatically converted to
 the type of the resource. API assumes that resource underlying type is a number that implements
 ISupportsFloatConversion interface.
 </note>
+
+## Context-based usage
+You can also use resources in context-based way. This is useful when you want to use resources in a
+specific context e.g. when you received gold by killing that monster, and you want to pass monster instance
+to event invoked by the resource system.
+
+```C#
+public sealed class MonsterKilledResourceContext : IAddResourceContext
+{
+    // This is access point to local economy, will be automatically set by the system
+    public IWithLocalEconomy Economy { get; set; } = null;
+    
+    // This is amount of gold that you want to add to the player
+    public int32 Amount { get; set; } = 15;
+    
+    // This is the monster that was killed
+    public Monster LinkedMonster { get; private set; }
+    
+    public MonsterKilledResourceContext(Monster monster)
+    {
+        LinkedMonster = monster;
+    }
+}
+```
+<warning>If you're using class as context base the Economy property will be automatically updated to last entity you've used!</warning>
+
+Then you can use the context like this:
+```C#
+var monster = new Monster();
+var context = new MonsterKilledResourceContext(monster);
+
+// This will add 15 gold to the player indicating that the gold was received from killing the monster
+// in event called by the resource system
+EconomyAPI.AddGlobalResource<CoinsResource>(context);
+```
 
 ## Supported resource operations
 * Add(value) - adds specified value to the resource
@@ -81,7 +114,7 @@ Numeric interfaces are fully supported by the resource system. You can simply im
 resource to limit the value of the resource or to set the default value.
 
 ```C#
-public sealed class CoinsResource : GlobalResource<CoinsResource, int32>, 
+public sealed class CoinsResource : GlobalResource<CoinsResource>, 
 IWithMinLimit<int32>, IWithMaxLimit<int32>, IWithDefaultValue<int32>
 {
    public int32 DefaultValue => 1000;

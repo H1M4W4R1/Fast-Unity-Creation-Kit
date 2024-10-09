@@ -1,5 +1,7 @@
 ﻿using FastUnityCreationKit.Core.Events;
+using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Economy.Abstract;
+using FastUnityCreationKit.Economy.Context;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy.Events.Data
@@ -10,13 +12,21 @@ namespace FastUnityCreationKit.Economy.Events.Data
     public readonly struct LocalResourceEventData<TResource> : IEventChannelData
         where TResource : ILocalResource
     {
-        [CanBeNull] public readonly IWithLocalEconomy entity;
-        public readonly float amount;
-        
-        public LocalResourceEventData(IWithLocalEconomy entity, float amount)
+        [NotNull] public readonly IModifyResourceContext context;
+
+        /// <summary>
+        /// Amount of the resource that was added or taken.
+        /// </summary>
+        public int32 Amount => context.Amount;
+
+        /// <summary>
+        /// Local economy context of the resource change event.
+        /// </summary>
+        [CanBeNull] public IWithLocalEconomy LocalEconomy => context.Economy;
+
+        public LocalResourceEventData([NotNull] IModifyResourceContext context)
         {
-            this.entity = entity;
-            this.amount = amount;
+            this.context = context;
         }
     }
 }

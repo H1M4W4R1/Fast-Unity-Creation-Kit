@@ -27,7 +27,8 @@ namespace FastUnityCreationKit.Core.PrioritySystem.Tools
                 // that we should insert the item before the current object.
                 if (item.Priority > this[i].Priority) continue;
 
-                Insert(i, item);
+                // We need to use base method to prevent throwing exception.
+                base.Insert(i, item);
                 return;
             }
 

@@ -206,16 +206,16 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnLocalResourceAdded(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
-                Assert.AreEqual(data.entity, entity);
-                valueAdded = data.amount;
+                Assert.AreEqual(data.context!.Economy, entity);
+                valueAdded = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
             
             UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
-                Assert.AreEqual(data.entity, entity);
-                valueChanged = data.amount;
+                Assert.AreEqual(data.context!.Economy, entity);
+                valueChanged = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -249,16 +249,16 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnLocalResourceTaken(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
-                Assert.AreEqual(data.entity, entity);
-                valueTaken = data.amount;
+                Assert.AreEqual(data.context!.Economy, entity);
+                valueTaken = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
             
             UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
-                Assert.AreEqual(data.entity, entity);
-                valueChanged = data.amount;
+                Assert.AreEqual(data.context!.Economy, entity);
+                valueChanged = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -292,16 +292,16 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnLocalResourceTaken(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
-                Assert.AreEqual(data.entity, entity);
-                valueTaken = data.amount;
+                Assert.AreEqual(data.context!.Economy, entity);
+                valueTaken = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
             
             UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
-                Assert.AreEqual(data.entity, entity);
-                valueChanged = data.amount;
+                Assert.AreEqual(data.context!.Economy, entity);
+                valueChanged = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -330,8 +330,8 @@ namespace FastUnityCreationKit.Tests.Economy
             
             UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
-                Assert.AreEqual(data.entity, entity);
-                valueChanged = data.amount;
+                Assert.AreEqual(data.context!.Economy, entity);
+                valueChanged = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -360,8 +360,8 @@ namespace FastUnityCreationKit.Tests.Economy
             
             UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
-                Assert.AreEqual(data.entity, entity);
-                valueChanged = data.amount;
+                Assert.AreEqual(data.context!.Economy, entity);
+                valueChanged = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
@@ -395,16 +395,16 @@ namespace FastUnityCreationKit.Tests.Economy
             // Event handler
             UniTask OnLocalResourceTaken(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
-                Assert.AreEqual(data.entity, entity);
-                valueTaken = data.amount;
+                Assert.AreEqual(data.context!.Economy, entity);
+                valueTaken = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
             
             UniTask OnLocalResourceChanged(LocalResourceEventData<ExampleHealthLocalResource> data)
             {
-                Assert.AreEqual(data.entity, entity);
-                valueChanged = data.amount;
+                Assert.AreEqual(data.context!.Economy, entity);
+                valueChanged = data.context!.Amount;
                 
                 return UniTask.CompletedTask;
             }
