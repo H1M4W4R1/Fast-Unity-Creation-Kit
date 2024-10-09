@@ -33,8 +33,11 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         public static void AddLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
             IAddResourceContext resourceContext)
-            where TResource : ILocalResource, IResource =>
+            where TResource : ILocalResource, IResource
+        {
+            resourceContext.Economy = withLocalEconomy;
             withLocalEconomy.AddResource<TResource>(resourceContext);
+        }
 
         /// <summary>
         /// Adds local resource of type <typeparamref name="TResource"/> with the specified amount.
@@ -48,8 +51,11 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         public static void TakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
             ITakeResourceContext resourceContext)
-            where TResource : ILocalResource, IResource =>
+            where TResource : ILocalResource, IResource
+        {
+            resourceContext.Economy = withLocalEconomy;
             withLocalEconomy.TakeResource<TResource>(resourceContext);
+        }
 
         /// <summary>
         /// Takes local resource of type <typeparamref name="TResource"/> with the specified amount.
@@ -63,8 +69,11 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         public static bool TryTakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
             ITakeResourceContext resourceContext)
-            where TResource : ILocalResource, IResource =>
-            withLocalEconomy.TryTakeResource<TResource>(resourceContext);
+            where TResource : ILocalResource, IResource
+        {
+            resourceContext.Economy = withLocalEconomy;
+            return withLocalEconomy.TryTakeResource<TResource>(resourceContext);
+        }
 
         /// <summary>
         /// Tries to take local resource of type <typeparamref name="TResource"/> with the specified amount.
@@ -79,8 +88,11 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         public static void SetLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
             IModifyResourceContext resourceContext)
-            where TResource : ILocalResource, IResource =>
+            where TResource : ILocalResource, IResource
+        {
+            resourceContext.Economy = withLocalEconomy;
             withLocalEconomy.SetResource<TResource>(resourceContext);
+        }
 
         /// <summary>
         /// Sets local resource of type <typeparamref name="TResource"/> with the specified amount.
@@ -94,9 +106,12 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         public static bool HasEnoughLocalResource<TResource>(
             [NotNull] this IWithLocalEconomy withLocalEconomy,
-            ICompareResourceContext context)
-            where TResource : ILocalResource, IResource =>
-            withLocalEconomy.HasEnoughResource<TResource>(context);
+            ICompareResourceContext resourceContext)
+            where TResource : ILocalResource, IResource
+        {
+            resourceContext.Economy = withLocalEconomy;
+            return withLocalEconomy.HasEnoughResource<TResource>(resourceContext);
+        }
 
         /// <summary>
         /// Checks if object has enough local resource of type <typeparamref name="TResource"/>.
