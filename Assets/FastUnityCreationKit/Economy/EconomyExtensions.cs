@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Economy
 {
-    /// TODO: Add HAL methods with context as parameter
     public static class Extensions
     {
         /// <summary>
@@ -18,105 +17,94 @@ namespace FastUnityCreationKit.Economy
         /// Checks if object has local resource of type <typeparamref name="TResource"/>.
         /// </summary>
         public static bool HasLocalResource<TResource>(this IWithLocalEconomy withLocalEconomy)
-            where TResource : ILocalResource, new()
-        {
-            return withLocalEconomy.HasResource<TResource>();
-        }
+            where TResource : ILocalResource, new() =>
+            withLocalEconomy.HasResource<TResource>();
 
         /// <summary>
         /// Gets local resource from object if object supports local economy.
         /// </summary>
         public static bool TryGetLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
             [CanBeNull] out TResource resource)
-            where TResource : ILocalResource, new()
-        {
-            return withLocalEconomy.TryGetResource(out resource);
-        }
+            where TResource : ILocalResource, new() =>
+            withLocalEconomy.TryGetResource(out resource);
 
-        public static void AddLocalResource<TResource, TContext>([NotNull] this IWithLocalEconomy withLocalEconomy,
-            int32 amount)
-            where TResource : ILocalResource, IResource
-            where TContext : IAddResourceContext, new() =>
-            withLocalEconomy.AddResource<TResource>(new TContext
-            {
-                Amount = amount,
-                Economy = withLocalEconomy
-            });
+        /// <summary>
+        /// Adds local resource of type <typeparamref name="TResource"/> with the specified context.
+        /// </summary>
+        public static void AddLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
+            IAddResourceContext resourceContext)
+            where TResource : ILocalResource, IResource =>
+            withLocalEconomy.AddResource<TResource>(resourceContext);
 
+        /// <summary>
+        /// Adds local resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
         public static void AddLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, int32 amount)
-            where TResource : ILocalResource, IResource
-        {
+            where TResource : ILocalResource, IResource =>
             withLocalEconomy.AddResource<TResource>(new GenericAddResourceContext(withLocalEconomy, amount));
-        }
 
-        public static void TakeLocalResource<TResource, TContext>([NotNull] this IWithLocalEconomy withLocalEconomy,
-            int32 amount)
-            where TResource : ILocalResource, IResource
-            where TContext : ITakeResourceContext, new() =>
-            withLocalEconomy.TakeResource<TResource>(new TContext
-            {
-                Amount = amount,
-                Economy = withLocalEconomy
-            });
+        /// <summary>
+        /// Takes local resource of type <typeparamref name="TResource"/> with the specified context.
+        /// </summary>
+        public static void TakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
+            ITakeResourceContext resourceContext)
+            where TResource : ILocalResource, IResource =>
+            withLocalEconomy.TakeResource<TResource>(resourceContext);
 
+        /// <summary>
+        /// Takes local resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
         public static void TakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, int32 amount)
-            where TResource : ILocalResource, IResource
-        {
+            where TResource : ILocalResource, IResource =>
             withLocalEconomy.TakeResource<TResource>(new GenericTakeResourceContext(withLocalEconomy, amount));
-        }
 
-        public static bool TryTakeLocalResource<TResource, TContext>([NotNull] this IWithLocalEconomy withLocalEconomy,
-            int32 amount)
-            where TResource : ILocalResource, IResource
-            where TContext : ITakeResourceContext, new() =>
-            withLocalEconomy.TryTakeResource<TResource>(new TContext
-            {
-                Amount = amount,
-                Economy = withLocalEconomy
-            });
+        /// <summary>
+        /// Tries to take local resource of type <typeparamref name="TResource"/> with the specified context.
+        /// </summary>
+        public static bool TryTakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
+            ITakeResourceContext resourceContext)
+            where TResource : ILocalResource, IResource =>
+            withLocalEconomy.TryTakeResource<TResource>(resourceContext);
 
+        /// <summary>
+        /// Tries to take local resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
         public static bool TryTakeLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
             int32 amount)
-            where TResource : ILocalResource, IResource
-        {
-            return withLocalEconomy.TryTakeResource<TResource>(
-                new GenericTakeResourceContext(withLocalEconomy, amount));
-        }
+            where TResource : ILocalResource, IResource =>
+            withLocalEconomy.TryTakeResource<TResource>(new GenericTakeResourceContext(withLocalEconomy, amount));
 
-        public static void SetLocalResource<TResource, TContext>([NotNull] this IWithLocalEconomy withLocalEconomy,
-            int32 amount)
-            where TResource : ILocalResource, IResource
-            where TContext : IModifyResourceContext, new() =>
-            withLocalEconomy.SetResource<TResource>(new TContext
-            {
-                Amount = amount,
-                Economy = withLocalEconomy
-            });
+        /// <summary>
+        /// Sets local resource of type <typeparamref name="TResource"/> with the specified context.
+        /// </summary>
+        public static void SetLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
+            IModifyResourceContext resourceContext)
+            where TResource : ILocalResource, IResource =>
+            withLocalEconomy.SetResource<TResource>(resourceContext);
 
-
+        /// <summary>
+        /// Sets local resource of type <typeparamref name="TResource"/> with the specified amount.
+        /// </summary>
         public static void SetLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy, int32 amount)
-            where TResource : ILocalResource, IResource
-        {
+            where TResource : ILocalResource, IResource =>
             withLocalEconomy.SetResource<TResource>(new GenericModifyResourceContext(withLocalEconomy, amount));
-        }
 
-        public static bool HasEnoughLocalResource<TResource, TContext>(
+        /// <summary>
+        /// Checks if object has enough local resource of type <typeparamref name="TResource"/>.
+        /// </summary>
+        public static bool HasEnoughLocalResource<TResource>(
             [NotNull] this IWithLocalEconomy withLocalEconomy,
-            int32 amount)
-            where TResource : ILocalResource, IResource
-            where TContext : ICompareResourceContext, new() =>
-            withLocalEconomy.HasEnoughResource<TResource>(new TContext
-            {
-                Amount = amount,
-                Economy = withLocalEconomy
-            });
+            ICompareResourceContext context)
+            where TResource : ILocalResource, IResource =>
+            withLocalEconomy.HasEnoughResource<TResource>(context);
 
+        /// <summary>
+        /// Checks if object has enough local resource of type <typeparamref name="TResource"/>.
+        /// </summary>
         public static bool HasEnoughLocalResource<TResource>([NotNull] this IWithLocalEconomy withLocalEconomy,
             int32 amount)
-            where TResource : ILocalResource, IResource
-        {
-            return withLocalEconomy.HasEnoughResource<TResource>(
+            where TResource : ILocalResource, IResource =>
+            withLocalEconomy.HasEnoughResource<TResource>(
                 new GenericCompareResourceContext(withLocalEconomy, amount));
-        }
     }
 }

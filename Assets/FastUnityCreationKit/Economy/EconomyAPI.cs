@@ -10,27 +10,14 @@ namespace FastUnityCreationKit.Economy
     /// <summary>
     /// API functions and extensions for economy.
     /// </summary>
-    /// TODO: Add HAL methods with context as parameter
     public static class EconomyAPI
     {
         /// <summary>
         /// Gets global resource of type <typeparamref name="TResource"/>.
         /// </summary>
         public static TResource GetGlobalResource<TResource>()
-            where TResource : IGlobalResource, ISingleton<TResource>, new()
-        {
-            // Acquire reference via internal instance method
-            return ISingleton<TResource>.GetInstance();
-        }
-
-        /// <summary>
-        /// Adds a global resource of type <typeparamref name="TResource"/> with the specified amount.
-        /// </summary>
-        public static void AddGlobalResource<TResource, TContextType>(int32 amount)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
-            where TContextType : IAddResourceContext, new() =>
-            AddGlobalResource<TResource>(new TContextType {Amount = amount});
-        
+            where TResource : IGlobalResource, ISingleton<TResource>, new() =>
+            ISingleton<TResource>.GetInstance();
 
         /// <summary>
         /// Adds a global resource of type <typeparamref name="TResource"/> with the specified amount.
@@ -43,20 +30,9 @@ namespace FastUnityCreationKit.Economy
         /// Adds a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
         public static void AddGlobalResource<TResource>(IAddResourceContext context)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
-        {
-            TResource resource = ISingleton<TResource>.GetInstance();
-            resource.Add(context);
-        }
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
+            ISingleton<TResource>.GetInstance().Add(context);
 
-        /// <summary>
-        /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
-        /// </summary>
-        public static void TakeGlobalResource<TResource, TContextType>(int32 amount)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
-            where TContextType : ITakeResourceContext, new() =>
-            TakeGlobalResource<TResource>(new TContextType {Amount = amount});
-        
         /// <summary>
         /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
@@ -68,20 +44,9 @@ namespace FastUnityCreationKit.Economy
         /// Takes a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
         public static void TakeGlobalResource<TResource>(ITakeResourceContext context)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
-        {
-            TResource resource = ISingleton<TResource>.GetInstance();
-            resource.Take(context);
-        }
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
+            ISingleton<TResource>.GetInstance().Take(context);
 
-        /// <summary>
-        /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
-        /// </summary>
-        public static void SetGlobalResource<TResource, TContextType>(int32 amount)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
-            where TContextType : IModifyResourceContext, new() =>
-            SetGlobalResource<TResource>(new TContextType {Amount = amount});
-        
         /// <summary>
         /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
@@ -93,20 +58,9 @@ namespace FastUnityCreationKit.Economy
         /// Sets a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
         public static void SetGlobalResource<TResource>(IModifyResourceContext context)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
-        {
-            TResource resource = ISingleton<TResource>.GetInstance();
-            resource.SetAmount(context);
-        }
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
+            ISingleton<TResource>.GetInstance().SetAmount(context);
 
-        /// <summary>
-        /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
-        /// </summary>
-        public static bool HasEnoughGlobalResource<TResource, TContextType>(int32 amount)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
-            where TContextType : ICompareResourceContext, new() =>
-            HasEnoughGlobalResource<TResource>(new TContextType {Amount = amount});
-        
         /// <summary>
         /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
         /// </summary>
@@ -118,20 +72,9 @@ namespace FastUnityCreationKit.Economy
         /// Checks if the global resource of type <typeparamref name="TResource"/> has enough of the specified amount.
         /// </summary>
         public static bool HasEnoughGlobalResource<TResource>(ICompareResourceContext context)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
-        {
-            TResource resource = ISingleton<TResource>.GetInstance();
-            return resource.HasEnough(context);
-        }
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
+            ISingleton<TResource>.GetInstance().HasEnough(context);
 
-        /// <summary>
-        /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
-        /// </summary>
-        public static bool TryTakeGlobalResource<TResource, TContextType>(int32 amount)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
-            where TContextType : ITakeResourceContext, new() =>
-            TryTakeGlobalResource<TResource>(new TContextType {Amount = amount});
-        
         /// <summary>
         /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
@@ -143,10 +86,7 @@ namespace FastUnityCreationKit.Economy
         /// Tries to take a global resource of type <typeparamref name="TResource"/> with the specified amount.
         /// </summary>
         public static bool TryTakeGlobalResource<TResource>(ITakeResourceContext context)
-            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new()
-        {
-            TResource resource = ISingleton<TResource>.GetInstance();
-            return resource.TryTake(context);
-        }
+            where TResource : IResource, IGlobalResource, ISingleton<TResource>, new() =>
+            ISingleton<TResource>.GetInstance().TryTake(context);
     }
 }
