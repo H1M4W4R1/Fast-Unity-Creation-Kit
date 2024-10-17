@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Status;
+using FastUnityCreationKit.Status.Context;
 using FastUnityCreationKit.Tests.Status.Data;
 using NUnit.Framework;
 
@@ -11,8 +12,9 @@ namespace FastUnityCreationKit.Tests.Status
         public void GetAmountOfTimesStatusIsAdded_Returns_Correct_Amount()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            RegularStatus status = new RegularStatus();
+            EntityWithStatus entity = new();
+            RegularStatus status = new();
+            GenericStatusContext<RegularStatus> context = new(entity, status);
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
@@ -21,7 +23,7 @@ namespace FastUnityCreationKit.Tests.Status
             Assert.AreEqual(0, objectWithStatus.GetAmountOfTimesStatusIsAdded<RegularStatus>());
             
             // Act
-            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatus(context);
             
             // Assert
             Assert.AreEqual(1, objectWithStatus.GetAmountOfTimesStatusIsAdded<RegularStatus>());
@@ -31,14 +33,15 @@ namespace FastUnityCreationKit.Tests.Status
         public void AddStatus_Works_Correctly()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            RegularStatus status = new RegularStatus();
+            EntityWithStatus entity = new();
+            RegularStatus status = new();
+            GenericStatusContext<RegularStatus> context = new(entity, status);
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatus(context);
             
             // Assert
             Assert.IsTrue(objectWithStatus.HasStatus<RegularStatus>());
@@ -49,15 +52,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void AddStatus_Does_Not_Add_Same_Status_Twice()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            RegularStatus status = new RegularStatus();
+            EntityWithStatus entity = new();
+            RegularStatus status = new();
+            GenericStatusContext<RegularStatus> context = new(entity, status);
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.AddStatus(context);
             
             // Assert
             Assert.IsTrue(objectWithStatus.HasStatus<RegularStatus>());
@@ -69,15 +73,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void RemoveStatus_Works_Correctly()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            RegularStatus status = new RegularStatus();
+            EntityWithStatus entity = new();
+            RegularStatus status = new();
+            GenericStatusContext<RegularStatus> context = new(entity, status);
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.RemoveStatusAsync<RegularStatus>();
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.RemoveStatus<RegularStatus>(context);
             
             // Assert
             Assert.IsFalse(objectWithStatus.HasStatus<RegularStatus>());
@@ -88,14 +93,15 @@ namespace FastUnityCreationKit.Tests.Status
         public void RemoveStatus_Does_Not_Remove_Status_If_Not_Exists()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            RegularStatus status = new RegularStatus();
+            EntityWithStatus entity = new();
+            RegularStatus status = new();
+            GenericStatusContext<RegularStatus> context = new(entity, status);
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.RemoveStatusAsync<RegularStatus>();
+            objectWithStatus.RemoveStatus<RegularStatus>(context);
             
             // Assert
             Assert.IsFalse(objectWithStatus.HasStatus<RegularStatus>());
@@ -106,14 +112,15 @@ namespace FastUnityCreationKit.Tests.Status
         public void IsStatusExplicitlySupported_Returns_Correct_Value()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            RegularStatus status = new RegularStatus();
+            EntityWithStatus entity = new();
+            RegularStatus status = new();
+            GenericStatusContext<RegularStatus> context = new(entity, status);
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatus(context);
             
             // Assert
             Assert.IsTrue(objectWithStatus.IsStatusExplicitlySupported<RegularStatus>());
@@ -124,7 +131,7 @@ namespace FastUnityCreationKit.Tests.Status
         public void IsStatusSupported_Returns_Correct_Value()
         {
             // Arrange
-            EntityWithForbiddenStatus entity = new EntityWithForbiddenStatus();
+            EntityWithForbiddenStatus entity = new();
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
@@ -139,7 +146,7 @@ namespace FastUnityCreationKit.Tests.Status
         public void IsStatusSupported_BannedStatusTakesPriority_OverSupportedStatus()
         {
             // Arrange
-            EntityWithForbiddenStatus entity = new EntityWithForbiddenStatus();
+            EntityWithForbiddenStatus entity = new();
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
@@ -152,7 +159,7 @@ namespace FastUnityCreationKit.Tests.Status
         public void IsStatusExplicitlySupported_BannedStatusTakesPriority_OverSupportedStatus()
         {
             // Arrange
-            EntityWithForbiddenStatus entity = new EntityWithForbiddenStatus();
+            EntityWithForbiddenStatus entity = new();
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
@@ -165,14 +172,15 @@ namespace FastUnityCreationKit.Tests.Status
         public void GetStatus_Returns_Correct_Status()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            RegularStatus status = new RegularStatus();
+            EntityWithStatus entity = new();
+            RegularStatus status = new();
+            GenericStatusContext<RegularStatus> context = new(entity, status);
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatus(context);
             RegularStatus acquiredStatus = objectWithStatus.GetStatus<RegularStatus>();
             
             // Assert
@@ -184,14 +192,15 @@ namespace FastUnityCreationKit.Tests.Status
         public void AddStatus_DoesNotAdd_IfIsForbidden()
         {
             // Arrange
-            EntityWithForbiddenStatus entity = new EntityWithForbiddenStatus();
-            RegularStatus status = new RegularStatus();
+            EntityWithForbiddenStatus entity = new();
+            RegularStatus status = new();
+            GenericStatusContext<RegularStatus> context = new(entity, status);
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatus(context);
             
             // Assert
             Assert.IsFalse(objectWithStatus.HasStatus<RegularStatus>());
@@ -202,14 +211,15 @@ namespace FastUnityCreationKit.Tests.Status
         public void AddStatus_DoesNotAdd_IfIsForbidden_EvenIfSupported()
         {
             // Arrange
-            EntityWithForbiddenStatus entity = new EntityWithForbiddenStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithForbiddenStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
             
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
             
             // Act
-            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatus(context);
             
             // Assert
             Assert.IsFalse(objectWithStatus.HasStatus<StackableStatus>());

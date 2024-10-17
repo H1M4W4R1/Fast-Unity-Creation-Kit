@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Status.Context;
 using JetBrains.Annotations;
 using Unity.Mathematics;
 
@@ -18,41 +19,41 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// Triggered when the percentage value reaches 100%.
         /// </summary>
-        public UniTask OnMaxPercentageReachedAsync([NotNull] IObjectWithStatus objectWithStatus);
+        public UniTask OnMaxPercentageReachedAsync([NotNull] IStatusContext context);
         
         /// <summary>
         /// Triggered when the percentage value reaches 0%.
         /// </summary>
-        public UniTask OnMinPercentageReachedAsync([NotNull] IObjectWithStatus objectWithStatus);
+        public UniTask OnMinPercentageReachedAsync([NotNull] IStatusContext context);
         
         /// <summary>
         /// Increases the percentage value by the given amount where 1.0 is 100%.
         /// </summary>
-        public void IncreasePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount) =>
-            ChangePercentage(objectWithStatus, amount).GetAwaiter().GetResult();
+        public void IncreasePercentage([NotNull] IStatusContext context, float amount) =>
+            ChangePercentage(context, amount).GetAwaiter().GetResult();
         
         /// <summary>
         /// Increases the percentage value by the given amount where 1.0 is 100%.
         /// </summary>
-        public async UniTask IncreasePercentageAsync([NotNull] IObjectWithStatus objectWithStatus, float amount) =>
-            await ChangePercentage(objectWithStatus, amount);
+        public async UniTask IncreasePercentageAsync([NotNull] IStatusContext context, float amount) =>
+            await ChangePercentage(context, amount);
 
         /// <summary>
         /// Decreases the percentage value by the given amount where 1.0 is 100%.
         /// </summary>
-        public void DecreasePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount) =>
-            ChangePercentage(objectWithStatus, -amount).GetAwaiter().GetResult();
+        public void DecreasePercentage([NotNull] IStatusContext context, float amount) =>
+            ChangePercentage(context, -amount).GetAwaiter().GetResult();
         
         /// <summary>
         /// Decreases the percentage value by the given amount where 1.0 is 100%.
         /// </summary>
-        public async UniTask DecreasePercentageAsync([NotNull] IObjectWithStatus objectWithStatus, float amount) => 
-            await ChangePercentage(objectWithStatus, -amount);
+        public async UniTask DecreasePercentageAsync([NotNull] IStatusContext context, float amount) => 
+            await ChangePercentage(context, -amount);
         
         /// <summary>
         /// Increases the percentage value by the given amount.
         /// </summary>
-        private async UniTask ChangePercentage([NotNull] IObjectWithStatus objectWithStatus, float amount)
+        private async UniTask ChangePercentage([NotNull] IStatusContext context, float amount)
         {
             float previousPercentage = Percentage;
             
@@ -65,10 +66,10 @@ namespace FastUnityCreationKit.Status
             switch (Percentage)
             {
                 case >= 1f when previousPercentage < 1f:
-                    await OnMaxPercentageReachedAsync(objectWithStatus);
+                    await OnMaxPercentageReachedAsync(context);
                     break;
                 case <= 0f when previousPercentage > 0f:
-                    await OnMinPercentageReachedAsync(objectWithStatus);
+                    await OnMinPercentageReachedAsync(context);
                     break;
             }
             
@@ -79,15 +80,15 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// Sets the percentage value to the given value.
         /// </summary>
-        internal async UniTask SetPercentageAsync([NotNull] IObjectWithStatus obj, float amount)
+        internal async UniTask SetPercentageAsync([NotNull] IStatusContext context, float amount)
         {
             float previousPercentage = Percentage;
             Percentage = amount;
             
             if(previousPercentage < amount && amount >= 1f)
-                await OnMaxPercentageReachedAsync(obj);
+                await OnMaxPercentageReachedAsync(context);
             else if(previousPercentage > amount && amount <= 0f)
-                await OnMinPercentageReachedAsync(obj);
+                await OnMinPercentageReachedAsync(context);
             
         }
     }
