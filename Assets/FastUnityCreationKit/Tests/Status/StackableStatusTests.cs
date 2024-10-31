@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Status;
+using FastUnityCreationKit.Status.Context;
 using FastUnityCreationKit.Tests.Status.Data;
 using NUnit.Framework;
 
@@ -10,14 +11,15 @@ namespace FastUnityCreationKit.Tests.Status
         public void AddStatus_AddsFirstStack_ToStackableStatus()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatus(context);
 
             // Assert
             Assert.AreEqual(1, status.wasStatusAdded);
@@ -29,15 +31,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void AddStatus_AddsSecondStack_ToStackableStatus()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.AddStatus(context);
 
             // Assert
             Assert.AreEqual(2, status.CurrentStack);
@@ -48,15 +51,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void RemoveStatus_RemovesAllStacks_FromStackableStatus()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.RemoveStatusAsync<StackableStatus>();
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.RemoveStatus<StackableStatus>(context);
 
             // Assert
             Assert.AreEqual(0, status.CurrentStack);
@@ -75,15 +79,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void IncreaseStackCount_IncreasesStackCount_ByOne()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(context);
 
             // Assert
             Assert.AreEqual(2, status.CurrentStack);
@@ -95,15 +100,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void IncreaseStackCount_IncreasesStackCount_ByCorrectValue()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status); // +1
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(2); // +2
+            objectWithStatus.AddStatus(context); // +1
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context, 2); // +2
 
             // Assert
             Assert.AreEqual(3, status.CurrentStack);
@@ -120,13 +126,14 @@ namespace FastUnityCreationKit.Tests.Status
         public void IncreaseStackCount_AddsStatus_IfNotAlreadyAdded()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
+            EntityWithStatus entity = new();
+            GenericStatusContext<StackableStatus> context = new(entity);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
             StackableStatus status = objectWithStatus.GetStatus<StackableStatus>();
 
             // Assert
@@ -138,20 +145,21 @@ namespace FastUnityCreationKit.Tests.Status
         public void IncreaseStackCount_DoesNotCallMaxStackReachedEvent_IfStackCountIsNotChanged()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
+            EntityWithStatus entity = new();
+            GenericStatusContext<StackableStatus> context = new(entity);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
 
             // Acquire the status
             StackableStatus status = objectWithStatus.GetStatus<StackableStatus>();
@@ -171,13 +179,14 @@ namespace FastUnityCreationKit.Tests.Status
         public void IncreaseStackCount_CallsMaxStackReachedEvent_EveryTime_IfEveryTimeNotificationSetting_IsUsed()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
+            EntityWithStatus entity = new();
+            GenericStatusContext<MultipleNotificationStackableStatus> context = new(entity);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.IncreaseStatusStackCountAsync<MultipleNotificationStackableStatus>(5);
+            objectWithStatus.IncreaseStatusStackCount<MultipleNotificationStackableStatus>(context, 5);
 
             // Acquire the status
             MultipleNotificationStackableStatus status =
@@ -198,16 +207,17 @@ namespace FastUnityCreationKit.Tests.Status
         public void DecreaseStackCount_DecreasesStackCount_ByOne()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status); // +1
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(2); // +2
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>(); // -1
+            objectWithStatus.AddStatus(context); // +1
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context, 2); // +2
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context); // -1
 
             // Assert
             Assert.AreEqual(2, status.CurrentStack);
@@ -218,16 +228,17 @@ namespace FastUnityCreationKit.Tests.Status
         public void DecreaseStackCount_DecreasesStackCount_ByCorrectValue()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status); // +1
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(3); // +3 (+2 due to limit)
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>(2); // -2
+            objectWithStatus.AddStatus(context); // +1
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context, 3); // +3 (+2 due to limit)
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context, 2); // -2
 
             // Assert
             Assert.AreEqual(1, status.CurrentStack);
@@ -243,15 +254,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void DecreaseStackCount_RemovesStatus_IfStackCountIsZero()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context);
 
             // Assert
             Assert.AreEqual(0, status.CurrentStack);
@@ -262,16 +274,17 @@ namespace FastUnityCreationKit.Tests.Status
         public void DecreaseStackCount_DoesNotRemoveStatus_IfStackCountIsNotZero()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context);
 
             // Assert
             Assert.AreEqual(1, status.CurrentStack);
@@ -282,16 +295,17 @@ namespace FastUnityCreationKit.Tests.Status
         public void DecreaseStackCount_SupportsNegativeValues()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(3);
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>(4);
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context, 3);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context, 4);
 
             // Assert
             Assert.AreEqual(-1, status.CurrentStack);
@@ -301,20 +315,21 @@ namespace FastUnityCreationKit.Tests.Status
         public void DecreaseStackCount_DoesNotCallMinStackReachedEvent_IfStackCountIsNotChanged()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
+            EntityWithStatus entity = new();
+            GenericStatusContext<StackableStatus> context = new(entity);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>();
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context);
 
             // Acquire the status
             StackableStatus status = objectWithStatus.GetStatus<StackableStatus>();
@@ -334,13 +349,15 @@ namespace FastUnityCreationKit.Tests.Status
         public void DecreaseStackCount_CallsMinStackReachedEvent_EveryTime_IfEveryTimeNotificationSetting_IsUsed()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
+            EntityWithStatus entity = new();
+            GenericStatusContext<MultipleNotificationStackableStatus> context = new(entity);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.DecreaseStatusStackCountAsync<MultipleNotificationStackableStatus>(5);
+            objectWithStatus.DecreaseStatusStackCount<MultipleNotificationStackableStatus>(
+                context, 5);
 
             // Acquire the status
             MultipleNotificationStackableStatus status =
@@ -361,15 +378,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void MinLimit_IsRespected_WhenDecreasingStackCount()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.DecreaseStatusStackCountAsync<StackableStatus>(40);
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.DecreaseStatusStackCount<StackableStatus>(context, 40);
 
             // Assert
             Assert.AreEqual(-3, status.CurrentStack);
@@ -382,15 +400,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void MaxLimit_IsRespected_WhenIncreasingStackCount()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(40);
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context, 40);
 
             // Assert
             Assert.AreEqual(3, status.CurrentStack);
@@ -403,15 +422,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void GetStatusStackCount_ReturnsCorrectValue()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
             // Act
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>(2);
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context, 2);
 
             // Assert
             Assert.AreEqual(3, objectWithStatus.GetStatusStackCount<StackableStatus>());
@@ -421,7 +441,7 @@ namespace FastUnityCreationKit.Tests.Status
         public void GetStatusStackCount_ReturnsZero_IfStatusIsNotAdded()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
+            EntityWithStatus entity = new();
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
@@ -437,15 +457,16 @@ namespace FastUnityCreationKit.Tests.Status
         public void GetStatusStackCount_ReturnsZero_IfStatusIsRemoved()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.IncreaseStatusStackCountAsync<StackableStatus>();
-            objectWithStatus.RemoveStatusAsync<StackableStatus>();
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.IncreaseStatusStackCount<StackableStatus>(context);
+            objectWithStatus.RemoveStatus<StackableStatus>(context);
 
             // Act
             int stackCount = objectWithStatus.GetStatusStackCount<StackableStatus>();
@@ -458,14 +479,15 @@ namespace FastUnityCreationKit.Tests.Status
         public void GetAmountOfTimesStatusIsAdded_ReturnsCorrectValue()
         {
             // Arrange
-            EntityWithStatus entity = new EntityWithStatus();
-            StackableStatus status = new StackableStatus();
+            EntityWithStatus entity = new();
+            StackableStatus status = new();
+            GenericStatusContext<StackableStatus> context = new(entity, status);
 
             // Cast to IObjectWithStatus to access the Statuses property
             IObjectWithStatus objectWithStatus = entity;
 
-            objectWithStatus.AddStatusAsync(status);
-            objectWithStatus.AddStatusAsync(status);
+            objectWithStatus.AddStatus(context);
+            objectWithStatus.AddStatus(context);
 
             // Act
             int amountOfTimesStatusIsAdded = objectWithStatus.GetAmountOfTimesStatusIsAdded<StackableStatus>();

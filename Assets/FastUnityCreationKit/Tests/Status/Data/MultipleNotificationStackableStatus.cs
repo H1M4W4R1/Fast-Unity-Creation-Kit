@@ -2,6 +2,7 @@
 using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Limits;
 using FastUnityCreationKit.Status;
+using FastUnityCreationKit.Status.Context;
 using FastUnityCreationKit.Status.Enums;
 
 namespace FastUnityCreationKit.Tests.Status.Data
@@ -15,13 +16,13 @@ namespace FastUnityCreationKit.Tests.Status.Data
         public int wasMaxStackCountReached;
         public int wasMinStackCountReached;
 
-        public UniTask OnStatusAddedAsync(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusAddedAsync(IStatusContext context)
         {
             wasStatusAdded++;
             return UniTask.CompletedTask;
         }
 
-        public UniTask OnStatusRemovedAsync(IObjectWithStatus objectWithStatus)
+        public UniTask OnStatusRemovedAsync(IStatusContext context)
         {
             wasStatusRemoved++;
             return UniTask.CompletedTask;
@@ -36,19 +37,19 @@ namespace FastUnityCreationKit.Tests.Status.Data
             MinStackLimitReachedNotificationMode.EveryTime;
 
 
-        public UniTask OnStackCountChangedAsync(IObjectWithStatus objectWithStatus, int amount)
+        public UniTask OnStackCountChangedAsync(IStatusContext context, int amount)
         {
             wasStackCountChanged += amount;
             return UniTask.CompletedTask;
         }
 
-        public UniTask OnMaxStackCountReachedAsync(IObjectWithStatus objectWithStatus)
+        public UniTask OnMaxStackCountReachedAsync(IStatusContext context)
         {
             wasMaxStackCountReached++;
             return UniTask.CompletedTask;
         }
 
-        public UniTask OnMinStackCountReachedAsync(IObjectWithStatus objectWithStatus)
+        public UniTask OnMinStackCountReachedAsync(IStatusContext context)
         {
             wasMinStackCountReached++;
             return UniTask.CompletedTask;
