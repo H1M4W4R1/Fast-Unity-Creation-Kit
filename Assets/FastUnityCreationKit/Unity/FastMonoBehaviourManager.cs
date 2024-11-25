@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FastUnityCreationKit.Core.Utility.Singleton;
 using FastUnityCreationKit.Unity.Events.Interfaces;
 using UnityEngine;
 
@@ -8,37 +9,15 @@ namespace FastUnityCreationKit.Unity
     /// This class is implementation of FastMonoBehaviour processing.
     /// Should not be used directly.
     /// </summary>
-    public sealed class FastMonoBehaviourManager : MonoBehaviour // Can't be FMB to prevent infinite loop
+    public sealed class FastMonoBehaviourManager : MonoBehaviour, IMonoBehaviourSingleton<FastMonoBehaviourManager> // Can't be FMB to prevent infinite loop
     {
-        private static FastMonoBehaviourManager _instance;
-
+        public static FastMonoBehaviourManager Instance => IMonoBehaviourSingleton<FastMonoBehaviourManager>.GetInstance();
+      
         /// <summary>
         /// List of all known FastMonoBehaviours in the scene.
         /// </summary>
-        private List<FastMonoBehaviour> _fastMonoBehaviours = new List<FastMonoBehaviour>();
-
-        /// <summary>
-        /// Instance of the FastMonoBehaviourManager.
-        /// </summary>
-        public static FastMonoBehaviourManager Instance
-        {
-            get
-            {
-                // Try to return the instance if it's already created
-                if (_instance) return _instance;
-
-                // Find the instance in the scene 
-                _instance = FindAnyObjectByType<FastMonoBehaviourManager>();
-
-                // If the instance is not found, create a new one
-                if (!_instance)
-                    _instance = new GameObject("FastMonoBehaviourManager").AddComponent<FastMonoBehaviourManager>();
-
-                // Return the instance
-                return _instance;
-            }
-        }
-
+        private readonly List<FastMonoBehaviour> _fastMonoBehaviours = new();
+       
         /// <summary>
         /// Returns the first object found in the scene of the specified type.
         /// </summary>
@@ -62,23 +41,15 @@ namespace FastUnityCreationKit.Unity
         /// </summary>
         private void Awake()
         {
-            // Check if the instance is already created
-            if (_instance && _instance != this)
-            {
-                // Destroy the current instance
-                Destroy(gameObject);
-                return;
-            }
-
-            // Set the instance
-            _instance = this;
-
             // Ensure this is on the root level, otherwise Unity may throw an error with DontDestroyOnLoad
             // as only root level objects can be made persistent
             transform.SetParent(null);
 
             // Make the object persistent
             DontDestroyOnLoad(gameObject);
+            
+            // Note that we're not setting instance here because it's handled by the singleton system
+            // for more information see IMonoBehaviourSingleton.cs
         }
 
         /// <summary>

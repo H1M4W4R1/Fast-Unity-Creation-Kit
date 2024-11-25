@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Unity.Interfaces
@@ -18,7 +19,7 @@ namespace FastUnityCreationKit.Unity.Interfaces
         /// <summary>
         /// List of all selected objects.
         /// </summary>
-        protected static List<ISelectable> SelectedObjects { get; } = new();
+        [UsedImplicitly] protected static List<ISelectable> SelectedObjects { get; } = new();
         
         public bool IsSelected { get; protected set; }
 

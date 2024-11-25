@@ -26,23 +26,41 @@ namespace FastUnityCreationKit.Unity
         {
             // Register this object to the object registry.
             FastMonoBehaviourManager.Instance.RegisterFastMonoBehaviour(this);
-            
+
+            // Check if supports persistent interface.
+            if (this is IPersistent persistent)
+            {
+                // Ensure that object is on the root level as Unity only allows root level objects to be made persistent.
+                if (transform.parent)
+                {
+                    transform.SetParent(null);
+
+                    // Log warning in editor's console to notify the user.
+#if UNITY_EDITOR
+                    Debug.LogWarning($"Persistent object {name} is not on the root level. This may cause unexpected behavior.", this);
+#endif
+                }
+
+                // Make the object persistent.
+                DontDestroyOnLoad(gameObject);
+            }
+
             // Initialize the object if it implements the IInitializable interface.
             if (this is IInitializable initializable)
             {
                 initializable.Initialize();
-                
+
                 // Trigger the OnObjectInitialized event.
                 OnObjectInitializedEvent<TSelf>.TriggerEvent(new FastMonoBehaviourEventData<TSelf>((this as TSelf)!));
             }
 
             // Call creation event to notify listeners that the object has been created.
             OnObjectCreatedEvent<TSelf>.TriggerEvent(new FastMonoBehaviourEventData<TSelf>((this as TSelf)!));
-            
+
             // Check if this object supports "create" callback.
-            if(this is ICreateCallback createCallback)
+            if (this is ICreateCallback createCallback)
                 createCallback.OnObjectCreated();
-            
+
             // If this is both clickable and selectable print warning.
             if (this is IClickable and ISelectable)
                 Debug.LogWarning("Object is both clickable and selectable. This may cause unexpected behavior.");
@@ -53,7 +71,7 @@ namespace FastUnityCreationKit.Unity
             // Trigger the OnObjectActivated event.
             OnObjectActivatedEvent<TSelf>.TriggerEvent(new FastMonoBehaviourEventData<TSelf>((this as TSelf)!));
         }
-        
+
         protected void OnDisable()
         {
             // Trigger the OnObjectDeactivated event.
@@ -64,11 +82,11 @@ namespace FastUnityCreationKit.Unity
         {
             // Trigger the OnObjectDestroyed event.
             OnObjectDestroyedEvent<TSelf>.TriggerEvent(new FastMonoBehaviourEventData<TSelf>((this as TSelf)!));
-            
+
             // Callback must be called after event to prevent weird behavior.
-            if(this is IDestroyCallback destroyCallback)
+            if (this is IDestroyCallback destroyCallback)
                 destroyCallback.OnObjectDestroyed();
-            
+
             // Unregister this object from the object registry.
             FastMonoBehaviourManager.Instance.UnregisterFastMonoBehaviour(this);
         }
@@ -78,9 +96,10 @@ namespace FastUnityCreationKit.Unity
             if (this is IHoverable hoverable)
             {
                 hoverable.OnHoverEnter(eventData);
-                
+
                 // Call the OnHoverStart event.
-                OnObjectHoverStartEvent<TSelf>.TriggerEvent(new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
+                OnObjectHoverStartEvent<TSelf>.TriggerEvent(
+                    new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
             }
         }
 
@@ -91,7 +110,8 @@ namespace FastUnityCreationKit.Unity
                 hoverable.OnHoverExit(eventData);
 
                 // Call the OnHoverEnd event.
-                OnObjectHoverEndEvent<TSelf>.TriggerEvent(new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
+                OnObjectHoverEndEvent<TSelf>.TriggerEvent(
+                    new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
             }
         }
 
@@ -100,29 +120,38 @@ namespace FastUnityCreationKit.Unity
             if (this is ISelectable selectable)
             {
                 selectable._ReverseSelectionState();
-                
-                OnObjectSelectionChangedEvent<TSelf>.TriggerEvent(new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!, selectable.IsSelected));
-                
+
+                OnObjectSelectionChangedEvent<TSelf>.TriggerEvent(
+                    new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!,
+                        selectable.IsSelected));
+
                 // Trigger selection events
-                if (selectable.IsSelected) OnObjectSelectedEvent<TSelf>.TriggerEvent(new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!, selectable.IsSelected));
-                else OnObjectDeselectedEvent<TSelf>.TriggerEvent(new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!, selectable.IsSelected));
+                if (selectable.IsSelected)
+                    OnObjectSelectedEvent<TSelf>.TriggerEvent(
+                        new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!,
+                            selectable.IsSelected));
+                else
+                    OnObjectDeselectedEvent<TSelf>.TriggerEvent(
+                        new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!,
+                            selectable.IsSelected));
             }
 
             if (this is IClickable clickable)
             {
                 clickable.OnClick(eventData);
-                
+
                 // Call the OnClick event.
-                OnObjectClickedEvent<TSelf>.TriggerEvent(new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
+                OnObjectClickedEvent<TSelf>.TriggerEvent(
+                    new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
             }
 
-            if(this is IDoubleClickable doubleClickable)
+            if (this is IDoubleClickable doubleClickable)
             {
                 // Check if the time between two clicks is less than the threshold.
                 if (Time.time - doubleClickable.LastClickTime < doubleClickable.DoubleClickTimeThreshold)
                 {
                     doubleClickable.OnDoubleClick();
-                    
+
                     // Call the OnDoubleClick event.
                     OnObjectDoubleClickedEvent<TSelf>.TriggerEvent(
                         new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
@@ -133,6 +162,5 @@ namespace FastUnityCreationKit.Unity
 
     public abstract class FastMonoBehaviour : MonoBehaviour
     {
-        
     }
 }
