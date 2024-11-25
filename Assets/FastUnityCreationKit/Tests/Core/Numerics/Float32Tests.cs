@@ -1,6 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Abstract;
-using FastUnityCreationKit.Core.Numerics.Types;
 using NUnit.Framework;
 
 namespace FastUnityCreationKit.Tests.Core.Numerics

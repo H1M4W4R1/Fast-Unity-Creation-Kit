@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.Core.Numerics;
-using FastUnityCreationKit.Core.Numerics.Limits;
 
 namespace FastUnityCreationKit.Inventory.Stacking
 {

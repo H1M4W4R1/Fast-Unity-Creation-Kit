@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.Core.Numerics;
-using FastUnityCreationKit.Economy;
+﻿using FastUnityCreationKit.Economy;
 using FastUnityCreationKit.Economy.Abstract;
 using FastUnityCreationKit.Tests.Economy.Data;
 using NUnit.Framework;

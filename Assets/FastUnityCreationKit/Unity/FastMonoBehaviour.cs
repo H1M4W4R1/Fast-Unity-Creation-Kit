@@ -1,5 +1,4 @@
-﻿using System;
-using FastUnityCreationKit.Core.Utility.Initialization;
+﻿using FastUnityCreationKit.Core.Utility.Initialization;
 using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Events.Data;
 using FastUnityCreationKit.Unity.Events.Input;

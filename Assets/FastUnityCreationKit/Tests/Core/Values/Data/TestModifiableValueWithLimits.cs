@@ -1,7 +1,6 @@
 ﻿using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Core.Numerics.Limits;
 using FastUnityCreationKit.Core.Values;
-using FastUnityCreationKit.Core.Values.Abstract;
 
 namespace FastUnityCreationKit.Tests.Core.Values.Data
 {

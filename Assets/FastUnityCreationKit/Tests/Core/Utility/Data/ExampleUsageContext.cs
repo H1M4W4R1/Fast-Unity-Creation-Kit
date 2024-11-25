@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.Context.Abstract;
-using FastUnityCreationKit.Core.Utility.Properties;
 
 namespace FastUnityCreationKit.Tests.Core.Utility.Data
 {

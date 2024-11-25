@@ -1,6 +1,5 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Events.Data;
 using FastUnityCreationKit.Unity.Events.Unity;
 using JetBrains.Annotations;

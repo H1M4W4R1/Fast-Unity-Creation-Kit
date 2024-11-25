@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using FastUnityCreationKit.Inventory;
-using FastUnityCreationKit.Inventory.Stacking;
 using FastUnityCreationKit.Tests.Inventory.Data;
 using NUnit.Framework;
 

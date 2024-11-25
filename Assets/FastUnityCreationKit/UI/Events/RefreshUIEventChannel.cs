@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.Core.Events;
-using FastUnityCreationKit.UI.Abstract;
 
 namespace FastUnityCreationKit.UI.Events
 {

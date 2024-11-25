@@ -1,5 +1,4 @@
-﻿using Unity.Mathematics;
-using UnityEngine.EventSystems;
+﻿using UnityEngine.EventSystems;
 
 namespace FastUnityCreationKit.Unity.Interfaces
 {

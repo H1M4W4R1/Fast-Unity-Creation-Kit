@@ -1,6 +1,4 @@
-﻿using System;
-using FastUnityCreationKit.Core.Utility.Internal;
-using Sirenix.Utilities;
+﻿using FastUnityCreationKit.Core.Utility.Internal;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

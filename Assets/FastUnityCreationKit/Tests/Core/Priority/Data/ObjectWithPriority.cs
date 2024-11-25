@@ -1,5 +1,4 @@
-﻿using System;
-using FastUnityCreationKit.Core.PrioritySystem.Abstract;
+﻿using FastUnityCreationKit.Core.PrioritySystem.Abstract;
 
 namespace FastUnityCreationKit.Tests.Core.Priority.Data
 {

@@ -1,11 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
-using FastUnityCreationKit.Core.Numerics;
 using FastUnityCreationKit.Economy;
 using FastUnityCreationKit.Economy.Events;
 using FastUnityCreationKit.Economy.Events.Data;
 using FastUnityCreationKit.Tests.Economy.Data;
 using NUnit.Framework;
-using UnityEngine;
 using UnityEngine.TestTools;
 
 namespace FastUnityCreationKit.Tests.Economy

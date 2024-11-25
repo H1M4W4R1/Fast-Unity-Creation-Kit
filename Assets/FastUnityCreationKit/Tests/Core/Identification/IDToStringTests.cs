@@ -1,5 +1,4 @@
-﻿using System;
-using FastUnityCreationKit.Core.Identification;
+﻿using FastUnityCreationKit.Core.Identification;
 using NUnit.Framework;
 
 namespace FastUnityCreationKit.Tests.Core.Identification
