@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Sirenix.Utilities;
 
 namespace FastUnityCreationKit.Core.Utility.Internal
@@ -14,6 +15,7 @@ namespace FastUnityCreationKit.Core.Utility.Internal
 	    /// <typeparam name="TSourceType">Source type.</typeparam>
 	    /// <typeparam name="TRequestedType">Requested type.</typeparam>
 	    /// <exception cref="ArgumentException">When the SourceType does not inherit from RequestedType.</exception>
+	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
 	    public static void AssertType<TSourceType, TRequestedType>()
 	    {
 		    #if UNITY_EDITOR
@@ -29,6 +31,7 @@ namespace FastUnityCreationKit.Core.Utility.Internal
 	    /// <typeparam name="TSourceType">Source type.</typeparam>
 	    /// <typeparam name="TRequestedType">Requested type.</typeparam>
 	    /// <exception cref="ArgumentException">When the SourceType inherits from RequestedType.</exception>
+	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
 	    public static void AssertNotType<TSourceType, TRequestedType>()
 	    {
 		    #if UNITY_EDITOR
