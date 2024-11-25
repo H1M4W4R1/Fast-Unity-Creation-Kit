@@ -5,7 +5,6 @@ using FastUnityCreationKit.Unity.Events.Input;
 using FastUnityCreationKit.Unity.Events.Interfaces;
 using FastUnityCreationKit.Unity.Events.Unity;
 using FastUnityCreationKit.Unity.Interfaces;
-using FastUnityCreationKit.Unity.Structure.Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

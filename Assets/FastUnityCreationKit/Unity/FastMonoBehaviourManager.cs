@@ -2,7 +2,7 @@
 using FastUnityCreationKit.Unity.Events.Interfaces;
 using UnityEngine;
 
-namespace FastUnityCreationKit.Unity.Structure.Managers
+namespace FastUnityCreationKit.Unity
 {
     /// <summary>
     /// This class is implementation of FastMonoBehaviour processing.
