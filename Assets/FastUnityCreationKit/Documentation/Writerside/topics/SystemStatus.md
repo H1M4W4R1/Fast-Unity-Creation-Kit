@@ -32,12 +32,12 @@ To create a custom status effect you need to create a class that implements the 
 ```C#
 public sealed class StunnedStatus : IStatus
 {
-    public void OnStatusAdded(IObjectWithStatus entity)
+    public UniTask OnStatusAddedAsync(IStatusContext context)
     {
         // Apply entity stun
     }
 
-    public void OnStatusRemoved(IObjectWithStatus entity)
+    public UniTask OnStatusRemovedAsync(IStatusContext context)
     {
         // Remove entity stun
     }
@@ -62,22 +62,22 @@ public sealed class OverChargeStatus : IPercentageStatus
 {
     float IPercentageStatus.Percentage { get; set; }
 
-    public override void OnStatusAdded(IObjectWithStatus entity)
+    public override UniTask OnStatusAddedAsync(IStatusContext context)
     {
         // Apply entity speed increase by 50%
     }
 
-    public override void OnStatusRemoved(IObjectWithStatus entity)
+    public override UniTask OnStatusRemovedAsync(IStatusContext context)
     {
         // Remove entity speed increase        
     }
     
-    public void OnMaxPercentageReached(IObjectWithStatus objectWithStatus)
+    public UniTask OnMaxPercentageReachedAsync(IStatusContext context)
     {
         // Apply entity stun status
     }
     
-    public void OnMinPercentageReached(IObjectWithStatus objectWithStatus)
+    public void OnMinPercentageReachedAsync(IStatusContext context)
     {
         // Remove entity stun status
     }
@@ -105,26 +105,26 @@ public sealed class SpeedBoostStatus : IStackableStatus
 {
     int32 IStackableStatus.StackCount { get; set; }
 
-    public override void OnStatusAdded(IObjectWithStatus entity)
+    public override UniTask OnStatusAddedAsync(IStatusContext context)
     {
         // Do nothing, stack changed callback will be called
     }
 
-    public override void OnStatusRemoved(IObjectWithStatus entity)
+    public override UniTask OnStatusRemovedAsync(IStatusContext context)
     {
         // Do nothing, stack changed callback will be called
     }
 
-    public void OnStackChanged(IObjectWithStatus objectWithStatus, int amount)
+    public UniTask OnStackCountChangedAsync(IStatusContext context, int amount)
     {
         // Apply entity speed increase or decrease depending on the amount
     }
 
-    public void OnMaxStackReached(IObjectWithStatus objectWithStatus)
+    public UniTask OnMaxStackCountReachedAsync(IStatusContext context)
     {
     }
 
-    public void OnMinStackReached(IObjectWithStatus objectWithStatus)
+    public UniTask OnMinStackCountReachedAsync(IStatusContext context)
     {
     }
 }
@@ -156,23 +156,23 @@ public sealed class PoisonStatus : IStackablePercentageStatus
     int32 IStackableStatus.StackCount { get; set; }
     float IPercentageStatus.Percentage { get; set; }
 
-    public override void OnStatusAdded(IObjectWithStatus entity)
+    public override void OnStatusAddedAsync(IStatusContext context)
     {
     }
 
-    public override void OnStatusRemoved(IObjectWithStatus entity)
+    public override void OnStatusRemovedAsync(IStatusContext context)
     {
     }
 
-    public void OnStackChanged(IObjectWithStatus objectWithStatus, int amount)
+    public void OnStackCountChangedAsync(IStatusContext context, int amount)
     {
     }
 
-    public void OnMaxStackReached(IObjectWithStatus objectWithStatus)
+    public void OnMaxStackCountReachedAsync(IStatusContext context)
     {
     }
 
-    public void OnMinStackReached(IObjectWithStatus objectWithStatus)
+    public void OnMinStackCountReachedAsync(IStatusContext context)
     {
     }
 }
@@ -196,6 +196,12 @@ Statues are removed automatically if:
 - Status is a percentage status and percentage is 0% after update.
 - Status is a stackable status and stack is 0 after update.
 - Status is a stackable percentage status and percentage reaches 0% and stack is 0 after update.
+
+## Additional info about status management
+<note>
+You can also use Async versions of the methods if you need to perform some async operations.
+All async methods use UniTask to provide await functionality.
+</note>
 
 ## Applying status
 To apply a status to an entity you need to call the `ApplyStatus` method on the entity.
@@ -304,7 +310,7 @@ public class ExampleEntity : IWithBannedStatus<StunnedStatus>
 ```
 
 <warning>
-IWithBannedStatus takes precedence over IObjectWithStatus, so even if entity indicates that status is
-supported, it will not be applied if IWithBannedStatus for the status exists, even if it is deeper
+<b>IWithBannedStatus</b> takes precedence over <b>IObjectWithStatus</b>, so even if entity indicates that status is
+supported, it will not be applied if <b>IWithBannedStatus</b> for the status exists, even if it is deeper
 in the inheritance hierarchy.
 </warning>

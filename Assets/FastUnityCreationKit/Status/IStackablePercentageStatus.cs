@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Status.Context;
 
 namespace FastUnityCreationKit.Status
 {
@@ -7,18 +8,18 @@ namespace FastUnityCreationKit.Status
     /// </summary>
     public interface IStackablePercentageStatus : IStackableStatus, IPercentageStatus
     {
-        async UniTask IPercentageStatus.OnMaxPercentageReachedAsync(IObjectWithStatus objectWithStatus)
+        async UniTask IPercentageStatus.OnMaxPercentageReachedAsync(IStatusContext context)
         {
-            await IncreaseStackCountAsync(objectWithStatus);
+            await IncreaseStackCountAsync(context);
             Percentage = 0;
         }
 
-        async UniTask IPercentageStatus.OnMinPercentageReachedAsync(IObjectWithStatus objectWithStatus)
+        async UniTask IPercentageStatus.OnMinPercentageReachedAsync(IStatusContext context)
         {
             // If there are stacks left, decrease the stack count and set the percentage to 100%.
             if (StackCount <= 0) return;
             
-            await DecreaseStackCountAsync(objectWithStatus);
+            await DecreaseStackCountAsync(context);
             Percentage = 1;
         }
     }
