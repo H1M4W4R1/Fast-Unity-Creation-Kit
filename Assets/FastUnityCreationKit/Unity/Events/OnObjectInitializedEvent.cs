@@ -8,7 +8,7 @@ namespace FastUnityCreationKit.Unity.Events
     /// It is not recommended to use this event directly as it may lead to significant code mess.
     /// </summary>
     public sealed class OnObjectInitializedEvent<TFastMonoBehaviour> : 
-        GlobalEventChannel<OnObjectInitializedEvent<TFastMonoBehaviour>, FastMonoBehaviourInitializationEventData<TFastMonoBehaviour>>
+        GlobalEventChannel<OnObjectInitializedEvent<TFastMonoBehaviour>, FastMonoBehaviourEventData<TFastMonoBehaviour>>
         where TFastMonoBehaviour : FastMonoBehaviour<TFastMonoBehaviour>, new()
     {
         

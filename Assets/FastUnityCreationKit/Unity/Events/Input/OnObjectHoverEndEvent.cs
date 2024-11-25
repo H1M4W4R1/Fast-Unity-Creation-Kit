@@ -1,8 +1,7 @@
 ﻿using FastUnityCreationKit.Core.Events;
 using FastUnityCreationKit.Unity.Events.Data;
-using FastUnityCreationKit.Unity.Interfaces;
 
-namespace FastUnityCreationKit.Unity.Events
+namespace FastUnityCreationKit.Unity.Events.Input
 {
     /// <summary>
     /// Represents an event that is triggered when an object hover ends.

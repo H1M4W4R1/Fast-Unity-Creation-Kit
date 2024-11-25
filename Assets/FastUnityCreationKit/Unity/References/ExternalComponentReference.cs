@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Events.Data;
+using FastUnityCreationKit.Unity.Events.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -88,7 +89,7 @@ namespace FastUnityCreationKit.Unity.References
         /// This might get called even if the owner of this reference is destroyed,
         /// but it's heavily recommended to dispose the reference when the owner is destroyed.
         /// </summary>
-        private UniTask OnObjectDestroyed(FastMonoBehaviourDestroyedData<TComponentType> data)
+        private UniTask OnObjectDestroyed(FastMonoBehaviourEventData<TComponentType> data)
         {
             // Check if the reference is the same.
             if (!ReferenceEquals(data.reference, _component)) return UniTask.CompletedTask;
