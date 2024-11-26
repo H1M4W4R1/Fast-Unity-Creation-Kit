@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Core.Events;
+﻿using FastUnityCreationKit.Events;
 using JetBrains.Annotations;
 using UnityEngine.EventSystems;
 

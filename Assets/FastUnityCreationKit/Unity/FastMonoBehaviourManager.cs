@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using FastUnityCreationKit.Core.Utility.Singleton;
+using FastUnityCreationKit.Structure.Singleton;
 using FastUnityCreationKit.Unity.Events.Interfaces;
 using UnityEngine;
 

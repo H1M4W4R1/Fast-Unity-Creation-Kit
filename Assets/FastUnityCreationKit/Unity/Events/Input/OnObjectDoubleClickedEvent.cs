@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Core.Events;
+﻿using FastUnityCreationKit.Events;
 using FastUnityCreationKit.Unity.Events.Data;
 
 namespace FastUnityCreationKit.Unity.Events.Input

@@ -1,6 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using FastUnityCreationKit.Guardian.Logging;
-using UnityEngine;
 
 namespace FastUnityCreationKit.Guardian.Data
 {

@@ -1,6 +1,4 @@
-﻿using FastUnityCreationKit.Core.Utility.Initialization;
-using FastUnityCreationKit.Core.Utility.Singleton;
-using FastUnityCreationKit.Unity.Events.Interfaces;
+﻿using FastUnityCreationKit.Structure.Singleton;
 
 namespace FastUnityCreationKit.Unity.Structure.Managers
 {

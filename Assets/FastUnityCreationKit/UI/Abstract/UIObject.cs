@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Core.Utility.Initialization;
+﻿using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Events.Interfaces;
 
