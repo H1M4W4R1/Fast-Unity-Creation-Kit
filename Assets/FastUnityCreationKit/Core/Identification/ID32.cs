@@ -12,7 +12,7 @@ namespace FastUnityCreationKit.Core.Identification
     /// </summary>
     [BurstCompile]
     [StructLayout(LayoutKind.Explicit)]
-    public readonly struct ID32 : INumberIdentifier<uint32>, IEquatable<ID32>
+    public readonly struct ID32 : INumberIdentifier<uint>, IEquatable<ID32>
     {
         [FieldOffset(0)] public readonly uint value;
         [FieldOffset(4)] public readonly byte isCreated;
@@ -53,6 +53,6 @@ namespace FastUnityCreationKit.Core.Identification
         public override string ToString() => value.ToString();
         
         /// <inheritdoc/>
-        public uint32 Value => value;
+        public uint Value => value;
     }
 }

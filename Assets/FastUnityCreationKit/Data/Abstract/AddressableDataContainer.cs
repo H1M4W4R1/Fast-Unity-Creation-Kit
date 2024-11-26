@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿#if DISABLED
+using System.Collections.Generic;
 using FastUnityCreationKit.Data.Interfaces;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
-using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace FastUnityCreationKit.Data.Abstract
 {
@@ -59,3 +58,4 @@ namespace FastUnityCreationKit.Data.Abstract
         }
     }
 }
+#endif

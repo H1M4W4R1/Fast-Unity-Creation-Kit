@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using FastUnityCreationKit.Data.Interfaces;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Data.Abstract
@@ -9,7 +8,7 @@ namespace FastUnityCreationKit.Data.Abstract
     /// Represents a core data container that is used to store data of a specific type.
     /// </summary>
     public abstract class IndexedDataContainerBase<TIndexType, TDataType> : 
-        IIndexedDataContainer<TIndexType, TDataType>, IIndexableBy<TDataType, int>
+        IIndexedDataContainer<TIndexType, TDataType>
     {
         protected readonly List<TDataType> data = new();
         protected readonly List<TIndexType> indices = new();

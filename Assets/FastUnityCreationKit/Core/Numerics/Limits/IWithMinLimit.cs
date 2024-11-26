@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+﻿using System;
 
 namespace FastUnityCreationKit.Core.Numerics.Limits
 {
@@ -6,14 +6,22 @@ namespace FastUnityCreationKit.Core.Numerics.Limits
     /// Represents a minimum limit for a number.
     /// Used on an object with a numeric context - for example a status effect that reduces health by a certain amount.
     /// </summary>
-    public interface IWithMinLimit<TNumber> : ILimit<TNumber> 
-        where TNumber : struct, INumber, ISupportsFloatConversion<TNumber>
+    /// <remarks>
+    /// If TNumber is not numeric type a lot of f-up will happen.
+    /// </remarks>
+    public interface IWithMinLimit<out TNumber> : IWithMinLimit
+        where TNumber : notnull
     {
-     
         /// <summary>
         /// Minimum limit for the number.
         /// </summary>
-        public TNumber MinLimit { get; }
+        public new TNumber MinLimit { get; }
         
+        float IWithMinLimit.MinLimit => Convert.ToSingle(MinLimit);
+    }
+    
+    public interface IWithMinLimit : ILimited
+    {
+        public float MinLimit { get; }
     }
 }

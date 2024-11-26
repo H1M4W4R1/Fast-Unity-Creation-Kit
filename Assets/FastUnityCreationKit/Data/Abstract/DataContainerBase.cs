@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using FastUnityCreationKit.Data.Interfaces;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Data.Abstract

@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Core.Utility.Internal;
+﻿using FastUnityCreationKit.Guardian;
+using JetBrains.Annotations;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -15,9 +16,14 @@ namespace FastUnityCreationKit.Core.Utility.Singleton
         /// Gets the instance of the singleton.
         /// Overwrites <see cref="ISingleton{TSelf}.GetInstance"/>
         /// </summary>
-        public new static TSelf GetInstance()
+        [NotNull] public new static TSelf GetInstance()
         {
-            Validation.AssertType<TSelf, MonoBehaviour>();
+            // Ensure that the type is a MonoBehaviour
+            if (Check.ThatType<TSelf>().Is<MonoBehaviour>()
+                .EditorLogIfTrue(LogType.Error, 
+                    $"IMonoBehaviourSingleton: [{nameof(TSelf)}] must be a MonoBehaviour")
+                .HasFailed())
+                return ISingleton<TSelf>.GetInstance();
 
             // Check if the instance exists
             if (Instance) return Instance;

@@ -1,12 +1,10 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
-
-namespace FastUnityCreationKit.Core.Identification.Abstract.Identifiers
+﻿namespace FastUnityCreationKit.Core.Identification.Abstract.Identifiers
 {
     /// <summary>
     /// Represents identifier with number data for given number type.
     /// </summary>
-    public interface INumberIdentifier<out TNumber> : INumberIdentifier
-        where TNumber : INumber
+    public interface INumberIdentifier<out TNumber> : INumberIdentifier 
+        where TNumber : notnull
     {
         /// <summary>
         /// Gets value of the identifier.

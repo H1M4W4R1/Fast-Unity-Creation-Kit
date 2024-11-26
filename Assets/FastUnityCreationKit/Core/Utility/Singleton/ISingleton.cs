@@ -1,6 +1,8 @@
-﻿using FastUnityCreationKit.Core.Utility.Internal;
+﻿using System;
+using FastUnityCreationKit.Guardian;
 using JetBrains.Annotations;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Core.Utility.Singleton
 {
@@ -12,9 +14,8 @@ namespace FastUnityCreationKit.Core.Utility.Singleton
     public interface ISingleton<TSelf> : IUnsafeSingleton<TSelf>
         where TSelf : ISingleton<TSelf>, new()
     {
-       
     }
-    
+
     /// <summary>
     /// This represents a singleton object that is not type-safe.
     /// It is strongly recommended to use <see cref="ISingleton{TSelf}"/> instead as
@@ -25,19 +26,25 @@ namespace FastUnityCreationKit.Core.Utility.Singleton
         /// <summary>
         /// The instance of the singleton.
         /// </summary>
-        [CanBeNull] protected static TSelf Instance { get; set; }
+        [CanBeNull]
+        protected static TSelf Instance { get; set; }
 
-        [NotNull] public static TSelf GetInstance()
+        [NotNull]
+        public static TSelf GetInstance()
         {
-            // Throw if the type is not a regular class, but Unity Object
-            Validation.AssertNotType<TSelf, Object>();
-            
+            // Ensure that the type is not a UnityEngine.Object
+            if (Check.ThatType<TSelf>().IsNot<Object>()
+                .EditorLogIfTrue(LogType.Error, 
+                    $"ISingleton: [{nameof(TSelf)}] cannot be a UnityEngine.Object")
+                .HasFailed())
+                throw new NotSupportedException("The singleton cannot be a UnityEngine.Object");
+
             // Check if the instance exists
-            if(Instance != null) return Instance;
-            
+            if (Instance != null) return Instance;
+
             // Create a new instance
             Instance = new TSelf();
-            
+
             // Return the instance
             return Instance!;
         }
@@ -45,6 +52,5 @@ namespace FastUnityCreationKit.Core.Utility.Singleton
 
     public interface ISingleton
     {
-        
     }
 }

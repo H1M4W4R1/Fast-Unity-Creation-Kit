@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.Core.Identification
     /// </summary>
     [BurstCompile]
     [StructLayout(LayoutKind.Explicit)]
-    public readonly struct ID64 : INumberIdentifier<uint64>, IEquatable<ID64>
+    public readonly struct ID64 : INumberIdentifier<ulong>, IEquatable<ID64>
     {
         [FieldOffset(0)] public readonly uint4 vectorized; // 16B
         
@@ -55,6 +55,6 @@ namespace FastUnityCreationKit.Core.Identification
         public override string ToString() => value.ToString();
         
         /// <inheritdoc/>
-        public uint64 Value => value;
+        public ulong Value => value;
     }
 }

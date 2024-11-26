@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Core.Numerics.Abstract;
+﻿using System;
 
 namespace FastUnityCreationKit.Core.Numerics.Limits
 {
@@ -6,14 +6,22 @@ namespace FastUnityCreationKit.Core.Numerics.Limits
     /// Represents a maximum limit for a number.
     /// Used on an object with a numeric context - for example a status effect that reduces health by a certain amount.
     /// </summary>
-    public interface IWithMaxLimit<TNumber> : ILimit<TNumber> 
-        where TNumber : struct, INumber, ISupportsFloatConversion<TNumber>
+    /// <remarks>
+    /// If TNumber is not numeric type a lot of f-up will happen.
+    /// </remarks>
+    public interface IWithMaxLimit<out TNumber> : IWithMaxLimit
+        where TNumber : notnull
     {
-        
         /// <summary>
         /// Maximum limit for the number.
         /// </summary>
-        public TNumber MaxLimit { get; }
+        public new TNumber MaxLimit { get; }
         
+        float IWithMaxLimit.MaxLimit => Convert.ToSingle(MaxLimit);
+    }
+    
+    public interface IWithMaxLimit : ILimited
+    {
+        public float MaxLimit { get; }
     }
 }

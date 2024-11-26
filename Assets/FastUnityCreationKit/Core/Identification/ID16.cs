@@ -11,7 +11,7 @@ namespace FastUnityCreationKit.Core.Identification
     /// Represents 16-bit non-unique identifier.
     /// </summary>
     [BurstCompile] [StructLayout(LayoutKind.Explicit)]
-    public readonly struct ID16 : INumberIdentifier<uint16>, IEquatable<ID16>
+    public readonly struct ID16 : INumberIdentifier<ushort>, IEquatable<ID16>
     {
         [FieldOffset(0)] public readonly ushort value;
         [FieldOffset(2)] public readonly byte isCreated;
@@ -50,6 +50,6 @@ namespace FastUnityCreationKit.Core.Identification
         public override string ToString() => value.ToString();
         
         /// <inheritdoc/>
-        public uint16 Value => value;
+        public ushort Value => value;
     }
 }

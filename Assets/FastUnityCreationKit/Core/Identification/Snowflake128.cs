@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Core.Identification.Abstract.Identifiers;
 using FastUnityCreationKit.Core.Numerics;
+using Unity.Mathematics;
 
 namespace FastUnityCreationKit.Core.Identification
 {
@@ -21,7 +22,7 @@ namespace FastUnityCreationKit.Core.Identification
     [StructLayout(LayoutKind.Explicit)]
     public readonly struct Snowflake128 : IUniqueIdentifier, IEquatable<Snowflake128>
     {
-        [FieldOffset(0)] public readonly v128 vectorized;
+        [FieldOffset(0)] public readonly int4 vectorized;
         [FieldOffset(0)] public readonly long timestamp;
         [FieldOffset(8)] public readonly uint identifierData;
         [FieldOffset(12)] public readonly ushort additionalData;
@@ -48,7 +49,7 @@ namespace FastUnityCreationKit.Core.Identification
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Snowflake128 other) =>
-             other.vectorized == vectorized;
+             math.all(other.vectorized == vectorized);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Equals(object obj)
