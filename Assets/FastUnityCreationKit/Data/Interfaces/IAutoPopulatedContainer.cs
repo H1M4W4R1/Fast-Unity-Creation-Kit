@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Data.Interfaces
+﻿using Cysharp.Threading.Tasks;
+
+namespace FastUnityCreationKit.Data.Interfaces
 {
     /// <summary>
     /// Represents a container that is auto-populated with data on first creation of instance.
@@ -14,7 +16,7 @@
         /// <summary>
         /// Populates the container with data.
         /// </summary>
-        public void Populate();
+        public UniTask Populate();
 
         /// <summary>
         /// Used to ensure that the container is populated and ready to be used.

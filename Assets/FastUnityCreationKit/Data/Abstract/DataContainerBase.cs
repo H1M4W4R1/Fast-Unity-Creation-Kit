@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using FastUnityCreationKit.Data.Interfaces;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Data.Abstract
@@ -10,8 +12,9 @@ namespace FastUnityCreationKit.Data.Abstract
     public abstract class DataContainerBase<TDataType> : IDataContainer<TDataType>
     {
         /// <summary>
-        /// Data storage.
+        /// Data storage. 
         /// </summary>
+        [ShowInInspector] [ReadOnly] [OdinSerialize]
         protected readonly List<TDataType> data = new();
         
         /// <summary>

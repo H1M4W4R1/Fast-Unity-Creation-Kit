@@ -1,61 +1,91 @@
-﻿#if DISABLED
+﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Data.Interfaces;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Data.Abstract
 {
     /// <summary>
     /// This is a container that is auto-populated with data that is stored in an addressable asset group.
     /// </summary>
-    /// <typeparam name="TDataType"></typeparam>
-    public abstract class AddressableDataContainer<TDataType> : DataContainerBase<TDataType>, IAutoPopulatedContainer
+    /// <typeparam name="TDataType">Type of data that is stored in the container.</typeparam>
+    public abstract class AddressableDataContainer<TDataType> : SerializedScriptableObject,
+        IDataContainer<TDataType>, IAutoPopulatedContainer
         where TDataType : Object
     {
+        /// <summary>
+        /// Internal data container.
+        /// </summary>
+        [ShowInInspector] [ReadOnly] [OdinSerialize]
+        private readonly AddressableDataContainerStorageObject _internalContainer = new();
+
+#if UNITY_EDITOR
         [Header("Addressable Asset Group")]
         [Required]
         [SerializeField]
         [NotNull]
-        protected AddressableAssetGroup addressableAssetGroup = default!;
-        
-        private int _loadCount;
-        private int _loadedCount;
-        
+        protected string addressableTag = string.Empty;
+#endif
+
         /// <summary>
         /// Checks if the data container is populated.
         /// </summary>
-        public bool IsPopulated => _loadedCount == _loadCount;
-        
-        public void Populate()
+        public bool IsPopulated => _isCompleted;
+
+        public async UniTask Populate()
         {
-            // Clear the data before populating
-            Clear();
+            // Clear loading status and internal container
+            _isCompleted = false;
+            _internalContainer.Clear();
 
-            // Get all the assets in the addressable asset group
-            ICollection<AddressableAssetEntry> entries = addressableAssetGroup.entries;
-
-            // Add all the assets to the data container
-            foreach (AddressableAssetEntry entry in entries)
-            {
-                // Load asset
-                _loadCount++;
-                AsyncOperationHandle<TDataType> loadRequest = Addressables.LoadAssetAsync<TDataType>(entry.guid);
-                loadRequest.Completed += handle =>
+            // Load all assets from the addressable asset group based on asset tag
+            _loadHandle = Addressables.LoadAssetsAsync<TDataType>(addressableTag,
+                foundObject =>
                 {
-                    Add(handle.Result);
-                    _loadedCount++;
-                };
-                
-                // We don't store the handle because we don't need to release the asset
-                // as it is stored in the data container permanently
-                
-                // Also we don't care about order of completion as we are just populating the data
-                // so we don't need to wait for the completion of the load request
-            }
+                    Debug.Log("Found: " + foundObject);
+                    _internalContainer.Add(foundObject);
+                });
+
+            // Wait for loading to be completed.
+            await _loadHandle.Task;
+
+            // Mark assets as loaded
+            _isCompleted = true;
         }
+
+        [Serializable]
+        private sealed class AddressableDataContainerStorageObject : DataContainerBase<TDataType>
+        {
+        }
+
+#region LOADING_DATA
+
+        private bool _isCompleted;
+        private AsyncOperationHandle<IList<TDataType>> _loadHandle;
+
+#endregion
+
+#region IDataContainer
+
+        public TDataType this[int index] => _internalContainer[index];
+
+        public void Add(TDataType data) => _internalContainer.Add(data);
+
+        public void Remove(TDataType data) => _internalContainer.Remove(data);
+
+        public void Clear() => _internalContainer.Clear();
+
+        public bool Contains(TDataType data) => _internalContainer.Contains(data);
+
+        public int Count => _internalContainer.Count;
+
+#endregion
     }
 }
-#endif
