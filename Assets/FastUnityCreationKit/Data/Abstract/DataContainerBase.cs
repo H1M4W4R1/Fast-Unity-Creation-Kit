@@ -8,7 +8,7 @@ namespace FastUnityCreationKit.Data.Abstract
     /// <summary>
     /// Represents a core data container that is used to store data of a specific type.
     /// </summary>
-    public abstract class DataContainerBase<TDataType> : IDataContainer<TDataType>, IIndexableBy<TDataType, int>
+    public abstract class DataContainerBase<TDataType> : IDataContainer<TDataType>
     {
         /// <summary>
         /// Data storage.

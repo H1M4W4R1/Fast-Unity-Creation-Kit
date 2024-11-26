@@ -15,5 +15,10 @@
         /// Populates the container with data.
         /// </summary>
         public void Populate();
+
+        /// <summary>
+        /// Used to ensure that the container is populated and ready to be used.
+        /// </summary>
+        public bool IsPopulated { get; }
     }
 }

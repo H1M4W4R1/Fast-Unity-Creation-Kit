@@ -5,7 +5,7 @@ namespace FastUnityCreationKit.Data.Interfaces
     /// <summary>
     /// Represents a data container that is used to store data of a specific type.
     /// </summary>
-    public interface IDataContainer<in TDataType>
+    public interface IDataContainer<TDataType> : IIndexableBy<TDataType, int>
     {
         /// <summary>
         /// Adds the data to the container.
