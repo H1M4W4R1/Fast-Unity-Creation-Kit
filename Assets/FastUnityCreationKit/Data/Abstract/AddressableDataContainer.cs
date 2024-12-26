@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Data.Attributes;
 using FastUnityCreationKit.Data.Interfaces;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
@@ -17,14 +18,16 @@ namespace FastUnityCreationKit.Data.Abstract
     /// </summary>
     /// <typeparam name="TDataType">Type of data that is stored in the container.</typeparam>
     public abstract class AddressableDataContainer<TDataType> : SerializedScriptableObject,
-        IDataContainer<TDataType>, IAutoPopulatedContainer
+        IDataContainer<TDataType>, IAutoPopulatedContainer, ISelfValidator
         where TDataType : Object
     {
         /// <summary>
         /// Internal data container.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [OdinSerialize]
-        private readonly AddressableDataContainerStorageObject _internalContainer = new();
+        [ShowInInspector]
+        [ReadOnly]
+        [OdinSerialize]
+        protected readonly AddressableDataContainerStorageObject internalContainer = new();
 
 #if UNITY_EDITOR
         [Header("Addressable Asset Group")]
@@ -43,15 +46,11 @@ namespace FastUnityCreationKit.Data.Abstract
         {
             // Clear loading status and internal container
             _isCompleted = false;
-            _internalContainer.Clear();
+            internalContainer.Clear();
 
             // Load all assets from the addressable asset group based on asset tag
             _loadHandle = Addressables.LoadAssetsAsync<TDataType>(addressableTag,
-                foundObject =>
-                {
-                    Debug.Log("Found: " + foundObject);
-                    _internalContainer.Add(foundObject);
-                });
+                foundObject => internalContainer.Add(foundObject));
 
             // Wait for loading to be completed.
             await _loadHandle.Task;
@@ -60,8 +59,14 @@ namespace FastUnityCreationKit.Data.Abstract
             _isCompleted = true;
         }
 
+        /// <summary>
+        /// Internal data container storage object.
+        /// </summary>
         [Serializable]
-        private sealed class AddressableDataContainerStorageObject : DataContainerBase<TDataType>
+        [NoDuplicates]
+        [NoNullEntries]
+        [OnlySealedElements]
+        protected sealed class AddressableDataContainerStorageObject : DataContainerBase<TDataType>
         {
         }
 
@@ -74,17 +79,31 @@ namespace FastUnityCreationKit.Data.Abstract
 
 #region IDataContainer
 
-        public TDataType this[int index] => _internalContainer[index];
+        public TDataType this[int index] => internalContainer[index];
 
-        public void Add(TDataType data) => _internalContainer.Add(data);
+        public IReadOnlyList<TDataType> All => internalContainer.All;
 
-        public void Remove(TDataType data) => _internalContainer.Remove(data);
+        public void Add(TDataType data) => internalContainer.Add(data);
 
-        public void Clear() => _internalContainer.Clear();
+        public void Remove(TDataType data) => internalContainer.Remove(data);
 
-        public bool Contains(TDataType data) => _internalContainer.Contains(data);
+        public void Clear() => internalContainer.Clear();
 
-        public int Count => _internalContainer.Count;
+        public bool Contains(TDataType data) => internalContainer.Contains(data);
+
+        public int Count => internalContainer.Count;
+
+        public void RemoveAt(int index) => internalContainer.RemoveAt(index);
+
+#endregion
+
+#region ISelfValidator
+
+        public void Validate(SelfValidationResult result)
+        {
+            // Validate internal container
+            internalContainer.Validate(result);
+        }
 
 #endregion
     }

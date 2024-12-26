@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Data.Interfaces
 {
@@ -7,6 +8,11 @@ namespace FastUnityCreationKit.Data.Interfaces
     /// </summary>
     public interface IDataContainer<TDataType> : IDataContainer, IIndexableBy<TDataType, int>
     {
+        /// <summary>
+        /// All available objects in the container.
+        /// </summary>
+        public IReadOnlyList<TDataType> All { get; }
+        
         /// <summary>
         /// Adds the data to the container.
         /// </summary>
@@ -31,8 +37,12 @@ namespace FastUnityCreationKit.Data.Interfaces
         /// Count of the data items in the container.
         /// </summary>
         public int Count { get; }
-        
-        
+
+        /// <summary>
+        /// Returns the data at the specified index.
+        /// </summary>
+        public void RemoveAt(int index);
+
     }
 
     /// <summary>

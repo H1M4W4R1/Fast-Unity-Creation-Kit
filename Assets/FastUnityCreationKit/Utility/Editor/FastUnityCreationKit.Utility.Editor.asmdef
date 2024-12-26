@@ -1,0 +1,14 @@
+{
+	"name": "FastUnityCreationKit.Utility.Editor",
+	"allowUnsafeCode": true,
+	"includePlatforms": [
+		"Editor"
+	],
+	"references": [
+		"GUID:69448af7b92c7f342b298e06a37122aa",
+		"GUID:2088dbdb78944d69805c321ad476fa6f",
+		"GUID:877cb650da554d888813e8f994e2e639",
+		"GUID:f51ebe6a0ceec4240a699833d6309b23"
+	]
+	
+}

@@ -21,6 +21,11 @@ namespace FastUnityCreationKit.Identification.Identifiers
     [StructLayout(LayoutKind.Explicit)]
     public readonly struct Snowflake128 : IUniqueIdentifier, IEquatable<Snowflake128>
     {
+        /// <summary>
+        /// Local counter for id creation
+        /// </summary>
+        private static uint idGeneratorCounter;
+        
         [FieldOffset(0)] public readonly int4 vectorized;
         [FieldOffset(0)] public readonly long timestamp;
         [FieldOffset(8)] public readonly uint identifierData;
@@ -36,7 +41,7 @@ namespace FastUnityCreationKit.Identification.Identifiers
         /// </summary>
         public Snowflake128(long timestamp, uint identifierData, ushort additionalData)
         {
-            // This value is overriden by remaining data and thus should be ignored
+            // This value is overriden by remaining data and thus should be ignored 
             vectorized = default;
             
             this.timestamp = timestamp;
@@ -67,7 +72,9 @@ namespace FastUnityCreationKit.Identification.Identifiers
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString() =>
-             $"{timestamp:X16}-{identifierData:X8}-{additionalData:X4}";
+             $"{timestamp:X16}-{identifierData:X8}-{additionalData:X4}-{reserved:X2}-{created:X2}";
         
+       public static Snowflake128 Empty => default;
+       public static Snowflake128 New => new Snowflake128(DateTime.UtcNow.Ticks, idGeneratorCounter++, 0);
     }
 }

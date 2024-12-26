@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
+using FastUnityCreationKit.Unity.Events.Data;
+using FastUnityCreationKit.Unity.Events.Input;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace FastUnityCreationKit.Unity.Interfaces
 {
     /// <summary>
     /// Represents an object that can be selected.
     /// </summary>
-    public interface ISelectable
+    public interface ISelectable<TSelf> : ISelectable, IPointerClickHandler
+        where TSelf : FastMonoBehaviour<TSelf>, new()
     {
         /// <summary>
         /// Checks if the multi-selection key is pressed.
@@ -15,11 +19,6 @@ namespace FastUnityCreationKit.Unity.Interfaces
         /// </summary>
         public static bool MultiSelectionKeyIsPressed =>
             Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
-
-        /// <summary>
-        /// List of all selected objects.
-        /// </summary>
-        [UsedImplicitly] protected static List<ISelectable> SelectedObjects { get; } = new();
         
         public bool IsSelected { get; protected set; }
 
@@ -52,5 +51,29 @@ namespace FastUnityCreationKit.Unity.Interfaces
         /// Called when the object is selected.
         /// </summary>
         public void OnSelectionChanged(bool previousSelectionState, bool newSelectionState);
+
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+        {
+            _ReverseSelectionState();
+
+            OnObjectSelectionChangedEvent<TSelf>.TriggerEvent(
+                new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!, IsSelected));
+
+            // Trigger selection events
+            if (IsSelected)
+                OnObjectSelectedEvent<TSelf>.TriggerEvent(
+                    new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!, IsSelected));
+            else
+                OnObjectDeselectedEvent<TSelf>.TriggerEvent(
+                    new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!, IsSelected));
+        }
+    }
+
+    public interface ISelectable
+    {
+        /// <summary>
+        /// List of all selected objects.
+        /// </summary>
+        [UsedImplicitly] protected static List<ISelectable> SelectedObjects { get; } = new();
     }
 }

@@ -1,6 +1,12 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Context.Interface;
+using FastUnityCreationKit.Data.Containers.Interfaces;
+using FastUnityCreationKit.Data.Interfaces;
+using FastUnityCreationKit.Identification;
 using FastUnityCreationKit.Status.References;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Limits;
 using UnityEngine;
 
@@ -8,62 +14,71 @@ namespace FastUnityCreationKit.Status.Abstract
 {
     /// <summary>
     /// This class represents a core status that is used to store status data.
-    /// </summary>
+    /// </summary> 
     /// <remarks>
     /// Supports int64 limits.
     /// </remarks>
+    [AutoCreatedObject(Directories.STATUS_PATH)]
+    [AddressableGroup(Directories.STATUS_PATH, Directories.STATUS_PATH)]
     public abstract class StatusBase<TStatusTarget> : StatusBase
     {
+    }
+
+    /// <summary>
+    /// Internal status base class, do not use.
+    /// </summary>
+    public abstract class StatusBase : UniqueDefinitionBase, IDefinition<StatusBase>,
+        IWithDatabase<StatusDatabase, StatusBase>
+    {
         /// <summary>
-        /// Called when status is applied to the target when the target is not affected by the status.
+        /// Gets the database for the object.
         /// </summary>
-        public virtual async UniTask OnStatusApplied(IContextWithTarget<TStatusTarget> context) =>
+        public StatusDatabase Database => StatusDatabase.Instance;
+        
+        /// <summary>
+        /// Called when status is applied to the target when the target is not affected by the status. 
+        /// </summary>
+        public virtual async UniTask OnStatusApplied(IContextWithTarget context) =>
             await UniTask.CompletedTask;
 
         /// <summary>
         /// Called when status is removed from the target when the target is affected by the status.
         /// </summary>
-        public virtual async UniTask OnStatusRemoved(IContextWithTarget<TStatusTarget> context) =>
+        public virtual async UniTask OnStatusRemoved(IContextWithTarget context) =>
             await UniTask.CompletedTask;
 
         /// <summary>
         /// Called when status level is changed. For percentage status it's also known as 100% stack level change.
         /// </summary>
-        public virtual async UniTask OnStatusLevelChanged(IContextWithTarget<TStatusTarget> context) =>
+        public virtual async UniTask OnStatusLevelChanged(IContextWithTarget context, long difference) =>
             await UniTask.CompletedTask;
 
         /// <summary>
         /// Called when maximum percentage is reached.
         /// Must support IWithMaxLimit, otherwise it will never be called.
         /// </summary>
-        public virtual async UniTask OnMaxLimitReached(IContextWithTarget<TStatusTarget> context) =>
+        public virtual async UniTask OnMaxLimitReached(IContextWithTarget context) =>
             await UniTask.CompletedTask;
 
         /// <summary>
         /// Called when minimum percentage is reached.
         /// Must support IWithMinLimit, otherwise it will never be called.
         /// </summary>
-        public virtual async UniTask OnMinLimitReached(IContextWithTarget<TStatusTarget> context) =>
+        public virtual async UniTask OnMinLimitReached(IContextWithTarget context) =>
             await UniTask.CompletedTask;
-    }
 
-    /// <summary>
-    /// Internal status base class, do not use.
-    /// </summary>
-    public abstract class StatusBase : ScriptableObject
-    {
         /// <summary>
         /// Ensure limits for specified status reference.
         /// </summary>
-        public LimitHit EnsureLimitsFor(ref AppliedStatusReference statusReference)
+        public LimitHit EnsureLimitsFor(AppliedStatusReference statusReference)
         {
             // Check if this status is limited, if not, return.
             if (this is not ILimited) return LimitHit.None;
 
             // Check if reference has same status as this status, if not, return with error.
-            if (!ReferenceEquals(statusReference.status, this))
+            if (!ReferenceEquals(statusReference.Status, this))
             {
-                Debug.LogError($"Status reference has different status [{statusReference.status}] than this status.",
+                Debug.LogError($"Status reference has different status [{statusReference.Status}] than this status.",
                     this);
                 return LimitHit.None;
             }
@@ -83,6 +98,17 @@ namespace FastUnityCreationKit.Status.Abstract
             }
 
             return LimitHit.None;
+        }
+
+        private void Awake()
+        { 
+            if(!Database.Contains(this))
+                Database.Add(this);
+        }
+
+        private void OnDestroy()
+        {
+            Database.Remove(this);
         }
     }
 }

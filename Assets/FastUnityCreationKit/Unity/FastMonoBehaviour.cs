@@ -14,8 +14,7 @@ namespace FastUnityCreationKit.Unity
     /// Base class for all MonoBehaviours compatible with the FastUnityCreationKit.
     /// Used to automatically handle interface processing.
     /// </summary>
-    public abstract class FastMonoBehaviour<TSelf> : FastMonoBehaviour, IPointerEnterHandler,
-        IPointerExitHandler, IPointerClickHandler
+    public abstract class FastMonoBehaviour<TSelf> : FastMonoBehaviour
         where TSelf : FastMonoBehaviour<TSelf>, new()
     {
         /// <summary>
@@ -37,7 +36,8 @@ namespace FastUnityCreationKit.Unity
 
                     // Log warning in editor's console to notify the user.
 #if UNITY_EDITOR
-                    Debug.LogWarning($"Persistent object {name} is not on the root level. This may cause unexpected behavior.", this);
+                    Debug.LogWarning($"Persistent object {name} is not on the root level. This may cause unexpected behavior." +
+                                     $"Fail-safe triggered: moving object to root layer.", this);
 #endif
                 }
 
@@ -62,7 +62,7 @@ namespace FastUnityCreationKit.Unity
                 createCallback.OnObjectCreated();
 
             // If this is both clickable and selectable print warning.
-            if (this is IClickable and ISelectable)
+            if (this is IClickable<TSelf> and ISelectable)
                 Debug.LogWarning("Object is both clickable and selectable. This may cause unexpected behavior.");
         }
 
@@ -89,74 +89,6 @@ namespace FastUnityCreationKit.Unity
 
             // Unregister this object from the object registry.
             FastMonoBehaviourManager.Instance.UnregisterFastMonoBehaviour(this);
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            if (this is IHoverable hoverable)
-            {
-                hoverable.OnHoverEnter(eventData);
-
-                // Call the OnHoverStart event.
-                OnObjectHoverStartEvent<TSelf>.TriggerEvent(
-                    new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
-            }
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            if (this is IHoverable hoverable)
-            {
-                hoverable.OnHoverExit(eventData);
-
-                // Call the OnHoverEnd event.
-                OnObjectHoverEndEvent<TSelf>.TriggerEvent(
-                    new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
-            }
-        }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (this is ISelectable selectable)
-            {
-                selectable._ReverseSelectionState();
-
-                OnObjectSelectionChangedEvent<TSelf>.TriggerEvent(
-                    new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!,
-                        selectable.IsSelected));
-
-                // Trigger selection events
-                if (selectable.IsSelected)
-                    OnObjectSelectedEvent<TSelf>.TriggerEvent(
-                        new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!,
-                            selectable.IsSelected));
-                else
-                    OnObjectDeselectedEvent<TSelf>.TriggerEvent(
-                        new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!,
-                            selectable.IsSelected));
-            }
-
-            if (this is IClickable clickable)
-            {
-                clickable.OnClick(eventData);
-
-                // Call the OnClick event.
-                OnObjectClickedEvent<TSelf>.TriggerEvent(
-                    new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
-            }
-
-            if (this is IDoubleClickable doubleClickable)
-            {
-                // Check if the time between two clicks is less than the threshold.
-                if (Time.time - doubleClickable.LastClickTime < doubleClickable.DoubleClickTimeThreshold)
-                {
-                    doubleClickable.OnDoubleClick();
-
-                    // Call the OnDoubleClick event.
-                    OnObjectDoubleClickedEvent<TSelf>.TriggerEvent(
-                        new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
-                }
-            }
         }
     }
 

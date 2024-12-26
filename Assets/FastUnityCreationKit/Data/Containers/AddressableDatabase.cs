@@ -1,0 +1,50 @@
+﻿using System.Collections.Generic;
+using FastUnityCreationKit.Data.Abstract;
+using FastUnityCreationKit.Data.Containers.Interfaces;
+using FastUnityCreationKit.Data.Interfaces;
+using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+namespace FastUnityCreationKit.Data.Containers
+{
+    /// <summary>
+    /// Storage for addressable definitions.
+    /// </summary>
+    public abstract class AddressableDatabase<TSelfSealed, TDataType> : AddressableDefinitionContainer<TDataType>, 
+        IDatabase<TDataType>
+        where TSelfSealed : AddressableDatabase<TSelfSealed, TDataType>, new()
+        where TDataType : ScriptableObject, IDefinition<TDataType>
+    {
+        private static TSelfSealed _instance;
+
+        /// <summary>
+        /// Get the instance of the database.
+        /// </summary>
+        public static TSelfSealed Instance
+        {
+            get
+            {
+                // ReferenceEquals is used to check if the instance is null
+                // this way we don't check Unity object lifecycle which is expensive
+                // so the performance of this method is as fast as possible
+                // and on-par with regular class null check.
+                //
+                // We assume that instance will be either null or a reference to database
+                // ScriptableObject, so we don't need to check if it's destroyed.
+                // The issue will arise if user will destroy the database, but it's not
+                // within specification to destroy the database, as database is managed by the system.
+                if(!ReferenceEquals(_instance, null)) return _instance;
+                
+                // Load the database 
+                AsyncOperationHandle<TSelfSealed> awaitable = 
+                    Addressables.LoadAssetAsync<TSelfSealed>(typeof(TSelfSealed).Name);
+                awaitable.WaitForCompletion();
+                
+                _instance = awaitable.Result;
+                return _instance;
+            }
+        }
+    }
+}

@@ -37,8 +37,8 @@ namespace FastUnityCreationKit.Structure.Singleton
             // Create a new instance
             Instance = new GameObject(nameof(TSelf)).AddComponent<TSelf>();
 
-            // Return the instance
-            return Instance;
+            // Return the instance, most likely won't be null as long as TSelf is a MonoBehaviour
+            return Instance!;
         }
     }
 }

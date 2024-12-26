@@ -1,9 +1,15 @@
-﻿namespace FastUnityCreationKit.Unity.Interfaces
+﻿using FastUnityCreationKit.Unity.Events.Data;
+using FastUnityCreationKit.Unity.Events.Input;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+namespace FastUnityCreationKit.Unity.Interfaces
 {
     /// <summary>
-    /// Represents an object that can be double clicked.
+    /// Represents an object that can be double-clicked.
     /// </summary>
-    public interface IDoubleClickable
+    public interface IDoubleClickable<TSelf> : IClickable<TSelf>
+        where TSelf : FastMonoBehaviour<TSelf>, new()
     {
         /// <summary>
         /// Represents the time of the last click.
@@ -17,8 +23,39 @@
         internal float DoubleClickTimeThreshold { get; }
 
         /// <summary>
+        /// Default implementation for the OnClick method.
+        /// </summary>
+        /// <param name="pointerData">The pointer event data.</param>
+        void IClickable<TSelf>.OnClick(PointerEventData pointerData)
+        {
+            // Do nothing.
+        }
+        
+        /// <summary>
         /// Called when the object is double-clicked.
         /// </summary>
         public void OnDoubleClick();
+        
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+        {
+            // Handle click in case this object is also single-clickable
+            // to remove requirement of overwriting this method to remove
+            // multi-interface collision issue.
+            OnClick(eventData);
+            
+            // Check if the time between the last click and the current click is less than the double click threshold.
+            if (Time.time - LastClickTime < DoubleClickTimeThreshold)
+            {
+                OnDoubleClick();
+                
+                // Call the OnDoubleClick event.
+                OnObjectDoubleClickedEvent<TSelf>.TriggerEvent(
+                    new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
+            }
+            else
+            {
+                LastClickTime = Time.time;
+            }
+        }
     }
 }
