@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.UI.Elements.Basic
     public abstract class UIText<TSelfUIObject, TDataContextSealed> : UIObject<TSelfUIObject>, 
         IRenderable<TSelfUIObject, TDataContextSealed> 
         where TDataContextSealed : DataContext<TDataContextSealed>, new()
-        where TSelfUIObject : UIObject<TSelfUIObject>, new()
+        where TSelfUIObject : UIText<TSelfUIObject, TDataContextSealed>, new()
     {
         private TextMeshProUGUI _textMeshProUGUI;
 
