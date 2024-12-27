@@ -19,6 +19,11 @@ namespace FastUnityCreationKit.UI.Context
         where TSelfSealed : DataContext<TSelfSealed>, new()
     {
         /// <summary>
+        /// Check if this context is a reference to another context.
+        /// </summary>
+        public bool IsReference => this is ReferencedDataContext<TSelfSealed>;
+        
+        /// <summary>
         /// Represents the dirty state of the data context.
         /// If the data context is dirty, rendered UI should be updated.
         /// </summary>
