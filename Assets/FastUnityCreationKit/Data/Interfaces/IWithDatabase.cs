@@ -8,9 +8,10 @@ namespace FastUnityCreationKit.Data.Interfaces
     /// Represents an object that has a database
     /// </summary>
     /// <typeparam name="TDatabaseType">The type of database</typeparam>
-    /// <typeparam name="TSelfDataType">The type of the object</typeparam>
-    public interface IWithDatabase<out TDatabaseType, TSelfDataType> : IWithDatabase
-        where TDatabaseType : IDatabase<TSelfDataType>, new() 
+    /// <typeparam name="TSelfSealedDataType">The type of the object</typeparam>
+    public interface IWithDatabase<out TDatabaseType, TSelfSealedDataType> : IWithDatabase
+        where TDatabaseType : IDatabase<TSelfSealedDataType>, new() 
+        where TSelfSealedDataType : ScriptableObject
     {
         /// <summary>
         /// The database of the object
