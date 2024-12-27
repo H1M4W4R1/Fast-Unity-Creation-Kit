@@ -8,8 +8,10 @@ namespace FastUnityCreationKit.UI.Interfaces
     /// Represents a UI object that can be rendered.
     /// </summary>
     /// <typeparam name="TDataContextSealed">Context used to render this object.</typeparam>
-    public interface IRenderable<TDataContextSealed> : IRenderable
-        where TDataContextSealed : DataContext<TDataContextSealed>, new()
+    /// <typeparam name="TSelfUIObject">UI object type.</typeparam>
+    public interface IRenderable<TSelfUIObject, TDataContextSealed> : IRenderable
+        where TDataContextSealed : DataContext<TDataContextSealed>, new() 
+        where TSelfUIObject : UIObject<TSelfUIObject>, new()
     {
         /// <summary>
         /// Gets the data context for this renderer.
@@ -19,7 +21,7 @@ namespace FastUnityCreationKit.UI.Interfaces
             get
             {
                 // Check if this object is UIObject, if so, get data context
-                if (this is UIObject uiObject) return uiObject.GetDataContext<TDataContextSealed>();
+                if (this is UIObject<TSelfUIObject> uiObject) return uiObject.GetDataContext<TDataContextSealed>();
                 
                 // Log error if this object is not UIObject
                 Debug.LogError($"DataContext is not supported on {GetType().Name}.");
@@ -30,7 +32,7 @@ namespace FastUnityCreationKit.UI.Interfaces
         void IRenderable.TryRender(bool forceRender)
         {
             // Check if this object is UIObject
-            if (this is not UIObject uiObject)
+            if (this is not UIObject<TSelfUIObject> uiObject)
             {
                 Debug.LogError($"Render is not supported on {GetType().Name}.");
                 return;

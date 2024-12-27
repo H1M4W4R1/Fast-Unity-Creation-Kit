@@ -73,7 +73,7 @@ namespace FastUnityCreationKit.UI.Context
         /// <summary>
         /// Setup this context
         /// </summary>
-        public abstract void Setup();
+        public virtual void Setup(){}
 
         /// <summary>
         /// Tear down this context

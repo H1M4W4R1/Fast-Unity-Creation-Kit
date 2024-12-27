@@ -1,6 +1,6 @@
 ﻿using System;
-using FastUnityCreationKit.Guardian;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -33,12 +33,9 @@ namespace FastUnityCreationKit.Structure.Singleton
         public static TSelf GetInstance()
         {
             // Ensure that the type is not a UnityEngine.Object
-            if (Check.ThatType<TSelf>().IsNot<Object>()
-                .EditorLogIfTrue(LogType.Error, 
-                    $"ISingleton: [{nameof(TSelf)}] cannot be a UnityEngine.Object")
-                .HasFailed())
+            if(typeof(TSelf).ImplementsOrInherits(typeof(Object)))
                 throw new NotSupportedException("The singleton cannot be a UnityEngine.Object");
-
+     
             // Check if the instance exists
             if (Instance != null) return Instance;
 

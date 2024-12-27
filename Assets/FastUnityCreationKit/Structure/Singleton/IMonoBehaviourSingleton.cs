@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Guardian;
+﻿using System;
 using JetBrains.Annotations;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -19,11 +19,8 @@ namespace FastUnityCreationKit.Structure.Singleton
         [NotNull] public new static TSelf GetInstance()
         {
             // Ensure that the type is a MonoBehaviour
-            if (Check.ThatType<TSelf>().Is<MonoBehaviour>()
-                .EditorLogIfTrue(LogType.Error, 
-                    $"IMonoBehaviourSingleton: [{nameof(TSelf)}] must be a MonoBehaviour")
-                .HasFailed())
-                return ISingleton<TSelf>.GetInstance();
+            if (!typeof(TSelf).IsSubclassOf(typeof(MonoBehaviour)))
+                throw new NotSupportedException("The singleton must be a MonoBehaviour");
 
             // Check if the instance exists
             if (Instance) return Instance;
@@ -35,7 +32,7 @@ namespace FastUnityCreationKit.Structure.Singleton
             if (Instance) return Instance;
 
             // Create a new instance
-            Instance = new GameObject(nameof(TSelf)).AddComponent<TSelf>();
+            Instance = new GameObject(typeof(TSelf).Name).AddComponent<TSelf>();
 
             // Return the instance, most likely won't be null as long as TSelf is a MonoBehaviour
             return Instance!;
