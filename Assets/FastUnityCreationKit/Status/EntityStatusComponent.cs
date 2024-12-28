@@ -5,6 +5,7 @@ using FastUnityCreationKit.Status.Interfaces;
 using FastUnityCreationKit.Status.References;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Utility;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Status
@@ -17,6 +18,7 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// List of all statuses that are applied to the entity.
         /// </summary>
+        [ShowInInspector] [TabGroup("Debug")] [ReadOnly]
         public List<AppliedStatusReference> AppliedStatuses { get; } = new List<AppliedStatusReference>();
 
         /// <summary>
@@ -91,6 +93,25 @@ namespace FastUnityCreationKit.Status
             
             // Otherwise, remove status
             await DecreaseLevel<TStatusType>(reference.statusLevel);
+        }
+        
+        /// <summary>
+        /// Clears all statuses from the entity.
+        /// </summary>
+        public async UniTask ClearAll()
+        {
+            for (int i = AppliedStatuses.Count - 1; i >= 0; i--)
+            {
+                AppliedStatusReference reference = AppliedStatuses[i];
+                
+                long nLevels = reference.statusLevel;
+                
+                // Otherwise, decrease status level
+                if (reference.Status is IPercentageStatus)
+                    await reference.TakeLevel(this, nLevels * IPercentageStatus.PERCENTAGE_SCALE);
+                else
+                    await reference.TakeLevel(this, nLevels);
+            }
         }
         
         /// <summary>

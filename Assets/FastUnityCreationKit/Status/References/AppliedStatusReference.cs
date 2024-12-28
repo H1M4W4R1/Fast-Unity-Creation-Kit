@@ -4,6 +4,7 @@ using FastUnityCreationKit.Identification.Identifiers;
 using FastUnityCreationKit.Status.Abstract;
 using FastUnityCreationKit.Utility.Limits;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 
 namespace FastUnityCreationKit.Status.References
 {
@@ -13,6 +14,12 @@ namespace FastUnityCreationKit.Status.References
     public sealed class AppliedStatusReference
     {
         /// <summary>
+        /// Reference to status instance within the database.
+        /// </summary>
+        [ShowInInspector] [ReadOnly]
+        public StatusBase Status => StatusDatabase.Instance.GetStatusByIdentifier(statusIdentifier);
+        
+        /// <summary>
         /// Pointer to status that is applied.
         /// </summary>
         internal readonly Snowflake128 statusIdentifier;
@@ -20,13 +27,9 @@ namespace FastUnityCreationKit.Status.References
         /// <summary>
         /// Level of the status. Interpreted differently based on the status type.
         /// </summary>
+        [ShowInInspector] [ReadOnly]
         internal long statusLevel;
         
-        /// <summary>
-        /// Reference to status instance within the database.
-        /// </summary>
-        public StatusBase Status => StatusDatabase.Instance.GetStatusByIdentifier(statusIdentifier);
-
         public AppliedStatusReference(EntityStatusComponent context, [NotNull] StatusBase status, long statusLevel = 0)
         {
             this.statusIdentifier = status.Id;

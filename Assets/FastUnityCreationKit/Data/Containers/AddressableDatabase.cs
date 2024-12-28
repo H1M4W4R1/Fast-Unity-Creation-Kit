@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.Data.Containers
     /// Storage for addressable definitions.
     /// </summary>
     public abstract class AddressableDatabase<TSelfSealed, TDataType> : AddressableDefinitionContainer<TDataType>, 
-        IDatabase<TDataType>
+        IDatabase<TDataType>, IUniqueDataContainer
         where TSelfSealed : AddressableDatabase<TSelfSealed, TDataType>, new()
         where TDataType : ScriptableObject, IDefinition<TDataType>
     {

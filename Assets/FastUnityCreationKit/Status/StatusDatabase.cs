@@ -44,6 +44,7 @@ namespace FastUnityCreationKit.Status
             for(int i = 0; i < internalContainer.All.Count; i++)
             {
                 StatusBase status = internalContainer.All[i];
+                if (!status) continue;
                 
                 if(status.Id.Equals(identifier))
                     return status;

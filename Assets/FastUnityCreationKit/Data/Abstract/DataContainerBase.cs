@@ -96,9 +96,6 @@ namespace FastUnityCreationKit.Data.Abstract
                     else if (element != null) continue;
                     
                     RemoveAt(index);
-                    
-                    Debug.Log($"Null data found in the container {GetType().Name}." +
-                              $" Data was automatically removed.");
                 }
             }
 
@@ -119,9 +116,6 @@ namespace FastUnityCreationKit.Data.Abstract
                         // Check if data is the same, if so, add error
                         if (!ReferenceEquals(element, innerData)) continue;
                         RemoveAt(innerIndex);
-                        
-                        Debug.Log($"Duplicate data found in the container {GetType().Name}." +
-                                  $" Data was automatically removed.");
                     }
                 }
             }

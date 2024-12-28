@@ -5,6 +5,7 @@ using FastUnityCreationKit.Identification;
 using FastUnityCreationKit.Status.References;
 using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Limits;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Status.Abstract
@@ -17,13 +18,6 @@ namespace FastUnityCreationKit.Status.Abstract
     /// </remarks>
     [AutoCreatedObject(LocalConstants.STATUS_OBJECT_DIRECTORY)]
     [AddressableGroup(LocalConstants.STATUS_ADDRESSABLE_TAG)]
-    public abstract class StatusBase<TStatusTarget> : StatusBase
-    {
-    }
-
-    /// <summary>
-    /// Internal status base class, do not use.
-    /// </summary>
     public abstract class StatusBase : UniqueDefinitionBase, IDefinition<StatusBase>,
         IWithDatabase<StatusDatabase, StatusBase>
     {
