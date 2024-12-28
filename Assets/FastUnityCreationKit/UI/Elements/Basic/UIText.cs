@@ -12,6 +12,8 @@ namespace FastUnityCreationKit.UI.Elements.Basic
         where TSelfUIObject : UIText<TSelfUIObject, TDataContextSealed>, new()
     {
         private TextMeshProUGUI _textMeshProUGUI;
+        
+        protected TextMeshProUGUI Text => _textMeshProUGUI;
 
         public override void Setup()
         {
@@ -19,7 +21,7 @@ namespace FastUnityCreationKit.UI.Elements.Basic
             _textMeshProUGUI = GetComponent<TextMeshProUGUI>();
         }
 
-        public void Render<TTargetDataContext>(TTargetDataContext usingDataContext)
+        public virtual void Render<TTargetDataContext>(TTargetDataContext usingDataContext)
         {
             // Check if data context is IStringContext and set text
             if(usingDataContext is IStringContext stringContext)
