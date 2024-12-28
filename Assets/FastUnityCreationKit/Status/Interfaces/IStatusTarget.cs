@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using FastUnityCreationKit.Context.Interface;
 using FastUnityCreationKit.Status.Abstract;
 using FastUnityCreationKit.Status.References;
 using JetBrains.Annotations;
@@ -18,7 +17,7 @@ namespace FastUnityCreationKit.Status.Interfaces
         /// Does nothing if status exists already.
         /// </summary>
         internal AppliedStatusReference GetOrCreateStatusReference<TStatusType, TStatusTarget>(
-            IContextWithTarget<TStatusTarget> context, TStatusType statusDefinition)
+            EntityStatusComponent context, TStatusType statusDefinition)
             where TStatusType : StatusBase<TStatusTarget>
             where TStatusTarget : IStatusTarget
         {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using FastUnityCreationKit.Context.Interface;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Events.Interfaces;
 using Sirenix.OdinInspector;
@@ -14,8 +13,7 @@ namespace FastUnityCreationKit.UI.Context
     /// To separate game data layer from presentation data layer a custom data object should be created. Then you can
     /// attach references to your data object to make sure that the data is updated in the UI object.
     /// </remarks>
-    public abstract class DataContext<TSelfSealed> : FastMonoBehaviour<TSelfSealed>, IContext,
-        ICreateCallback, IDestroyCallback
+    public abstract class DataContext<TSelfSealed> : FastMonoBehaviour<TSelfSealed>, ICreateCallback, IDestroyCallback
         where TSelfSealed : DataContext<TSelfSealed>, new()
     {
         /// <summary>

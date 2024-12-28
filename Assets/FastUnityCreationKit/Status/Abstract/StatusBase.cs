@@ -1,11 +1,8 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using FastUnityCreationKit.Context.Interface;
+﻿using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Data.Containers.Interfaces;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Identification;
 using FastUnityCreationKit.Status.References;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Limits;
 using UnityEngine;
@@ -18,8 +15,8 @@ namespace FastUnityCreationKit.Status.Abstract
     /// <remarks>
     /// Supports int64 limits.
     /// </remarks>
-    [AutoCreatedObject(Directories.STATUS_PATH)]
-    [AddressableGroup(Directories.STATUS_PATH, Directories.STATUS_PATH)]
+    [AutoCreatedObject(LocalConstants.STATUS_OBJECT_DIRECTORY)]
+    [AddressableGroup(LocalConstants.STATUS_ADDRESSABLE_TAG)]
     public abstract class StatusBase<TStatusTarget> : StatusBase
     {
     }
@@ -38,33 +35,33 @@ namespace FastUnityCreationKit.Status.Abstract
         /// <summary>
         /// Called when status is applied to the target when the target is not affected by the status. 
         /// </summary>
-        public virtual async UniTask OnStatusApplied(IContextWithTarget context) =>
+        public virtual async UniTask OnStatusApplied(EntityStatusComponent context) =>
             await UniTask.CompletedTask;
 
         /// <summary>
         /// Called when status is removed from the target when the target is affected by the status.
         /// </summary>
-        public virtual async UniTask OnStatusRemoved(IContextWithTarget context) =>
+        public virtual async UniTask OnStatusRemoved(EntityStatusComponent context) =>
             await UniTask.CompletedTask;
 
         /// <summary>
         /// Called when status level is changed. For percentage status it's also known as 100% stack level change.
         /// </summary>
-        public virtual async UniTask OnStatusLevelChanged(IContextWithTarget context, long difference) =>
+        public virtual async UniTask OnStatusLevelChanged(EntityStatusComponent context, long difference) =>
             await UniTask.CompletedTask;
 
         /// <summary>
         /// Called when maximum percentage is reached.
         /// Must support IWithMaxLimit, otherwise it will never be called.
         /// </summary>
-        public virtual async UniTask OnMaxLimitReached(IContextWithTarget context) =>
+        public virtual async UniTask OnMaxLimitReached(EntityStatusComponent context) =>
             await UniTask.CompletedTask;
 
         /// <summary>
         /// Called when minimum percentage is reached.
         /// Must support IWithMinLimit, otherwise it will never be called.
         /// </summary>
-        public virtual async UniTask OnMinLimitReached(IContextWithTarget context) =>
+        public virtual async UniTask OnMinLimitReached(EntityStatusComponent context) =>
             await UniTask.CompletedTask;
 
         /// <summary>

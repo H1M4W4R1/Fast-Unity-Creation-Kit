@@ -12,5 +12,11 @@
             Labels = labels;
         }
         
+        public AddressableGroupAttribute(string groupName)
+        {
+            GroupName = groupName;
+            Labels = new string[] {groupName};
+        }
+        
     }
 }

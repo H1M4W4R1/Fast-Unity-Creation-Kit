@@ -1,7 +1,7 @@
-﻿using FastUnityCreationKit.Data.Containers;
+﻿using FastUnityCreationKit.Data;
+using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Identification.Identifiers;
 using FastUnityCreationKit.Status.Abstract;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Attributes;
 
 namespace FastUnityCreationKit.Status
@@ -9,13 +9,13 @@ namespace FastUnityCreationKit.Status
     /// <summary>
     /// Database for status.  
     /// </summary>
-    [AutoCreatedObject(Directories.DATABASES_PATH)]
-    [AddressableGroup(Directories.DATABASES_PATH, Directories.DATABASES_PATH)]
+    [AutoCreatedObject(DatabaseConstants.DATABASE_DIRECTORY)]
+    [AddressableGroup(DatabaseConstants.DATABASE_ADDRESSABLE_TAG)]
     public sealed class StatusDatabase : AddressableDatabase<StatusDatabase, StatusBase>
     {
         public StatusDatabase()
         {
-            addressableTag = Directories.STATUS_PATH;
+            addressableTag = LocalConstants.STATUS_ADDRESSABLE_TAG;
         }
 
         /// <summary>
