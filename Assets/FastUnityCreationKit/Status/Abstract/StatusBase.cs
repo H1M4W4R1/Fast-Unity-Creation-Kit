@@ -19,7 +19,7 @@ namespace FastUnityCreationKit.Status.Abstract
     [AutoCreatedObject(LocalConstants.STATUS_OBJECT_DIRECTORY)]
     [AddressableGroup(LocalConstants.STATUS_ADDRESSABLE_TAG)]
     public abstract class StatusBase : UniqueDefinitionBase, IDefinition<StatusBase>,
-        IWithDatabase<StatusDatabase, StatusBase>
+        IWithDatabase<StatusDatabase, StatusBase>, ISelfValidator
     {
         /// <summary>
         /// Gets the database for the object.
@@ -100,6 +100,13 @@ namespace FastUnityCreationKit.Status.Abstract
         private void OnDestroy()
         {
             Database.Remove(this);
+        }
+
+        public void Validate(SelfValidationResult result)
+        {
+            // Check if database contains this status
+            if (!Database.Contains(this))
+                Database.Add(this);
         }
     }
 }

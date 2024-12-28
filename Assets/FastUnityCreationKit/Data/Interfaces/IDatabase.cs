@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Data.Interfaces
@@ -19,5 +21,6 @@ namespace FastUnityCreationKit.Data.Interfaces
 	/// </summary>
 	public interface IDatabase
 	{
+		IList RawData { get; }
 	}
 }

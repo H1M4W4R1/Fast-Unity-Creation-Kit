@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Containers.Interfaces;
 using FastUnityCreationKit.Data.Interfaces;
@@ -46,5 +48,13 @@ namespace FastUnityCreationKit.Data.Containers
                 return _instance;
             }
         }
+        
+        [Button("Force Populate")]
+        public void ForcePopulate()
+        {
+            Populate().Forget();
+        }
+
+        public IList RawData => (IList) All;
     }
 }

@@ -4,13 +4,14 @@ using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Identification;
 using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Limits;
+using Sirenix.OdinInspector;
 
 namespace FastUnityCreationKit.Economy
 {
     [AutoCreatedObject(LocalConstants.RESOURCES_OBJECT_DIRECTORY)]
     [AddressableGroup(LocalConstants.RESOURCE_ADDRESSABLE_TAG)]
     public abstract class ResourceBase : UniqueDefinitionBase, IDefinition<ResourceBase>,
-        IWithDatabase<ResourceDatabase, ResourceBase>
+        IWithDatabase<ResourceDatabase, ResourceBase>, ISelfValidator
     {
         public ResourceDatabase Database => ResourceDatabase.Instance;
         
@@ -67,6 +68,13 @@ namespace FastUnityCreationKit.Economy
                 return LimitHit.LowerLimitHit;
 
             return LimitHit.None;
+        }
+
+        public void Validate(SelfValidationResult result)
+        {
+            // Check if database contains this resource 
+            if (!Database.Contains(this))
+                Database.Add(this);
         }
     }
 }

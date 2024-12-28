@@ -18,7 +18,7 @@ namespace FastUnityCreationKit.Data.Abstract
     /// </summary>
     /// <typeparam name="TDataType">Type of data that is stored in the container.</typeparam>
     public abstract class AddressableDataContainer<TDataType> : SerializedScriptableObject,
-        IDataContainer<TDataType>, IAutoPopulatedContainer, ISelfValidator
+        IDataContainer<TDataType>, IAutoPopulatedContainer
         where TDataType : Object
     {
         /// <summary>
@@ -60,7 +60,7 @@ namespace FastUnityCreationKit.Data.Abstract
         }
 
         /// <summary>
-        /// Internal data container storage object.
+        /// Internal data container storage object. 
         /// </summary>
         [Serializable]
         [NoDuplicates]
@@ -94,16 +94,6 @@ namespace FastUnityCreationKit.Data.Abstract
         public int Count => internalContainer.Count;
 
         public void RemoveAt(int index) => internalContainer.RemoveAt(index);
-
-#endregion
-
-#region ISelfValidator
-
-        public void Validate(SelfValidationResult result)
-        {
-            // Validate internal container
-            internalContainer.Validate(result);
-        }
 
 #endregion
     }

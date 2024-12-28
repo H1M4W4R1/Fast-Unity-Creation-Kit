@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Data.Interfaces
@@ -43,6 +44,7 @@ namespace FastUnityCreationKit.Data.Interfaces
         /// </summary>
         public void RemoveAt(int index);
 
+        IList IDataContainer.RawData => (IList) All;
     }
 
     /// <summary>
@@ -50,6 +52,7 @@ namespace FastUnityCreationKit.Data.Interfaces
     /// </summary>
     public interface IDataContainer
     {
+        IList RawData { get; }
         
     }
 }

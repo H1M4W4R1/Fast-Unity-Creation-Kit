@@ -12,7 +12,7 @@ namespace FastUnityCreationKit.Data.Abstract
     /// <summary>
     /// Represents a core data container that is used to store data of a specific type.
     /// </summary>
-    public abstract class DataContainerBase<TDataType> : IDataContainer<TDataType>, ISelfValidator
+    public abstract class DataContainerBase<TDataType> : IDataContainer<TDataType>
     {
         /// <summary>
         /// Data storage. 
@@ -75,78 +75,5 @@ namespace FastUnityCreationKit.Data.Abstract
         /// Removes the data at the specified index.
         /// </summary>
         public virtual void RemoveAt(int index) => data.RemoveAt(index);
-        
-        public void Validate(SelfValidationResult result)
-        {
-            // Check if container cannot have any null entries
-            // and remove them if found.
-            if (GetType().GetCustomAttribute<NoNullEntriesAttribute>() != null)
-            {
-                for (int index = Count - 1; index >= 0; index--)
-                {
-                    TDataType element = this[index];
-                    
-                    // Check if element is null
-                    // Use Unity's Object class to check if object is null
-                    // as otherwise false-negative results can be returned.
-                    if (element is UnityEngine.Object unityObject)
-                    {
-                        if (unityObject != null) continue;
-                    }
-                    else if (element != null) continue;
-                    
-                    RemoveAt(index);
-                }
-            }
-
-            // Check if container cannot have any duplicate entries
-            // and remove them if found.
-            if(GetType().GetCustomAttribute<NoDuplicatesAttribute>() == null){
-                for (int index = Count - 1; index >= 0; index--)
-                {
-                    // Get data and ensure it's not null
-                    TDataType element = this[index];
-                    if (element == null) continue;
-
-                    for (int innerIndex = Count - 1; innerIndex > index; innerIndex--)
-                    {
-                        TDataType innerData = this[innerIndex];
-                        if (innerData == null) continue;
-
-                        // Check if data is the same, if so, add error
-                        if (!ReferenceEquals(element, innerData)) continue;
-                        RemoveAt(innerIndex);
-                    }
-                }
-            }
-            
-            // All container values must be sealed classes
-            // this is enforced to prevent any issues with data handling
-            // and improve performance.
-            if (GetType().GetCustomAttribute<OnlySealedElementsAttribute>() != null)
-            {
-                for (int index = Count - 1; index >= 0; index--)
-                {
-                    TDataType element = this[index];
-                    if (element == null) continue;
-
-                    if (element.GetType().IsSealed) continue;
-                    result.AddError("Container values must be sealed classes.")
-                        .WithButton("Information",
-                            () =>
-                            {
-                                Debug.Log($"Add `sealed` keyword to class definition of {element.GetType().Name}.");
-                            });
-                }
-            }
-
-            // Container should be populated to ensure all data is loaded
-            // and available for use. 
-            if (this is IAutoPopulatedContainer {IsPopulated: false} autoPopulatedContainer)
-            {
-                result.AddWarning("Container is not populated.")
-                    .WithFix("Populate the container.", async () => { await autoPopulatedContainer.Populate(); });
-            }
-        }
     }
 }

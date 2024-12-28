@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using FastUnityCreationKit.Data.Interfaces;
 using UnityEngine;
 
@@ -69,5 +70,7 @@ namespace FastUnityCreationKit.Data.Abstract
                 return indexIndex == -1 ? default : data[indexIndex];
             }
         }
+
+        public IList RawData => data;
     }
 }
