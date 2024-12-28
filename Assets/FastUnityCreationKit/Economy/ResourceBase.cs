@@ -47,7 +47,7 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         /// Ensure resource limits for the container.
         /// </summary>
-        public LimitHit EnsureLimitsFor(ResourceContainer container)
+        public LimitHit CheckLimitsFor(ResourceContainer container)
         {
             // Check if resource is limited
             if (this is not ILimited) return LimitHit.None;
@@ -60,17 +60,11 @@ namespace FastUnityCreationKit.Economy
 
             // Check max status limit
             if (this is IWithMaxLimit maxLimit && container.Amount > maxLimit.MaxLimit)
-            {
-                container.Amount = (long) maxLimit.MaxLimit;
                 return LimitHit.UpperLimitHit;
-            }
 
             // Check min status limit
             if (this is IWithMinLimit minLimit && container.Amount < minLimit.MinLimit)
-            {
-                container.Amount = (long) minLimit.MinLimit;
                 return LimitHit.LowerLimitHit;
-            }
 
             return LimitHit.None;
         }

@@ -24,6 +24,11 @@ namespace FastUnityCreationKit.Economy
 
         public ResourceBase Resource => ResourceDatabase.Instance.GetResource(Identifier);
         
+        public long ContainerMaxLimit => (long) (this is IWithMaxLimit maxLimitContainer ? maxLimitContainer.MaxLimit : long.MaxValue);
+        public long ContainerMinLimit => (long) (this is IWithMinLimit minLimitContainer ? minLimitContainer.MinLimit : 0);
+        public long ResourceMaxLimit => (long) (Resource is IWithMaxLimit maxLimitResource ? maxLimitResource.MaxLimit : long.MaxValue);
+        public long ResourceMinLimit => (long) (Resource is IWithMinLimit minLimitResource ? minLimitResource.MinLimit : 0);
+        
         /// <summary>
         /// Tries to add the specified amount of resource to the container.
         /// </summary>
@@ -122,8 +127,7 @@ namespace FastUnityCreationKit.Economy
         public virtual bool HasEnough(long amount)
         {
             // Get min limit for resource
-            long minLimit = (long)(Resource is IWithMinLimit minLimitResource ? minLimitResource.MinLimit : 0);
-            
+            long minLimit = ResourceMinLimit > ContainerMinLimit ? ResourceMinLimit : ContainerMinLimit;
             return Amount - amount >= minLimit;
         }
         
@@ -136,8 +140,7 @@ namespace FastUnityCreationKit.Economy
         public virtual bool CanStore(long amount)
         {
             // Get max limit for resource
-            long maxLimit = (long)(Resource is IWithMaxLimit maxLimitResource ? maxLimitResource.MaxLimit : long.MaxValue);
-            
+            long maxLimit = ResourceMaxLimit < ContainerMaxLimit ? ResourceMaxLimit : ContainerMaxLimit;
             return amount <= maxLimit;
         }
         
@@ -149,15 +152,20 @@ namespace FastUnityCreationKit.Economy
         public virtual bool HasSpaceFor(long amount)
         {
             // Get max limit for resource
-            long maxLimit = (long)(Resource is IWithMaxLimit maxLimitResource ? maxLimitResource.MaxLimit : long.MaxValue);
+            long maxLimit = ResourceMaxLimit < ContainerMaxLimit ? ResourceMaxLimit : ContainerMaxLimit;
             
             return Amount + amount <= maxLimit;
         }
-        
+
+        protected UniTask OnMaxLimitReachedAsync() => UniTask.CompletedTask;
+        protected UniTask OnMinLimitReachedAsync() => UniTask.CompletedTask;
+
         protected virtual async UniTask CheckLimitsAndRaiseEvents()
         {
             // Acquire limit information from referenced status
-            LimitHit limitHit = Resource.EnsureLimitsFor(this);
+            // Beware that this only ensures resource limits not container limits to prevent 
+            // events being raised with container limits.
+            LimitHit limitHit = Resource.CheckLimitsFor(this);
             switch (limitHit)
             {
                 // Check if max limit is reached
@@ -172,6 +180,27 @@ namespace FastUnityCreationKit.Economy
                 default:
                     throw new NotSupportedException();
             }
+
+            // Check container limits and call container events
+            if (Amount > ContainerMaxLimit)
+            {
+                Amount = ContainerMaxLimit;
+                await OnMaxLimitReachedAsync();
+            }
+            else if (Amount < ContainerMinLimit)
+            {
+                Amount = ContainerMinLimit;
+                await OnMinLimitReachedAsync();
+            }
+
+            // Ensure limits for resource again and update
+            // container amount without raising resource events
+            // as those were already raised.
+            if (Amount > ResourceMaxLimit)
+                Amount = ResourceMaxLimit;
+            else if (Amount < ResourceMinLimit)
+                Amount = ResourceMinLimit;
+            
         }
     }
 }
