@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Status.Abstract;
+using FastUnityCreationKit.Status.Interfaces;
 using FastUnityCreationKit.Status.References;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Utility;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Status
 {
@@ -25,7 +27,7 @@ namespace FastUnityCreationKit.Status
         /// <remarks>
         /// If status already exists, it's level will be increased by <paramref name="nLevels"/>.
         /// </remarks>
-        public async UniTask<bool> AddStatus<TStatusType>(int nLevels = 1)
+        public async UniTask<bool> AddStatus<TStatusType>(long nLevels = 1)
             where TStatusType : StatusBase
         {
             // Get status from the database
@@ -39,7 +41,7 @@ namespace FastUnityCreationKit.Status
             AppliedStatusReference reference = GetStatusReference<TStatusType>();
             if (reference != null)
             {
-                await reference.AddLevel(this, nLevels);
+                await IncreaseLevel<TStatusType>(nLevels);
                 return true;
             }
             
@@ -71,7 +73,7 @@ namespace FastUnityCreationKit.Status
             if (reference == null) return false;
             
             // Otherwise, remove status and return true
-            await reference.TakeLevel(this, nLevels);
+            await DecreaseLevel<TStatusType>(nLevels);
             return true;
         }
         
@@ -88,7 +90,7 @@ namespace FastUnityCreationKit.Status
             if (reference == null) return;
             
             // Otherwise, remove status
-            await reference.TakeLevel(this, reference.statusLevel);
+            await DecreaseLevel<TStatusType>(reference.statusLevel);
         }
         
         /// <summary>
@@ -97,7 +99,7 @@ namespace FastUnityCreationKit.Status
         /// <param name="nLevels">Number of levels to increase. Default is 1.</param>
         /// <typeparam name="TStatusType">Type of status to increase.</typeparam>
         /// <returns>True if status was increased, false if status does not exist.</returns>
-        public async UniTask<bool> IncreaseLevel<TStatusType>(int nLevels = 1)
+        public async UniTask<bool> IncreaseLevel<TStatusType>(long nLevels = 1)
             where TStatusType : StatusBase
         {
             // Get status reference if exists
@@ -108,7 +110,11 @@ namespace FastUnityCreationKit.Status
                 return await AddStatus<TStatusType>(nLevels);
             
             // Otherwise, increase status level
-            await reference.AddLevel(this, nLevels);
+            if(reference.Status is IPercentageStatus)
+                await reference.AddLevel(this, nLevels * IPercentageStatus.PERCENTAGE_SCALE);
+            else
+                await reference.AddLevel(this, nLevels);
+            
             return true;
         }
         
@@ -118,7 +124,7 @@ namespace FastUnityCreationKit.Status
         /// <param name="nLevels">Number of levels to decrease. Default is 1.</param>
         /// <typeparam name="TStatusType">Type of status to decrease.</typeparam>
         /// <returns>True if status was decreased, false if status does not exist.</returns>
-        public async UniTask<bool> DecreaseLevel<TStatusType>(int nLevels = 1)
+        public async UniTask<bool> DecreaseLevel<TStatusType>(long nLevels = 1)
             where TStatusType : StatusBase
         {
             // Get status reference if exists
@@ -128,17 +134,81 @@ namespace FastUnityCreationKit.Status
             if (reference == null) return false;
             
             // Otherwise, decrease status level
-            await reference.TakeLevel(this, nLevels);
+            if (reference.Status is IPercentageStatus)
+                await reference.TakeLevel(this, nLevels * IPercentageStatus.PERCENTAGE_SCALE);
+            else
+                await reference.TakeLevel(this, nLevels);
+            
             return true;
         }
-        
+
         /// <summary>
         /// Gets the level of status of type <typeparamref name="TStatusType"/>.
         /// </summary>
         public long GetLevel<TStatusType>()
-            where TStatusType : StatusBase =>
-            GetStatusReference<TStatusType>()?.statusLevel ?? 0;
+            where TStatusType : StatusBase
+        {
+            AppliedStatusReference statusRef = GetStatusReference<TStatusType>();
+            
+            // If status is percentage status, return total percentage loops
+            if(statusRef.Status is IPercentageStatus percentageStatus)
+                return statusRef.statusLevel / IPercentageStatus.PERCENTAGE_SCALE;
+            
+            return statusRef.statusLevel;
+        }
         
+        /// <summary>
+        /// Gets the percentage of status of type <typeparamref name="TStatusType"/>.
+        /// </summary>
+        /// <typeparam name="TStatusType">Type of status to get percentage of.</typeparam>
+        /// <returns>Percentage of status level.</returns>
+        /// <remarks>If status is not percentage status, returns 0.</remarks>
+        public float GetPercentage<TStatusType>()
+            where TStatusType : StatusBase
+        {
+            AppliedStatusReference statusRef = GetStatusReference<TStatusType>();
+            
+            // If status is percentage status, return total percentage loops
+            if (statusRef.Status is IPercentageStatus percentageStatus)
+            {
+                long percentageRemnant = statusRef.statusLevel % IPercentageStatus.PERCENTAGE_SCALE;
+                return percentageRemnant / (float) IPercentageStatus.PERCENTAGE_SCALE;
+            }
+
+            Debug.LogError($"Status {nameof(TStatusType)} is not a percentage status.", this);
+            return 0;
+        }
+        
+        public async UniTask<bool> IncreasePercentage<TStatusType>(float percentage)
+            where TStatusType : StatusBase
+        {
+            // Get status reference if exists
+            AppliedStatusReference reference = GetStatusReference<TStatusType>();
+            
+            // Otherwise, increase status level
+            if(reference?.Status is IPercentageStatus)
+                await reference.AddLevel(this, (long) (percentage * IPercentageStatus.PERCENTAGE_SCALE));
+            else EditorCheck.Perform(true) // Log error if status is not percentage status
+                .WithError($"Status {nameof(TStatusType)} is not a percentage status.");
+            
+            return false;
+        }
+        
+        public async UniTask<bool> DecreasePercentage<TStatusType>(float percentage)
+            where TStatusType : StatusBase
+        {
+            // Get status reference if exists
+            AppliedStatusReference reference = GetStatusReference<TStatusType>();
+            
+            // Otherwise, increase status level
+            if(reference?.Status is IPercentageStatus)
+                await reference.TakeLevel(this, (long) (percentage * IPercentageStatus.PERCENTAGE_SCALE));
+            else EditorCheck.Perform(true) // Log error if status is not percentage status
+                    .WithError($"Status {nameof(TStatusType)} is not a percentage status.");
+            
+            return false;
+        }
+
         /// <summary>
         /// Gets a reference to the status of type <typeparamref name="TStatusType"/> that
         /// </summary>
