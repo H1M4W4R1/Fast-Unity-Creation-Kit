@@ -20,7 +20,7 @@ namespace FastUnityCreationKit.Structure.Singleton
         [NotNull] public new static TSelf GetInstance()
         {
             // Ensure that the type is a MonoBehaviour
-            EditorCheck.Perform(typeof(TSelf).IsSubclassOf(typeof(MonoBehaviour)))
+            EditorCheck.Perform(!typeof(TSelf).IsSubclassOf(typeof(MonoBehaviour)))
                 .WithException<NotSupportedException>("The singleton must be a MonoBehaviour");
 
             // Check if the instance exists
