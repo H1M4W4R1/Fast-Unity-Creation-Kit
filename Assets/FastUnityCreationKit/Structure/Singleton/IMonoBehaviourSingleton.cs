@@ -1,4 +1,5 @@
 ﻿using System;
+using FastUnityCreationKit.Utility;
 using JetBrains.Annotations;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -19,8 +20,8 @@ namespace FastUnityCreationKit.Structure.Singleton
         [NotNull] public new static TSelf GetInstance()
         {
             // Ensure that the type is a MonoBehaviour
-            if (!typeof(TSelf).IsSubclassOf(typeof(MonoBehaviour)))
-                throw new NotSupportedException("The singleton must be a MonoBehaviour");
+            EditorCheck.Perform(typeof(TSelf).IsSubclassOf(typeof(MonoBehaviour)))
+                .WithException<NotSupportedException>("The singleton must be a MonoBehaviour");
 
             // Check if the instance exists
             if (Instance) return Instance;

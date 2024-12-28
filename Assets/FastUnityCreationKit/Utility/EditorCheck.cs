@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Utility
@@ -21,6 +22,18 @@ namespace FastUnityCreationKit.Utility
             return false;
 #endif
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool WithException<TException>(string message)
+            where TException : System.Exception, new()
+        {
+#if UNITY_EDITOR
+            if (_source) throw (TException) Activator.CreateInstance(typeof(TException), message);
+            return _source;
+#endif
+            return false;
+        }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool WithError(string message)

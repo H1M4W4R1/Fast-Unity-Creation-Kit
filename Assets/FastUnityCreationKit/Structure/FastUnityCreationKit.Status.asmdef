@@ -3,7 +3,8 @@
 	"allowUnsafeCode": true,
 	"references": [
 		"GUID:073b3eb3f1a67e64399bd59e9e28db00",
-		"GUID:8f4e52fe706a46529a51cf708b1530ef"
+		"GUID:8f4e52fe706a46529a51cf708b1530ef",
+		"GUID:2088dbdb78944d69805c321ad476fa6f"
 	]
 	
 }
