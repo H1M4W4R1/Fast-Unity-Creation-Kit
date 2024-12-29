@@ -55,8 +55,14 @@ namespace FastUnityCreationKit.Events
         /// <summary>
         /// Trigger the event channel with the data.
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="data">Channel data that is sent through the event channel.</param>
         public static void TriggerEvent([NotNull] TChannelData data) => Instance.Trigger(data);
+        
+        /// <summary>
+        /// Trigger the event channel with the data asynchronously.
+        /// </summary>
+        /// <param name="data">Channel data that is sent through the event channel.</param>
+        public static async UniTask TriggerEventAsync([NotNull] TChannelData data) => await Instance.TriggerAsync(data);
         
         /// <summary>
         /// Register the listener to the event channel.

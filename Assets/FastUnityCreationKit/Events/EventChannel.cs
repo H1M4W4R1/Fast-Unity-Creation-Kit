@@ -32,6 +32,20 @@ namespace FastUnityCreationKit.Events
                 listener.Invoke(data);
             }
         }
+        
+        /// <summary>
+        /// Trigger the event channel with the data asynchronously.
+        /// </summary>
+        /// <param name="data">The data that is sent through the channel.</param>
+        public virtual async UniTask TriggerAsync([NotNull] TChannelData data)
+        {
+            // Loops through all listeners and invokes them.
+            for (int index = 0; index < listeners.Count; index++)
+            {
+                EventChannelCallbackAsync<TChannelData> listener = listeners[index];
+                await listener.Invoke(data);
+            }
+        }
     }
 
     /// <summary>
