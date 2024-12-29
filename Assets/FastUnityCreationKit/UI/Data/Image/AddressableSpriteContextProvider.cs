@@ -1,17 +1,38 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace FastUnityCreationKit.UI.Data.Image
 {
+    /// <summary>
+    /// Represents a context that is populated with sprite data. This context provider uses Addressables to load the sprite.
+    /// When sprite is loading, it returns null and waits until the sprite is loaded.
+    /// </summary>
     public sealed class AddressableSpriteContextProvider : SpriteContextBaseProvider
     {
         [SerializeField] [TabGroup("Configuration")] [Required]
+        [Tooltip("Reference to the sprite that will be returned by this context.")]
         private AssetReferenceSprite spriteReference;
 
+        /// <summary>
+        /// If true, the sprite is currently loading. Will return null until the sprite is loaded.
+        /// </summary>
         private bool _isLoading;
-        private Sprite _spriteCache;
         
+        /// <summary>
+        /// Cached sprite asset.
+        /// </summary>
+        private Sprite _spriteCache;
+
+        /// <summary>
+        /// Handle to the async operation that loads the sprite.
+        /// </summary>
+        private AsyncOperationHandle<Sprite> _handle;
+
+        /// <summary>
+        /// Current sprite asset. Also handles loading of the asset.
+        /// </summary>
         public Sprite Image
         {
             get
@@ -35,11 +56,12 @@ namespace FastUnityCreationKit.UI.Data.Image
                 _isLoading = true;
                 
                 // If the reference is not valid, load the asset asynchronously 
-                spriteReference.LoadAssetAsync<Sprite>().Completed += handle =>
+                _handle = spriteReference.LoadAssetAsync<Sprite>();
+                _handle.Completed += handle =>
                 {
                     // Cache the result and make the object dirty
                     _spriteCache = handle.Result;
-                    IsDirty = true;
+                    NotifyContextHasChanged();
                     
                     // Reset the loading flag
                     _isLoading = false;
@@ -50,6 +72,17 @@ namespace FastUnityCreationKit.UI.Data.Image
             }
         }
 
+        /// <summary>
+        /// Provides the sprite asset.
+        /// </summary>
+        /// <returns>Sprite asset.</returns>
         public override Sprite Provide() => Image;
+
+        private void OnDestroy()
+        {
+            // Release the handle when the object is destroyed
+            if (_handle.IsValid())
+                Addressables.Release(_handle);
+        }
     }
 }

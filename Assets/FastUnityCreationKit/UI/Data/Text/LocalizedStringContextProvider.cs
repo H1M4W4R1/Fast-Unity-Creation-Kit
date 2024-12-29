@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
-using FastUnityCreationKit.Unity.Events.Interfaces;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -10,7 +9,9 @@ namespace FastUnityCreationKit.UI.Data.Text
     /// This class is used to represent a localized string context.
     /// In standard configuration it is used to display static localized text, however it also
     /// can be used to display text with variables, but in such case it needs to be inherited
-    /// into variable-based context that supports <see cref="IUpdateCallback"/>
+    /// into variable-based context. You can use <see cref="LocalizedString"/> property
+    /// to access the localized string and set custom variables. Changes will be automatically
+    /// reflected in the context.
     /// </summary>
     public class LocalizedStringContextProvider : StringContextBaseProvider, IInitializable
     {
@@ -18,6 +19,11 @@ namespace FastUnityCreationKit.UI.Data.Text
         
         [SerializeField] [TabGroup("Configuration")] [Required]
         private LocalizedString localizedString;
+        
+        /// <summary>
+        /// Access to localized string.
+        /// </summary>
+        public LocalizedString LocalizedString => localizedString;
         
         private string _cachedString;
 
@@ -31,19 +37,24 @@ namespace FastUnityCreationKit.UI.Data.Text
         {
             // Refresh context if string is changed
             _cachedString = value;
-            IsDirty = true;
+            NotifyContextHasChanged();
         }
 
         private string LocalizedText
         {
             get
             {
-                // If the localized string is set, return the localized string
-                if (localizedString != null) return _cachedString ?? localizedString.GetLocalizedString();
+                // If the localized string is set, return the cached string or localized string
+                // if cached string is not set.
+                if (localizedString != null)
+                {
+                    if(!string.IsNullOrEmpty(_cachedString)) return _cachedString;
+                    _cachedString = localizedString.GetLocalizedString();
+                    return _cachedString;
+                }
                 
                 Debug.LogError("Localized string is not set in the context.", this);
                 return string.Empty;
-
             }
         }
 

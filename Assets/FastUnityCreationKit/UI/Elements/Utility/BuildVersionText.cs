@@ -6,8 +6,10 @@ namespace FastUnityCreationKit.UI.Elements.Utility
 {
     /// <summary>
     /// Displays the build version string.
+    /// Automatically adds a <see cref="BuildVersionStringContextProvider"/> to the same GameObject which
+    /// is required for this element to work.
     /// </summary>
-    [RequireComponent(typeof(BuildVersionStringContextProvider))] // Add context automatically
+    [RequireComponent(typeof(BuildVersionStringContextProvider))] 
     public sealed class BuildVersionText : UIText<BuildVersionText>
     {
         

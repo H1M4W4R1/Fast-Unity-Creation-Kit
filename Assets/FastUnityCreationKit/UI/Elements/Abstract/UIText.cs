@@ -9,8 +9,14 @@ namespace FastUnityCreationKit.UI.Elements.Abstract
         IRenderable<TSelfUIObject, string> 
         where TSelfUIObject : UIText<TSelfUIObject>, new()
     {
+        /// <summary>
+        /// Internal reference to the TextMeshProUGUI component.
+        /// </summary>
         private TextMeshProUGUI _textMeshProUGUI;
         
+        /// <summary>
+        /// Exposes the TextMeshProUGUI component for child classes to use.
+        /// </summary>
         protected TextMeshProUGUI Text => _textMeshProUGUI;
 
         public override void Setup()

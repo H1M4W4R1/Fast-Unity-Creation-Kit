@@ -11,7 +11,7 @@
 
         public bool IsDirty => Provider.IsDirty;
 
-        public void Consume() => Provider.IsDirty = false;
+        public void Consume() => Provider.Consume();
         
         public DataContextInfo(IDataContextProvider<TDataContext> provider, TDataContext context)
         {

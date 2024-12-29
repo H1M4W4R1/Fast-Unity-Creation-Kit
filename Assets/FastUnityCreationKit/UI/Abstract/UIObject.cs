@@ -10,12 +10,10 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     /// The base class for all UI objects in Fast Unity Creation Kit.
     /// </summary>
-    public abstract class UIObject<TSelf> : FastMonoBehaviour<TSelf>, IUpdateCallback, IInitializable, ICreateCallback,
+    public abstract class UIObject<TSelf> : FastMonoBehaviour<TSelf>, IUpdateCallback, ICreateCallback,
         IDestroyCallback
         where TSelf : UIObject<TSelf>, new()
     {
-        bool IInitializable.InternalInitializationStatusStorage { get; set; }
-
         public void OnObjectUpdated(float deltaTime)
         {
             // Check if this object is IRenderable, if so, try to render
@@ -39,11 +37,6 @@ namespace FastUnityCreationKit.UI.Abstract
 
         public virtual void Teardown()
         {
-        }
-
-        void IInitializable.OnInitialize()
-        {
-            // TODO: Initialize if supports setup for current object
         }
 
         /// <summary>

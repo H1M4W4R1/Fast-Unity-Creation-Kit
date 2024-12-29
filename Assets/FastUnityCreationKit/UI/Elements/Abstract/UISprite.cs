@@ -5,11 +5,20 @@ using UnityEngine.UI;
 
 namespace FastUnityCreationKit.UI.Elements.Abstract
 {
+    /// <summary>
+    /// Represents generic sprite renderer. Can be for example your icon or image.
+    /// </summary>
     public abstract class UISprite<TSelfUIObject> : UIObject<TSelfUIObject>, IRenderable<TSelfUIObject, Sprite> 
         where TSelfUIObject : UISprite<TSelfUIObject>, new()
     {
+        /// <summary>
+        /// Cached reference to Unity's Image component.
+        /// </summary>
         private Image _image;
         
+        /// <summary>
+        /// External access to Image component. Useful for custom postprocessing.
+        /// </summary>
         protected Image Image => _image;
         
         public override void Setup()
