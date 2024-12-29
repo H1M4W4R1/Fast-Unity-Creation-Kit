@@ -10,7 +10,7 @@ namespace FastUnityCreationKit.Data.Containers
     /// Storage for addressable definitions.
     /// </summary>
     public abstract class AddressableDefinitionContainer<TDataType> : AddressableDataContainer<TDataType>
-        where TDataType : ScriptableObject, IDefinition<TDataType>
+        where TDataType : Object, IDefinition<TDataType>
     {
        
     }

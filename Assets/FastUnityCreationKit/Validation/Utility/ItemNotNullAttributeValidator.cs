@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using FastUnityCreationKit.Utility.Editor.Validation;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Validation.Utility;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor.Validation;
 
 [assembly: RegisterValidator(typeof(ItemNotNullAttributeValidator))]
-namespace FastUnityCreationKit.Utility.Editor.Validation
+namespace FastUnityCreationKit.Validation.Utility
 {
     public sealed class ItemNotNullAttributeValidator : AttributeValidator<ItemNotNullAttribute, object>
     {

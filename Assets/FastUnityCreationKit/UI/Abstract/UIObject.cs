@@ -27,9 +27,16 @@ namespace FastUnityCreationKit.UI.Abstract
             // Check if this object is IRenderable, if so, try to render
             if (this is IRenderable renderable)
                 renderable.TryRender(true);
+            
+            // Call after first render
+            AfterFirstRenderOrCreated();
         }
 
         public virtual void Setup()
+        {
+        }
+        
+        public virtual void AfterFirstRenderOrCreated()
         {
         }
 

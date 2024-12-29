@@ -11,7 +11,7 @@ namespace FastUnityCreationKit.Data.Interfaces
 	/// For more reference see <see cref="IWithDatabase"/>.
 	/// </summary>
     public interface IDatabase<TDataType> : IDatabase, IDataContainer<TDataType>
-		where TDataType : ScriptableObject
+		where TDataType : Object
     {
 	   
     }

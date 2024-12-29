@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using FastUnityCreationKit.Utility.Editor.Validation;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Validation.Utility;
 using Sirenix.OdinInspector.Editor.Validation;
 
 [assembly: RegisterValidator(typeof(SystemDiagnosticsNotNullAttributeValidator))]
 [assembly: RegisterValidator(typeof(JetbrainsNotNullAttributeValidator))]
-namespace FastUnityCreationKit.Utility.Editor.Validation
+namespace FastUnityCreationKit.Validation.Utility
 {
     public sealed class SystemDiagnosticsNotNullAttributeValidator : AttributeValidator<NotNullAttribute, object>
     {

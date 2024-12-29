@@ -11,7 +11,7 @@ namespace FastUnityCreationKit.Data.Interfaces
     /// <typeparam name="TSelfSealedDataType">The type of the object</typeparam>
     public interface IWithDatabase<out TDatabaseType, TSelfSealedDataType> : IWithDatabase
         where TDatabaseType : IDatabase<TSelfSealedDataType>, new() 
-        where TSelfSealedDataType : ScriptableObject
+        where TSelfSealedDataType : Object
     {
         /// <summary>
         /// The database of the object

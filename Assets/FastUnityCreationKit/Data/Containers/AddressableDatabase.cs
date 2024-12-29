@@ -17,7 +17,7 @@ namespace FastUnityCreationKit.Data.Containers
     public abstract class AddressableDatabase<TSelfSealed, TDataType> : AddressableDefinitionContainer<TDataType>, 
         IDatabase<TDataType>, IUniqueDataContainer
         where TSelfSealed : AddressableDatabase<TSelfSealed, TDataType>, new()
-        where TDataType : ScriptableObject, IDefinition<TDataType>
+        where TDataType : Object, IDefinition<TDataType>
     {
         private static TSelfSealed _instance;
 
@@ -36,7 +36,7 @@ namespace FastUnityCreationKit.Data.Containers
                 // We assume that instance will be either null or a reference to database
                 // ScriptableObject, so we don't need to check if it's destroyed.
                 // The issue will arise if user will destroy the database, but it's not
-                // within specification to destroy the database, as database is managed by the system.
+                // within specification to destroy the database, as database is managed by the system. 
                 if(!ReferenceEquals(_instance, null)) return _instance;
                 
                 // Load the database 

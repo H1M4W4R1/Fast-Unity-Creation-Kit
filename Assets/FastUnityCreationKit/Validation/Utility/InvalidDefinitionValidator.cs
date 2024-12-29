@@ -1,11 +1,11 @@
 ﻿using System;
 using FastUnityCreationKit.Utility.Attributes;
-using FastUnityCreationKit.Utility.Editor.Validation;
+using FastUnityCreationKit.Validation.Utility;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor.Validation;
 
 [assembly: RegisterValidator(typeof(InvalidDefinitionValidator))]
-namespace FastUnityCreationKit.Utility.Editor.Validation
+namespace FastUnityCreationKit.Validation.Utility
 {
     public sealed class InvalidDefinitionValidator : AttributeValidator<AutoCreatedObjectAttribute, SerializedScriptableObject>
     {
