@@ -9,16 +9,7 @@ namespace FastUnityCreationKit.UI.Elements.Abstract
     /// </summary>
     public class UIPanel : UIObject
     {
-        /// <summary>
-        /// Local reference to Unity's RectTransform component.
-        /// </summary>
-        protected RectTransform rectTransform;
-        
-        public override void Setup()
-        {
-            base.Setup();
-            rectTransform = GetComponent<RectTransform>();
-        }
+
         
     }
 }

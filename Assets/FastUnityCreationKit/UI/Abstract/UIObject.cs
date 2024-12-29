@@ -12,6 +12,8 @@ namespace FastUnityCreationKit.UI.Abstract
     /// </summary>
     public abstract class UIObject : FastMonoBehaviour, IUpdateCallback, ICreateCallback, IDestroyCallback
     {
+        private RectTransform _rectTransform;
+        
         public void OnObjectUpdated(float deltaTime)
         {
             // Check if this object is IRenderable, if so, try to render
@@ -21,6 +23,9 @@ namespace FastUnityCreationKit.UI.Abstract
 
         public void OnObjectCreated()
         {
+            // Get rect transform
+            _rectTransform = GetComponent<RectTransform>();
+            
             // Setup object
             Setup();
 
@@ -73,5 +78,7 @@ namespace FastUnityCreationKit.UI.Abstract
             // Teardown object
             Teardown();
         }
+
+        public RectTransform RectTransform => _rectTransform;
     }
 }
