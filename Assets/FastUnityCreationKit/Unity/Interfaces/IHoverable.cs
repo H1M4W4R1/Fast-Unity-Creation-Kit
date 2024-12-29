@@ -1,14 +1,11 @@
-﻿using FastUnityCreationKit.Unity.Events.Data;
-using FastUnityCreationKit.Unity.Events.Input;
-using UnityEngine.EventSystems;
+﻿using UnityEngine.EventSystems;
 
 namespace FastUnityCreationKit.Unity.Interfaces
 {
     /// <summary>
     /// Represents an object that can be hovered over.
     /// </summary>
-    public interface IHoverable<TSelf> : IPointerEnterHandler, IPointerExitHandler
-        where TSelf : FastMonoBehaviour<TSelf>, new()
+    public interface IHoverable : IPointerEnterHandler, IPointerExitHandler
     {
         /// <summary>
         /// Event that is called when the object is hovered over.
@@ -23,19 +20,11 @@ namespace FastUnityCreationKit.Unity.Interfaces
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
             OnHoverEnter(eventData);
-            
-            // Call the OnHoverStart event.
-            OnObjectHoverStartEvent<TSelf>.TriggerEvent(
-                new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
         }
         
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
             OnHoverExit(eventData);
-            
-            // Call the OnHoverEnd event.
-            OnObjectHoverEndEvent<TSelf>.TriggerEvent(
-                new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
         }
     }
 }

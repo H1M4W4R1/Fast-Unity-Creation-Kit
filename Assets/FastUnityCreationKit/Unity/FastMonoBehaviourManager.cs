@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FastUnityCreationKit.Structure.Singleton;
-using FastUnityCreationKit.Unity.Events.Interfaces;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Unity
@@ -60,41 +60,10 @@ namespace FastUnityCreationKit.Unity
         /// </summary>
         private void Update()
         {
-            // Compute delta time
-            float deltaTime = Time.deltaTime;
-
-            // Loop through all known FastMonoBehaviours and check for PreUpdateCallbacks
-            for (int fastMonoBehaviourIndex = 0;
-                 fastMonoBehaviourIndex < _fastMonoBehaviours.Count;
-                 fastMonoBehaviourIndex++)
-            {
-                FastMonoBehaviour fastMonoBehaviour = _fastMonoBehaviours[fastMonoBehaviourIndex];
-
-                if (fastMonoBehaviour is IPreUpdateCallback preUpdate)
-                    preUpdate.OnBeforeObjectUpdated(deltaTime);
-            }
-
-            // Loop through all known FastMonoBehaviours and check for UpdateCallbacks
-            for (int fastMonoBehaviourIndex = 0;
-                 fastMonoBehaviourIndex < _fastMonoBehaviours.Count;
-                 fastMonoBehaviourIndex++)
-            {
-                FastMonoBehaviour fastMonoBehaviour = _fastMonoBehaviours[fastMonoBehaviourIndex];
-
-                if (fastMonoBehaviour is IUpdateCallback update)
-                    update.OnObjectUpdated(deltaTime);
-            }
-
-            // Loop through all known FastMonoBehaviours and check for PostUpdateCallbacks
-            for (int fastMonoBehaviourIndex = 0;
-                 fastMonoBehaviourIndex < _fastMonoBehaviours.Count;
-                 fastMonoBehaviourIndex++)
-            {
-                FastMonoBehaviour fastMonoBehaviour = _fastMonoBehaviours[fastMonoBehaviourIndex];
-
-                if (fastMonoBehaviour is IPostUpdateCallback postUpdate)
-                    postUpdate.OnAfterObjectUpdated(deltaTime);
-            }
+            // Loop through all FastMonoBehaviours and call their update methods
+            ExecuteForAll(FastMonoBehaviour.HandlePreUpdate);
+            ExecuteForAll(FastMonoBehaviour.HandleUpdate);
+            ExecuteForAll(FastMonoBehaviour.HandlePostUpdate);
         }
 
         /// <summary>
@@ -102,15 +71,20 @@ namespace FastUnityCreationKit.Unity
         /// </summary>
         public void FixedUpdate()
         {
-            // Loop through all known FastMonoBehaviours and check for FixedUpdateCallbacks
+            ExecuteForAll(FastMonoBehaviour.HandleFixedUpdate);
+        }
+        
+        private void ExecuteForAll(Action<FastMonoBehaviour, float> action)
+        {
+            float deltaTime = Time.deltaTime;
+            
+            // Execute for all known FastMonoBehaviours
             for (int fastMonoBehaviourIndex = 0;
                  fastMonoBehaviourIndex < _fastMonoBehaviours.Count;
                  fastMonoBehaviourIndex++)
             {
                 FastMonoBehaviour fastMonoBehaviour = _fastMonoBehaviours[fastMonoBehaviourIndex];
-
-                if (fastMonoBehaviour is IFixedUpdateCallback fixedUpdate)
-                    fixedUpdate.OnObjectFixedUpdated();
+                action(fastMonoBehaviour, deltaTime);
             }
         }
     }

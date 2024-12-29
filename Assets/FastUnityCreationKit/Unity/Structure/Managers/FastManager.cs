@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.Unity.Structure.Managers
     /// to provide a way to manage features that are not possible to be implemented in a different way.
     /// </summary>
     /// <typeparam name="TManagerType">Type that represents the manager.</typeparam>
-    public abstract class FastManager<TManagerType> : FastMonoBehaviour<TManagerType>,
+    public abstract class FastManager<TManagerType> : FastMonoBehaviour,
         IMonoBehaviourSingleton<TManagerType> where TManagerType : FastManager<TManagerType>, new()
     {
         /// <summary>

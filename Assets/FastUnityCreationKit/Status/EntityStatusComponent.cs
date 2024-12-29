@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.Status
     /// <summary>
     /// This component is used to store entity status.
     /// </summary>
-    public sealed class EntityStatusComponent : FastMonoBehaviour<EntityStatusComponent>
+    public sealed class EntityStatusComponent : FastMonoBehaviour
     {
         /// <summary>
         /// List of all statuses that are applied to the entity.

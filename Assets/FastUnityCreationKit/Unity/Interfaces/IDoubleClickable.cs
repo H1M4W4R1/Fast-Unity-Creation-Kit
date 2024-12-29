@@ -1,6 +1,4 @@
-﻿using FastUnityCreationKit.Unity.Events.Data;
-using FastUnityCreationKit.Unity.Events.Input;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace FastUnityCreationKit.Unity.Interfaces
@@ -8,8 +6,7 @@ namespace FastUnityCreationKit.Unity.Interfaces
     /// <summary>
     /// Represents an object that can be double-clicked.
     /// </summary>
-    public interface IDoubleClickable<TSelf> : IClickable<TSelf>
-        where TSelf : FastMonoBehaviour<TSelf>, new()
+    public interface IDoubleClickable : IClickable
     {
         /// <summary>
         /// Represents the time of the last click.
@@ -26,7 +23,7 @@ namespace FastUnityCreationKit.Unity.Interfaces
         /// Default implementation for the OnClick method.
         /// </summary>
         /// <param name="pointerData">The pointer event data.</param>
-        void IClickable<TSelf>.OnClick(PointerEventData pointerData)
+        void IClickable.OnClick(PointerEventData pointerData)
         {
             // Do nothing.
         }
@@ -47,10 +44,6 @@ namespace FastUnityCreationKit.Unity.Interfaces
             if (Time.time - LastClickTime < DoubleClickTimeThreshold)
             {
                 OnDoubleClick();
-                
-                // Call the OnDoubleClick event.
-                OnObjectDoubleClickedEvent<TSelf>.TriggerEvent(
-                    new FastMonoBehaviourPointerEventData<TSelf>(eventData, (this as TSelf)!));
             }
             else
             {

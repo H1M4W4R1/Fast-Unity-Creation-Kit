@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using FastUnityCreationKit.Unity.Events.Data;
-using FastUnityCreationKit.Unity.Events.Input;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,9 +8,14 @@ namespace FastUnityCreationKit.Unity.Interfaces
     /// <summary>
     /// Represents an object that can be selected.
     /// </summary>
-    public interface ISelectable<TSelf> : ISelectable, IPointerClickHandler
-        where TSelf : FastMonoBehaviour<TSelf>, new()
+    public interface ISelectable : IPointerClickHandler
     {
+        /// <summary>
+        /// List of all selected objects.
+        /// </summary>
+        [UsedImplicitly] protected static List<ISelectable> SelectedObjects { get; } = new();
+
+        
         /// <summary>
         /// Checks if the multi-selection key is pressed.
         /// TODO: Support new input system.
@@ -22,6 +25,23 @@ namespace FastUnityCreationKit.Unity.Interfaces
         
         public bool IsSelected { get; protected set; }
 
+        /// <summary>
+        /// Called when the selection state of the object changes to a selected state.
+        /// </summary>
+        void OnSelected();
+        
+        /// <summary>
+        /// Called when the selection state of the object changes to a deselected state.
+        /// </summary>
+        void OnDeselected();
+        
+        /// <summary>
+        /// Called when the selection state of the object changes.
+        /// </summary>
+        /// <param name="previousSelectionState">Old selection state.</param>
+        /// <param name="newSelectionState">New selection state.</param>
+        void OnSelectionChanged(bool previousSelectionState, bool newSelectionState);
+        
         /// <summary>
         /// Reverses the selection state of the object.
         /// Called when object is clicked.
@@ -46,34 +66,14 @@ namespace FastUnityCreationKit.Unity.Interfaces
             if (IsSelected) SelectedObjects.Add(this);
             else SelectedObjects.Remove(this);
         }
-        
-        /// <summary>
-        /// Called when the object is selected.
-        /// </summary>
-        public void OnSelectionChanged(bool previousSelectionState, bool newSelectionState);
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
             _ReverseSelectionState();
 
-            OnObjectSelectionChangedEvent<TSelf>.TriggerEvent(
-                new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!, IsSelected));
-
             // Trigger selection events
-            if (IsSelected)
-                OnObjectSelectedEvent<TSelf>.TriggerEvent(
-                    new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!, IsSelected));
-            else
-                OnObjectDeselectedEvent<TSelf>.TriggerEvent(
-                    new FastMonoBehaviourSelectionPointerEventData<TSelf>(eventData, (this as TSelf)!, IsSelected));
+            if (IsSelected) OnSelected();
+            else OnDeselected();
         }
-    }
-
-    public interface ISelectable
-    {
-        /// <summary>
-        /// List of all selected objects.
-        /// </summary>
-        [UsedImplicitly] protected static List<ISelectable> SelectedObjects { get; } = new();
     }
 }

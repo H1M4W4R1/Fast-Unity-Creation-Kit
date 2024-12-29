@@ -2,7 +2,7 @@
 using FastUnityCreationKit.UI.Context;
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.Unity;
-using FastUnityCreationKit.Unity.Events.Interfaces;
+using FastUnityCreationKit.Unity.Callbacks;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Abstract
@@ -10,7 +10,7 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     /// The base class for all UI objects in Fast Unity Creation Kit.
     /// </summary>
-    public abstract class UIObject<TSelf> : FastMonoBehaviour<TSelf>, IUpdateCallback, ICreateCallback,
+    public abstract class UIObject<TSelf> : FastMonoBehaviour, IUpdateCallback, ICreateCallback,
         IDestroyCallback
         where TSelf : UIObject<TSelf>, new()
     {

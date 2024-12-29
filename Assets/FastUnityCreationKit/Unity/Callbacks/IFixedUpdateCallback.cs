@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Unity.Events.Interfaces
+﻿namespace FastUnityCreationKit.Unity.Callbacks
 {
     public interface IFixedUpdateCallback
     {
