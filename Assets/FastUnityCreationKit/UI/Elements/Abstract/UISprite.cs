@@ -8,8 +8,7 @@ namespace FastUnityCreationKit.UI.Elements.Abstract
     /// <summary>
     /// Represents generic sprite renderer. Can be for example your icon or image.
     /// </summary>
-    public abstract class UISprite<TSelfUIObject> : UIObject<TSelfUIObject>, IRenderable<TSelfUIObject, Sprite> 
-        where TSelfUIObject : UISprite<TSelfUIObject>, new()
+    public abstract class UISprite : UIObject, IRenderable<Sprite> 
     {
         /// <summary>
         /// Cached reference to Unity's Image component.

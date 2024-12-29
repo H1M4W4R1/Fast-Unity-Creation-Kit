@@ -5,9 +5,7 @@ using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Elements.Abstract
 {
-    public abstract class UIText<TSelfUIObject> : UIObject<TSelfUIObject>, 
-        IRenderable<TSelfUIObject, string> 
-        where TSelfUIObject : UIText<TSelfUIObject>, new()
+    public abstract class UIText : UIObject, IRenderable<string> 
     {
         /// <summary>
         /// Internal reference to the TextMeshProUGUI component.

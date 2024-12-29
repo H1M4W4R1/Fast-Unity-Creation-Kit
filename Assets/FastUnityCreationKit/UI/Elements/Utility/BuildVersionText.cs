@@ -10,7 +10,7 @@ namespace FastUnityCreationKit.UI.Elements.Utility
     /// is required for this element to work.
     /// </summary>
     [RequireComponent(typeof(BuildVersionStringContextProvider))] 
-    public sealed class BuildVersionText : UIText<BuildVersionText>
+    public sealed class BuildVersionText : UIText
     {
         
     }

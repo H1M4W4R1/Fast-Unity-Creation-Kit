@@ -10,9 +10,7 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     /// The base class for all UI objects in Fast Unity Creation Kit.
     /// </summary>
-    public abstract class UIObject<TSelf> : FastMonoBehaviour, IUpdateCallback, ICreateCallback,
-        IDestroyCallback
-        where TSelf : UIObject<TSelf>, new()
+    public abstract class UIObject : FastMonoBehaviour, IUpdateCallback, ICreateCallback, IDestroyCallback
     {
         public void OnObjectUpdated(float deltaTime)
         {
