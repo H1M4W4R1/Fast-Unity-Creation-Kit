@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Unity.Events.Interfaces;
+﻿using FastUnityCreationKit.Structure.Initialization;
+using FastUnityCreationKit.Unity.Events.Interfaces;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -11,17 +12,17 @@ namespace FastUnityCreationKit.UI.Data.Text
     /// can be used to display text with variables, but in such case it needs to be inherited
     /// into variable-based context that supports <see cref="IUpdateCallback"/>
     /// </summary>
-    public class LocalizedStringContext : StringContextBase<LocalizedStringContext>
+    public class LocalizedStringContextProvider : StringContextBaseProvider, IInitializable
     {
+        bool IInitializable.InternalInitializationStatusStorage { get; set; }
+        
         [SerializeField] [TabGroup("Configuration")] [Required]
         private LocalizedString localizedString;
         
         private string _cachedString;
 
-        public override void Setup()
+        void IInitializable.OnInitialize()
         {
-            base.Setup();
-            
             // Subscribe to string changed event
             localizedString.StringChanged += OnStringChanged;
         }
@@ -30,21 +31,29 @@ namespace FastUnityCreationKit.UI.Data.Text
         {
             // Refresh context if string is changed
             _cachedString = value;
-            MakeDirty();
+            IsDirty = true;
         }
 
-        public override string LocalizedText
+        private string LocalizedText
         {
             get
             {
-                if (localizedString == null)
-                {
-                    Debug.LogError("Localized string is not set in the context.", this);
-                    return string.Empty;
-                }
-               
-                return _cachedString ?? localizedString.GetLocalizedString();
+                // If the localized string is set, return the localized string
+                if (localizedString != null) return _cachedString ?? localizedString.GetLocalizedString();
+                
+                Debug.LogError("Localized string is not set in the context.", this);
+                return string.Empty;
+
             }
         }
+
+        public override string Provide()
+        {
+            return LocalizedText;
+        }
+
+        
+
+      
     }
 }

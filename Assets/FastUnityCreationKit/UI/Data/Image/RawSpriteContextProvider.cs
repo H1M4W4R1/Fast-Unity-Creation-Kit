@@ -3,11 +3,12 @@ using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Data.Image
 {
-    public sealed class RawSpriteContext : SpriteContextBase<RawSpriteContext>
+    public sealed class RawSpriteContextProvider : SpriteContextBaseProvider
     {
         [SerializeField] [TabGroup("Configuration")] [Required]
         private Sprite sprite;
-        
-        public override Sprite Image => sprite; 
+
+
+        public override Sprite Provide() => sprite;
     }
 }

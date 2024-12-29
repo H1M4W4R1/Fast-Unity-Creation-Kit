@@ -4,7 +4,7 @@ using UnityEngine.AddressableAssets;
 
 namespace FastUnityCreationKit.UI.Data.Image
 {
-    public sealed class AddressableSpriteContext : SpriteContextBase<AddressableSpriteContext>
+    public sealed class AddressableSpriteContextProvider : SpriteContextBaseProvider
     {
         [SerializeField] [TabGroup("Configuration")] [Required]
         private AssetReferenceSprite spriteReference;
@@ -12,7 +12,7 @@ namespace FastUnityCreationKit.UI.Data.Image
         private bool _isLoading;
         private Sprite _spriteCache;
         
-        public override Sprite Image
+        public Sprite Image
         {
             get
             {
@@ -39,7 +39,7 @@ namespace FastUnityCreationKit.UI.Data.Image
                 {
                     // Cache the result and make the object dirty
                     _spriteCache = handle.Result;
-                    MakeDirty();
+                    IsDirty = true;
                     
                     // Reset the loading flag
                     _isLoading = false;
@@ -49,5 +49,7 @@ namespace FastUnityCreationKit.UI.Data.Image
                 return null;
             }
         }
+
+        public override Sprite Provide() => Image;
     }
 }

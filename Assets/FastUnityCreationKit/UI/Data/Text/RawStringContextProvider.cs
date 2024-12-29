@@ -4,22 +4,25 @@ using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Data.Text
 {
-    public sealed class RawStringContext : StringContextBase<RawStringContext>, IUpdateCallback
+    public sealed class RawStringContextProvider : StringContextBaseProvider
     {
         [TabGroup("Configuration")] [ShowInInspector] [SerializeField]
         private string text;
         private string _renderedText;
-
-        public override string LocalizedText => text;
-
-        public void OnObjectUpdated(float deltaTime)
+        
+        public void FixedUpdate()
         {
             // Check if text has changed and update it
             if (_renderedText == text) return;
             _renderedText = text;
             
             // Notify that the object has been updated
-            MakeDirty();
+            IsDirty = true;
+        }
+
+        public override string Provide()
+        {
+            return text;
         }
     }
 }

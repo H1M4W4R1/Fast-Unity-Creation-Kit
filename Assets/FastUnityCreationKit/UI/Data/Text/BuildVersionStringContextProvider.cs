@@ -5,8 +5,9 @@ namespace FastUnityCreationKit.UI.Data.Text
     /// <summary>
     /// This context is used to store build version string.
     /// </summary>
-    public sealed class BuildVersionStringContext : StringContextBase<BuildVersionStringContext>
+    public sealed class BuildVersionStringContextProvider : StringContextBaseProvider
     {
-        public override string LocalizedText => Application.version;
+        public override string Provide() => Application.version;
+        
     }
 }
