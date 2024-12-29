@@ -26,12 +26,9 @@ namespace FastUnityCreationKit.UI.Elements.Abstract
             _image = GetComponent<Image>();
         }
 
-        public virtual void Render<TTargetContext>(TTargetContext usingDataContext)
+        public virtual void Render(Sprite dataContext)
         {
-            if (usingDataContext is Sprite sprite)
-                _image.sprite = sprite;
-            else
-                Debug.LogError($"Invalid data context type {usingDataContext.GetType().Name} for {GetType().Name}.");
+            _image.sprite = dataContext;
         }
     }
 }

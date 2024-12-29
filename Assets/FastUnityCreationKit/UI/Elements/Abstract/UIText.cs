@@ -23,13 +23,9 @@ namespace FastUnityCreationKit.UI.Elements.Abstract
             _textMeshProUGUI = GetComponent<TextMeshProUGUI>();
         }
 
-        public virtual void Render<TTargetDataContext>(TTargetDataContext usingDataContext)
+        public virtual void Render(string dataContext)
         {
-            // Check if data context is IStringContext and set text
-            if(usingDataContext is string stringContext)
-                _textMeshProUGUI.text = stringContext;
-            else
-                Debug.LogError($"Invalid data context type {usingDataContext.GetType().Name} for {GetType().Name}.");
+            _textMeshProUGUI.text = dataContext;
         }
     }
 }

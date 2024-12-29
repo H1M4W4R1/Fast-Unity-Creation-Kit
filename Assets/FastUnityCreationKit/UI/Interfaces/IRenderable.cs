@@ -49,15 +49,19 @@ namespace FastUnityCreationKit.UI.Interfaces
                 Debug.LogError($"DataContext is not valid on {GetType().Name}.", uiObject);
             }
         }
-    }
-
-    public interface IRenderable
-    {
-        internal void TryRender(bool forceRender = false);
-
+        
         /// <summary>
         /// Render this object
         /// </summary>
-        public void Render<TDataContextSealed>(TDataContextSealed usingDataContext);
+        public void Render(TDataContextSealed dataContext);
+    }
+
+    /// <summary>
+    /// Internal interface for rendering objects. Do not implement this interface directly.
+    /// See <see cref="IRenderable{TDataContextSealed}"/> instead.
+    /// </summary>
+    public interface IRenderable
+    {
+        internal void TryRender(bool forceRender = false);
     }
 }
