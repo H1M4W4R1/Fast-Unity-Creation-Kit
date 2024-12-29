@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using FastUnityCreationKit.Data.Interfaces;
-using FastUnityCreationKit.Data.Validation;
+using FastUnityCreationKit.Validation.Data;
 using Sirenix.OdinInspector.Editor.Validation;
 using UnityEngine;
 
 [assembly: RegisterValidator(typeof(WithDatabaseRootObjectValidator))]
-namespace FastUnityCreationKit.Data.Validation
+namespace FastUnityCreationKit.Validation.Data
 {
     public sealed class WithDatabaseRootObjectValidator : RootObjectValidator<ScriptableObject>
     {

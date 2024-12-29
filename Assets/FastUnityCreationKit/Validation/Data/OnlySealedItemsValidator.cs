@@ -1,17 +1,20 @@
 ﻿using System.Collections;
 using FastUnityCreationKit.Data.Attributes;
 using FastUnityCreationKit.Data.Interfaces;
-using FastUnityCreationKit.Data.Validation;
+using FastUnityCreationKit.Validation.Abstract;
+using FastUnityCreationKit.Validation.Data;
 using Sirenix.OdinInspector.Editor.Validation;
 
-[assembly: RegisterValidator(typeof(OnlySealedItemsAttributeValidator))]
-namespace FastUnityCreationKit.Data.Validation
+[assembly: RegisterValidator(typeof(OnlySealedItemsValidator.InternalValueValidator))]
+[assembly: RegisterValidator(typeof(OnlySealedItemsValidator.InternalRootObjectValidator))]
+namespace FastUnityCreationKit.Validation.Data
 {
-    public sealed class OnlySealedItemsAttributeValidator : AttributeValidator<OnlySealedElementsAttribute, IDataContainer>
+    public sealed class OnlySealedItemsValidator : QuickAttributeBasedValidator<
+        OnlySealedItemsValidator, OnlySealedElementsAttribute, IDataContainer>
     {
-        protected override void Validate(ValidationResult result)
+        public override void Validate(ValidationResult result, IDataContainer value)
         {
-            IList list = Value.RawData;
+            IList list = value.RawData;
             for (int i = list.Count - 1; i >= 0; i--)
             {
                 // Skip if the type is sealed
@@ -24,7 +27,7 @@ namespace FastUnityCreationKit.Data.Validation
                 // Add error if the type is not sealed
                 result.AddError($"Type [{list[i].GetType()}] is not sealed. It cannot be stored in the container.")
                     .WithFix(() => list.RemoveAt(index));
-            }            
+            }     
         }
     }
     

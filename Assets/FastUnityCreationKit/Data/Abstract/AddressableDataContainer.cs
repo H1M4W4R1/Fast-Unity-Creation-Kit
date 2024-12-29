@@ -17,6 +17,7 @@ namespace FastUnityCreationKit.Data.Abstract
     /// This is a container that is auto-populated with data that is stored in an addressable asset group.
     /// </summary>
     /// <typeparam name="TDataType">Type of data that is stored in the container.</typeparam>
+    [NoDuplicates] [NoNullEntries] [OnlySealedElements]
     public abstract class AddressableDataContainer<TDataType> : SerializedScriptableObject,
         IDataContainer<TDataType>, IAutoPopulatedContainer
         where TDataType : Object
@@ -63,9 +64,6 @@ namespace FastUnityCreationKit.Data.Abstract
         /// Internal data container storage object. 
         /// </summary>
         [Serializable]
-        [NoDuplicates]
-        [NoNullEntries]
-        [OnlySealedElements]
         protected sealed class AddressableDataContainerStorageObject : DataContainerBase<TDataType>
         {
         }
