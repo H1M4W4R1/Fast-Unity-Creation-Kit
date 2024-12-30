@@ -12,8 +12,6 @@ namespace FastUnityCreationKit.UI.Interfaces
         
         public bool MultipleSnapsPossible { get; }
         
-        public bool CanBeSnappedTo { get; }
-        
         /// <summary>
         /// Checks if it is possible to snap to the object.
         /// </summary>

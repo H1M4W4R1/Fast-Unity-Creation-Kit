@@ -3,6 +3,7 @@ using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Extensions;
 using FastUnityCreationKit.UI.Interfaces;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,18 +19,27 @@ namespace FastUnityCreationKit.UI.Features.Snapping
         /// <summary>
         /// Object that is currently snapped to.
         /// </summary>
-        [CanBeNull] private TSnapObject _currentlySnappedTo;
+        [CanBeNull] [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        private TSnapObject _currentlySnappedTo;
         
         /// <summary>
         /// Original position of the object.
         /// </summary>
+        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
         private Vector2 _originalPosition;
         
         /// <summary>
         /// If true next pointer up event will execute snap.
         /// </summary>
+        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
         private bool _searchForSnapActive;
 
+        /// <summary>
+        /// If true mouse position will be used to calculate snap position instead
+        /// of transform position. It is recommended to use mouse position for snapping
+        /// for better performance and user experience.
+        /// </summary>
+        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
         protected virtual bool UseMousePosition => true;
 
         public override void Setup()
