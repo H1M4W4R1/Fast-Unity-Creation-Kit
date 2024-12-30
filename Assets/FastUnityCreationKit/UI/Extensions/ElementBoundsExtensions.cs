@@ -9,6 +9,52 @@ namespace FastUnityCreationKit.UI.Extensions
     public static class ElementBoundsExtensions
     {
         /// <summary>
+        /// Gets the distance between the specified UI object and the specified point.
+        /// </summary>
+        /// <param name="uiObject">UI object.</param>
+        /// <param name="fromPoint">Point to get the distance from.</param>
+        /// <returns>Distance between the UI object and the specified point.</returns>
+        public static float GetDistanceTo(this UIObject uiObject, Vector2 fromPoint)
+        {
+            // Get nearest point
+            Vector2 nearestPoint = uiObject.GetNearestPoint(fromPoint);
+           
+            // Return the distance between the point and the nearest point
+            return math.distance(nearestPoint, fromPoint);
+        }
+        
+        /// <summary>
+        /// Gets the nearest point on the element to the specified point.
+        /// </summary>
+        /// <param name="uiObject">UI object.</param>
+        /// <param name="toPoint">Point to get the nearest point to.</param>
+        /// <returns>Nearest point on the element to the specified point.</returns>
+        public static Vector2 GetNearestPoint(this UIObject uiObject, Vector2 toPoint)
+        {
+            Debug.Log("Target point: " + toPoint);
+            
+            // Get rect transform
+            RectTransform rectTransform = uiObject.GetComponent<RectTransform>();
+            
+            // Get bounds
+            Rect rect = rectTransform.rect;
+            
+            Vector2 position = rectTransform.position;
+            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2) rect.size;
+            
+            // Get left bottom corner of the element
+            position -= pivotOffset;
+            
+            // Shift position to centre of rect
+            position += rect.size / 2;
+            
+            Bounds bounds = new Bounds(position, rect.size);
+            
+            // Return the nearest point (absolute position)
+            return bounds.ClosestPoint(toPoint);
+        }
+        
+        /// <summary>
         /// Checks if specified UI object is within the bounds of its parent.
         /// </summary>
         public static bool IsWithinParentBounds(this UIObject uiObject)

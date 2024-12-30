@@ -14,6 +14,7 @@ namespace FastUnityCreationKit.UI.Abstract
     public abstract class UIObject : FastMonoBehaviour, IUpdateCallback, ICreateCallback, IDestroyCallback
     {
         private RectTransform _rectTransform;
+        public RectTransform RectTransform => _rectTransform;
         
         public void OnObjectUpdated(float deltaTime)
         {
@@ -26,6 +27,9 @@ namespace FastUnityCreationKit.UI.Abstract
         {
             // Get rect transform
             _rectTransform = GetComponent<RectTransform>();
+         
+            // Register this object
+            UIManager.Instance.RegisterUserInterfaceObject(this);
             
             // Setup object
             Setup();
@@ -78,8 +82,9 @@ namespace FastUnityCreationKit.UI.Abstract
         {
             // Teardown object
             Teardown();
+            
+            // Unregister this object
+            UIManager.Instance.UnregisterUserInterfaceObject(this);
         }
-
-        public RectTransform RectTransform => _rectTransform;
     }
 }
