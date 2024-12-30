@@ -7,11 +7,12 @@ namespace FastUnityCreationKit.UI.Features
     /// <summary>
     /// Enforces constraints to limit the object position to the parent bounds.
     /// </summary>
-    public sealed class ConstrainedToParentFeature : UIObject
+    public sealed class ConstrainedToParentFeature : UIFeature
     {
         private void LateUpdate()
         {
-            this.FitIntoParent();
+            objectReference.FitIntoParent();
         }
+
     }
 }
