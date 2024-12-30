@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Elements.Abstract
 {
+    [RequireComponent(typeof(TextMeshProUGUI))]
     public abstract class UIText : UIObject, IRenderable<string> 
     {
         /// <summary>
