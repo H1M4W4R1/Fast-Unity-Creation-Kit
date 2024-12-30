@@ -11,8 +11,6 @@ namespace FastUnityCreationKit.Validation.Utility
     {
         protected override void Validate(ValidationResult result)
         {
-            base.Validate(result);
-            
             // Check if object name is equal to expected type name
             // if not it means that object was renamed
             Type type = Value.GetType();

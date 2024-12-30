@@ -9,9 +9,7 @@ namespace FastUnityCreationKit.Identification.Validation
     {
         protected override void Validate(ValidationResult result)
         {
-            base.Validate(result);
-            
-            if(Value?.IsCreated ?? false)
+            if(!Value?.IsCreated ?? false)
                 result.AddError($"Identifier is not created. Something went wrong.");
         }
     }

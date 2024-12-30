@@ -94,13 +94,19 @@ namespace FastUnityCreationKit.Status.Abstract
         }
 
         private void Awake()
-        { 
+        {
+            // Prevent null database
+            if (!Database) return;
+            
             if(!Database.Contains(this))
                 Database.Add(this);
         }
 
         private void OnDestroy()
         {
+            // Prevent null database
+            if (!Database) return;
+            
             Database.Remove(this);
         }
 
