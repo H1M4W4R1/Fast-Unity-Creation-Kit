@@ -20,6 +20,7 @@ namespace FastUnityCreationKit.Data.Containers
         where TDataType : Object, IDefinition<TDataType>
     {
         private static TSelfSealed _instance;
+        private static AsyncOperationHandle<TSelfSealed> _operationHandle;
 
         /// <summary>
         /// Get the instance of the database.
@@ -39,12 +40,19 @@ namespace FastUnityCreationKit.Data.Containers
                 // within specification to destroy the database, as database is managed by the system. 
                 if(!ReferenceEquals(_instance, null)) return _instance;
                 
-                // Load the database 
-                AsyncOperationHandle<TSelfSealed> awaitable = 
-                    Addressables.LoadAssetAsync<TSelfSealed>(typeof(TSelfSealed).Name);
-                awaitable.WaitForCompletion();
+                // Prevent loading the database multiple times
+                if(_operationHandle.IsValid() && !_operationHandle.IsDone)
+                {
+                    _operationHandle.WaitForCompletion();
+                    _instance = _operationHandle.Result;
+                    return _instance;
+                }
                 
-                _instance = awaitable.Result;
+                // Load the database 
+                _operationHandle = Addressables.LoadAssetAsync<TSelfSealed>(typeof(TSelfSealed).Name);
+                _operationHandle.WaitForCompletion();
+                
+                _instance = _operationHandle.Result;
                 return _instance;
             }
         }
