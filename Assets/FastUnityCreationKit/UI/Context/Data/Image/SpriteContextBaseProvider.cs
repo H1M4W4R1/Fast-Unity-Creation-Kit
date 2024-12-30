@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.UI.Context.Providers;
-using FastUnityCreationKit.UI.Context.Providers.Base;
+﻿using FastUnityCreationKit.UI.Context.Providers.Base;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Context.Data.Image

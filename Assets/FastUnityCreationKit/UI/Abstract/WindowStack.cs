@@ -3,7 +3,6 @@ using FastUnityCreationKit.UI.Elements.Core;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
-using NUnit.Framework;
 
 namespace FastUnityCreationKit.UI.Abstract
 {

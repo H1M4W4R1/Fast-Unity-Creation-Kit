@@ -2,6 +2,7 @@
 using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Context.Providers.Base
@@ -26,14 +27,14 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         /// <summary>
         /// Provides the data context.
         /// </summary>
-        public abstract TContextType Provide();
+        [CanBeNull] public abstract TContextType Provide();
 
         /// <summary>
         /// Provides the data context at the specified index.
         /// </summary>
         /// <param name="index">Index of the data context.</param>
         /// <returns>Data context at the specified index.</returns>
-        public virtual TContextType ProvideAt(int index)
+        [CanBeNull] public virtual TContextType ProvideAt(int index)
         {
             Guard<EditorAutomationLogConfig>.Warning(
                 $"ProvideAt method on {GetType().Name} is not overridden. Are you accessing wrong provider? " +

@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
-using FastUnityCreationKit.UI.Features;
 using FastUnityCreationKit.UI.Features.Snapping;
 
 namespace FastUnityCreationKit.UI.Interfaces

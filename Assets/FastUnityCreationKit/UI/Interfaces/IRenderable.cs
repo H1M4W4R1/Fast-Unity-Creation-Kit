@@ -1,10 +1,7 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
-using FastUnityCreationKit.UI.Context;
-using FastUnityCreationKit.UI.Context.Providers;
 using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Utility.Logging;
-using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Interfaces
 {

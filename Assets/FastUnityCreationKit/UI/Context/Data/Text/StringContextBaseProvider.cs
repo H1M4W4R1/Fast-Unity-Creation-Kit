@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.UI.Context.Providers;
-using FastUnityCreationKit.UI.Context.Providers.Base;
+﻿using FastUnityCreationKit.UI.Context.Providers.Base;
 
 namespace FastUnityCreationKit.UI.Context.Data.Text
 {

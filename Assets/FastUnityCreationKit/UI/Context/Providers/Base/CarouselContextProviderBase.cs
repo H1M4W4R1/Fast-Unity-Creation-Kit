@@ -1,0 +1,75 @@
+﻿using FastUnityCreationKit.UI.Elements.Utility.Internal.Carousel;
+using Sirenix.OdinInspector;
+using UnityEngine;
+
+namespace FastUnityCreationKit.UI.Context.Providers.Base
+{
+    /// <summary>
+    /// Carousel context provider - used to provide context in carousel style (with right/left buttons).
+    /// </summary>
+    /// <typeparam name="TContextType">Type of context.</typeparam>
+    public abstract class CarouselContextProviderBase<TContextType> : ListContextProviderBase<TContextType>
+    {
+        [Required] [SerializeField] [TabGroup("Configuration")] private CarouselButton previousButton;
+        [Required] [SerializeField] [TabGroup("Configuration")] private CarouselButton nextButton;
+
+        protected int CurrentIndex { get; private set; } = 0;
+        
+        public virtual bool WrapForward => true;
+        public virtual bool WrapBackward => true;
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            previousButton.onButtonPressed += OnPreviousButtonPressed;
+            nextButton.onButtonPressed += OnNextButtonPressed;
+        }
+
+        public override TContextType Provide()
+        {
+            // Ensure that the list is not empty
+            if(Count == 0)
+                return default;
+            
+            // Ensure that the index is within the bounds
+            // we need to ensure that just in case some overrides will change the index
+            // to be out of bounds
+            if(CurrentIndex < 0 || CurrentIndex >= Count)
+                CurrentIndex = 0;
+            
+            // Return the current element
+            return GetElementAt(CurrentIndex);
+        }
+        
+        private void OnNextButtonPressed()
+        {
+            int index = CurrentIndex;
+            CurrentIndex++;
+            
+            // Wrap around if needed, also prevents index out of bounds
+            if(CurrentIndex >= Count)
+                CurrentIndex = WrapForward ? 0 : Count - 1;
+            
+            // Notify that the context has changed (only if index was changed)
+            // to prevent unnecessary updates
+            if(index != CurrentIndex)
+                NotifyContextHasChanged();
+        }
+
+        private void OnPreviousButtonPressed()
+        {
+            int index = CurrentIndex;
+            CurrentIndex--;
+            
+            // Wrap around if needed, also prevents index out of bounds
+            if(CurrentIndex < 0)
+                CurrentIndex = WrapBackward ? Count - 1 : 0;
+            
+            // Notify that the context has changed (only if index was changed)
+            // to prevent unnecessary updates
+            if(index != CurrentIndex)
+                NotifyContextHasChanged();
+        }
+    }
+}

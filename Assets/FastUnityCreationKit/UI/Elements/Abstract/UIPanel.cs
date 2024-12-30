@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
-using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Elements.Abstract
 {
