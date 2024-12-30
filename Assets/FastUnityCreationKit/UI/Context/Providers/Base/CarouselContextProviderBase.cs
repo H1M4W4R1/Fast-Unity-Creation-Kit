@@ -1,4 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Elements.Utility.Internal.Carousel;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -29,9 +31,12 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         public override TContextType Provide()
         {
             // Ensure that the list is not empty
-            if(Count == 0)
+            if (Count == 0)
+            {
+                Guard<EditorAutomationLogConfig>.Error($"The list is empty on {name}. Cannot provide context.");
                 return default;
-            
+            }
+
             // Ensure that the index is within the bounds
             // we need to ensure that just in case some overrides will change the index
             // to be out of bounds

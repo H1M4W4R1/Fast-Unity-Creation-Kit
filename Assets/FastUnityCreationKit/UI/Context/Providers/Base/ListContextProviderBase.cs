@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 
@@ -79,9 +81,9 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         {
             // If no element with the specified index exists, return
             // as we cannot remove an element that does not exist
-            if(index < 0 || index >= _elements.Count)
+            if (index < 0 || index >= _elements.Count)
                 return;
-            
+
             _elements.RemoveAt(index);
             NotifyContextHasChanged();
         }
@@ -94,8 +96,11 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         [CanBeNull] protected TContextType GetElementAt(int index)
         {
             if (index < 0 || index >= _elements.Count)
+            {
+                Guard<EditorAutomationLogConfig>.Error($"Requested index {index} is out of bounds on {name}.");
                 return default;
-            
+            }
+
             return _elements[index];
         }
         
@@ -107,8 +112,11 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         protected void SetElementAt(int index, [NotNull] TContextType element)
         {
             if (index < 0 || index >= _elements.Count)
+            {
+                Guard<EditorAutomationLogConfig>.Error($"Requested index {index} is out of bounds on {name}.");
                 return;
-            
+            }
+
             _elements[index] = element;
             NotifyContextHasChanged();
         }
