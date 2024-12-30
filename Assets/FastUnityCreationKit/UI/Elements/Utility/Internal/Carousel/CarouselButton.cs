@@ -1,7 +1,5 @@
 ﻿using System;
 using FastUnityCreationKit.UI.Elements.Abstract;
-using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Elements.Utility.Internal.Carousel
 {
@@ -10,8 +8,6 @@ namespace FastUnityCreationKit.UI.Elements.Utility.Internal.Carousel
     /// </summary>
     public sealed class CarouselButton : UIButton
     {
-        [SerializeField] [ShowInInspector] [TabGroup("Configuration")] private CarouselButtonType type;
-
         /// <summary>
         /// Internal action that is invoked when the button is pressed.
         /// </summary>
