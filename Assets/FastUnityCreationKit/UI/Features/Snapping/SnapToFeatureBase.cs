@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.UI.Features.Snapping
     /// Represents a feature that allows snapping to a specific position.
     /// </summary>
     /// TODO: Consider if events should be propagated to children
-    public abstract class SnapToFeature<TSnapObject> : UIFeature, IPointerUpHandler, IPointerDownHandler
+    public abstract class SnapToFeatureBase<TSnapObject> : UIFeature, IPointerUpHandler, IPointerDownHandler
         where TSnapObject : UIObject, ISnapTarget<TSnapObject>
     {
         /// <summary>

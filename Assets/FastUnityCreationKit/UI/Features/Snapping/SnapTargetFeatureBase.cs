@@ -9,8 +9,8 @@ namespace FastUnityCreationKit.UI.Features.Snapping
     /// This object does not support multi-snap instances.
     /// </summary>
     /// <typeparam name="TSelf">Type of the snap target.</typeparam>
-    public abstract class SnapTargetBase<TSelf> : UIObject, ISnapTarget<TSelf>, IOnObjectSnappedCallback<TSelf>
-        where TSelf : SnapTargetBase<TSelf>, ISnapTarget<TSelf>, new()
+    public abstract class SnapTargetFeatureBase<TSelf> : UIObject, ISnapTarget<TSelf>, IOnObjectSnappedCallback<TSelf>
+        where TSelf : SnapTargetFeatureBase<TSelf>, ISnapTarget<TSelf>, new()
     {
         /// <summary>
         /// If true, an object is snapped to this object.
@@ -29,14 +29,14 @@ namespace FastUnityCreationKit.UI.Features.Snapping
         /// </summary>
         /// <param name="snapObject">Object you wish to snap to.</param>
         /// <returns>True if it is possible to snap to the object, false otherwise</returns>
-        public virtual bool IsPossibleToSnap(SnapToFeature<TSelf> snapObject) => !HasSnappedObject || MultipleSnapsPossible;
+        public virtual bool IsPossibleToSnap(SnapToFeatureBase<TSelf> snapObject) => !HasSnappedObject || MultipleSnapsPossible;
         
-        public virtual void OnSnapBreak(SnapToFeature<TSelf> objectBrokenFromSnap)
+        public virtual void OnSnapBreak(SnapToFeatureBase<TSelf> objectBrokenFromSnap)
         {
             HasSnappedObject = false;
         }
 
-        public virtual void OnSnap(SnapToFeature<TSelf> objectSnapped)
+        public virtual void OnSnap(SnapToFeatureBase<TSelf> objectSnapped)
         {
             HasSnappedObject = true;
         }

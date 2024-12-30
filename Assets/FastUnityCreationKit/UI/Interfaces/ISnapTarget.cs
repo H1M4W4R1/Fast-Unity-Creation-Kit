@@ -15,6 +15,6 @@ namespace FastUnityCreationKit.UI.Interfaces
         /// <summary>
         /// Checks if it is possible to snap to the object.
         /// </summary>
-        bool IsPossibleToSnap(SnapToFeature<TSelf> snapObject);
+        bool IsPossibleToSnap(SnapToFeatureBase<TSelf> snapObject);
     }
 }

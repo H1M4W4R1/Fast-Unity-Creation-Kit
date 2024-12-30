@@ -2,7 +2,7 @@
 
 namespace FastUnityCreationKit.UI.Features.Example
 {
-    public sealed class SimpleSnapObject : SnapToFeature<SimpleSnapTarget>
+    public sealed class SimpleSnapObject : SnapToFeatureBase<SimpleSnapTargetFeature>
     {
         
     }
