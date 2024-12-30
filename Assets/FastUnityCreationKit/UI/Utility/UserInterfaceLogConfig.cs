@@ -1,7 +1,7 @@
 ﻿using FastUnityCreationKit.Utility.Logging;
 using Unity.Logging;
 
-namespace FastUnityCreationKit.UI
+namespace FastUnityCreationKit.UI.Utility
 {
     public sealed class UserInterfaceLogConfig : LogConfigBase
     {

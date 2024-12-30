@@ -1,7 +1,7 @@
-﻿using FastUnityCreationKit.UI.Context;
+﻿using FastUnityCreationKit.UI.Context.Providers;
 using UnityEngine;
 
-namespace FastUnityCreationKit.UI.Data.Image
+namespace FastUnityCreationKit.UI.Context.Data.Image
 {
     /// <summary>
     /// Represents a context that is populated with sprite data.

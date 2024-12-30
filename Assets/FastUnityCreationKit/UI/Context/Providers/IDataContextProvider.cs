@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.UI.Context
+﻿namespace FastUnityCreationKit.UI.Context.Providers
 {
     public interface IDataContextProvider<out TDataContext>
     {

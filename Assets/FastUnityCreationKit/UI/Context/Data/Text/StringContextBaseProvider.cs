@@ -1,6 +1,6 @@
-﻿using FastUnityCreationKit.UI.Context;
+﻿using FastUnityCreationKit.UI.Context.Providers;
 
-namespace FastUnityCreationKit.UI.Data.Text
+namespace FastUnityCreationKit.UI.Context.Data.Text
 {
     /// <summary>
     /// Represents a context that is populated with string data.

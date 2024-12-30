@@ -1,10 +1,11 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
+using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Localization;
 
-namespace FastUnityCreationKit.UI.Data.Text
+namespace FastUnityCreationKit.UI.Context.Data.Text
 {
     /// <summary>
     /// This class is used to represent a localized string context.

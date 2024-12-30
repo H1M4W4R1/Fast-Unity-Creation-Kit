@@ -1,6 +1,6 @@
 ﻿using UnityEngine.Device;
 
-namespace FastUnityCreationKit.UI.Data.Text
+namespace FastUnityCreationKit.UI.Context.Data.Text
 {
     /// <summary>
     /// This context is used to store build version string.

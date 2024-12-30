@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using FastUnityCreationKit.UI.Abstract;
-using JetBrains.Annotations;
 
-namespace FastUnityCreationKit.UI
+namespace FastUnityCreationKit.UI.Utility
 {
     /// <summary>
     /// Represents a table of UI objects.

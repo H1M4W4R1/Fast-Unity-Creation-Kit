@@ -1,7 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace FastUnityCreationKit.UI.Data.Image
+namespace FastUnityCreationKit.UI.Context.Data.Image
 {
     /// <summary>
     /// Providers raw sprite context. It always returns image that is set in the inspector.

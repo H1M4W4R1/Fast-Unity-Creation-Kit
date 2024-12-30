@@ -1,7 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace FastUnityCreationKit.UI.Data.Text
+namespace FastUnityCreationKit.UI.Context.Data.Text
 {
     /// <summary>
     /// Provides raw string data to the renderer.

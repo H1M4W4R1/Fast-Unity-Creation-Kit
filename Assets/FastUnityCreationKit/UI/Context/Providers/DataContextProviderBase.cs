@@ -3,7 +3,7 @@ using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using UnityEngine;
 
-namespace FastUnityCreationKit.UI.Context
+namespace FastUnityCreationKit.UI.Context.Providers
 {
     /// <summary>
     /// Represents a data context provider.

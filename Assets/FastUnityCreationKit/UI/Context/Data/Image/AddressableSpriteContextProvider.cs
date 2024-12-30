@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace FastUnityCreationKit.UI.Data.Image
+namespace FastUnityCreationKit.UI.Context.Data.Image
 {
     /// <summary>
     /// Represents a context that is populated with sprite data. This context provider uses Addressables to load the sprite.

@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.UI.Data.Text;
+﻿using FastUnityCreationKit.UI.Context.Data.Text;
 using FastUnityCreationKit.UI.Elements.Abstract;
 using UnityEngine;
 
