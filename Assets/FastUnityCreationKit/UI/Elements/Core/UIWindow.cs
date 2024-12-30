@@ -4,6 +4,7 @@ using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Elements.Abstract;
 using FastUnityCreationKit.Unity.Interfaces;
 using FastUnityCreationKit.Utility.Attributes;
+using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -51,7 +52,7 @@ namespace FastUnityCreationKit.UI.Elements.Core
         /// <param name="stack">Window stack to set.</param>
         public void SetWindowStack([NotNull] WindowStack stack) =>
             windowStack = stack;
-        
+
         /// <summary>
         /// Set order of window in canvas.
         /// </summary>
@@ -70,6 +71,7 @@ namespace FastUnityCreationKit.UI.Elements.Core
             // Move window to top of stack.
             windowStack.Windows.Remove(this);
             windowStack.Windows.Add(this);
+            Guard<UserInterfaceLogConfig>.Info($"Window {GetType().Name} moved to top of stack.");
             
             // Sort windows in manager as window was clicked.
             UIManager.Instance.SortWindows();
@@ -93,6 +95,8 @@ namespace FastUnityCreationKit.UI.Elements.Core
             // Sort windows in manager as window was closed.
             if(notifyManager)
                 UIManager.Instance.SortWindows();
+            
+            Guard<UserInterfaceLogConfig>.Info($"Window {GetType().Name} closed.");
         }
 
         /// <summary>

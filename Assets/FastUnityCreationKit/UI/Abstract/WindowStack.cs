@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FastUnityCreationKit.UI.Elements.Core;
+using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
@@ -24,14 +25,19 @@ namespace FastUnityCreationKit.UI.Abstract
         /// Order of first window in stack.
         /// </summary>
         private int StartOrder { get; set; }
-                
-        internal void DeleteWindow([NotNull] UIWindow window) =>
+
+        internal void DeleteWindow([NotNull] UIWindow window)
+        {
             Windows.Remove(window);
-        
+            window.SetWindowStack(null!);
+            Guard<UserInterfaceLogConfig>.Verbose($"Window {window.name} has been removed from stack.");
+        }
+
         internal void AddWindow([NotNull] UIWindow window)
         {
             Windows.Add(window);
             window.SetWindowStack(this);
+            Guard<UserInterfaceLogConfig>.Verbose($"Window {window.name} has been added to stack.");
         }
         
         /// <summary>

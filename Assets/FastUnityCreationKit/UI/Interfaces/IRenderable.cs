@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Context;
+using FastUnityCreationKit.Utility.Logging;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Interfaces
@@ -21,7 +22,7 @@ namespace FastUnityCreationKit.UI.Interfaces
                 if (this is UIObject uiObject) return uiObject.GetDataContext<TDataContextSealed>();
 
                 // Log error if this object is not UIObject
-                Debug.LogError($"DataContext is not supported on {GetType().Name}.");
+                Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on {GetType().Name}.");
                 return default;
             }
         }
@@ -31,7 +32,7 @@ namespace FastUnityCreationKit.UI.Interfaces
             // Check if this object is UIObject
             if (this is not UIObject uiObject)
             {
-                Debug.LogError($"Render is not supported on {GetType().Name}.");
+                Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on {GetType().Name}.");
                 return;
             }
 
@@ -42,11 +43,13 @@ namespace FastUnityCreationKit.UI.Interfaces
                 {
                     Render(DataContext.Context);
                     DataContext.Consume();
+                    
+                    Guard<UserInterfaceLogConfig>.Verbose($"Rendered {GetType().Name} [was enforced: {forceRender}].");
                 }
             }
             else
             {
-                Debug.LogError($"DataContext is not valid on {GetType().Name}.", uiObject);
+                Guard<UserInterfaceLogConfig>.Error($"Data context is not valid for {GetType().Name}.");
             }
         }
         

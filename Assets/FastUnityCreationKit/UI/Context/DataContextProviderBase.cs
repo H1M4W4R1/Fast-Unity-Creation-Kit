@@ -1,4 +1,6 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Context
@@ -9,17 +11,17 @@ namespace FastUnityCreationKit.UI.Context
     public abstract class DataContextProviderBase<TContextType> : MonoBehaviour, IDataContextProvider<TContextType>
     {
         public delegate void OnContextChangedHandler(TContextType context);
-        
+
         /// <summary>
         /// Notified when the context has changed.
         /// </summary>
         public event OnContextChangedHandler OnContextChanged;
-        
+
         /// <summary>
         /// Represents the dirty state of the data context.
         /// </summary>
         public virtual bool IsDirty { get; private set; }
-        
+
         /// <summary>
         /// Provides the data context.
         /// </summary>
@@ -32,12 +34,13 @@ namespace FastUnityCreationKit.UI.Context
         /// <returns>Data context at the specified index.</returns>
         public virtual TContextType ProvideAt(int index)
         {
-            Debug.LogWarning("ProvideAt method is not overridden. Are you accessing wrong provider? " +
-                             "Executing fallback to default Provide method.");
+            Guard<EditorAutomationLogConfig>.Warning(
+                $"ProvideAt method on {GetType().Name} is not overridden. Are you accessing wrong provider? " +
+                "Executing fallback to default Provide method.");
             Provide();
             return default;
         }
-        
+
         /// <summary>
         /// Resets the dirty state of the data context.
         /// </summary>
@@ -45,7 +48,7 @@ namespace FastUnityCreationKit.UI.Context
 
         protected virtual void Awake()
         {
-            if(this is IInitializable initializable)
+            if (this is IInitializable initializable)
                 initializable.Initialize();
         }
 

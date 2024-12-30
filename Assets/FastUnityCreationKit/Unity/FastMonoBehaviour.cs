@@ -1,6 +1,8 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.Unity.Callbacks;
 using FastUnityCreationKit.Unity.Interfaces;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Unity
@@ -30,9 +32,9 @@ namespace FastUnityCreationKit.Unity
 
                     // Log warning in editor's console to notify the user.
 #if UNITY_EDITOR
-                    Debug.LogWarning(
+                    Guard<EditorAutomationLogConfig>.Warning(
                         $"Persistent object {name} is not on the root level. This may cause unexpected behavior." +
-                        $"Fail-safe triggered: moving object to root layer.", this);
+                        $"Fail-safe triggered: moving object to root layer.");
 #endif
                 }
 
@@ -48,7 +50,10 @@ namespace FastUnityCreationKit.Unity
 
             // If this is both clickable and selectable print warning.
             if (this is IClickable and ISelectable)
-                Debug.LogWarning("Object is both clickable and selectable. This may cause unexpected behavior.");
+            {
+                Guard<EditorAutomationLogConfig>.Warning(
+                    $"Object {name} is both clickable and selectable. This may cause unexpected behavior.");
+            }
         }
 
         protected void OnEnable()

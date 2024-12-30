@@ -2,6 +2,7 @@
 using FastUnityCreationKit.Data.Attributes;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Validation.Abstract;
 using FastUnityCreationKit.Validation.Data;
 using Sirenix.OdinInspector.Editor.Validation;
@@ -21,7 +22,7 @@ namespace FastUnityCreationKit.Validation.Data
             {
                 if (list[i].IsNull())
                 {
-                    Debug.Log($"Null item removed from the container at index {i}: {list[i]}");
+                    Guard<EditorAutomationLogConfig>.Error($"Removing null item found in {value.GetType().Name} at index {i}");
                     list.RemoveAt(i);
                 }
             }

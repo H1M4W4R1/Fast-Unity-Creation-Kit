@@ -36,7 +36,7 @@ namespace FastUnityCreationKit.Status.References
             this.statusLevel = statusLevel;
             
             // Notify that status was applied
-            status.OnStatusApplied(context).GetAwaiter().GetResult();
+            status.OnStatusApplied(context).Forget();
         }
 
         private async UniTask CheckLimitsAndRaiseEvents(EntityStatusComponent context)

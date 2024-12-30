@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
+using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -53,7 +54,7 @@ namespace FastUnityCreationKit.UI.Data.Text
                     return _cachedString;
                 }
                 
-                Debug.LogError("Localized string is not set in the context.", this);
+                Guard<UserInterfaceLogConfig>.Error("Localized string is not set in the context provider.");
                 return string.Empty;
             }
         }

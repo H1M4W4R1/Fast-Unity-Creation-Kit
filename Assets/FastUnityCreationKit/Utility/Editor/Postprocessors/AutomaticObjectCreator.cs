@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Utility.Attributes;
+using FastUnityCreationKit.Utility.Logging;
 using UnityEditor;
 using UnityEditor.Search;
 using UnityEngine;
@@ -45,7 +46,7 @@ namespace FastUnityCreationKit.Utility.Editor.Postprocessors
                     if (!typeof(ScriptableObject).IsAssignableFrom(type))
                     {
                         // Log error 
-                        Debug.LogError($"Type {type.Name} cannot be created as it is not a scriptable object. Skipping.");
+                        Guard<EditorAutomationLogConfig>.Error($"Type {type.Name} cannot be created as it is not a scriptable object. Skipping.");
                         continue;
                     }
 
@@ -82,7 +83,7 @@ namespace FastUnityCreationKit.Utility.Editor.Postprocessors
                     if (!AssetDatabase.IsValidFolder(currentPath + "/" + splitDir[j]))
                     {
                         AssetDatabase.CreateFolder(currentPath, splitDir[j]);
-                        Debug.Log("Created folder: " + currentPath + "/" + splitDir[j]);
+                        Guard<EditorAutomationLogConfig>.Verbose($"Created missing folder: {currentPath}/{splitDir[j]}");
                     }
           
                     // Append new directory to path 
@@ -92,7 +93,10 @@ namespace FastUnityCreationKit.Utility.Editor.Postprocessors
 
                 // Ensure that the object type is a scriptable object
                 if (!typeof(ScriptableObject).IsAssignableFrom(type))
-                    throw new ArgumentException("Object type must be a scriptable object.");
+                {
+                    Guard<EditorAutomationLogConfig>.Error($"Type {type.Name} cannot be created as it is not a scriptable object. Skipping.");
+                    continue;
+                }
 
                 if(!currentPath.EndsWith('/'))
                     currentPath += '/';
@@ -107,6 +111,9 @@ namespace FastUnityCreationKit.Utility.Editor.Postprocessors
                 // Save object
                 AssetDatabase.CreateAsset(obj, $"{currentPath}{type.Name}.asset");
                 nCreated++;
+                
+                // Log creation
+                Guard<EditorAutomationLogConfig>.Verbose($"Created {type.Name} at {currentPath}{type.Name}.asset");
             }
             
             // Save assets
@@ -115,8 +122,6 @@ namespace FastUnityCreationKit.Utility.Editor.Postprocessors
 
             if (nCreated > 0)
             {
-                Debug.Log($"Created {nCreated} objects.");
-                
                 // Reload domain if objects were created
                 // this allows for AddressableAssetsAssigner to create
                 // groups and assign assets to them as otherwise

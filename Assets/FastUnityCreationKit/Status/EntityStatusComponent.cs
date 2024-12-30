@@ -5,6 +5,7 @@ using FastUnityCreationKit.Status.Interfaces;
 using FastUnityCreationKit.Status.References;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -18,7 +19,9 @@ namespace FastUnityCreationKit.Status
         /// <summary>
         /// List of all statuses that are applied to the entity.
         /// </summary>
-        [ShowInInspector] [TabGroup("Debug")] [ReadOnly]
+        [ShowInInspector]
+        [TabGroup("Debug")]
+        [ReadOnly]
         public List<AppliedStatusReference> AppliedStatuses { get; } = new List<AppliedStatusReference>();
 
         /// <summary>
@@ -35,10 +38,13 @@ namespace FastUnityCreationKit.Status
             // Get status from the database
             TStatusType status = StatusDatabase.Instance.GetStatus<TStatusType>();
 
-            if (EditorCheck.Perform(status == null)
-                .WithError($"Status of type {typeof(TStatusType).Name} not found in the database. Probably" +
-                           $"database was not repopulated correctly.")) return false;
-            
+            // If status does not exist, return false
+            if (ReferenceEquals(status, null))
+            {
+                Guard<EditorAutomationLogConfig>.Error($"Status {typeof(TStatusType).Name} not found in the database.");
+                return false;
+            }
+
             // Check if status already exists
             AppliedStatusReference reference = GetStatusReference<TStatusType>();
             if (reference != null)
@@ -46,13 +52,15 @@ namespace FastUnityCreationKit.Status
                 await IncreaseLevel<TStatusType>(nLevels);
                 return true;
             }
-            
+
             // Create new status reference
             reference = new AppliedStatusReference(this, status, nLevels);
             AppliedStatuses.Add(reference);
+            Guard<EntityLogConfig>.Info(
+                $"Status {typeof(TStatusType).Name} added to the entity {name} with level {nLevels}.");
             return true;
         }
-        
+
         /// <summary>
         /// Checks if status of type <typeparamref name="TStatusType"/> is applied to the entity.
         /// </summary>
@@ -73,12 +81,13 @@ namespace FastUnityCreationKit.Status
 
             // If status does not exist, return false
             if (reference == null) return false;
-            
+
             // Otherwise, remove status and return true
             await DecreaseLevel<TStatusType>(nLevels);
+            Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} removed from the entity {name}.");
             return true;
         }
-        
+
         /// <summary>
         /// Clears status of type <typeparamref name="TStatusType"/> from the entity.
         /// </summary>
@@ -87,14 +96,15 @@ namespace FastUnityCreationKit.Status
         {
             // Get status reference if exists
             AppliedStatusReference reference = GetStatusReference<TStatusType>();
-            
+
             // If status does not exist, return
             if (reference == null) return;
-            
+
             // Otherwise, remove status
             await DecreaseLevel<TStatusType>(reference.statusLevel);
+            Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} cleared from the entity {name}.");
         }
-        
+
         /// <summary>
         /// Clears all statuses from the entity.
         /// </summary>
@@ -103,17 +113,19 @@ namespace FastUnityCreationKit.Status
             for (int i = AppliedStatuses.Count - 1; i >= 0; i--)
             {
                 AppliedStatusReference reference = AppliedStatuses[i];
-                
+
                 long nLevels = reference.statusLevel;
-                
+
                 // Otherwise, decrease status level
                 if (reference.Status is IPercentageStatus)
                     await reference.TakeLevel(this, nLevels * IPercentageStatus.PERCENTAGE_SCALE);
                 else
                     await reference.TakeLevel(this, nLevels);
             }
+
+            Guard<EntityLogConfig>.Info($"All statuses cleared from the entity {name}.");
         }
-        
+
         /// <summary>
         /// Increases the level of status of type <typeparamref name="TStatusType"/>.
         /// </summary>
@@ -125,20 +137,28 @@ namespace FastUnityCreationKit.Status
         {
             // Get status reference if exists
             AppliedStatusReference reference = GetStatusReference<TStatusType>();
-            
+
             // If status does not exist, add status
             if (reference == null)
                 return await AddStatus<TStatusType>(nLevels);
-            
+
             // Otherwise, increase status level
-            if(reference.Status is IPercentageStatus)
+            if (reference.Status is IPercentageStatus)
+            {
                 await reference.AddLevel(this, nLevels * IPercentageStatus.PERCENTAGE_SCALE);
+                Guard<EntityLogConfig>.Info(
+                    $"Status {typeof(TStatusType).Name} increased by {(nLevels * IPercentageStatus.PERCENTAGE_SCALE):P} [{nLevels} levels].");
+            }
             else
+            {
                 await reference.AddLevel(this, nLevels);
-            
+                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} increased by {nLevels} levels.");
+            }
+
+
             return true;
         }
-        
+
         /// <summary>
         /// Decreases the level of status of type <typeparamref name="TStatusType"/>.
         /// </summary>
@@ -150,16 +170,24 @@ namespace FastUnityCreationKit.Status
         {
             // Get status reference if exists
             AppliedStatusReference reference = GetStatusReference<TStatusType>();
-            
+
             // If status does not exist, return false
             if (reference == null) return false;
-            
+
             // Otherwise, decrease status level
             if (reference.Status is IPercentageStatus)
+            {
                 await reference.TakeLevel(this, nLevels * IPercentageStatus.PERCENTAGE_SCALE);
+                Guard<EntityLogConfig>.Info(
+                    $"Status {typeof(TStatusType).Name} decreased by {(nLevels * IPercentageStatus.PERCENTAGE_SCALE):P}");
+            }
             else
+            {
                 await reference.TakeLevel(this, nLevels);
-            
+                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} decreased by {nLevels} [{nLevels} levels].");
+            }
+
+
             return true;
         }
 
@@ -170,14 +198,14 @@ namespace FastUnityCreationKit.Status
             where TStatusType : StatusBase
         {
             AppliedStatusReference statusRef = GetStatusReference<TStatusType>();
-            
+
             // If status is percentage status, return total percentage loops
-            if(statusRef.Status is IPercentageStatus percentageStatus)
+            if (statusRef.Status is IPercentageStatus percentageStatus)
                 return statusRef.statusLevel / IPercentageStatus.PERCENTAGE_SCALE;
-            
+
             return statusRef.statusLevel;
         }
-        
+
         /// <summary>
         /// Gets the percentage of status of type <typeparamref name="TStatusType"/>.
         /// </summary>
@@ -188,7 +216,7 @@ namespace FastUnityCreationKit.Status
             where TStatusType : StatusBase
         {
             AppliedStatusReference statusRef = GetStatusReference<TStatusType>();
-            
+
             // If status is percentage status, return total percentage loops
             if (statusRef.Status is IPercentageStatus percentageStatus)
             {
@@ -196,42 +224,50 @@ namespace FastUnityCreationKit.Status
                 return percentageRemnant / (float) IPercentageStatus.PERCENTAGE_SCALE;
             }
 
-            Debug.LogError($"Status {nameof(TStatusType)} is not a percentage status.", this);
+            Guard<EditorAutomationLogConfig>.Error($"Status {typeof(TStatusType).Name} is not a percentage status.");
             return 0;
         }
-        
+
         public async UniTask<bool> IncreasePercentage<TStatusType>(float percentage)
             where TStatusType : StatusBase
         {
             // Get status reference if exists
             AppliedStatusReference reference = GetStatusReference<TStatusType>();
-            
+
             // Otherwise, increase status level
-            if(reference?.Status is IPercentageStatus)
+            if (reference?.Status is IPercentageStatus)
+            {
                 await reference.AddLevel(this, (long) (percentage * IPercentageStatus.PERCENTAGE_SCALE));
-            else EditorCheck.Perform(true) // Log error if status is not percentage status
-                .WithError($"Status {nameof(TStatusType)} is not a percentage status.");
-            
+                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} increased by {percentage:P}.");
+            }
+            else
+                Guard<EditorAutomationLogConfig>.Error(
+                    $"Status {typeof(TStatusType).Name} is not a percentage status.");
+
             return false;
         }
-        
+
         public async UniTask<bool> DecreasePercentage<TStatusType>(float percentage)
             where TStatusType : StatusBase
         {
             // Get status reference if exists
             AppliedStatusReference reference = GetStatusReference<TStatusType>();
-            
+
             // Otherwise, increase status level
-            if(reference?.Status is IPercentageStatus)
+            if (reference?.Status is IPercentageStatus)
+            {
                 await reference.TakeLevel(this, (long) (percentage * IPercentageStatus.PERCENTAGE_SCALE));
-            else EditorCheck.Perform(true) // Log error if status is not percentage status
-                    .WithError($"Status {nameof(TStatusType)} is not a percentage status.");
-            
+                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} decreased by {percentage:P}.");
+            }
+            else
+                Guard<EditorAutomationLogConfig>.Error(
+                    $"Status {typeof(TStatusType).Name} is not a percentage status.");
+
             return false;
         }
 
         /// <summary>
-        /// Gets a reference to the status of type <typeparamref name="TStatusType"/> that
+        /// Gets a reference to the status of type <typeparamref name="TStatusType"/> that 
         /// </summary>
         public AppliedStatusReference GetStatusReference<TStatusType>()
             where TStatusType : StatusBase
@@ -243,6 +279,7 @@ namespace FastUnityCreationKit.Status
                     return AppliedStatuses[i];
             }
 
+            Guard<EntityLogConfig>.Warning($"Status {typeof(TStatusType).Name} not found in the entity {name}.");
             return null;
         }
 

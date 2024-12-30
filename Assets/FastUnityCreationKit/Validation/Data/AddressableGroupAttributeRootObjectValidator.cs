@@ -1,11 +1,14 @@
 ﻿using System.Reflection;
+using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Editor.Extensions;
+using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Validation.Data;
 using Sirenix.OdinInspector.Editor.Validation;
 using UnityEngine;
 
 [assembly: RegisterValidator(typeof(AddressableGroupAttributeRootObjectValidator))]
+
 namespace FastUnityCreationKit.Validation.Data
 {
     public sealed class AddressableGroupAttributeRootObjectValidator : RootObjectValidator<ScriptableObject>
@@ -17,11 +20,7 @@ namespace FastUnityCreationKit.Validation.Data
             if (attribute == null) return;
 
             if (Value.SetAddressableGroup(attribute.GroupName, attribute.Labels))
-            {
-                Debug.Log($"Assigned {Value.name} to addressable group {attribute.GroupName}");
-            }
-
+                Guard<EditorAutomationLogConfig>.Verbose($"Assigned {Value.name} to addressable group {attribute.GroupName}");
         }
-
     }
 }

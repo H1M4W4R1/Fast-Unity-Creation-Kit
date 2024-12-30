@@ -3,6 +3,7 @@ using FastUnityCreationKit.UI.Context;
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Callbacks;
+using FastUnityCreationKit.Utility.Logging;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Abstract
@@ -28,11 +29,15 @@ namespace FastUnityCreationKit.UI.Abstract
             
             // Setup object
             Setup();
+            Guard<UserInterfaceLogConfig>.Verbose($"UI object {name} has been set-up correctly.");
 
             // Check if this object is IRenderable, if so, try to render
             if (this is IRenderable renderable)
+            {
                 renderable.TryRender(true);
-            
+                Guard<UserInterfaceLogConfig>.Verbose($"UI object {name} has been rendered correctly for the first time.");
+            }
+
             // Call after first render
             AfterFirstRenderOrCreated();
         }
@@ -61,16 +66,12 @@ namespace FastUnityCreationKit.UI.Abstract
                                                           GetComponentInParent<IDataContextProvider<TDataContext>>(
                                                               true);
 
-            // If provider is not found, log an error and return null
-            if (provider == null)
-            {
-                Debug.LogError($"Data context provider of type {typeof(TDataContext)} is not found on the object.",
-                    this);
-                return default;
-            }
-
-            // Provide the data context
-            return new DataContextInfo<TDataContext>(provider, provider.Provide());
+            // Check if provider is not null
+            if (provider != null) return new DataContextInfo<TDataContext>(provider, provider.Provide());
+            
+            // if not found, log error
+            Guard<UserInterfaceLogConfig>.Error($"Data context provider not found on {name} or its parent.");
+            return default;
         }
 
         public void OnObjectDestroyed()

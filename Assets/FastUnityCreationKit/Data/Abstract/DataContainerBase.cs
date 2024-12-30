@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using FastUnityCreationKit.Data.Attributes;
 using FastUnityCreationKit.Data.Interfaces;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using Sirenix.Utilities;
@@ -44,7 +46,7 @@ namespace FastUnityCreationKit.Data.Abstract
         {
             if(this is IUniqueDataContainer && Contains(obj))
             {
-                Debug.LogError($"Data already exists in the container [{GetType()}].");
+                Guard<EditorAutomationLogConfig>.Warning($"Data already exists in the container [{GetType()}].");
                 return;
             }
             

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using FastUnityCreationKit.Data.Interfaces;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Data.Abstract
@@ -26,7 +28,7 @@ namespace FastUnityCreationKit.Data.Abstract
             // Check if this is a unique data container
             if (this is IUniqueDataContainer && ContainsValue(obj))
             {
-                Debug.LogError($"Data already exists in the container [{GetType()}].");
+                Guard<EditorAutomationLogConfig>.Warning($"Data already exists in the container [{GetType()}].");
                 return;
             }
             
@@ -37,11 +39,7 @@ namespace FastUnityCreationKit.Data.Abstract
         public virtual void Remove(TIndexType index)
         {
             int indexIndex = indices.IndexOf(index);
-            if (indexIndex == -1)
-            {
-                Debug.LogError($"Index [{index} does not exist in the container [{GetType()}].");
-                return;
-            }
+            if (indexIndex == -1) return;
             
             // Remove the data and the index
             data.RemoveAt(indexIndex);

@@ -1,4 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -95,7 +97,7 @@ namespace FastUnityCreationKit.UI.Extensions
                 targetRect.height > otherRect.height)
             {
                 // Log a warning
-                Debug.LogWarning("Draggable element is larger than viewport.", rectTransform);
+                Guard<EditorAutomationLogConfig>.Warning("Draggable element is larger than parent.");
                 return;
             }
 
@@ -149,7 +151,7 @@ namespace FastUnityCreationKit.UI.Extensions
                 targetRect.height > Screen.height)
             {
                 // Log a warning
-                Debug.LogWarning("Draggable element is larger than viewport.", rectTransform);
+                Guard<EditorAutomationLogConfig>.Warning("Draggable element is larger than viewport.");
                 return;
             }
 

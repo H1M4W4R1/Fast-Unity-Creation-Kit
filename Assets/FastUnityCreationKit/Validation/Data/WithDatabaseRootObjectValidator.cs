@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using FastUnityCreationKit.Data.Interfaces;
+using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Validation.Data;
 using Sirenix.OdinInspector.Editor.Validation;
 using UnityEngine;
+using FastUnityCreationKit.Utility;
 
 [assembly: RegisterValidator(typeof(WithDatabaseRootObjectValidator))]
 namespace FastUnityCreationKit.Validation.Data
@@ -28,7 +30,7 @@ namespace FastUnityCreationKit.Validation.Data
             if (!databaseContent.Contains(Value))
             {
                 databaseContent.Add(Value);
-                Debug.Log($"Added {Value.name} to database {withDatabase.RawDatabase}.");
+                Guard<EditorAutomationLogConfig>.Verbose($"Added {Value.name} to database {withDatabase.RawDatabase}.");
             }
         }
         

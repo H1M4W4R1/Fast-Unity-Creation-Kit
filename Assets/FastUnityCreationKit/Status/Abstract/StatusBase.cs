@@ -3,8 +3,10 @@ using FastUnityCreationKit.Data.Containers.Interfaces;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Identification;
 using FastUnityCreationKit.Status.References;
+using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Limits;
+using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -69,8 +71,8 @@ namespace FastUnityCreationKit.Status.Abstract
             // Check if reference has same status as this status, if not, return with error.
             if (!ReferenceEquals(statusReference.Status, this))
             {
-                Debug.LogError($"Status reference has different status [{statusReference.Status}] than this status.",
-                    this);
+                Guard<EditorAutomationLogConfig>.Error(
+                    $"Status reference has different status [{statusReference.Status}] than current status [{this}].");
                 return LimitHit.None;
             }
 

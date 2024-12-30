@@ -3,6 +3,7 @@ using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Elements.Core;
 using FastUnityCreationKit.Unity.Interfaces;
 using FastUnityCreationKit.Unity.Structure.Managers;
+using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -55,7 +56,7 @@ namespace FastUnityCreationKit.UI
             TWindowType window = FindWindowPrefab<TWindowType>();
             if (window == null)
             {
-                Debug.LogError($"Window of type {typeof(TWindowType)} not found in database.", this);
+                Guard<UserInterfaceLogConfig>.Fatal($"Window of type {typeof(TWindowType).Name} not found in database.");
                 return null;
             }
             
@@ -64,6 +65,7 @@ namespace FastUnityCreationKit.UI
                 // Create new stack
                 inStack = new WindowStack();
                 _windowStacks.Add(inStack);
+                Guard<UserInterfaceLogConfig>.Info($"Created new window stack for window {window.name}.");
             }
             
             // Create window instance and add to desired stack.
@@ -76,7 +78,10 @@ namespace FastUnityCreationKit.UI
             {
                 _windowStacks.Remove(inStack);
                 _windowStacks.Add(inStack);
+                Guard<UserInterfaceLogConfig>.Info($"Moved window {instance.name} and it's stack to top.");
             }
+            
+            Guard<UserInterfaceLogConfig>.Info($"Opened window of type {typeof(TWindowType).Name}.");
             
             // Set order of windows to be nicely displayed
             SortWindows();
@@ -155,6 +160,8 @@ namespace FastUnityCreationKit.UI
                 }
             }
             
+            Guard<UserInterfaceLogConfig>.Info($"Closed all windows of type {typeof(TWindowType).Name}.");
+            
             // Sort windows after closing
             SortWindows();
         }
@@ -180,6 +187,8 @@ namespace FastUnityCreationKit.UI
                 // We need to increment the order by the number of windows in the stack
                 currentOrder += stack.Windows.Count;
             }
+            
+            Guard<UserInterfaceLogConfig>.Info("Sorted windows.");
         }
 
         /// <summary>

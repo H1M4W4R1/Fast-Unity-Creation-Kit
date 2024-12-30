@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using FastUnityCreationKit.Data.Attributes;
 using FastUnityCreationKit.Data.Interfaces;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Validation.Abstract;
 using FastUnityCreationKit.Validation.Data;
 using Sirenix.OdinInspector.Editor.Validation;
@@ -32,7 +34,7 @@ namespace FastUnityCreationKit.Validation.Data
                 // Remove the duplicate item
                 if (foundDuplicate)
                 {
-                    Debug.Log($"Duplicate item removed from the container at index {i}: {list[i]}");
+                    Guard<EditorAutomationLogConfig>.Error($"Duplicate item found in {value.GetType().Name}: {list[i]}");
                     list.RemoveAt(i);
                 }
             }

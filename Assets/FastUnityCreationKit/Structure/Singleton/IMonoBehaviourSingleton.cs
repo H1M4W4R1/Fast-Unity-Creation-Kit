@@ -1,5 +1,6 @@
 ﻿using System;
 using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -17,11 +18,18 @@ namespace FastUnityCreationKit.Structure.Singleton
         /// Gets the instance of the singleton.
         /// Overwrites <see cref="ISingleton{TSelf}.GetInstance"/>
         /// </summary>
-        [NotNull] public new static TSelf GetInstance()
+        [NotNull]
+        public new static TSelf GetInstance()
         {
             // Ensure that the type is a MonoBehaviour
-            EditorCheck.Perform(!typeof(TSelf).IsSubclassOf(typeof(MonoBehaviour)))
-                .WithException<NotSupportedException>("The singleton must be a MonoBehaviour");
+#if UNITY_EDITOR
+            if (!typeof(TSelf).IsSubclassOf(typeof(MonoBehaviour)))
+            {
+                Guard<EditorAutomationLogConfig>.Error($"Type {typeof(TSelf).Name} is not a MonoBehaviour. " +
+                                                       $"For regular C# classes use ISingleton<TSelf>.");
+                return default!;
+            }
+#endif
 
             // Check if the instance exists
             if (Instance) return Instance;
