@@ -7,7 +7,7 @@ namespace FastUnityCreationKit.UI.Interfaces
     /// Represents a callback for snapping.
     /// </summary>
     public interface ISnapCallback<in TSnapTarget>
-        where TSnapTarget : UIObject, ISnapTarget
+        where TSnapTarget : UIObject, ISnapTarget<TSnapTarget>
     {
         /// <summary>
         /// Called when snapping to a target.

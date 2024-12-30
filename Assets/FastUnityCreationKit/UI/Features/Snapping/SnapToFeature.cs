@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.UI.Features.Snapping
     /// </summary>
     /// TODO: Consider if events should be propagated to children
     public abstract class SnapToFeature<TSnapObject> : UIFeature, IPointerUpHandler, IPointerDownHandler
-        where TSnapObject : UIObject, ISnapTarget
+        where TSnapObject : UIObject, ISnapTarget<TSnapObject>
     {
         /// <summary>
         /// Object that is currently snapped to.
@@ -28,14 +28,9 @@ namespace FastUnityCreationKit.UI.Features.Snapping
         /// <summary>
         /// If true next pointer up event will execute snap.
         /// </summary>
-        private bool _searchForSnapActive = false;
+        private bool _searchForSnapActive;
 
-        /// <summary>
-        /// List of all callback objects within current snap
-        /// </summary>
-        [CanBeNull] private ISnapCallback<TSnapObject>[] _snapLookupTable;
-        
-        public virtual bool UseMousePosition { get; } = true;
+        protected virtual bool UseMousePosition => true;
 
         public override void Setup()
         {
@@ -64,7 +59,6 @@ namespace FastUnityCreationKit.UI.Features.Snapping
 
         internal void ExecuteSnap(Vector2 position)
         {
-            _snapLookupTable = GetComponents<ISnapCallback<TSnapObject>>();
             OnSnapBreak(_currentlySnappedTo);
             
             _searchForSnapActive = false;
@@ -79,7 +73,7 @@ namespace FastUnityCreationKit.UI.Features.Snapping
             foreach (TSnapObject uiObject in objects)
             {
                 // Check if object can be snapped to
-                if(!uiObject.CanBeSnappedTo) continue;
+                if(!uiObject.IsPossibleToSnap(this)) continue;
                 
                 // Get distance to object
                 float distance = uiObject.GetDistanceTo(position);

@@ -8,7 +8,7 @@ namespace FastUnityCreationKit.UI.Interfaces
     /// Callback for snapping to an object.
     /// </summary>
     public interface IOnObjectSnappedCallback<TSnapObject> 
-        where TSnapObject : UIObject, ISnapTarget
+        where TSnapObject : UIObject, ISnapTarget<TSnapObject>
     {
         public void OnSnapBreak(SnapToFeature<TSnapObject> objectBrokenFromSnap);
         public void OnSnap(SnapToFeature<TSnapObject> objectSnapped);
