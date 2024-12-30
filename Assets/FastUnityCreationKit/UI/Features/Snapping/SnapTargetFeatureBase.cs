@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.UI.Features.Snapping
     /// This object does not support multi-snap instances.
     /// </summary>
     /// <typeparam name="TSelf">Type of the snap target.</typeparam>
-    public abstract class SnapTargetFeatureBase<TSelf> : UIObject, ISnapTarget<TSelf>, IOnObjectSnappedCallback<TSelf>
+    public abstract class SnapTargetFeatureBase<TSelf> : UIObjectBase, ISnapTarget<TSelf>, IOnObjectSnappedCallback<TSelf>
         where TSelf : SnapTargetFeatureBase<TSelf>, ISnapTarget<TSelf>, new()
     {
         /// <summary>

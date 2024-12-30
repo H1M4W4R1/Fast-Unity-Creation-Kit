@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.UI.Context.Providers
+﻿namespace FastUnityCreationKit.UI.Context.Providers.Utility
 {
     /// <summary>
     /// Represents a data context info used to store data context and its provider.

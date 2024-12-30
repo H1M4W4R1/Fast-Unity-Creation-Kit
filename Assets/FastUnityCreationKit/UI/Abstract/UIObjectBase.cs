@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.UI.Context;
 using FastUnityCreationKit.UI.Context.Providers;
+using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Unity;
@@ -13,7 +14,7 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     /// The base class for all UI objects in Fast Unity Creation Kit.
     /// </summary>
-    public abstract class UIObject : FastMonoBehaviour, IUpdateCallback, ICreateCallback, IDestroyCallback
+    public abstract class UIObjectBase : FastMonoBehaviour, IUpdateCallback, ICreateCallback, IDestroyCallback
     {
         private RectTransform _rectTransform;
         public RectTransform RectTransform => _rectTransform;

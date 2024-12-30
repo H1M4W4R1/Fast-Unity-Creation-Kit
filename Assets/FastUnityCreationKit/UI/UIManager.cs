@@ -206,7 +206,7 @@ namespace FastUnityCreationKit.UI
         /// <typeparam name="TUserInterfaceObjectType">Type of object to get.</typeparam>
         /// <returns>Enumerator of all objects of type TUserInterfaceObjectType.</returns>
         public IEnumerable<TUserInterfaceObjectType> GetAllObjectsOfType<TUserInterfaceObjectType>()
-            where TUserInterfaceObjectType : UIObject
+            where TUserInterfaceObjectType : UIObjectBase
         {
             UserInterfaceObjectTable<TUserInterfaceObjectType> table = GetTableFor<TUserInterfaceObjectType>();
             for (int i = 0; i < table.Count; i++)
@@ -217,14 +217,14 @@ namespace FastUnityCreationKit.UI
         /// Register user interface object.
         /// </summary>
         /// <param name="obj">Object to register.</param>
-        internal void RegisterUserInterfaceObject([NotNull] UIObject obj) =>
+        internal void RegisterUserInterfaceObject([NotNull] UIObjectBase obj) =>
             GetTableFor(obj).Add(obj);
         
         /// <summary>
         /// Unregister user interface object.
         /// </summary>
         /// <param name="obj">Object to unregister.</param>
-        internal void UnregisterUserInterfaceObject([NotNull] UIObject obj) =>
+        internal void UnregisterUserInterfaceObject([NotNull] UIObjectBase obj) =>
             GetTableFor(obj).Remove(obj);
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace FastUnityCreationKit.UI
         /// <typeparam name="TUserInterfaceObject">Type of object.</typeparam>
         /// <returns>Table for object.</returns>
         [NotNull] internal UserInterfaceObjectTable<TUserInterfaceObject> GetTableFor<TUserInterfaceObject>()
-            where TUserInterfaceObject : UIObject =>
+            where TUserInterfaceObject : UIObjectBase =>
             (UserInterfaceObjectTable<TUserInterfaceObject>) GetTableFor(typeof(TUserInterfaceObject));
         
         /// <summary>
@@ -241,7 +241,7 @@ namespace FastUnityCreationKit.UI
         /// </summary>
         /// <param name="obj">Object to get table for.</param>
         /// <returns>Table for object.</returns>
-        [NotNull] internal UserInterfaceObjectTable GetTableFor([NotNull] UIObject obj) =>
+        [NotNull] internal UserInterfaceObjectTable GetTableFor([NotNull] UIObjectBase obj) =>
             GetTableFor(obj.GetType());
 
         /// <summary>

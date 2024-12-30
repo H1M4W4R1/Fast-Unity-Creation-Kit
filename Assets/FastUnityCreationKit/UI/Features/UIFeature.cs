@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.UI.Features
     /// <summary>
     /// Feature that can be added to a UI object.
     /// </summary>
-    [RequireComponent(typeof(UIObject))]
+    [RequireComponent(typeof(UIObjectBase))]
     public abstract class UIFeature : FastMonoBehaviour, ICreateCallback, IDestroyCallback, IInitializable
     {
         bool IInitializable.InternalInitializationStatusStorage { get; set; }
@@ -17,7 +17,7 @@ namespace FastUnityCreationKit.UI.Features
         /// <summary>
         /// Reference to the object this feature is attached to.
         /// </summary>
-        protected UIObject objectReference;
+        protected UIObjectBase objectBaseReference;
 
         /// <summary>
         /// Called when the object is created.
@@ -34,7 +34,7 @@ namespace FastUnityCreationKit.UI.Features
 
         void IInitializable.OnInitialize()
         {
-            objectReference = GetComponent<UIObject>();
+            objectBaseReference = GetComponent<UIObjectBase>();
         }
     }
 }

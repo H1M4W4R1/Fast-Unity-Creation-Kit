@@ -14,7 +14,7 @@ namespace FastUnityCreationKit.UI.Features.Snapping
     /// </summary>
     /// TODO: Consider if events should be propagated to children
     public abstract class SnapToFeatureBase<TSnapObject> : UIFeature, IPointerUpHandler, IPointerDownHandler
-        where TSnapObject : UIObject, ISnapTarget<TSnapObject>
+        where TSnapObject : UIObjectBase, ISnapTarget<TSnapObject>
     {
         /// <summary>
         /// Object that is currently snapped to.

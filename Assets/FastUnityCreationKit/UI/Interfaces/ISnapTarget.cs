@@ -6,7 +6,7 @@ namespace FastUnityCreationKit.UI.Interfaces
     /// <summary>
     /// Represents a snap target.
     /// </summary>
-    public interface ISnapTarget<TSelf> where TSelf : UIObject, ISnapTarget<TSelf>
+    public interface ISnapTarget<TSelf> where TSelf : UIObjectBase, ISnapTarget<TSelf>
     {
         public bool HasSnappedObject { get; }
         

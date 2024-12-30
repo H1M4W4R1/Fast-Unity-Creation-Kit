@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Context;
 using FastUnityCreationKit.UI.Context.Providers;
+using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace FastUnityCreationKit.UI.Interfaces
             get
             {
                 // Check if this object is UIObject, if so, get data context
-                if (this is UIObject uiObject) return uiObject.GetDataContext<TDataContextSealed>();
+                if (this is UIObjectBase uiObject) return uiObject.GetDataContext<TDataContextSealed>();
 
                 // Log error if this object is not UIObject
                 Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on {GetType().Name}.");
@@ -32,7 +33,7 @@ namespace FastUnityCreationKit.UI.Interfaces
         void IRenderable.TryRender(bool forceRender)
         {
             // Check if this object is UIObject
-            if (this is not UIObject uiObject)
+            if (this is not UIObjectBase uiObject)
             {
                 Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on {GetType().Name}.");
                 return;

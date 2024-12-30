@@ -1,9 +1,10 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
+using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using UnityEngine;
 
-namespace FastUnityCreationKit.UI.Context.Providers
+namespace FastUnityCreationKit.UI.Context.Providers.Base
 {
     /// <summary>
     /// Represents a data context provider.

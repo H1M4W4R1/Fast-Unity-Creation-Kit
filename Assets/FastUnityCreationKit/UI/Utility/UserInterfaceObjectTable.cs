@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.UI.Utility
     /// </summary>
     /// <typeparam name="TUserInterfaceObject">Type of UI object.</typeparam>
     internal sealed class UserInterfaceObjectTable<TUserInterfaceObject> : UserInterfaceObjectTable
-        where TUserInterfaceObject : UIObject
+        where TUserInterfaceObject : UIObjectBase
     {
         /// <summary>
         /// Creates a new table of UI objects.
@@ -44,7 +44,7 @@ namespace FastUnityCreationKit.UI.Utility
     internal abstract class UserInterfaceObjectTable 
     {
         protected readonly Type mainTableType;
-        protected readonly List<UIObject> objects = new List<UIObject>();
+        protected readonly List<UIObjectBase> objects = new List<UIObjectBase>();
         
         /// <summary>
         /// Type of table.
@@ -58,21 +58,21 @@ namespace FastUnityCreationKit.UI.Utility
 
         public int Count => objects.Count;
         
-        public void Add(UIObject uiObject)
+        public void Add(UIObjectBase uiObjectBase)
         {
             #if UNITY_EDITOR
-            if(uiObject.GetType() != mainTableType)
+            if(uiObjectBase.GetType() != mainTableType)
                 throw new ArgumentException("UI object type does not match table type.");
             #endif
             
             // Add object if not yet added
-            if(!objects.Contains(uiObject))
-                objects.Add(uiObject);
+            if(!objects.Contains(uiObjectBase))
+                objects.Add(uiObjectBase);
         }
         
-        public void Remove(UIObject uiObject)
+        public void Remove(UIObjectBase uiObjectBase)
         {
-            objects.Remove(uiObject);
+            objects.Remove(uiObjectBase);
         }
     }
 }

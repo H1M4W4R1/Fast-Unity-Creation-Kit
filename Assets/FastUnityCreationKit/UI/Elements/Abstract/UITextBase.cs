@@ -6,7 +6,7 @@ using UnityEngine;
 namespace FastUnityCreationKit.UI.Elements.Abstract
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
-    public abstract class UIText : UIObject, IRenderable<string> 
+    public abstract class UITextBase : UIObjectBase, IRenderable<string> 
     {
         /// <summary>
         /// Internal reference to the TextMeshProUGUI component.

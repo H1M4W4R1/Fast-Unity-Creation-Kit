@@ -11,13 +11,13 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Gets the distance between the specified UI object and the specified point.
         /// </summary>
-        /// <param name="uiObject">UI object.</param>
+        /// <param name="uiObjectBase">UI object.</param>
         /// <param name="fromPoint">Point to get the distance from.</param>
         /// <returns>Distance between the UI object and the specified point.</returns>
-        public static float GetDistanceTo(this UIObject uiObject, Vector2 fromPoint)
+        public static float GetDistanceTo(this UIObjectBase uiObjectBase, Vector2 fromPoint)
         {
             // Get nearest point
-            Vector2 nearestPoint = uiObject.GetNearestPoint(fromPoint);
+            Vector2 nearestPoint = uiObjectBase.GetNearestPoint(fromPoint);
            
             // Return the distance between the point and the nearest point
             return math.distance(nearestPoint, fromPoint);
@@ -26,15 +26,15 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Gets the nearest point on the element to the specified point.
         /// </summary>
-        /// <param name="uiObject">UI object.</param>
+        /// <param name="uiObjectBase">UI object.</param>
         /// <param name="toPoint">Point to get the nearest point to.</param>
         /// <returns>Nearest point on the element to the specified point.</returns>
-        public static Vector2 GetNearestPoint(this UIObject uiObject, Vector2 toPoint)
+        public static Vector2 GetNearestPoint(this UIObjectBase uiObjectBase, Vector2 toPoint)
         {
             Debug.Log("Target point: " + toPoint);
             
             // Get rect transform
-            RectTransform rectTransform = uiObject.GetComponent<RectTransform>();
+            RectTransform rectTransform = uiObjectBase.GetComponent<RectTransform>();
             
             // Get bounds
             Rect rect = rectTransform.rect;
@@ -57,10 +57,10 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Checks if specified UI object is within the bounds of its parent.
         /// </summary>
-        public static bool IsWithinParentBounds(this UIObject uiObject)
+        public static bool IsWithinParentBounds(this UIObjectBase uiObjectBase)
         {
             // Get rect transform
-            RectTransform rectTransform = uiObject.GetComponent<RectTransform>();
+            RectTransform rectTransform = uiObjectBase.GetComponent<RectTransform>();
             return rectTransform.IsWithinParentBounds();
         }
 
@@ -106,10 +106,10 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Fits the element into the bounds of the parent.
         /// </summary>
-        public static void FitIntoParent(this UIObject uiObject)
+        public static void FitIntoParent(this UIObjectBase uiObjectBase)
         {
             // Get rect transform
-            RectTransform rectTransform = uiObject.GetComponent<RectTransform>();
+            RectTransform rectTransform = uiObjectBase.GetComponent<RectTransform>();
             rectTransform.FitIntoParent();
         }
 
@@ -176,10 +176,10 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Fits the element into the bounds of the viewport.
         /// </summary>
-        public static void FitIntoViewport(this UIObject uiObjectBase)
+        public static void FitIntoViewport(this UIObjectBase uiObjectBaseBase)
         {
             // Get rect transform
-            RectTransform rectTransform = uiObjectBase.GetComponent<RectTransform>();
+            RectTransform rectTransform = uiObjectBaseBase.GetComponent<RectTransform>();
             rectTransform.FitIntoViewport();
         }
 
@@ -229,10 +229,10 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Checks if the specified UI object is within the bounds of the viewport.
         /// </summary>
-        public static bool IsWithinViewportBounds(this UIObject uiObjectBase)
+        public static bool IsWithinViewportBounds(this UIObjectBase uiObjectBaseBase)
         {
             // Get the rect transform
-            RectTransform rectTransform = uiObjectBase.RectTransform;
+            RectTransform rectTransform = uiObjectBaseBase.RectTransform;
             return rectTransform.IsWithinViewportBounds();
         }
 

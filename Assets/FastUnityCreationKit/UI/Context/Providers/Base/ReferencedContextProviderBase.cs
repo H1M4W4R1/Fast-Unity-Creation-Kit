@@ -1,7 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace FastUnityCreationKit.UI.Context.Providers
+namespace FastUnityCreationKit.UI.Context.Providers.Base
 {
     /// <summary>
     /// Represents a data context provider that references another data context provider.

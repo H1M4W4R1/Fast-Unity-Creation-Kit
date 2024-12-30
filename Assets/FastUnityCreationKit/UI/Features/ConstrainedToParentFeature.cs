@@ -11,7 +11,7 @@ namespace FastUnityCreationKit.UI.Features
     {
         private void LateUpdate()
         {
-            objectReference.FitIntoParent();
+            objectBaseReference.FitIntoParent();
         }
 
     }
