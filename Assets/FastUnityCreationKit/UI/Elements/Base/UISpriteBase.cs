@@ -3,7 +3,7 @@ using FastUnityCreationKit.UI.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FastUnityCreationKit.UI.Elements.Abstract
+namespace FastUnityCreationKit.UI.Elements.Base
 {
     /// <summary>
     /// Represents generic sprite renderer. Can be for example your icon or image.

@@ -1,13 +1,15 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Elements.Callbacks;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace FastUnityCreationKit.UI.Elements.Abstract
+namespace FastUnityCreationKit.UI.Elements.Base.Input
 {
     /// <summary>
     /// Represents a toggle element.
     /// </summary>
-    public abstract class UIToggle : UIObjectBase
+    [RequireComponent(typeof(Toggle))]
+    public abstract class UIToggleBase : UIObjectBase
     {
         /// <summary>
         /// Internal reference to the toggle.

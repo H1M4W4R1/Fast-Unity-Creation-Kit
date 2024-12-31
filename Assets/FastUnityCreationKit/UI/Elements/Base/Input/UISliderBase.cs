@@ -1,13 +1,15 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Elements.Callbacks;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace FastUnityCreationKit.UI.Elements.Abstract
+namespace FastUnityCreationKit.UI.Elements.Base.Input
 {
     /// <summary>
     /// Represents a slider element.
     /// </summary>
-    public abstract class UISlider : UIObjectBase
+    [RequireComponent(typeof(Slider))]
+    public abstract class UISliderBase : UIObjectBase
     {
         /// <summary>
         /// Internal reference to the slider component.

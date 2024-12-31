@@ -78,8 +78,10 @@ namespace FastUnityCreationKit.UI.Context.Data.Image
         /// <returns>Sprite asset.</returns>
         public override Sprite Provide() => Image;
 
-        private void OnDestroy()
+        protected override void TearDown()
         {
+            base.TearDown();
+            
             // Release the handle when the object is destroyed
             if (_handle.IsValid())
                 Addressables.Release(_handle);

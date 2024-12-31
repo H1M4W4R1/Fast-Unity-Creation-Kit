@@ -1,6 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 
-namespace FastUnityCreationKit.UI.Elements.Abstract
+namespace FastUnityCreationKit.UI.Elements.Core
 {
     /// <summary>
     /// Represents generic panel. Can be for example your window or dialog.

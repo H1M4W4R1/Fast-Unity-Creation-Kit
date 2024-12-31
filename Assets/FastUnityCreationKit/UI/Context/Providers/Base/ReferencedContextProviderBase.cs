@@ -14,15 +14,14 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         [Required]
         private DataContextProviderBase<TContextBase> providerReference;
 
-        protected override void Awake()
+        protected override void Setup()
         {
-            base.Awake();
-            
-            // Subscribe to context change event of the referenced provider.
-            providerReference.OnContextChanged += OnContextChangedCallback;
+            // If the referenced provider is not null, we should subscribe to its events.
+            if (providerReference)
+                providerReference.OnContextChanged += OnContextChangedCallback;
         }
-
-        private void OnDestroy()
+        
+        protected override void TearDown()
         {
             // If the referenced provider is destroyed, we should unsubscribe from its events.
             // This is to prevent memory leaks. We also need to check if the provider is null to

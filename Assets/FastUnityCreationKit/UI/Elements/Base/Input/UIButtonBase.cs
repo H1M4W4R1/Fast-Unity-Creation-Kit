@@ -1,13 +1,15 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Elements.Callbacks;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace FastUnityCreationKit.UI.Elements.Abstract
+namespace FastUnityCreationKit.UI.Elements.Base.Input
 {
     /// <summary>
     /// Represents a button.
     /// </summary>
-    public abstract class UIButton : UIObjectBase
+    [RequireComponent(typeof(Button))]
+    public abstract class UIButtonBase : UIObjectBase
     {
         /// <summary>
         /// Internal reference to the button.

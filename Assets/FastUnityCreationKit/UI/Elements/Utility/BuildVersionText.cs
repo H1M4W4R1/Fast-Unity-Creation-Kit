@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Context.Data.Text;
 using FastUnityCreationKit.UI.Elements.Abstract;
+using FastUnityCreationKit.UI.Elements.Base;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Elements.Utility

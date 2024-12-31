@@ -3,7 +3,7 @@ using FastUnityCreationKit.UI.Interfaces;
 using TMPro;
 using UnityEngine;
 
-namespace FastUnityCreationKit.UI.Elements.Abstract
+namespace FastUnityCreationKit.UI.Elements.Base
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
     public abstract class UITextBase : UIObjectBase, IRenderable<string> 
