@@ -34,7 +34,7 @@ namespace FastUnityCreationKit.Validation.Data
                 // Remove the duplicate item
                 if (foundDuplicate)
                 {
-                    Guard<EditorAutomationLogConfig>.Error($"Duplicate item found in {value.GetType().Name}: {list[i]}");
+                    Guard<ValidationLogConfig>.Error($"Duplicate item found in {value.GetType().Name}: {list[i]}");
                     list.RemoveAt(i);
                 }
             }

@@ -41,7 +41,7 @@ namespace FastUnityCreationKit.Status
             // If status does not exist, return false
             if (ReferenceEquals(status, null))
             {
-                Guard<EditorAutomationLogConfig>.Error($"Status {typeof(TStatusType).Name} not found in the database.");
+                Guard<ValidationLogConfig>.Error($"Status {typeof(TStatusType).Name} not found in the database.");
                 return false;
             }
 
@@ -224,7 +224,7 @@ namespace FastUnityCreationKit.Status
                 return percentageRemnant / (float) IPercentageStatus.PERCENTAGE_SCALE;
             }
 
-            Guard<EditorAutomationLogConfig>.Error($"Status {typeof(TStatusType).Name} is not a percentage status.");
+            Guard<ValidationLogConfig>.Error($"Status {typeof(TStatusType).Name} is not a percentage status.");
             return 0;
         }
 
@@ -241,7 +241,7 @@ namespace FastUnityCreationKit.Status
                 Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} increased by {percentage:P}.");
             }
             else
-                Guard<EditorAutomationLogConfig>.Error(
+                Guard<ValidationLogConfig>.Error(
                     $"Status {typeof(TStatusType).Name} is not a percentage status.");
 
             return false;
@@ -260,7 +260,7 @@ namespace FastUnityCreationKit.Status
                 Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} decreased by {percentage:P}.");
             }
             else
-                Guard<EditorAutomationLogConfig>.Error(
+                Guard<ValidationLogConfig>.Error(
                     $"Status {typeof(TStatusType).Name} is not a percentage status.");
 
             return false;

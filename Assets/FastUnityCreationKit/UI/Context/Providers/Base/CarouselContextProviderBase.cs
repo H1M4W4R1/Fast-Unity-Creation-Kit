@@ -33,7 +33,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
             // Ensure that the list is not empty
             if (Count == 0)
             {
-                Guard<EditorAutomationLogConfig>.Error($"The list is empty on {name}. Cannot provide context.");
+                Guard<ValidationLogConfig>.Error($"The list is empty on {name}. Cannot provide context.");
                 return default;
             }
 

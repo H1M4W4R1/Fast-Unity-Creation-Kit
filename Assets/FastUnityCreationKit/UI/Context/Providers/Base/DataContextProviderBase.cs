@@ -36,7 +36,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         /// <returns>Data context at the specified index.</returns>
         [CanBeNull] public virtual TContextType ProvideAt(int index)
         {
-            Guard<EditorAutomationLogConfig>.Warning(
+            Guard<ValidationLogConfig>.Warning(
                 $"ProvideAt method on {GetType().Name} is not overridden. Are you accessing wrong provider? " +
                 "Executing fallback to default Provide method.");
             Provide();

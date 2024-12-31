@@ -143,7 +143,7 @@ namespace FastUnityCreationKit.UI.Extensions
                 targetRect.height > otherRect.height)
             {
                 // Log a warning
-                Guard<EditorAutomationLogConfig>.Warning("Draggable element is larger than parent.");
+                Guard<ValidationLogConfig>.Warning("Draggable element is larger than parent.");
                 return;
             }
 
@@ -197,7 +197,7 @@ namespace FastUnityCreationKit.UI.Extensions
                 targetRect.height > Screen.height)
             {
                 // Log a warning
-                Guard<EditorAutomationLogConfig>.Warning("Draggable element is larger than viewport.");
+                Guard<ValidationLogConfig>.Warning("Draggable element is larger than viewport.");
                 return;
             }
 

@@ -38,7 +38,7 @@ namespace FastUnityCreationKit.Structure.Singleton
 #if UNITY_EDITOR
             if (typeof(TSelf).ImplementsOrInherits(typeof(Object)))
             {
-                Guard<EditorAutomationLogConfig>.Error(
+                Guard<ValidationLogConfig>.Error(
                     $"Type {typeof(TSelf).Name} is a UnityEngine.Object. Unity.Object cannot be used as a singleton." +
                     $"For MonoBehaviour singletons use IMonoBehaviourSingleton<TSelf>.");
                 return default!;

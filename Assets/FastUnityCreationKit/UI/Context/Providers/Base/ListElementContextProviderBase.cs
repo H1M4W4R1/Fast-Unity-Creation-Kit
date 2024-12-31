@@ -23,14 +23,14 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
             // Ensure that the list provider is not null
             if (listProvider == null)
             {
-                Guard<EditorAutomationLogConfig>.Error($"ListElementContextProviderBase requires a ListContextProviderBase in the parent on object {name}.");
+                Guard<ValidationLogConfig>.Error($"ListElementContextProviderBase requires a ListContextProviderBase in the parent on object {name}.");
                 return default;
             }
             
             // Ensure that the index is within the bounds
             if (Index < 0 || Index >= listProvider.Count)
             {
-                Guard<EditorAutomationLogConfig>.Error($"Index {Index} is out of bounds for ListElementContextProviderBase on object {name}.");
+                Guard<ValidationLogConfig>.Error($"Index {Index} is out of bounds for ListElementContextProviderBase on object {name}.");
                 return default;
             }
 

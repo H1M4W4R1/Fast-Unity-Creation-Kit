@@ -32,7 +32,7 @@ namespace FastUnityCreationKit.Unity
 
                     // Log warning in editor's console to notify the user.
 #if UNITY_EDITOR
-                    Guard<EditorAutomationLogConfig>.Warning(
+                    Guard<ValidationLogConfig>.Warning(
                         $"Persistent object {name} is not on the root level. This may cause unexpected behavior." +
                         $"Fail-safe triggered: moving object to root layer.");
 #endif
@@ -51,7 +51,7 @@ namespace FastUnityCreationKit.Unity
             // If this is both clickable and selectable print warning.
             if (this is IClickable and ISelectable)
             {
-                Guard<EditorAutomationLogConfig>.Warning(
+                Guard<ValidationLogConfig>.Warning(
                     $"Object {name} is both clickable and selectable. This may cause unexpected behavior.");
             }
         }

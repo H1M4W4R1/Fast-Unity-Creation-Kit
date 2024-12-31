@@ -22,7 +22,7 @@ namespace FastUnityCreationKit.Validation.Data
             {
                 if (list[i].IsNull())
                 {
-                    Guard<EditorAutomationLogConfig>.Error($"Removing null item found in {value.GetType().Name} at index {i}");
+                    Guard<ValidationLogConfig>.Error($"Removing null item found in {value.GetType().Name} at index {i}");
                     list.RemoveAt(i);
                 }
             }

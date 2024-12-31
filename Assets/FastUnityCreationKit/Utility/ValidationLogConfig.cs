@@ -4,7 +4,7 @@ using Unity.Logging;
 
 namespace FastUnityCreationKit.Utility
 {
-    public sealed class EditorAutomationLogConfig : LogConfigBase
+    public sealed class ValidationLogConfig : LogConfigBase
     {
         public override LogLevel MinimumLevel => LogLevel.Verbose;
 

@@ -71,7 +71,7 @@ namespace FastUnityCreationKit.Status.Abstract
             // Check if reference has same status as this status, if not, return with error.
             if (!ReferenceEquals(statusReference.Status, this))
             {
-                Guard<EditorAutomationLogConfig>.Error(
+                Guard<ValidationLogConfig>.Error(
                     $"Status reference has different status [{statusReference.Status}] than current status [{this}].");
                 return LimitHit.None;
             }

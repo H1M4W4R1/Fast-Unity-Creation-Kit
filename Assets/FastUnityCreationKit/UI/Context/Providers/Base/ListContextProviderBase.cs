@@ -97,7 +97,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         {
             if (index < 0 || index >= _elements.Count)
             {
-                Guard<EditorAutomationLogConfig>.Error($"Requested index {index} is out of bounds on {name}.");
+                Guard<ValidationLogConfig>.Error($"Requested index {index} is out of bounds on {name}.");
                 return default;
             }
 
@@ -113,7 +113,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         {
             if (index < 0 || index >= _elements.Count)
             {
-                Guard<EditorAutomationLogConfig>.Error($"Requested index {index} is out of bounds on {name}.");
+                Guard<ValidationLogConfig>.Error($"Requested index {index} is out of bounds on {name}.");
                 return;
             }
 

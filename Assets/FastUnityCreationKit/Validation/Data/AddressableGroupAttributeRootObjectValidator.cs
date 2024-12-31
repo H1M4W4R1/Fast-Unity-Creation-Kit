@@ -20,7 +20,7 @@ namespace FastUnityCreationKit.Validation.Data
             if (attribute == null) return;
 
             if (Value.SetAddressableGroup(attribute.GroupName, attribute.Labels))
-                Guard<EditorAutomationLogConfig>.Verbose($"Assigned {Value.name} to addressable group {attribute.GroupName}");
+                Guard<ValidationLogConfig>.Verbose($"Assigned {Value.name} to addressable group {attribute.GroupName}");
         }
     }
 }

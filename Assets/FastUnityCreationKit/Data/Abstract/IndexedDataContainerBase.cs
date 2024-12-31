@@ -28,7 +28,7 @@ namespace FastUnityCreationKit.Data.Abstract
             // Check if this is a unique data container
             if (this is IUniqueDataContainer && ContainsValue(obj))
             {
-                Guard<EditorAutomationLogConfig>.Warning($"Data already exists in the container [{GetType()}].");
+                Guard<ValidationLogConfig>.Warning($"Data already exists in the container [{GetType()}].");
                 return;
             }
             

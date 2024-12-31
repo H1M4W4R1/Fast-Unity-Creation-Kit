@@ -30,7 +30,7 @@ namespace FastUnityCreationKit.Validation.Data
             if (!databaseContent.Contains(Value))
             {
                 databaseContent.Add(Value);
-                Guard<EditorAutomationLogConfig>.Verbose($"Added {Value.name} to database {withDatabase.RawDatabase}.");
+                Guard<ValidationLogConfig>.Verbose($"Added {Value.name} to database {withDatabase.RawDatabase}.");
             }
         }
         

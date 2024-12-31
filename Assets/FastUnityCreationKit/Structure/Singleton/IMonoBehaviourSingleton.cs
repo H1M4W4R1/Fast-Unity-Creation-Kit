@@ -25,7 +25,7 @@ namespace FastUnityCreationKit.Structure.Singleton
 #if UNITY_EDITOR
             if (!typeof(TSelf).IsSubclassOf(typeof(MonoBehaviour)))
             {
-                Guard<EditorAutomationLogConfig>.Error($"Type {typeof(TSelf).Name} is not a MonoBehaviour. " +
+                Guard<ValidationLogConfig>.Error($"Type {typeof(TSelf).Name} is not a MonoBehaviour. " +
                                                        $"For regular C# classes use ISingleton<TSelf>.");
                 return default!;
             }
