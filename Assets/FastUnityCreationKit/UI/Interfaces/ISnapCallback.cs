@@ -5,6 +5,9 @@ namespace FastUnityCreationKit.UI.Interfaces
 {
     /// <summary>
     /// Represents a callback for snapping.
+    /// 
+    /// This callback is performed on all components in object being moved and it's children
+    /// that implement it. 
     /// </summary>
     public interface ISnapCallback<in TSnapTarget>
         where TSnapTarget : UIObjectBase, ISnapTarget<TSnapTarget>
@@ -18,6 +21,6 @@ namespace FastUnityCreationKit.UI.Interfaces
         /// <summary>
         /// Called when snap is being broken
         /// </summary>
-        public void OnBreakSnap([NotNull] TSnapTarget previousSnapTarget);
+        public void OnSnapBreak([NotNull] TSnapTarget previousSnapTarget);
     }
 }

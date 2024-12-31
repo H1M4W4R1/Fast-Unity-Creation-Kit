@@ -69,7 +69,7 @@ namespace FastUnityCreationKit.UI.Features.Snapping
 
         internal void ExecuteSnap(Vector2 position)
         {
-            OnSnapBreak(_currentlySnappedTo);
+            NotifyObjectSnapBroken(_currentlySnappedTo);
             
             _searchForSnapActive = false;
             
@@ -103,7 +103,7 @@ namespace FastUnityCreationKit.UI.Features.Snapping
                 transform.position = _originalPosition;
                 
                 // Execute snap event
-                OnSnap(_currentlySnappedTo);
+                NotifyObjectSnapped(_currentlySnappedTo);
                 return;
             }
             
@@ -112,53 +112,37 @@ namespace FastUnityCreationKit.UI.Features.Snapping
             _currentlySnappedTo = closestObject;
             
             // Execute snap event
-            OnSnap(_currentlySnappedTo);
+            NotifyObjectSnapped(_currentlySnappedTo);
         }
 
         /// <summary>
         /// Executes snap event.
         /// </summary>
         /// <param name="toObject">Object to snap to.</param>
-        private void OnSnap([CanBeNull] TSnapObject toObject)
+        private void NotifyObjectSnapped([CanBeNull] TSnapObject toObject)
         {
             if (!toObject) return;
             
-            // We can't cache this as components may be added or removed at runtime
-            ISnapCallback<TSnapObject>[] componentLookupTable = GetComponents<ISnapCallback<TSnapObject>>();
+            // Send messages to all components that implement ISnapCallback
+            BroadcastMessage(nameof(ISnapCallback<TSnapObject>.OnSnap), toObject, SendMessageOptions.DontRequireReceiver);
             
-            // Loop through all components and call OnSnap
-            foreach (ISnapCallback<TSnapObject> snapCallback in componentLookupTable)
-                snapCallback.OnSnap(toObject);
-            
-            // Look-up all objects that implement IOnObjectSnappedCallback
-            IOnObjectSnappedCallback<TSnapObject>[] onObjectSnappedCallbacks = toObject.GetComponents<IOnObjectSnappedCallback<TSnapObject>>();
-            
-            // Loop through all components and call OnSnap
-            foreach (IOnObjectSnappedCallback<TSnapObject> onObjectSnappedCallback in onObjectSnappedCallbacks)
-                onObjectSnappedCallback.OnSnap(this);
+            // And notify target slot that it was snapped
+            toObject.SendMessage(nameof(IOnObjectSnappedCallback<TSnapObject>.OnSnap), this, SendMessageOptions.DontRequireReceiver);
         }
         
         /// <summary>
         /// Executes snap break event.
         /// </summary>
         /// <param name="fromObject">Object to break snap from.</param>
-        private void OnSnapBreak([CanBeNull] TSnapObject fromObject)
+        private void NotifyObjectSnapBroken([CanBeNull] TSnapObject fromObject)
         {
             if(!fromObject) return;
             
-            // We can't cache this as components may be added or removed at runtime
-            ISnapCallback<TSnapObject>[] componentLookupTable = GetComponents<ISnapCallback<TSnapObject>>();
+            // Send messages to all components that implement ISnapCallback
+            BroadcastMessage(nameof(ISnapCallback<TSnapObject>.OnSnapBreak), fromObject, SendMessageOptions.DontRequireReceiver);
             
-            // Loop through all components and call OnSnapBreak
-            foreach (ISnapCallback<TSnapObject> snapCallback in componentLookupTable)
-                snapCallback.OnBreakSnap(fromObject);
-            
-            // Look-up all objects that implement IOnObjectSnappedCallback
-            IOnObjectSnappedCallback<TSnapObject>[] onObjectSnappedCallbacks = fromObject.GetComponents<IOnObjectSnappedCallback<TSnapObject>>();
-            
-            // Loop through all components and call OnSnapBreak
-            foreach (IOnObjectSnappedCallback<TSnapObject> onObjectSnappedCallback in onObjectSnappedCallbacks)
-                onObjectSnappedCallback.OnSnapBreak(this);
+            // And notify target slot that it was snapped
+            fromObject.SendMessage(nameof(IOnObjectSnappedCallback<TSnapObject>.OnSnapBreak), this, SendMessageOptions.DontRequireReceiver);
         }
     }
 }
