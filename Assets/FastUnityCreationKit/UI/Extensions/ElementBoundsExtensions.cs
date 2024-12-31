@@ -31,8 +31,6 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <returns>Nearest point on the element to the specified point.</returns>
         public static Vector2 GetNearestPoint(this UIObjectBase uiObjectBase, Vector2 toPoint)
         {
-            Debug.Log("Target point: " + toPoint);
-            
             // Get rect transform
             RectTransform rectTransform = uiObjectBase.GetComponent<RectTransform>();
             
