@@ -100,6 +100,23 @@ namespace FastUnityCreationKit.Validation.Postprocessors
                 AutoCreatedObjectAttribute attribute = type.GetCustomAttribute<AutoCreatedObjectAttribute>(true);
                 if (attribute == null) continue;
 
+                // Ensure type is sealed, if not log warning and process further
+                if (!type.IsSealed)
+                {
+                    Guard<ValidationLogConfig>.Warning(
+                        $"Type {type.Name} is not sealed. Non-sealed types are unsafe. Please add 'sealed' keyword to the class.");
+                }
+
+                // We can't create generic types, this will result in big no-no
+                // Abstract generic types are fine because they won't pass to this check
+                // as are ignored earlier. 
+                if (type.IsGenericType)
+                {
+                    Guard<ValidationLogConfig>.Error(
+                        $"Type {type.Name} is generic. Generic types are not supported for auto-creation.");
+                    continue;
+                }
+                
                 // Get path to asset
                 string assetDirectory = ValidateAndGetDirectoryPath(attribute);
 
