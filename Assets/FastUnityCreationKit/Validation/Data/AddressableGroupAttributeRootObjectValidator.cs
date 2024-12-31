@@ -16,11 +16,11 @@ namespace FastUnityCreationKit.Validation.Data
         protected override void Validate(ValidationResult result)
         {
             // Check, if has AddressableGroupAttribute
-            AddressableGroupAttribute attribute = GetType().GetCustomAttribute<AddressableGroupAttribute>();
+            AddressableGroupAttribute attribute = Value.GetType().GetCustomAttribute<AddressableGroupAttribute>(true);
             if (attribute == null) return;
 
             if (Value.SetAddressableGroup(attribute.GroupName, attribute.Labels))
-                Guard<ValidationLogConfig>.Verbose($"Assigned {Value.name} to addressable group {attribute.GroupName}");
+                Guard<ValidationLogConfig>.Debug($"Assigned {Value.name} to addressable group {attribute.GroupName}");
         }
     }
 }
