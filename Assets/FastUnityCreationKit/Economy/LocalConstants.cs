@@ -2,8 +2,8 @@
 {
     internal static class LocalConstants
     {
-        public const string RESOURCES_OBJECT_DIRECTORY = "Resources";
-        public const string RESOURCE_ADDRESSABLE_TAG = "Resources";
+        public const string RESOURCES_OBJECT_DIRECTORY = "Economy";
+        public const string RESOURCE_ADDRESSABLE_TAG = "Economy";
           
     }
 }
