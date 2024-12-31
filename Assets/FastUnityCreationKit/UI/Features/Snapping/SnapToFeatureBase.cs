@@ -41,6 +41,9 @@ namespace FastUnityCreationKit.UI.Features.Snapping
         /// </summary>
         [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
         protected virtual bool UseMousePosition => true;
+        
+        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        protected virtual bool StartSnapped => false;
 
         public override void Setup()
         {
@@ -51,7 +54,8 @@ namespace FastUnityCreationKit.UI.Features.Snapping
         private void Start()
         {
             // Snap to closest object after everything is initialized
-            ExecuteSnap(transform.position);
+            if(StartSnapped)
+                ExecuteSnap(transform.position);
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -67,6 +71,15 @@ namespace FastUnityCreationKit.UI.Features.Snapping
                 ExecuteSnap(UseMousePosition ? eventData.position : transform.position);
         }
 
+        /// <summary>
+        /// High-level access to snapping to a specific position.
+        /// Warning: this may be unstable, so use with caution.
+        /// </summary>
+        /// <param name="position">Position from which you would like to search for TSnapObject (targets)
+        /// this object can snap to.</param>
+         public void SnapToObjectClosestTo(Vector2 position)=>
+            ExecuteSnap(position);
+        
         internal void ExecuteSnap(Vector2 position)
         {
             NotifyObjectSnapBroken(_currentlySnappedTo);
