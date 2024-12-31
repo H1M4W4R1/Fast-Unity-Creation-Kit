@@ -20,10 +20,17 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         public virtual bool WrapForward => true;
         public virtual bool WrapBackward => true;
 
-        protected override void Awake()
+        protected override void Setup()
         {
-            base.Awake();
-
+            base.Setup();
+            
+            // Ensure that the buttons are not null
+            if(previousButton == null || nextButton == null)
+            {
+                Guard<ValidationLogConfig>.Error($"Buttons are not set on {name}. Cannot setup carousel.");
+                return;
+            }
+            
             previousButton.onButtonPressed += OnPreviousButtonPressed;
             nextButton.onButtonPressed += OnNextButtonPressed;
         }

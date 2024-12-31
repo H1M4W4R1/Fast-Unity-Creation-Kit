@@ -1,9 +1,11 @@
-﻿using FastUnityCreationKit.UI.Context.Providers.Utility;
+﻿using FastUnityCreationKit.UI.Context.Providers.Base;
+using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Callbacks;
 using FastUnityCreationKit.Utility.Logging;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Abstract
@@ -59,23 +61,47 @@ namespace FastUnityCreationKit.UI.Abstract
         }
 
         /// <summary>
+        /// Gets the data context provider of the specified type.
+        /// </summary>
+        /// <typeparam name="TProviderType">The type of the data context provider.</typeparam>
+        /// <returns>The data context provider of the specified type or null if not found.</returns>
+        public TProviderType GetProviderByType<TProviderType>() 
+            where TProviderType : IDataContextProvider
+        {
+            // Try to get provider on this object or parent if not found
+            TProviderType provider = GetComponent<TProviderType>() ??
+                                     GetComponentInParent<TProviderType>(true);
+            
+            // Check if provider is not null
+            if (provider != null) return provider;
+            
+            // if not found, log error
+            Guard<UserInterfaceLogConfig>.Error($"Data context provider of type {typeof(TProviderType).Name} not found on {name} or its parent.");
+            return default;
+        }
+        
+        /// <summary>
+        /// Attempts to get the data context provider of the specified type.
+        /// This method exists to access provider without the need to actually provide the data context.
+        /// </summary>
+        /// <typeparam name="TDataContext">The type of the data context.</typeparam>
+        /// <returns>The data context provider of the specified type or null if not found.</returns>
+        [CanBeNull] public IDataContextProvider<TDataContext> GetProviderFor<TDataContext>()
+            => GetProviderByType<IDataContextProvider<TDataContext>>();
+        
+        /// <summary>
         /// Gets the data context of the specified type.
+        /// This method can be overriden for very stupid use cases that may not require
+        /// provider to be used.
         /// </summary>
         /// <typeparam name="TDataContext">The type of the data context.</typeparam>
         /// <returns>The data context of the specified type.</returns>
         public virtual DataContextInfo<TDataContext> GetDataContext<TDataContext>()
         {
-            // Try to get provider on this object or parent if not found
-            IDataContextProvider<TDataContext> provider = GetComponent<IDataContextProvider<TDataContext>>() ??
-                                                          GetComponentInParent<IDataContextProvider<TDataContext>>(
-                                                              true);
+            IDataContextProvider<TDataContext> provider = GetProviderFor<TDataContext>();
 
             // Check if provider is not null
-            if (provider != null) return new DataContextInfo<TDataContext>(provider, provider.Provide());
-            
-            // if not found, log error
-            Guard<UserInterfaceLogConfig>.Error($"Data context provider not found on {name} or its parent.");
-            return default;
+            return provider != null ? new DataContextInfo<TDataContext>(provider, provider.Provide()) : default;
         }
 
         public void OnObjectDestroyed()

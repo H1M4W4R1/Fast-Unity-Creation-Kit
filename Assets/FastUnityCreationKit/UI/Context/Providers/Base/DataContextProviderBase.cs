@@ -1,5 +1,7 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.UI.Context.Providers.Utility;
+using FastUnityCreationKit.Unity;
+using FastUnityCreationKit.Unity.Callbacks;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
@@ -10,7 +12,8 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
     /// <summary>
     /// Represents a data context provider.
     /// </summary>
-    public abstract class DataContextProviderBase<TContextType> : MonoBehaviour, IDataContextProvider<TContextType>
+    public abstract class DataContextProviderBase<TContextType> : FastMonoBehaviour, IDataContextProvider<TContextType>,
+        ICreateCallback, IDestroyCallback
     {
         public delegate void OnContextChangedHandler(TContextType context);
 
@@ -42,22 +45,23 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
             Provide();
             return default;
         }
+        
+        protected virtual void Setup() {}
+        protected virtual void TearDown() {}
 
         /// <summary>
         /// Resets the dirty state of the data context.
         /// </summary>
-        public void Consume() => IsDirty = false;
-
-        protected virtual void Awake()
-        {
-            if (this is IInitializable initializable)
-                initializable.Initialize();
-        }
+        public virtual void Consume() => IsDirty = false;
 
         protected virtual void NotifyContextHasChanged()
         {
             IsDirty = true;
             OnContextChanged?.Invoke(Provide());
         }
+
+        public void OnObjectCreated() => Setup();
+        public void OnObjectDestroyed() => TearDown();
+        
     }
 }

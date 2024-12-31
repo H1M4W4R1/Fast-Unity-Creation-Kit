@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
+using FastUnityCreationKit.UI.Elements.Callbacks;
 using UnityEngine.UI;
 
 namespace FastUnityCreationKit.UI.Elements.Abstract
@@ -18,9 +19,18 @@ namespace FastUnityCreationKit.UI.Elements.Abstract
             base.Setup();
             
             _button = GetComponent<Button>();
-            _button.onClick.AddListener(OnClick);
+            _button.onClick.AddListener(_OnClick);
         }
 
+        internal void _OnClick()
+        {
+            // Perform callback to the provider if it exists
+            IButtonClickedProviderCallback provider = GetProviderByType<IButtonClickedProviderCallback>();
+            provider?.OnButtonClicked(this);
+            
+            OnClick();
+        }
+        
         /// <summary>
         /// Event that is invoked when the button is clicked.
         /// </summary>
@@ -35,6 +45,6 @@ namespace FastUnityCreationKit.UI.Elements.Abstract
         /// <summary>
         /// Simulates a click on the button.
         /// </summary>
-        public void SimulateClick() => OnClick();
+        public void SimulateClick() => _OnClick();
     }
 }

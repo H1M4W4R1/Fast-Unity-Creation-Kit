@@ -18,16 +18,15 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         
         [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
         public int Count => _elements.Count;
-        
-        protected override void Awake()
-        {
-            base.Awake();
 
-            // Setup elements
+        protected override void Setup()
+        {
+            base.Setup();
+            
             SetupElements();
         }
-        
-          /// <summary>
+
+        /// <summary>
         /// Adds an element to the carousel.
         /// </summary>
         /// <param name="element">Element to add.</param>
@@ -140,6 +139,13 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         {
             throw new NotSupportedException("This method is not supported for ListContextProvider.");
         }
+        
+        /// <summary>
+        /// Provides a random element from the list.
+        /// </summary>
+        /// <returns>Random element from the list or default if not found.</returns>
+        public TContextType ProvideRandom() => 
+            _elements.Count == 0 ? default : _elements[UnityEngine.Random.Range(0, _elements.Count)];
 
         public override TContextType ProvideAt(int index)
         {
