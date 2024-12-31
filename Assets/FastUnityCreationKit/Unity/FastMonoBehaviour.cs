@@ -1,4 +1,6 @@
-﻿using FastUnityCreationKit.Structure.Initialization;
+﻿using System;
+using FastUnityCreationKit.Structure.Initialization;
+using FastUnityCreationKit.Structure.Singleton;
 using FastUnityCreationKit.Unity.Callbacks;
 using FastUnityCreationKit.Unity.Interfaces;
 using FastUnityCreationKit.Utility;
@@ -71,7 +73,9 @@ namespace FastUnityCreationKit.Unity
             NotifyObjectWasDestroyed();
 
             // Unregister this object from the object registry.
-            FastMonoBehaviourManager.Instance.UnregisterFastMonoBehaviour(this);
+            // Do this only if instance exists, otherwise it will throw an error.
+            if(!FastMonoBehaviourManager.WasDestroyed)
+                FastMonoBehaviourManager.Instance.UnregisterFastMonoBehaviour(this);
         }
 
         internal static void HandlePreUpdate(FastMonoBehaviour behaviour, float deltaTime)
@@ -140,6 +144,12 @@ namespace FastUnityCreationKit.Unity
         {
             if (this is IPostUpdateCallback postUpdateCallback)
                 postUpdateCallback.OnAfterObjectUpdated(deltaTime);
+        }
+
+        private void OnApplicationQuit()
+        {
+            if(this is IQuitCallback quitCallback)
+                quitCallback.OnQuit();
         }
     }
 }

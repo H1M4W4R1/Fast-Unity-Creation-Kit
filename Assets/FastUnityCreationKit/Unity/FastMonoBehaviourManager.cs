@@ -9,15 +9,25 @@ namespace FastUnityCreationKit.Unity
     /// This class is implementation of FastMonoBehaviour processing.
     /// Should not be used directly.
     /// </summary>
-    public sealed class FastMonoBehaviourManager : MonoBehaviour, IMonoBehaviourSingleton<FastMonoBehaviourManager> // Can't be FMB to prevent infinite loop
+    public sealed class
+        FastMonoBehaviourManager : MonoBehaviour,
+        IMonoBehaviourSingleton<FastMonoBehaviourManager> // Can't be FMB to prevent infinite loop
     {
-        public static FastMonoBehaviourManager Instance => IMonoBehaviourSingleton<FastMonoBehaviourManager>.GetInstance();
-      
+        /// <summary>
+        /// If true it means the object was destroyed.
+        /// It's used to prevent accidental instance creation when
+        /// quitting the application.
+        /// </summary>
+        public static bool WasDestroyed { get; set; }
+
+        public static FastMonoBehaviourManager Instance =>
+            IMonoBehaviourSingleton<FastMonoBehaviourManager>.GetInstance();
+
         /// <summary>
         /// List of all known FastMonoBehaviours in the scene.
         /// </summary>
         private readonly List<FastMonoBehaviour> _fastMonoBehaviours = new();
-       
+
         /// <summary>
         /// Returns the first object found in the scene of the specified type.
         /// </summary>
@@ -47,9 +57,15 @@ namespace FastUnityCreationKit.Unity
 
             // Make the object persistent
             DontDestroyOnLoad(gameObject);
-            
+
             // Note that we're not setting instance here because it's handled by the singleton system
             // for more information see IMonoBehaviourSingleton.cs
+            WasDestroyed = false;
+        }
+
+        private void OnDestroy()
+        {
+            WasDestroyed = true;
         }
 
         /// <summary>
@@ -73,11 +89,11 @@ namespace FastUnityCreationKit.Unity
         {
             ExecuteForAll(FastMonoBehaviour.HandleFixedUpdate);
         }
-        
+
         private void ExecuteForAll(Action<FastMonoBehaviour, float> action)
         {
             float deltaTime = Time.deltaTime;
-            
+
             // Execute for all known FastMonoBehaviours
             for (int fastMonoBehaviourIndex = 0;
                  fastMonoBehaviourIndex < _fastMonoBehaviours.Count;
