@@ -30,13 +30,11 @@ namespace FastUnityCreationKit.Data.Abstract
         [OdinSerialize]
         protected readonly AddressableDataContainerStorageObject internalContainer = new();
 
-#if UNITY_EDITOR
         [Header("Addressable Asset Group")]
         [Required]
         [SerializeField]
         [NotNull]
         protected string addressableTag = string.Empty;
-#endif
 
         /// <summary>
         /// Checks if the data container is populated.

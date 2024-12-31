@@ -1,9 +1,9 @@
 ﻿using FastUnityCreationKit.Identification.Abstract.Identifiers;
-using FastUnityCreationKit.Identification.Validation;
+using FastUnityCreationKit.Validation.Identification;
 using Sirenix.OdinInspector.Editor.Validation;
 
 [assembly: RegisterValidator(typeof(IdentifierValueValidator))]
-namespace FastUnityCreationKit.Identification.Validation
+namespace FastUnityCreationKit.Validation.Identification
 {
     public sealed class IdentifierValueValidator : ValueValidator<IIdentifier>
     {

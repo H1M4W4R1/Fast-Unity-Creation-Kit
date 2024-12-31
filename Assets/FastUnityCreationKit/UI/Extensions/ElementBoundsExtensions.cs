@@ -82,14 +82,15 @@ namespace FastUnityCreationKit.UI.Extensions
             Rect targetRect = rectTransform.rect;
             Rect otherRect = otherRectTransform.rect;
 
+            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2)targetRect.size;
+            
             // Get left bottom corner of the element
             Vector2 targetPosition = rectTransform.position;
-            targetPosition -= targetRect.size / 2;
+            targetPosition -= pivotOffset;
 
             // Get left bottom corner of the parent
-            Vector2 parentPosition = otherRectTransform.position;
+            Vector2 parentPosition = rectTransform.parent.position;
             parentPosition -= otherRect.size / 2;
-            parentPosition -= targetRect.size / 2;
 
             // Check if the element is within the bounds of the parent,
             // if it is not, then return false.
@@ -236,10 +237,14 @@ namespace FastUnityCreationKit.UI.Extensions
 
         public static bool IsWithinViewportBounds(this RectTransform rectTransform)
         {
-            // Get the target rect and position
             Rect targetRect = rectTransform.rect;
-            Vector2 targetPosition = rectTransform.position - new Vector3(targetRect.width / 2, targetRect.height / 2);
-
+            
+            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2)targetRect.size;
+            
+            // Get left bottom corner of the element
+            Vector2 targetPosition = rectTransform.position;
+            targetPosition -= pivotOffset;
+            
             // Check if the draggable element is within the bounds of the viewport
             return targetPosition is {x: >= 0, y: >= 0} &&
                    targetPosition.x + targetRect.width <= Screen.width &&

@@ -6,7 +6,6 @@ using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Validation.Abstract;
 using FastUnityCreationKit.Validation.Data;
 using Sirenix.OdinInspector.Editor.Validation;
-using UnityEngine;
 
 [assembly: RegisterValidator(typeof(NoNullEntriesValidator.InternalValueValidator))]
 [assembly: RegisterValidator(typeof(NoNullEntriesValidator.InternalRootObjectValidator))]
