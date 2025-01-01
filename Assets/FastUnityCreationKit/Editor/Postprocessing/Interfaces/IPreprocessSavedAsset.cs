@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
+﻿namespace FastUnityCreationKit.Editor.Postprocessing.Interfaces
 {
     public interface IPreprocessSavedAsset
     {

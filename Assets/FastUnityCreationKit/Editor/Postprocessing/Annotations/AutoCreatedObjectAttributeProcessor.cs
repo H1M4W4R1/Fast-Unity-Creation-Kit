@@ -4,6 +4,7 @@ using System.Reflection;
 using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
+using FastUnityCreationKit.Editor.Postprocessing.Interfaces;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;

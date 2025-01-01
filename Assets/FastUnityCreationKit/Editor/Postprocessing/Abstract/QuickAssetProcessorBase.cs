@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using FastUnityCreationKit.Editor.Postprocessing.Interfaces;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
