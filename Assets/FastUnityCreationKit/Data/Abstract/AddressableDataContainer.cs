@@ -42,7 +42,6 @@ namespace FastUnityCreationKit.Data.Abstract
         /// <summary>
         /// Internal data container storage object. 
         /// </summary>
-        /// BUG: This shit somehow is losing serialization on editor restart without any fucking errors
         protected sealed class AddressableDataContainerStorageObject : 
             DataContainerBase<AddressableReferenceEntry<TDataType>>,
             IIndexableBy<AssetReferenceT<TDataType>, string>
@@ -56,6 +55,7 @@ namespace FastUnityCreationKit.Data.Abstract
                     {
                         // Get the element
                         AddressableReferenceEntry<TDataType> element = this[i];
+                        if(ReferenceEquals(element, null)) continue;
 
                         // Check if the key is the same as the index
                         if (element.Address == index)
@@ -80,6 +80,7 @@ namespace FastUnityCreationKit.Data.Abstract
             for(int i = 0; i < internalContainer.Count; i++)
             {
                 AddressableReferenceEntry<TDataType> entryDefinition = internalContainer[i];
+                if(ReferenceEquals(entryDefinition, null)) continue;
                 
                 if (entryDefinition.Address != data.Address)
                     continue;

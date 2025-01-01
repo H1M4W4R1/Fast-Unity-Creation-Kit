@@ -24,7 +24,7 @@ namespace FastUnityCreationKit.Utility.Editor.Extensions
             // Check if settings exist
             // When Addressable settings are not found object can't be addressable
             if (!settings) return false;
-            
+
             // Get GUID of object
             string assetPath = AssetDatabase.GetAssetPath(obj);
             string guid = AssetDatabase.AssetPathToGUID(assetPath);
@@ -97,6 +97,7 @@ namespace FastUnityCreationKit.Utility.Editor.Extensions
                 string guid = AssetDatabase.AssetPathToGUID(assetPath);
 
                 bool modified = false;
+                bool created = false;
 
                 // Check if entry already exists
                 AddressableAssetEntry e = settings.FindAssetEntry(guid);
@@ -109,7 +110,10 @@ namespace FastUnityCreationKit.Utility.Editor.Extensions
                     e.SetAddress(obj.name);
 
                     modified = true;
+                    created = true;
                     e.ReadOnly = readOnly;
+                    
+                    NotifyAddressables(settings, group, e, AddressableAssetSettings.ModificationEvent.EntryCreated);
                 }
                 else if (e.parentGroup != group)
                 {
@@ -118,13 +122,10 @@ namespace FastUnityCreationKit.Utility.Editor.Extensions
                     e.SetAddress(obj.name);
                     modified = true;
                     e.ReadOnly = readOnly;
+                    
+                    NotifyAddressables(settings, group, e, AddressableAssetSettings.ModificationEvent.EntryMoved);
                 }
-                else if (e.ReadOnly != readOnly)
-                {
-                    e.ReadOnly = readOnly;
-                    modified = true;
-                }
-
+  
                 // Validate labels
                 e.ReadOnly = false;
                 for (int i = 0; i < labels.Length; i++)
@@ -136,17 +137,25 @@ namespace FastUnityCreationKit.Utility.Editor.Extensions
                     modified = true;
                 }
 
+                // Set readonly property
                 e.ReadOnly = readOnly;
-
-                // Set dirty
-                List<AddressableAssetEntry> entriesModified = new() {e};
-                group.SetDirty(AddressableAssetSettings.ModificationEvent.EntryMoved, entriesModified, false, true);
-                settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryMoved, entriesModified, true, false);
-
+                NotifyAddressables(settings, group, e, AddressableAssetSettings.ModificationEvent.EntryModified);
+                EditorUtility.SetDirty(obj);
                 return modified;
             }
 
             return false;
+        }
+
+        private static void NotifyAddressables([NotNull] AddressableAssetSettings settings,
+            [NotNull] AddressableAssetGroup group,
+            [NotNull] AddressableAssetEntry entry,
+            AddressableAssetSettings.ModificationEvent evt)
+        {
+            List<AddressableAssetEntry> mod = new List<AddressableAssetEntry> {entry};
+
+            group.SetDirty(AddressableAssetSettings.ModificationEvent.EntryAdded, mod, false, true);
+            settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryAdded, mod, true);
         }
     }
 }

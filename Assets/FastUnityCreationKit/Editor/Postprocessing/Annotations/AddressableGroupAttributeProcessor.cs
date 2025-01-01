@@ -6,6 +6,7 @@ using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Editor.Extensions;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
+using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -35,7 +36,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                 if (obj.SetAddressableGroup(groupAttribute.GroupName, true, groupAttribute.Labels))
                     Guard<ValidationLogConfig>.Debug(
                         $"Found AddressableGroupAttribute and assigned {obj.name} to addressable group {groupAttribute.GroupName}");
-
+                
                 return true;
             }
 

@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Sirenix.Utilities;
+using UnityEditor;
 using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
@@ -148,13 +149,17 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
 
                 Guard<ValidationLogConfig>.Debug(
                     $"Registered {obj.name} in {databaseSubtype.Name} database.");
+                
+                // Reserialize database!
+                if(database is Object unityObject)
+                    EditorUtility.SetDirty(unityObject);
             }
             catch (Exception exception)
             {
                 Debug.LogError(exception);
 
                 // Warn that adding failed, probably trying to add Addressable Asset to non-addressable
-                // database.
+                // database.  
                 Guard<ValidationLogConfig>.Warning(
                     $"Failed to register {obj.name} in {databaseSubtype.Name}. " +
                     $"Are you trying to add Addressable Asset to non-addressable database?");
@@ -172,7 +177,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             Type assetReferenceTType = typeof(AssetReferenceT<>).MakeGenericType(foundBaseClass);
             object assetReferenceT = reference.CastToReflected(assetReferenceTType);
 
-            // Create new KeyValuePair instance to be used in Contains and Add methods 
+            // Create new KeyValuePair instance to be used in Contains and Add methods  
             object[] parameters = {address, assetReferenceT};
             object kvp = Activator.CreateInstance(
                 typeof(AddressableReferenceEntry<>).MakeGenericType(foundBaseClass),
