@@ -14,6 +14,13 @@ namespace FastUnityCreationKit.Utility.Extensions
         {
             try
             {
+                // Check if file exists
+                if (!File.Exists(path))
+                {
+                    Guard<SaveLogConfig>.Error($"File not read. '{path}' does not exist.");
+                    return (false, Array.Empty<byte>());
+                }
+                
                 byte[] data = File.ReadAllBytes(path);
                 return (true, data);
             }
@@ -61,6 +68,17 @@ namespace FastUnityCreationKit.Utility.Extensions
         {
             try
             {
+                // Ensure directory exists
+                string directory = Path.GetDirectoryName(path);
+                if (string.IsNullOrEmpty(directory)) return false;
+
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                    Guard<SaveLogConfig>.Verbose($"Directory created for '{path}'.");
+                }
+
+                // Write data
                 File.WriteAllBytes(path, bytes);
                 return true;
             }
