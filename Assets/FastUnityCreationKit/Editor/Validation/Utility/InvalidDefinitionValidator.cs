@@ -1,5 +1,5 @@
 ﻿using System;
-using FastUnityCreationKit.Annotations.Attributes;
+using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Editor.Validation.Utility;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor.Validation;

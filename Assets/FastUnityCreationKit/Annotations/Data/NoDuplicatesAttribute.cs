@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FastUnityCreationKit.Annotations.Attributes
+namespace FastUnityCreationKit.Annotations.Data
 {
     /// <summary>
     /// Secures container from having duplicates.

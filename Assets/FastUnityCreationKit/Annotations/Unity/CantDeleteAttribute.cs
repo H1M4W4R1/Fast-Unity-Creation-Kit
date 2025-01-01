@@ -1,6 +1,6 @@
-﻿using FastUnityCreationKit.Annotations.Attributes.Interfaces;
+﻿using FastUnityCreationKit.Annotations.Interfaces;
 
-namespace FastUnityCreationKit.Annotations.Attributes
+namespace FastUnityCreationKit.Annotations.Unity
 {
     /// <summary>
     ///  Represents an attribute that marks a class that assets can't be deleted.

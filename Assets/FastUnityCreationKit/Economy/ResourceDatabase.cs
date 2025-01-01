@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Annotations.Attributes;
+﻿using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Data;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Identification.Identifiers;

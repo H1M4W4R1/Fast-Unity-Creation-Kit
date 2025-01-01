@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using FastUnityCreationKit.Annotations.Attributes;
+using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Utility;

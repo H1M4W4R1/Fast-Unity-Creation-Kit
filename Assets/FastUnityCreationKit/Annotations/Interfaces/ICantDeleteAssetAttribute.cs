@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Annotations.Attributes.Interfaces
+﻿namespace FastUnityCreationKit.Annotations.Interfaces
 {
     public interface ICantDeleteAssetAttribute
     {

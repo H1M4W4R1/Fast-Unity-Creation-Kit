@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using FastUnityCreationKit.Annotations.Attributes;
+using FastUnityCreationKit.Annotations.Data;
 using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;

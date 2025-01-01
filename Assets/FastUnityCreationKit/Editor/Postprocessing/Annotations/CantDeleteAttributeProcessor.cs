@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Annotations.Attributes.Interfaces;
+﻿using FastUnityCreationKit.Annotations.Interfaces;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Extensions;

@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using FastUnityCreationKit.Annotations.Attributes;
+using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Editor.Postprocessing.Annotations;
 using FastUnityCreationKit.Editor.Validation.Data;
 using FastUnityCreationKit.Utility;

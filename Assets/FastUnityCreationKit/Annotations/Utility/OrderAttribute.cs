@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Annotations.Attributes
+﻿namespace FastUnityCreationKit.Annotations.Utility
 {
     public sealed class OrderAttribute : System.Attribute
     {

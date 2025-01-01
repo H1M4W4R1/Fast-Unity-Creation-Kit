@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Annotations.Attributes
+﻿namespace FastUnityCreationKit.Annotations.Addressables
 {
     /// <summary>
     /// This attribute can be used to place ScriptableObject into AddressableGroup.

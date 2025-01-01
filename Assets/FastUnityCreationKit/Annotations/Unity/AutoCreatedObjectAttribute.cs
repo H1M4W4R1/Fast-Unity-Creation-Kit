@@ -1,7 +1,6 @@
-﻿using System;
-using FastUnityCreationKit.Annotations.Attributes.Interfaces;
+﻿using FastUnityCreationKit.Annotations.Interfaces;
 
-namespace FastUnityCreationKit.Annotations.Attributes
+namespace FastUnityCreationKit.Annotations.Unity
 {
     /// <summary>
     /// This attribute is used to automatically create ScriptableObjects.

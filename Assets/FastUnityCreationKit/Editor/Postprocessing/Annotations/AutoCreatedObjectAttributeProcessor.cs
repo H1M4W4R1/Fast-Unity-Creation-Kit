@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using FastUnityCreationKit.Annotations.Attributes;
+using FastUnityCreationKit.Annotations.Unity;
+using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
