@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
@@ -15,7 +16,7 @@ namespace FastUnityCreationKit.Data.Abstract
         /// <summary>
         /// Data storage.  
         /// </summary>
-        [ShowInInspector] [ReadOnly] [OdinSerialize]
+        [ShowInInspector] [ReadOnly] [OdinSerialize] [NonSerialized]
         protected readonly List<TDataType> data = new();
         
         /// <summary>
@@ -70,7 +71,7 @@ namespace FastUnityCreationKit.Data.Abstract
         public virtual int Count => data.Count;
         
         /// <summary>
-        /// Removes the data at the specified index.
+        /// Removes the data at the specified index. 
         /// </summary>
         public virtual void RemoveAt(int index) => data.RemoveAt(index);
     }

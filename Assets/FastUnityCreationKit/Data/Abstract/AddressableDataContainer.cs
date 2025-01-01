@@ -32,7 +32,7 @@ namespace FastUnityCreationKit.Data.Abstract
         /// <summary>
         /// Internal data container.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [OdinSerialize] [TabGroup("Debug")]
+        [ShowInInspector] [ReadOnly] [OdinSerialize] [TabGroup("Debug")] [NonSerialized]
         protected readonly AddressableDataContainerStorageObject internalContainer = new();
       
         [ShowInInspector] [ReadOnly] [TabGroup("Configuration")]
@@ -42,7 +42,7 @@ namespace FastUnityCreationKit.Data.Abstract
         /// <summary>
         /// Internal data container storage object. 
         /// </summary>
-        [Serializable]
+        /// BUG: This shit somehow is losing serialization on editor restart without any fucking errors
         protected sealed class AddressableDataContainerStorageObject : 
             DataContainerBase<AddressableReferenceEntry<TDataType>>,
             IIndexableBy<AssetReferenceT<TDataType>, string>
@@ -51,7 +51,7 @@ namespace FastUnityCreationKit.Data.Abstract
             {
                 get
                 {
-                    // Loop through all elements in the container
+                    // Loop through all elements in the container 
                     for (int i = 0; i < Count; i++)
                     {
                         // Get the element
