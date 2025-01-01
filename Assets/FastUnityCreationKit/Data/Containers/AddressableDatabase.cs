@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using FastUnityCreationKit.Annotations.Attributes;
 using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Utility;
-using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;

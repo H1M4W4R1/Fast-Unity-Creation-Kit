@@ -14,7 +14,27 @@ namespace FastUnityCreationKit.Utility.Editor.Extensions
 {
     public static class Addressable
     {
-        [CanBeNull]
+        public static bool IsAddressable(this Object obj)
+        {
+            AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+
+            // Get object type
+            Type objType = obj.GetType();
+
+            // Check if settings exist
+            // When Addressable settings are not found object can't be addressable
+            if (!settings) return false;
+            
+            // Get GUID of object
+            string assetPath = AssetDatabase.GetAssetPath(obj);
+            string guid = AssetDatabase.AssetPathToGUID(assetPath);
+
+            // Check if entry exists
+            AddressableAssetEntry e = settings.FindAssetEntry(guid);
+            return e != null;
+        }
+
+
         public static (string, AssetReference) GetAssetReference(this Object obj, [CanBeNull] Type targetType = null)
         {
             AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;

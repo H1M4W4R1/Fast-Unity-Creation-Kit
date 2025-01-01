@@ -1,7 +1,7 @@
-﻿using FastUnityCreationKit.Data;
+﻿using FastUnityCreationKit.Annotations.Attributes;
+using FastUnityCreationKit.Data;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.UI.Elements.Core;
-using FastUnityCreationKit.Utility.Attributes;
 
 namespace FastUnityCreationKit.UI
 {

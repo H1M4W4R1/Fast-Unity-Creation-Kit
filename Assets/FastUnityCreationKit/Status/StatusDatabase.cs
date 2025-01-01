@@ -1,8 +1,8 @@
-﻿using FastUnityCreationKit.Data;
+﻿using FastUnityCreationKit.Annotations.Attributes;
+using FastUnityCreationKit.Data;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Identification.Identifiers;
 using FastUnityCreationKit.Status.Abstract;
-using FastUnityCreationKit.Utility.Attributes;
 
 namespace FastUnityCreationKit.Status
 {

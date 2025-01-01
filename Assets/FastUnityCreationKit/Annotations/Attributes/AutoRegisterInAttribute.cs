@@ -1,10 +1,14 @@
 ﻿using System;
 
-namespace FastUnityCreationKit.Data.Attributes
+namespace FastUnityCreationKit.Annotations.Attributes
 {
     /// <summary>
-    /// Automatically registers class in specified database. 
+    /// Automatically registers class in specified type. 
     /// </summary>
+    /// <remarks>
+    /// May cause issues with Addressables if used on Addressable that has no
+    /// [AddressableGroup] attribute.
+    /// </remarks>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class AutoRegisterInAttribute : Attribute
     {

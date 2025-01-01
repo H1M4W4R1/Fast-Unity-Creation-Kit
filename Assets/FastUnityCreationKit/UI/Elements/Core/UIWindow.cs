@@ -1,7 +1,7 @@
-﻿using FastUnityCreationKit.UI.Abstract;
+﻿using FastUnityCreationKit.Annotations.Attributes;
+using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Unity.Interfaces;
-using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using UnityEngine;

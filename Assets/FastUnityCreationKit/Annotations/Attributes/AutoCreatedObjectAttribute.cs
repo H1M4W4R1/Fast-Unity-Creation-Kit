@@ -1,7 +1,10 @@
 ﻿using System;
 
-namespace FastUnityCreationKit.Utility.Attributes
+namespace FastUnityCreationKit.Annotations.Attributes
 {
+    /// <summary>
+    /// This attribute is used to automatically create ScriptableObjects.
+    /// </summary>
     public sealed class AutoCreatedObjectAttribute : Attribute
     {
         public string SubDirectory { get; }

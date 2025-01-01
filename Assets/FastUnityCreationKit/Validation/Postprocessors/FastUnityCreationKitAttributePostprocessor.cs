@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using FastUnityCreationKit.Data.Attributes;
+using FastUnityCreationKit.Annotations.Attributes;
+using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Utility;
-using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Editor.Extensions;
 using FastUnityCreationKit.Utility.Extensions;
 using FastUnityCreationKit.Utility.Logging;
@@ -31,7 +31,8 @@ namespace FastUnityCreationKit.Validation.Postprocessors
             if (!typeof(ScriptableObject).IsAssignableFrom(type)) return AssetDeleteResult.DidNotDelete;
 
             // Check if asset has AutoCreatedObjectAttribute
-            AutoCreatedObjectAttribute attribute = CustomAttributeExtensions.GetCustomAttribute<AutoCreatedObjectAttribute>(type, true);
+            AutoCreatedObjectAttribute attribute =
+                CustomAttributeExtensions.GetCustomAttribute<AutoCreatedObjectAttribute>(type, true);
             if (attribute == null) return AssetDeleteResult.DidNotDelete;
 
             // Fail deletion
@@ -49,7 +50,8 @@ namespace FastUnityCreationKit.Validation.Postprocessors
             if (!typeof(ScriptableObject).IsAssignableFrom(type)) return AssetMoveResult.DidNotMove;
 
             // Check if asset has AutoCreatedObjectAttribute
-            AutoCreatedObjectAttribute attribute = CustomAttributeExtensions.GetCustomAttribute<AutoCreatedObjectAttribute>(type, true);
+            AutoCreatedObjectAttribute attribute =
+                CustomAttributeExtensions.GetCustomAttribute<AutoCreatedObjectAttribute>(type, true);
             if (attribute == null) return AssetMoveResult.DidNotMove;
 
             // Fail move
@@ -116,7 +118,7 @@ namespace FastUnityCreationKit.Validation.Postprocessors
             Guard<ValidationLogConfig>.Verbose($"Loaded assembly {assembly.FullName}.");
 
             List<ScriptableObject> createdAssets = new List<ScriptableObject>();
-            
+
             // Process all types with the custom attribute 
             foreach (Type type in assembly.GetTypes())
             {
@@ -130,10 +132,13 @@ namespace FastUnityCreationKit.Validation.Postprocessors
                     createdAssets.Add(obj);
                 }
             }
-            
-            // Process all created assets
+
+            // Process all created assets   
             foreach (ScriptableObject obj in createdAssets)
+            {
                 TryUpdateAddressableGroup(obj);
+                TryToRegisterInContainers(obj);
+            }
 
             // Log the number of created assets 
             if (createdCount > 0)
@@ -148,12 +153,60 @@ namespace FastUnityCreationKit.Validation.Postprocessors
             AssetDatabase.Refresh();
         }
 
+        internal static bool IsAddressableContainer(Type type) => type.ImplementsOpenGenericClass(typeof(AddressableDataContainer<>));
+
+        internal static void TryToRegisterInContainers([NotNull] Object obj)
+        {
+            Type type = obj.GetType();
+
+            // Check if object has AutoRegisterInAttribute
+            IEnumerable<AutoRegisterInAttribute> registerInAttribute =
+                CustomAttributeExtensions.GetCustomAttributes<AutoRegisterInAttribute>(type, true);
+
+            // Ensure object is registered in specified databases
+            foreach (AutoRegisterInAttribute registerAttribute in registerInAttribute)
+            {
+                if (obj.IsAddressable())
+                {
+                    // Addressable object can only be registered in addressable database
+                    if (!IsAddressableContainer(registerAttribute.Type))
+                    {
+                        Guard<ValidationLogConfig>.Error(
+                            $"Cannot register {obj.name} in {registerAttribute.Type.Name}. " +
+                            $"Type is not a valid AddressableDataContainer.");
+                        continue;
+                    }
+                    
+                    TryRegisterInContainer(obj, registerAttribute, GetAddressableObjectToRegister);
+                }
+                else
+                {
+                    // Regular object cannot be added to addressable database
+                    if (IsAddressableContainer(registerAttribute.Type))
+                    {
+                        Guard<ValidationLogConfig>.Error(
+                            $"Cannot register {obj.name} in {registerAttribute.Type.Name}. " +
+                            $"Type is a valid AddressableDataContainer. Object is not addressable.");
+                        continue;
+                    }
+                    
+                    TryRegisterInContainer(obj, registerAttribute, SelfObjectReference);    
+                }
+
+                
+            }
+        }
+
+        private static object SelfObjectReference([NotNull] Object obj, [NotNull] Type foundBaseClass,
+            AutoRegisterInAttribute registerAttribute) => obj;
+        
         internal static bool TryUpdateAddressableGroup([NotNull] Object obj)
         {
             Type type = obj.GetType();
-            
+
             // Check if object has AddressableGroupAttribute
-            AddressableGroupAttribute groupAttribute = CustomAttributeExtensions.GetCustomAttribute<AddressableGroupAttribute>(type, true);
+            AddressableGroupAttribute groupAttribute =
+                CustomAttributeExtensions.GetCustomAttribute<AddressableGroupAttribute>(type, true);
             if (groupAttribute != null)
             {
                 // Assign object to addressable group, make it read-only
@@ -162,114 +215,119 @@ namespace FastUnityCreationKit.Validation.Postprocessors
                     Guard<ValidationLogConfig>.Debug(
                         $"Found AddressableGroupAttribute and assigned {obj.name} to addressable group {groupAttribute.GroupName}");
 
-                // Check if object has AutoRegisterInAttribute
-                IEnumerable<AutoRegisterInAttribute> registerInAttribute =
-                        CustomAttributeExtensions.GetCustomAttributes<AutoRegisterInAttribute>(type, true);
-                
-                // Ensure object is registered in specified databases
-                foreach (AutoRegisterInAttribute registerAttribute in registerInAttribute)
-                {
-                    // Get core type from attribute
-                    IEnumerable<Type> baseClasses = type.GetBaseClasses();
-
-                    Type foundBaseClass = null;
-                    
-                    // Find the first base class that has the specified type
-                    // without inheritance (this attribute is defined on the base class)
-                    foreach (Type baseClass in baseClasses)
-                    {
-                        IEnumerable<AutoRegisterInAttribute> attributes = baseClass.GetCustomAttributes<AutoRegisterInAttribute>(false);
-                        
-                        // Get first attribute that matches the specified type
-                        AutoRegisterInAttribute attribute = attributes.FirstOrDefault(a => a.Type == registerAttribute.Type);
-                        
-                        // Check if attribute is not null, if found, assign it to the base class
-                        if (attribute == null) continue;
-                        foundBaseClass = baseClass;
-                        break;
-                    }
-                    
-                    if(foundBaseClass == null)
-                    {
-                        Guard<ValidationLogConfig>.Error(
-                            $"Cannot register {obj.name} in {registerAttribute.Type.Name}. " +
-                            $"[AutoRegisterIn] not found on any base class.");
-                        continue;
-                    }
-                    
-                    // Get database type
-                    Type databaseSubtype = registerAttribute.Type;
-                    Type databaseType = typeof(AddressableDatabase<,>).MakeGenericType(databaseSubtype, foundBaseClass);
-
-                    // Get instance of the database
-                    PropertyInfo property = databaseType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-                    object database = property?.GetValue(null);
-
-                    // Check if database is not null
-                    if (database == null)
-                    {
-                        Guard<ValidationLogConfig>.Error(
-                            $"Cannot register {obj.name} in {databaseSubtype.Name} ({databaseType.Name}). Database instance not found. " +
-                            $"Are you sure it has public 'Instance' property?");
-                        continue;
-                    }
-
-                    // Get method to register object
-                    MethodInfo registerMethod = databaseSubtype.GetMethod("Add");
-                    MethodInfo checkMethod = databaseSubtype.GetMethod("Contains");
-
-                    // Check if method is not null
-                    if (registerMethod == null || checkMethod == null)
-                    {
-                        Guard<ValidationLogConfig>.Error(
-                            $"Cannot register {obj.name} in {databaseSubtype.Name}. 'Add' or 'Contains' method not found. " +
-                            $"Are you sure it exists and is public?");
-                        continue;
-                    }
-
-                    // Get reference to object
-                    (string address, AssetReference reference) = obj.GetAssetReference(foundBaseClass);
-                    
-                    // Prepare reference to be proper one
-                    Type assetReferenceTType = typeof(AssetReferenceT<>).MakeGenericType(foundBaseClass);
-                    object assetReferenceT = reference.CastToReflected(assetReferenceTType);
-                    
-                    // Create new KeyValuePair instance to be used in Contains and Add methods 
-                    object[] parameters = {address, assetReferenceT};
-                    object kvp = Activator.CreateInstance(
-                        typeof(AddressableReferenceEntry<>).MakeGenericType(foundBaseClass),
-                        parameters);
-
-                    // Check if key value pair exists 
-                    //
-                    // To think: Change to address?
-                    try
-                    {
-                        if (checkMethod.Invoke(database, new[] {kvp}) is true)
-                            continue;
-
-                        // Register object in database (add kvp)
-                        registerMethod.Invoke(database, new[] {kvp});
-                        
-                        Guard<ValidationLogConfig>.Debug(
-                            $"Registered {obj.name} in {databaseSubtype.Name} database.");
-                    }
-                    catch(Exception exception)
-                    {
-                        Debug.LogError(exception);
-                        
-                        // Warn that adding failed, probably trying to add Addressable Asset to non-addressable
-                        // database.
-                        Guard<ValidationLogConfig>.Warning(
-                            $"Failed to register {obj.name} in {databaseSubtype.Name}. " +
-                            $"Are you trying to add Addressable Asset to non-addressable database?");
-                    }
-                }
-
                 return true;
             }
 
             return false;
+        }
+
+        private static void TryRegisterInContainer([NotNull] Object obj, AutoRegisterInAttribute registerAttribute,
+            Func<Object, Type, AutoRegisterInAttribute, object> getRegistryObjectRequestAction)
+        {
+              // Get object type and base type used to define database
+            Type type = obj.GetType();
+            IEnumerable<Type> baseClasses = type.GetBaseClasses();
+            
+            Type foundBaseClass = null;
+
+            // Find the first base class that has the specified type
+            // without inheritance (this attribute is defined on the base class)
+            foreach (Type baseClass in baseClasses)
+            {
+                IEnumerable<AutoRegisterInAttribute> attributes =
+                    baseClass.GetCustomAttributes<AutoRegisterInAttribute>(false);
+
+                // Get first attribute that matches the specified type
+                AutoRegisterInAttribute attribute = attributes.FirstOrDefault(a => a.Type == registerAttribute.Type);
+
+                // Check if attribute is not null, if found, assign it to the base class
+                if (attribute == null) continue;
+                foundBaseClass = baseClass;
+                break;
+            }
+
+            if (foundBaseClass == null)
+            {
+                Guard<ValidationLogConfig>.Error(
+                    $"Cannot register {obj.name} in {registerAttribute.Type.Name}. " +
+                    $"[AutoRegisterIn] not found on any base class.");
+                return;
+            }
+
+            // Get database type
+            Type databaseSubtype = registerAttribute.Type;
+            Type databaseType = typeof(AddressableDatabase<,>).MakeGenericType(databaseSubtype, foundBaseClass);
+
+            // Get instance of the database
+            PropertyInfo property = databaseType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+            object database = property?.GetValue(null);
+
+            // Check if database is not null
+            if (database == null)
+            {
+                Guard<ValidationLogConfig>.Error(
+                    $"Cannot register {obj.name} in {databaseSubtype.Name} ({databaseType.Name}). Database instance not found. " +
+                    $"Are you sure it has public 'Instance' property?");
+                return;
+            }
+
+            // Get method to register object
+            MethodInfo registerMethod = databaseSubtype.GetMethod("Add");
+            MethodInfo checkMethod = databaseSubtype.GetMethod("Contains");
+
+            // Check if method is not null
+            if (registerMethod == null || checkMethod == null)
+            {
+                Guard<ValidationLogConfig>.Error(
+                    $"Cannot register {obj.name} in {databaseSubtype.Name}. 'Add' or 'Contains' method not found. " +
+                    $"Are you sure it exists and is public?");
+                return;
+            }
+            
+            try
+            {
+                // Get object to register
+                object objToRegister = getRegistryObjectRequestAction(obj, foundBaseClass, registerAttribute);
+                
+                // Ensure object is not already registered
+                if (checkMethod.Invoke(database, new[] {objToRegister}) is true)
+                    return;
+
+                // Register object in database (add kvp)
+                registerMethod.Invoke(database, new[] {objToRegister});
+
+                Guard<ValidationLogConfig>.Debug(
+                    $"Registered {obj.name} in {databaseSubtype.Name} database.");
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError(exception);
+
+                // Warn that adding failed, probably trying to add Addressable Asset to non-addressable
+                // database.
+                Guard<ValidationLogConfig>.Warning(
+                    $"Failed to register {obj.name} in {databaseSubtype.Name}. " +
+                    $"Are you trying to add Addressable Asset to non-addressable database?");
+            }
+        }
+        
+        private static object GetAddressableObjectToRegister([NotNull] Object obj, [NotNull] Type foundBaseClass,
+            AutoRegisterInAttribute registerAttribute)
+        {
+            // Get reference to object
+            (string address, AssetReference reference) = obj.GetAssetReference(foundBaseClass);
+
+            // Prepare reference to be proper one
+            Type assetReferenceTType = typeof(AssetReferenceT<>).MakeGenericType(foundBaseClass);
+            object assetReferenceT = reference.CastToReflected(assetReferenceTType);
+
+            // Create new KeyValuePair instance to be used in Contains and Add methods 
+            object[] parameters = {address, assetReferenceT};
+            object kvp = Activator.CreateInstance(
+                typeof(AddressableReferenceEntry<>).MakeGenericType(foundBaseClass),
+                parameters);
+            
+            return kvp;
         }
 
         private static (bool, ScriptableObject) TryCreateScriptableObject(Type type)
@@ -278,7 +336,8 @@ namespace FastUnityCreationKit.Validation.Postprocessors
             if (!typeof(ScriptableObject).IsAssignableFrom(type)) return (false, null);
 
             // Check if type has AutoCreatedObjectAttribute
-            AutoCreatedObjectAttribute attribute = CustomAttributeExtensions.GetCustomAttribute<AutoCreatedObjectAttribute>(type, true);
+            AutoCreatedObjectAttribute attribute =
+                CustomAttributeExtensions.GetCustomAttribute<AutoCreatedObjectAttribute>(type, true);
             if (attribute == null) return (false, null);
 
             // Ensure type is sealed, if not log warning and process further

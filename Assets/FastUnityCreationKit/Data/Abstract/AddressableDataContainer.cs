@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using FastUnityCreationKit.Data.Attributes;
+using FastUnityCreationKit.Annotations.Attributes;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Data.Interfaces;
 using JetBrains.Annotations;

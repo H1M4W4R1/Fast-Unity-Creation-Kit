@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FastUnityCreationKit.Data.Attributes
+namespace FastUnityCreationKit.Annotations.Attributes
 {
     /// <summary>
     /// Ensures that only sealed elements are allowed.

@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using FastUnityCreationKit.Data.Attributes;
+using FastUnityCreationKit.Annotations.Attributes;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;

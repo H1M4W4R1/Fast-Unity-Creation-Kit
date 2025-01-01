@@ -11,7 +11,8 @@
 		"GUID:877cb650da554d888813e8f994e2e639",
 		"GUID:2088dbdb78944d69805c321ad476fa6f",
 		"GUID:7817862aebd6484ebccd5bd352d21955",
-		"GUID:fdeae16a364a4a8cb0c588a136da08d2"
+		"GUID:fdeae16a364a4a8cb0c588a136da08d2",
+		"FastUnityCreationKit.Annotations"
 	],
 	"includePlatforms": ["Editor"]	
 }

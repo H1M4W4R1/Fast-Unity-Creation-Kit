@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using FastUnityCreationKit.Data.Attributes;
+using FastUnityCreationKit.Annotations.Attributes;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Validation.Abstract;
 using FastUnityCreationKit.Validation.Data;

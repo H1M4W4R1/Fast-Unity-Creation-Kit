@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
+using FastUnityCreationKit.Annotations.Attributes;
 using FastUnityCreationKit.Utility;
-using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Editor.Extensions;
 using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Validation.Data;
@@ -9,9 +9,10 @@ using Sirenix.OdinInspector.Editor.Validation;
 using UnityEngine;
 
 [assembly: RegisterValidator(typeof(AddressableGroupAttributeRootObjectValidator))]
-
 namespace FastUnityCreationKit.Validation.Data
 {
+    // TODO: Same for GameObject prefabs
+    // TODO: Also add validators for AutoRegisterInAttribute
     public sealed class AddressableGroupAttributeRootObjectValidator : RootObjectValidator<ScriptableObject>
     {
         protected override void Validate(ValidationResult result)

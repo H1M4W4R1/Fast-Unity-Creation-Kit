@@ -1,5 +1,9 @@
-﻿namespace FastUnityCreationKit.Utility.Attributes
+﻿namespace FastUnityCreationKit.Annotations.Attributes
 {
+    /// <summary>
+    /// This attribute can be used to place ScriptableObject into AddressableGroup.
+    /// Should also work on prefabs.
+    /// </summary>
     public sealed class AddressableGroupAttribute : System.Attribute
     {
         public string GroupName { get; }

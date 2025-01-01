@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
-using FastUnityCreationKit.Data.Attributes;
+using FastUnityCreationKit.Annotations.Attributes;
 using FastUnityCreationKit.Identification;
-using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Limits;
 
 namespace FastUnityCreationKit.Economy
