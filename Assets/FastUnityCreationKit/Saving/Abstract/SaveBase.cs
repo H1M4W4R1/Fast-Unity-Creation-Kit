@@ -84,7 +84,7 @@ namespace FastUnityCreationKit.Saving.Abstract
                 }
 
                 // Write header file to save directory
-                if (!SaveAPI.WriteHeaderFile<TSelfSealed, TSerializationProvider>(GetSaveFolder(), selfHeader))
+                if (!SaveAPI.WriteHeaderFile<TSelfSealed, TSerializationProvider>(GetSaveFilePath(HeaderName), selfHeader))
                     return false;
             }
 
@@ -191,6 +191,15 @@ namespace FastUnityCreationKit.Saving.Abstract
         [TabGroup("Debug")]
         [Required]
         public abstract string SaveDirectory { get; }
+        
+        /// <summary>
+        /// Name of the header file.
+        /// </summary>
+        [ShowInInspector]
+        [ReadOnly]
+        [TabGroup("Debug")]
+        [Required]
+        public virtual string HeaderName => SaveAPI.DEFAULT_HEADER_NAME;
 
         // Automatically set to current DateTime
         [OdinSerialize]

@@ -15,20 +15,20 @@ namespace FastUnityCreationKit.Saving.Utility
     /// </summary>
     public static class SaveAPI
     {
-        public const string HEADER_NAME = "CK_METADATA.sav";
+        public const string DEFAULT_HEADER_NAME = "CK_METADATA.sav";
         
         /// <summary>
         /// Read all saves in a directory.
         /// </summary>
         public static List<TSaveHeader> GetAllSavesIn<TSaveHeader>(string directoryPath)
-            where TSaveHeader : SaveBase =>
+            where TSaveHeader : SaveBase, new() =>
             GetAllSavesIn<TSaveHeader, OdinBinarySerializationProvider>(directoryPath);
 
         /// <summary>
         /// Get all saves in a directory.
         /// </summary>
         public static List<TSaveHeader> GetAllSavesIn<TSaveHeader, THeaderSerializationProvider>(string directoryPath)
-            where TSaveHeader : SaveBase
+            where TSaveHeader : SaveBase, new()
             where THeaderSerializationProvider : ISerializationProvider, new()
         {
             // Ensure that path is not empty
@@ -39,27 +39,35 @@ namespace FastUnityCreationKit.Saving.Utility
 
             // GetDirectories returns full path.
             string[] directories = Directory.GetDirectories(directoryPath);
+            
+            // Create temp header object to get save file path
+            TSaveHeader tempHeader = new TSaveHeader();
 
             List<TSaveHeader> saves = new List<TSaveHeader>();
             foreach (string directory in directories)
             {
-                // Ensure that path ends with correct symbol
+                // Ensure that path does not end with separator to support Path.GetFileName returning
+                // last path part.
                 string dir = directory;
-                if (!dir.EndsWith('/') && !dir.EndsWith('\\')) dir += '/';
+                dir = dir.TrimEnd('/', '\\');
+                
+                // Get directory name, directory is name of save.
+                string dirName = Path.GetFileName(dir);
+                tempHeader.SaveName = dirName;
 
-                // Get header
-                string headerPath = dir + HEADER_NAME;
-
+                // Get header file path (full path)
+                string expectedHeaderFilePath = tempHeader.GetSaveFilePath(tempHeader.HeaderName);
+                
                 // Check if header exists
-                if (!File.Exists(headerPath))
+                if (!File.Exists(expectedHeaderFilePath))
                 {
-                    Guard<SaveLogConfig>.Verbose($"Header '{HEADER_NAME}' not found in '{dir}'.");
+                    Guard<SaveLogConfig>.Verbose($"Header '{tempHeader.HeaderName}' not found in '{dir}'. Skipping.");
                     continue;
                 }
 
                 // Read header
                 (bool status, TSaveHeader header) =
-                    ReadHeaderFile<TSaveHeader, THeaderSerializationProvider>(headerPath);
+                    ReadHeaderFile<TSaveHeader, THeaderSerializationProvider>(expectedHeaderFilePath);
                 if (!status) continue; // Skip if no header was found
 
                 // Add header
@@ -99,28 +107,24 @@ namespace FastUnityCreationKit.Saving.Utility
         /// <summary>
         /// Write header file to path
         /// </summary>
-        public static bool WriteHeaderFile<THeaderFile>(string directoryPath, THeaderFile headerFile) where THeaderFile : SaveBase =>
-            WriteHeaderFile<THeaderFile, OdinBinarySerializationProvider>(directoryPath, headerFile);
+        public static bool WriteHeaderFile<THeaderFile>(string headerPath, THeaderFile headerFile) where THeaderFile : SaveBase =>
+            WriteHeaderFile<THeaderFile, OdinBinarySerializationProvider>(headerPath, headerFile);
 
         /// <summary>
         /// Write header file to path
         /// </summary>
-        public static bool WriteHeaderFile<THeaderFile, TSerializationProvider>(string directoryPath, THeaderFile headerFile)
+        public static bool WriteHeaderFile<THeaderFile, TSerializationProvider>(string headerPath, THeaderFile headerFile)
             where THeaderFile : SaveBase
             where TSerializationProvider : ISerializationProvider, new()
         {
             // Create provider
             TSerializationProvider serializationProvider = new TSerializationProvider();
-            
-            // Check if path ends with correct symbol and update it with header name
-            if (!directoryPath.EndsWith('/') && !directoryPath.EndsWith('\\')) directoryPath += '/';
-            directoryPath += HEADER_NAME;
-            
+         
             // Set header update information
             headerFile.LastModified = DateTime.UtcNow;
 
             // Write the save data and return the result if successful
-            return serializationProvider.WriteData(directoryPath, headerFile);
+            return serializationProvider.WriteData(headerPath, headerFile);
         }
 
         /// <summary>
