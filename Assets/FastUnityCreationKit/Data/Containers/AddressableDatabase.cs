@@ -160,7 +160,5 @@ namespace FastUnityCreationKit.Data.Containers
                 return _instance;
             }
         }
-
-        public IList RawData => (IList) All;
     }
 }
