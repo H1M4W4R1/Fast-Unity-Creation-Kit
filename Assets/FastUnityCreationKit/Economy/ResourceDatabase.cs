@@ -7,12 +7,11 @@ using JetBrains.Annotations;
 namespace FastUnityCreationKit.Economy
 {
     [AutoCreatedObject(DatabaseConstants.DATABASE_DIRECTORY)]
-    [AddressableGroup(DatabaseConstants.DATABASE_ADDRESSABLE_TAG)]   
     public sealed class ResourceDatabase : AddressableDatabase<ResourceDatabase, ResourceBase>
     {
         public ResourceDatabase()
         {
-            addressableTag = LocalConstants.RESOURCE_ADDRESSABLE_TAG;
+            addressableTags = new[] {LocalConstants.RESOURCE_ADDRESSABLE_TAG};
         }
 
         /// <summary>
@@ -22,13 +21,16 @@ namespace FastUnityCreationKit.Economy
         /// <returns>Resource with specified identifier or null if not found.</returns>
         [CanBeNull] public ResourceBase GetResource(Snowflake128 identifier)
         {
-            for(int i = 0; i < Count; i++)
+            EnsurePreloaded();
+            
+            for(int i = 0; i < PreloadedCount; i++)
             {
-                ResourceBase resource = this[i];
+                ResourceBase resource = GetElementAt(i);
                 if (!resource) continue;
                 
+                // If resource has the same identifier
                 if (resource.Id == identifier)
-                    return this[i];
+                    return resource;
             }
             
             return null;
@@ -42,9 +44,11 @@ namespace FastUnityCreationKit.Economy
         [CanBeNull] public TResource GetResource<TResource>() 
             where TResource : ResourceBase
         {
-            for(int i = 0; i < Count; i++)
+            EnsurePreloaded();
+            
+            for(int i = 0; i < PreloadedCount; i++)
             {
-                ResourceBase resource = this[i];
+                ResourceBase resource = GetElementAt(i);
                 if (!resource) continue;
                 
                 if (resource is TResource castedResource)

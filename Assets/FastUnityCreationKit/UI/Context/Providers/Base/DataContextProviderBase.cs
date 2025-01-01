@@ -1,11 +1,9 @@
-﻿using FastUnityCreationKit.Structure.Initialization;
-using FastUnityCreationKit.UI.Context.Providers.Utility;
+﻿using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Callbacks;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Context.Providers.Base
 {

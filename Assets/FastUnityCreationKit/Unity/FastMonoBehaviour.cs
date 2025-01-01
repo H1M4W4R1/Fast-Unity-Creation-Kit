@@ -1,6 +1,4 @@
-﻿using System;
-using FastUnityCreationKit.Structure.Initialization;
-using FastUnityCreationKit.Structure.Singleton;
+﻿using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.Unity.Callbacks;
 using FastUnityCreationKit.Unity.Interfaces;
 using FastUnityCreationKit.Utility;

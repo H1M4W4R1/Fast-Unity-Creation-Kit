@@ -11,7 +11,8 @@
 		"GUID:2088dbdb78944d69805c321ad476fa6f",
 		"GUID:877cb650da554d888813e8f994e2e639",
 		"GUID:f51ebe6a0ceec4240a699833d6309b23",
-		"GUID:fd228c28e14f1a34cbe508676c914dd7"
+		"GUID:fd228c28e14f1a34cbe508676c914dd7",
+		"Unity.Addressables"
 	]
 	
 }

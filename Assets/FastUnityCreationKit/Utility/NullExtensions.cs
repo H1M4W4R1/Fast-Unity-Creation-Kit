@@ -11,7 +11,7 @@ namespace FastUnityCreationKit.Utility
             {
                 UnityEngine.Object unityObject when unityObject == null => true,
                 null => true,
-                _ => false
+                _ => obj.Equals(null)
             };
         }
         

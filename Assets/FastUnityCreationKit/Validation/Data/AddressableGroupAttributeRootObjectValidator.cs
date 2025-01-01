@@ -4,6 +4,7 @@ using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Editor.Extensions;
 using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Validation.Data;
+using FastUnityCreationKit.Validation.Postprocessors;
 using Sirenix.OdinInspector.Editor.Validation;
 using UnityEngine;
 
@@ -15,11 +16,13 @@ namespace FastUnityCreationKit.Validation.Data
     {
         protected override void Validate(ValidationResult result)
         {
-            // Check, if has AddressableGroupAttribute
+            // Check, if has AddressableGroupAttribute  
             AddressableGroupAttribute attribute = Value.GetType().GetCustomAttribute<AddressableGroupAttribute>(true);
             if (attribute == null) return;
 
-            if (Value.SetAddressableGroup(attribute.GroupName, attribute.Labels))
+            // Ensure that the object is in the addressable group 
+            FastUnityCreationKitAttributePostprocessor.TryUpdateAddressableGroup(Value);
+            if (Value.SetAddressableGroup(attribute.GroupName, true, attribute.Labels))
                 Guard<ValidationLogConfig>.Debug($"Assigned {Value.name} to addressable group {attribute.GroupName}");
         }
     }

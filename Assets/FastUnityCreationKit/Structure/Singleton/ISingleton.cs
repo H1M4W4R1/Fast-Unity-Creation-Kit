@@ -1,9 +1,7 @@
-﻿using System;
-using FastUnityCreationKit.Utility;
+﻿using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using Sirenix.Utilities;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Structure.Singleton

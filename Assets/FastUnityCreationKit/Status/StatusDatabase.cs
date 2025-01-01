@@ -10,25 +10,28 @@ namespace FastUnityCreationKit.Status
     /// Database for status.  
     /// </summary>
     [AutoCreatedObject(DatabaseConstants.DATABASE_DIRECTORY)]
-    [AddressableGroup(DatabaseConstants.DATABASE_ADDRESSABLE_TAG)]
     public sealed class StatusDatabase : AddressableDatabase<StatusDatabase, StatusBase>
     {
         public StatusDatabase()
         {
-            addressableTag = LocalConstants.STATUS_ADDRESSABLE_TAG;
+            addressableTags = new[] {LocalConstants.STATUS_ADDRESSABLE_TAG};
         }
 
         /// <summary>
         /// Get status by type.
         /// </summary>
         /// <typeparam name="TStatusType">Type of the status.</typeparam>
-        /// <returns>Status with the type or null if not found.</returns>
+        /// <returns>Status with the type or null if not found.</returns> 
         public TStatusType GetStatus<TStatusType>() where TStatusType : StatusBase
         {
-            for(int i = 0; i < internalContainer.All.Count; i++)
+            EnsurePreloaded();
+            
+            for(int i = 0; i < PreloadedCount; i++)
             {
-                if(internalContainer.All[i] is TStatusType status)
-                    return status;
+                StatusBase status = GetElementAt(i);
+                
+                if (status is TStatusType castedStatus)
+                    return castedStatus;
             }
             
             return null;
@@ -41,9 +44,11 @@ namespace FastUnityCreationKit.Status
         /// <returns>Status with the identifier or null if not found.</returns>
         public StatusBase GetStatusByIdentifier(Snowflake128 identifier)
         {
-            for(int i = 0; i < internalContainer.All.Count; i++)
+            EnsurePreloaded();
+            
+            for(int i = 0; i < PreloadedCount; i++)
             {
-                StatusBase status = internalContainer.All[i];
+                StatusBase status = GetElementAt(i);
                 if (!status) continue;
                 
                 if(status.Id.Equals(identifier))

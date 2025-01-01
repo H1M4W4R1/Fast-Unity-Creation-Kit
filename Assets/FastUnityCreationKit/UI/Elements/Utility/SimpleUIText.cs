@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.UI.Elements.Abstract;
-using FastUnityCreationKit.UI.Elements.Base;
+﻿using FastUnityCreationKit.UI.Elements.Base;
 
 namespace FastUnityCreationKit.UI.Elements.Utility
 {

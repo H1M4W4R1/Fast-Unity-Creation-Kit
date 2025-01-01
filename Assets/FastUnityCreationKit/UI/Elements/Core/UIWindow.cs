@@ -1,7 +1,4 @@
-﻿using FastUnityCreationKit.Data.Containers.Interfaces;
-using FastUnityCreationKit.Data.Interfaces;
-using FastUnityCreationKit.UI.Abstract;
-using FastUnityCreationKit.UI.Elements.Abstract;
+﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Unity.Interfaces;
 using FastUnityCreationKit.Utility.Attributes;
@@ -17,8 +14,7 @@ namespace FastUnityCreationKit.UI.Elements.Core
     /// </summary>
     [AddressableGroup(LocalConstants.UI_ADDRESSABLE_GROUP_TAG, LocalConstants.UI_WINDOWS_ADDRESSABLE_TAG)]
     [RequireComponent(typeof(Canvas), typeof(CanvasGroup))]
-    public abstract class UIWindow : UIPanel, IClickable, IDefinition<UIWindow>,
-        IWithDatabase<UIWindowsDatabase, UIWindow>
+    public abstract class UIWindow : UIPanel, IClickable
     {
         /// <summary>
         /// Database with all windows

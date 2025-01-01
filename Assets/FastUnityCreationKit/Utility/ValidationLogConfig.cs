@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using FastUnityCreationKit.Utility.Logging;
+﻿using FastUnityCreationKit.Utility.Logging;
 using Unity.Logging;
 
 namespace FastUnityCreationKit.Utility

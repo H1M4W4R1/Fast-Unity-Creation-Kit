@@ -1,14 +1,11 @@
 ﻿using Cysharp.Threading.Tasks;
-using FastUnityCreationKit.Data.Containers.Interfaces;
-using FastUnityCreationKit.Data.Interfaces;
+using FastUnityCreationKit.Data.Attributes;
 using FastUnityCreationKit.Identification;
 using FastUnityCreationKit.Status.References;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Attributes;
 using FastUnityCreationKit.Utility.Limits;
 using FastUnityCreationKit.Utility.Logging;
-using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace FastUnityCreationKit.Status.Abstract
 {
@@ -20,8 +17,8 @@ namespace FastUnityCreationKit.Status.Abstract
     /// </remarks>
     [AutoCreatedObject(LocalConstants.STATUS_OBJECT_DIRECTORY)]
     [AddressableGroup(LocalConstants.STATUS_ADDRESSABLE_TAG)]
-    public abstract class StatusBase : UniqueDefinitionBase, IDefinition<StatusBase>,
-        IWithDatabase<StatusDatabase, StatusBase>, ISelfValidator
+    [AutoRegisterIn(typeof(StatusDatabase))]
+    public abstract class StatusBase : UniqueDefinitionBase
     {
         /// <summary>
         /// Gets the database for the object.
@@ -91,30 +88,6 @@ namespace FastUnityCreationKit.Status.Abstract
             }
 
             return LimitHit.None;
-        }
-
-        private void Awake()
-        {
-            // Prevent null database
-            if (!Database) return;
-            
-            if(!Database.Contains(this))
-                Database.Add(this);
-        }
-
-        private void OnDestroy()
-        {
-            // Prevent null database
-            if (!Database) return;
-            
-            Database.Remove(this);
-        }
-
-        public void Validate(SelfValidationResult result)
-        {
-            // Check if database contains this status
-            if (!Database.Contains(this))
-                Database.Add(this);
         }
     }
 }

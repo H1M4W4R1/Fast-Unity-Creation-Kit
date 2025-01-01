@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
-using UnityEngine;
 
 namespace FastUnityCreationKit.Data.Abstract
 {

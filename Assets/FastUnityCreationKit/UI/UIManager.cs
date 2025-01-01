@@ -40,10 +40,12 @@ namespace FastUnityCreationKit.UI
         [CanBeNull] public TWindowType FindWindowPrefab<TWindowType>()
             where TWindowType : UIWindow
         {
-            UIWindowsDatabase database = UIWindowsDatabase.Instance;
-            for (int i = 0; i < database.All.Count; i++)
+            UIWindowsDatabase database = UIWindowsDatabase.Instance
+                .EnsurePreloaded();
+            
+            for (int i = 0; i < database.PreloadedCount; i++)
             {
-                UIWindow window = database.All[i];
+                UIWindow window = database.GetElementAt(i);
                 if (window is TWindowType result)
                     return result;
             }

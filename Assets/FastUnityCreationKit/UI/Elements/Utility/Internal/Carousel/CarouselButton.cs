@@ -1,6 +1,4 @@
 ﻿using System;
-using FastUnityCreationKit.UI.Elements.Abstract;
-using FastUnityCreationKit.UI.Elements.Base;
 using FastUnityCreationKit.UI.Elements.Base.Input;
 
 namespace FastUnityCreationKit.UI.Elements.Utility.Internal.Carousel

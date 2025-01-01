@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Data.Attributes;
+using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Data.Interfaces;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Data.Abstract
@@ -17,80 +16,94 @@ namespace FastUnityCreationKit.Data.Abstract
     /// This is a container that is auto-populated with data that is stored in an addressable asset group.
     /// </summary>
     /// <typeparam name="TDataType">Type of data that is stored in the container.</typeparam>
-    [NoDuplicates] [NoNullEntries] [OnlySealedElements]
+    [NoDuplicates] [NoNullEntries] [OnlySealedElements] 
     public abstract class AddressableDataContainer<TDataType> : SerializedScriptableObject,
-        IDataContainer<TDataType>, IAutoPopulatedContainer
+        IDataContainer<AddressableReferenceEntry<TDataType>>, IIndexableBy<AssetReferenceT<TDataType>, string>
         where TDataType : Object
     {
-        /// <summary>
-        /// Internal data container.
-        /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [OdinSerialize]
-        protected readonly AddressableDataContainerStorageObject internalContainer = new();
-
         [Header("Addressable Asset Group")]
         [Required]
         [SerializeField]
-        [NotNull]
-        protected string addressableTag = string.Empty;
-
+        [NotNull] [TabGroup("Configuration", Order = -1)]
+        [ListDrawerSettings(ShowFoldout = false)]
+        [ReadOnly] [Tooltip("Tags are defined by developer and are used to filter the addressable assets.")]
+        protected string[] addressableTags = Array.Empty<string>();
+        
         /// <summary>
-        /// Checks if the data container is populated.
+        /// Internal data container.
         /// </summary>
-        public bool IsPopulated => _isCompleted;
-
-        public async UniTask Populate()
-        {
-            // Clear loading status and internal container
-            _isCompleted = false;
-            internalContainer.Clear();
-
-            // Load all assets from the addressable asset group based on asset tag
-            _loadHandle = Addressables.LoadAssetsAsync<TDataType>(addressableTag,
-                foundObject => internalContainer.Add(foundObject));
-
-            // Wait for loading to be completed.
-            await _loadHandle.Task;
-
-            // Mark assets as loaded
-            _isCompleted = true;
-        }
+        [ShowInInspector] [ReadOnly] [OdinSerialize] [TabGroup("Debug")]
+        protected readonly AddressableDataContainerStorageObject internalContainer = new();
+      
+        [ShowInInspector] [ReadOnly] [TabGroup("Configuration")]
+        [Tooltip("This setting is configured by the developer and is used to determine how the data is merged.")]
+        protected virtual Addressables.MergeMode MergeMode => Addressables.MergeMode.Union; 
 
         /// <summary>
         /// Internal data container storage object. 
         /// </summary>
         [Serializable]
-        protected sealed class AddressableDataContainerStorageObject : DataContainerBase<TDataType>
+        protected sealed class AddressableDataContainerStorageObject : 
+            DataContainerBase<AddressableReferenceEntry<TDataType>>,
+            IIndexableBy<AssetReferenceT<TDataType>, string>
         {
+            public AssetReferenceT<TDataType> this[string index]
+            {
+                get
+                {
+                    // Loop through all elements in the container
+                    for (int i = 0; i < Count; i++)
+                    {
+                        // Get the element
+                        AddressableReferenceEntry<TDataType> element = this[i];
+
+                        // Check if the key is the same as the index
+                        if (element.Address == index)
+                            return element.Entry;
+                    }
+                    
+                    // Return null if not found
+                    return null;
+                }
+            }
         }
-
-#region LOADING_DATA
-
-        private bool _isCompleted;
-        private AsyncOperationHandle<IList<TDataType>> _loadHandle;
-
-#endregion
 
 #region IDataContainer
 
-        public TDataType this[int index] => internalContainer[index];
-
-        public IReadOnlyList<TDataType> All => internalContainer.All;
-
-        public void Add(TDataType data) => internalContainer.Add(data);
-
-        public void Remove(TDataType data) => internalContainer.Remove(data);
-
+        public IReadOnlyList<AddressableReferenceEntry<TDataType>> All => internalContainer.All;
+        public void Add(AddressableReferenceEntry<TDataType> data) => internalContainer.Add(data);
+        public void Remove(AddressableReferenceEntry<TDataType> data) => internalContainer.Remove(data);
         public void Clear() => internalContainer.Clear();
 
-        public bool Contains(TDataType data) => internalContainer.Contains(data);
+        public bool Contains(AddressableReferenceEntry<TDataType> data)
+        {
+            for(int i = 0; i < internalContainer.Count; i++)
+            {
+                AddressableReferenceEntry<TDataType> entryDefinition = internalContainer[i];
+                
+                if (entryDefinition.Address != data.Address)
+                    continue;
 
-        public int Count => internalContainer.Count;
+                if (entryDefinition.Entry == null)
+                    return data.Entry == null;
+                
+                // Check if the asset GUID is the same
+                if (entryDefinition.Entry.AssetGUID == data.Entry.AssetGUID)
+                    return true;
+            }
+            
+            return false;
+        }
+        public AddressableReferenceEntry<TDataType> this[int index] => internalContainer[index];
+        
+        public virtual int Count => internalContainer.Count;
 
         public void RemoveAt(int index) => internalContainer.RemoveAt(index);
 
 #endregion
+
+        public AssetReferenceT<TDataType> this[string index] => internalContainer[index];
+
+
     }
 }

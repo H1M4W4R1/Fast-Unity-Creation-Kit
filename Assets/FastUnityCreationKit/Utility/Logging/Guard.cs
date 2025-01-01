@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Unity.Logging;
-using Unity.Logging.Sinks;
 
 namespace FastUnityCreationKit.Utility.Logging
 {

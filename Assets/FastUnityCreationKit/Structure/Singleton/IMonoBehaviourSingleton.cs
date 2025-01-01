@@ -1,5 +1,4 @@
-﻿using System;
-using FastUnityCreationKit.Utility;
+﻿using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using UnityEngine;

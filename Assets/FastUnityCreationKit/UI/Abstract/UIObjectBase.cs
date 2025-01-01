@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.UI.Context.Providers.Base;
-using FastUnityCreationKit.UI.Context.Providers.Utility;
+﻿using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Unity;
