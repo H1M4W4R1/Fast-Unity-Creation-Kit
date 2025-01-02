@@ -30,8 +30,12 @@ namespace FastUnityCreationKit.Saving.Utility
         internal static void InvokeOnFileSaved([NotNull] SaveBase saveFile)
         {
             // Loop through all saveable objects and call OnSave
-            foreach (ISaveableObject saveableObject in SaveableObjects)
+            // must be reversed as some objects may be destroyed during the process
+            for (int index = SaveableObjects.Count - 1; index >= 0; index--)
+            {
+                ISaveableObject saveableObject = SaveableObjects[index];
                 saveableObject.BeforeSaveSaved(saveFile);
+            }
         }
         
         /// <summary>
@@ -40,8 +44,13 @@ namespace FastUnityCreationKit.Saving.Utility
         internal static void InvokeOnFileLoaded([NotNull] SaveBase saveFile)
         {
             // Loop through all saveable objects and call OnLoad
-            foreach (ISaveableObject saveableObject in SaveableObjects)
+            // must be for loop as objects may be added during the process:
+            // We don't want to crash the game by using foreach
+            for (int index = 0; index < SaveableObjects.Count; index++)
+            {
+                ISaveableObject saveableObject = SaveableObjects[index];
                 saveableObject.AfterSaveLoaded(saveFile);
+            }
         }
         
         /// <summary>

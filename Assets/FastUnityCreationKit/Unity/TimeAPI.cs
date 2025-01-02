@@ -44,7 +44,7 @@ namespace FastUnityCreationKit.Unity
         /// <summary>
         /// List of all objects that paused the time.
         /// </summary>
-        public static List<PauseObject> PauseObjects { get; } = new List<PauseObject>();
+        private static List<PauseObject> PauseObjects { get; } = new List<PauseObject>();
 
         /// <summary>
         /// Pauses the time and returns the pause object
