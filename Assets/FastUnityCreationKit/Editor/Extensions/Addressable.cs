@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -10,7 +11,7 @@ using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
-namespace FastUnityCreationKit.Utility.Editor.Extensions
+namespace FastUnityCreationKit.Editor.Extensions
 {
     public static class Addressable
     {

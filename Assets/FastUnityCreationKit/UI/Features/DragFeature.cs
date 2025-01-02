@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using FastUnityCreationKit.UI.Abstract;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

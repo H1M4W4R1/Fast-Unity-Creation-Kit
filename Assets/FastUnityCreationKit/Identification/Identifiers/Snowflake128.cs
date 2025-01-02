@@ -18,7 +18,7 @@ namespace FastUnityCreationKit.Identification.Identifiers
     /// <li> 8 bits representing that identifier was created</li>
     /// </ul>
     /// </summary>
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit)] [Serializable]
     public readonly struct Snowflake128 : IUniqueIdentifier, IEquatable<Snowflake128>
     {
         /// <summary>

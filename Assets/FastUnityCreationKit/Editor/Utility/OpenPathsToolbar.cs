@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace FastUnityCreationKit.Utility.Editor
+namespace FastUnityCreationKit.Editor.Utility
 {
     public static class OpenPathsToolbar
     {

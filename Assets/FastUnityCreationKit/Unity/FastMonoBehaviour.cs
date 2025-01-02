@@ -14,6 +14,32 @@ namespace FastUnityCreationKit.Unity
     public abstract class FastMonoBehaviour : MonoBehaviour
     {
         /// <summary>
+        /// State of the object. If true, the object is disabled.
+        /// </summary>
+        public bool IsDisabled { get; private set; }
+        
+        /// <summary>
+        /// State of the object. If true, the object is enabled.
+        /// Directly opposite of <see cref="IsDisabled"/>.
+        /// </summary>
+        public bool IsEnabled => !IsDisabled;
+        
+        /// <summary>
+        /// State of the object. If true, the object is destroyed.
+        /// </summary>
+        public bool IsDestroyed { get; private set; }
+        
+        /// <summary>
+        /// If true, the object will be updated even when disabled.
+        /// </summary>
+        public virtual UpdateMode UpdateMode => UpdateMode.MonoBehaviour;
+        
+        /// <summary>
+        /// Mode of time used for updating the object.
+        /// </summary>
+        public virtual UpdateTime UpdateTimeConfig => UpdateTime.DeltaTime;
+        
+        /// <summary>
         /// Avoid overriding the Awake method. Implement the <see cref="IInitializable"/> interface instead
         /// and use the <see cref="IInitializable.OnInitialize"/> method.
         /// </summary>
@@ -23,7 +49,7 @@ namespace FastUnityCreationKit.Unity
             FastMonoBehaviourManager.Instance.RegisterFastMonoBehaviour(this);
 
             // Check if supports persistent interface.
-            if (this is IPersistent persistent)
+            if (this is IPersistent)
             {
                 // Ensure that object is on the root level as Unity only allows root level objects to be made persistent.
                 if (transform.parent)
@@ -58,22 +84,22 @@ namespace FastUnityCreationKit.Unity
 
         protected void OnEnable()
         {
+            IsDisabled = false;
             NotifyObjectWasEnabled();
         }
 
         protected void OnDisable()
         {
+            IsDisabled = true;
             NotifyObjectWasDisabled();
         }
 
         protected void OnDestroy()
         {
             NotifyObjectWasDestroyed();
-
-            // Unregister this object from the object registry.
-            // Do this only if instance exists, otherwise it will throw an error.
-            if(!FastMonoBehaviourManager.WasDestroyed)
-                FastMonoBehaviourManager.Instance.UnregisterFastMonoBehaviour(this);
+            IsDestroyed = true;
+  
+            FastMonoBehaviourManager.Instance.UnregisterFastMonoBehaviour(this);
         }
 
         internal static void HandlePreUpdate(FastMonoBehaviour behaviour, float deltaTime)

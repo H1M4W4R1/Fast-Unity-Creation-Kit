@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.UI.Extensions;
+﻿using FastUnityCreationKit.UI.Abstract;
+using FastUnityCreationKit.UI.Extensions;
 
 namespace FastUnityCreationKit.UI.Features
 {

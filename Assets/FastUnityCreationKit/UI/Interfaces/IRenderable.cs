@@ -7,6 +7,7 @@ namespace FastUnityCreationKit.UI.Interfaces
 {
     /// <summary>
     /// Represents a UI object that can be rendered.
+    /// TODO: Rework to be event-driven instead of pooling-driven to improve performance.
     /// </summary>
     /// <typeparam name="TDataContextSealed">Context used to render this object.</typeparam>
     public interface IRenderable<TDataContextSealed> : IRenderable

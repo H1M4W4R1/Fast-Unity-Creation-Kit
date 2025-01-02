@@ -12,7 +12,7 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     /// The base class for all UI objects in Fast Unity Creation Kit.
     /// </summary>
-    public abstract class UIObjectBase : FastMonoBehaviour, IUpdateCallback, ICreateCallback, IDestroyCallback
+    public abstract class UIObjectBase : UIBehaviour, IUpdateCallback, ICreateCallback, IDestroyCallback
     {
         private RectTransform _rectTransform;
         public RectTransform RectTransform => _rectTransform;

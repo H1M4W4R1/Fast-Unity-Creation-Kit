@@ -2,9 +2,9 @@
 using System.Reflection;
 using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Annotations.Utility;
+using FastUnityCreationKit.Editor.Extensions;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
 using FastUnityCreationKit.Utility;
-using FastUnityCreationKit.Utility.Editor.Extensions;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using UnityEditor;

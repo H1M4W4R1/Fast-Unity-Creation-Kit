@@ -9,8 +9,7 @@ namespace FastUnityCreationKit.Unity
     /// This class is implementation of FastMonoBehaviour processing.
     /// Should not be used directly.
     /// </summary>
-    public sealed class
-        FastMonoBehaviourManager : MonoBehaviour,
+    public sealed class FastMonoBehaviourManager : MonoBehaviour,
         IMonoBehaviourSingleton<FastMonoBehaviourManager> // Can't be FMB to prevent infinite loop
     {
         /// <summary>
@@ -22,7 +21,12 @@ namespace FastUnityCreationKit.Unity
 
         public static FastMonoBehaviourManager Instance =>
             IMonoBehaviourSingleton<FastMonoBehaviourManager>.GetInstance();
-
+        
+        // We can't use Time.timeScale because when it's 0 then this
+        // object won't receive updates. We need to create a custom
+        // pause system to handle this.
+        public bool IsTimePaused => TimeAPI.IsTimePaused;
+        
         /// <summary>
         /// List of all known FastMonoBehaviours in the scene.
         /// </summary>
@@ -76,10 +80,14 @@ namespace FastUnityCreationKit.Unity
         /// </summary>
         private void Update()
         {
+            // Get the delta time between frames
+            // including time scale
+            float deltaTime = TimeAPI.DeltaTime;
+            
             // Loop through all FastMonoBehaviours and call their update methods
-            ExecuteForAll(FastMonoBehaviour.HandlePreUpdate);
-            ExecuteForAll(FastMonoBehaviour.HandleUpdate);
-            ExecuteForAll(FastMonoBehaviour.HandlePostUpdate);
+            ExecuteForAll(FastMonoBehaviour.HandlePreUpdate, deltaTime);
+            ExecuteForAll(FastMonoBehaviour.HandleUpdate, deltaTime);
+            ExecuteForAll(FastMonoBehaviour.HandlePostUpdate, deltaTime);
         }
 
         /// <summary>
@@ -87,20 +95,44 @@ namespace FastUnityCreationKit.Unity
         /// </summary>
         public void FixedUpdate()
         {
-            ExecuteForAll(FastMonoBehaviour.HandleFixedUpdate);
+            ExecuteForAll(FastMonoBehaviour.HandleFixedUpdate, TimeAPI.FixedDeltaTime);
         }
 
-        private void ExecuteForAll(Action<FastMonoBehaviour, float> action)
+        private void ExecuteForAll(Action<FastMonoBehaviour, float> action, float deltaTime)
         {
-            float deltaTime = Time.deltaTime;
-
+            float realDeltaTime = TimeAPI.UnscaledDeltaTime;
+            float fixedDeltaTime = TimeAPI.FixedDeltaTime;
+            float timeSinceStartup = TimeAPI.RealtimeSinceStartup;
+            
             // Execute for all known FastMonoBehaviours
             for (int fastMonoBehaviourIndex = 0;
                  fastMonoBehaviourIndex < _fastMonoBehaviours.Count;
                  fastMonoBehaviourIndex++)
             {
+                // Get the FastMonoBehaviour
                 FastMonoBehaviour fastMonoBehaviour = _fastMonoBehaviours[fastMonoBehaviourIndex];
-                action(fastMonoBehaviour, deltaTime);
+                
+                // Skip destroyed objects
+                if(fastMonoBehaviour.IsDestroyed) continue;
+                
+                // Skip if update is forbidden
+                if((fastMonoBehaviour.UpdateMode & UpdateMode.Forbidden) != 0) continue;
+                
+                // Skip disabled objects if they don't update when disabled
+                if(fastMonoBehaviour.IsDisabled && (fastMonoBehaviour.UpdateMode & UpdateMode.UpdateWhenDisabled) != 0) continue;
+                
+                // Skip objects that don't update when time is paused
+                if (IsTimePaused && (fastMonoBehaviour.UpdateMode & UpdateMode.UpdateWhenTimePaused) == 0) continue;
+                
+                // Execute the action
+                action(fastMonoBehaviour, fastMonoBehaviour.UpdateTimeConfig switch
+                {
+                    UpdateTime.DeltaTime => deltaTime,
+                    UpdateTime.UnscaledDeltaTime => realDeltaTime,
+                    UpdateTime.RealtimeSinceStartup => timeSinceStartup,
+                    UpdateTime.FixedDeltaTime => fixedDeltaTime,
+                    _ => throw new ArgumentOutOfRangeException()
+                });
             }
         }
     }

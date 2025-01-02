@@ -12,7 +12,8 @@
 		"GUID:2088dbdb78944d69805c321ad476fa6f",
 		"GUID:7817862aebd6484ebccd5bd352d21955",
 		"GUID:fdeae16a364a4a8cb0c588a136da08d2",
-		"GUID:66f422d75030436eb76b555c1ef1ec8c"
+		"GUID:66f422d75030436eb76b555c1ef1ec8c",
+		"Unity.Addressables.Editor"
 	],
 	"includePlatforms": ["Editor"]	
 }
