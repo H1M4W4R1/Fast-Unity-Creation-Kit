@@ -33,7 +33,6 @@ namespace FastUnityCreationKit.Unity
     {
         DeltaTime = 0,
         UnscaledDeltaTime = 1,
-        RealtimeSinceStartup = 2,
-        FixedDeltaTime = 3
+        RealtimeSinceStartup = 2
     }
 }

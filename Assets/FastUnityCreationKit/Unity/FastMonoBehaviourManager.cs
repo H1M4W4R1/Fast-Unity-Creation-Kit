@@ -119,7 +119,7 @@ namespace FastUnityCreationKit.Unity
                 if((fastMonoBehaviour.UpdateMode & UpdateMode.Forbidden) != 0) continue;
                 
                 // Skip disabled objects if they don't update when disabled
-                if(fastMonoBehaviour.IsDisabled && (fastMonoBehaviour.UpdateMode & UpdateMode.UpdateWhenDisabled) != 0) continue;
+                if(fastMonoBehaviour.IsDisabled && (fastMonoBehaviour.UpdateMode & UpdateMode.UpdateWhenDisabled) == 0) continue;
                 
                 // Skip objects that don't update when time is paused
                 if (IsTimePaused && (fastMonoBehaviour.UpdateMode & UpdateMode.UpdateWhenTimePaused) == 0) continue;
@@ -130,7 +130,6 @@ namespace FastUnityCreationKit.Unity
                     UpdateTime.DeltaTime => deltaTime,
                     UpdateTime.UnscaledDeltaTime => realDeltaTime,
                     UpdateTime.RealtimeSinceStartup => timeSinceStartup,
-                    UpdateTime.FixedDeltaTime => fixedDeltaTime,
                     _ => throw new ArgumentOutOfRangeException()
                 });
             }

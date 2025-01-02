@@ -1,0 +1,20 @@
+{
+	"name": "FastUnityCreationKit.Examples",
+	"allowUnsafeCode": true,
+	"references": [		
+		"FastUnityCreationKit.Annotations",
+		"FastUnityCreationKit.Crafting",
+		"FastUnityCreationKit.Data",
+		"FastUnityCreationKit.Economy",
+		"FastUnityCreationKit.Events",
+		"FastUnityCreationKit.Identification",
+		"FastUnityCreationKit.Inventory",
+		"FastUnityCreationKit.Saving",
+		"FastUnityCreationKit.Status",
+		"FastUnityCreationKit.Structure",
+		"FastUnityCreationKit.UI",
+		"FastUnityCreationKit.Unity",
+		"FastUnityCreationKit.Utility"
+	]
+	
+}
