@@ -2,7 +2,8 @@
 	"name": "FastUnityCreationKit.Saving",
 	"allowUnsafeCode": true,
 	"references": [
-		"GUID:2088dbdb78944d69805c321ad476fa6f"		
+		"GUID:2088dbdb78944d69805c321ad476fa6f",
+		"UniTask"
 	]
 	
 }
