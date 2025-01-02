@@ -1,6 +1,7 @@
 ﻿using System;
 using FastUnityCreationKit.Saving.Abstract;
 using FastUnityCreationKit.Saving.Utility;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Saving.Metadata
 {
@@ -10,38 +11,14 @@ namespace FastUnityCreationKit.Saving.Metadata
     public sealed class SaveFileMetadata<TSaveFileSealed> : SaveFileMetadata
         where TSaveFileSealed : SaveFileBase, new()
     {
-        /// <summary>
-        /// Tries to load save file from path.
-        /// </summary>
-        public bool TryLoad(string fromPath, out TSaveFileSealed saveFile)
+        internal override SaveFileBase NewFile() => new TSaveFileSealed();
+
+        internal override bool FromPath(string path, out SaveFileBase saveFile)
         {
-            (bool success, TSaveFileSealed loadedSaveFile) = SaveAPI.ReadSaveFile<TSaveFileSealed>(fromPath);
+            (bool success, TSaveFileSealed loadedSaveFile) = SaveAPI.ReadSaveFile<TSaveFileSealed>(path);
             saveFile = loadedSaveFile;
             return success;
         }
-        
-        /// <summary>
-        /// Tries to load save file from path.
-        /// </summary>
-        public TSaveFileSealed Load(string fromPath)
-        {
-            (bool _, TSaveFileSealed saveFile) = SaveAPI.ReadSaveFile<TSaveFileSealed>(fromPath);
-            return saveFile;
-        }
-
-        /// <summary>
-        /// Tries to save the save file to the specified path.
-        /// </summary>
-        public bool TrySave(string toPath, TSaveFileSealed saveFile) =>
-             SaveAPI.WriteSaveFile(toPath, saveFile);
-        
-        /// <summary>
-        /// Saves the save file to the specified path.
-        /// </summary>
-        public void Save(string toPath, TSaveFileSealed saveFile) =>
-            SaveAPI.WriteSaveFile(toPath, saveFile);
-
-        internal sealed override SaveFileBase NewFile() => new TSaveFileSealed();
     }
     
     /// <summary>
@@ -49,6 +26,11 @@ namespace FastUnityCreationKit.Saving.Metadata
     /// </summary>
     public abstract class SaveFileMetadata
     {
+        /// <summary>
+        /// If true, the file will be automatically loaded on save file load.
+        /// </summary>
+        public bool AutoLoad { get; set; }
+        
         /// <summary>
         /// Name of file. Must match <see cref="SaveFileBase.FileName"/>
         /// </summary>
@@ -62,11 +44,16 @@ namespace FastUnityCreationKit.Saving.Metadata
         /// <summary>
         /// Date this metadata was last modified.
         /// </summary>
-        public DateTime LastModified { get; internal set; } = DateTime.UtcNow;
+        public DateTime LastModified { [UsedImplicitly] get; internal set; } = DateTime.UtcNow;
 
+        /// <summary>
+        /// Tries to load save file from path.
+        /// </summary>
+        internal abstract bool FromPath([NotNull] string path, [CanBeNull] out SaveFileBase saveFile);
+        
         /// <summary>
         /// Creates a new save file for this metadata.
         /// </summary>
-        internal abstract SaveFileBase NewFile();
+        [NotNull] internal abstract SaveFileBase NewFile();
     }
 }

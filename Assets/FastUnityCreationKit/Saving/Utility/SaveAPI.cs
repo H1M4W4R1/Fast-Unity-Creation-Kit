@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using FastUnityCreationKit.Saving.Abstract;
+using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Utility.Serialization.Interfaces;
 using FastUnityCreationKit.Utility.Serialization.Providers;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Saving.Utility
 {
@@ -16,6 +18,56 @@ namespace FastUnityCreationKit.Saving.Utility
     public static class SaveAPI
     {
         public const string DEFAULT_HEADER_NAME = "CK_METADATA.sav";
+
+        /// <summary>
+        /// List of all saveable objects currently registered.
+        /// </summary>
+        internal static List<ISaveableObject> SaveableObjects = new List<ISaveableObject>();
+
+        /// <summary>
+        /// Invoke the OnSave event on all registered saveable objects.
+        /// </summary>m>
+        internal static void InvokeOnFileSaved([NotNull] SaveBase saveFile)
+        {
+            // Loop through all saveable objects and call OnSave
+            foreach (ISaveableObject saveableObject in SaveableObjects)
+                saveableObject.BeforeSaveSaved(saveFile);
+        }
+        
+        /// <summary>
+        /// Invoke the OnLoad event on all registered saveable objects.
+        /// </summary>
+        internal static void InvokeOnFileLoaded([NotNull] SaveBase saveFile)
+        {
+            // Loop through all saveable objects and call OnLoad
+            foreach (ISaveableObject saveableObject in SaveableObjects)
+                saveableObject.AfterSaveLoaded(saveFile);
+        }
+        
+        /// <summary>
+        /// Register a saveable object to catch save/load events.
+        /// </summary>
+        /// <param name="saveableObject">Saveable object to register.</param>
+        public static void RegisterSavableObject([NotNull] ISaveableObject saveableObject)
+        {
+            if (SaveableObjects.Contains(saveableObject))
+            {
+                Guard<SaveLogConfig>.Warning("Saveable object is already registered.");
+                return;
+            }
+
+            SaveableObjects.Add(saveableObject);
+        }
+        
+        /// <summary>
+        /// Unregister a saveable object to stop catching save/load events.
+        /// </summary>
+        /// <param name="saveableObject">Saveable object to unregister.</param>
+        public static void UnregisterSavableObject([NotNull] ISaveableObject saveableObject)
+        {
+            if (!SaveableObjects.Contains(saveableObject)) return;
+            SaveableObjects.Remove(saveableObject);
+        }
         
         /// <summary>
         /// Read all saves in a directory.

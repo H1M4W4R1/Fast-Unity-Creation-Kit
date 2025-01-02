@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Metadata;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Utility.Logging;
@@ -22,7 +23,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         where TSelfSealed : SaveBase<TSelfSealed>, new()
     {
     }
-    
+
     /// <summary>
     /// Base class for save files.
     /// </summary>
@@ -38,25 +39,38 @@ namespace FastUnityCreationKit.Saving.Abstract
         protected abstract void SetupMetadata();
 
         /// <summary>
+        /// Called before save is saved. It can be used to update data before saving as it's
+        /// called before any data is written to disk.
+        /// </summary>
+        protected virtual async UniTask BeforeSaveSavedAsync() => await UniTask.CompletedTask;
+
+        /// <summary>
+        /// Called before save is loaded. This event is a place to create all databases that will
+        /// be populated with data from disk using <see cref="ISaveableObject"/> interface as
+        /// this event is called before any data is loaded.
+        /// </summary>
+        protected virtual async UniTask BeforeSaveLoadedAsync() => await UniTask.CompletedTask;
+
+        /// <summary>
         /// Called when save is loaded.
         /// </summary>
         protected virtual async UniTask OnSaveLoadedAsync() => await UniTask.CompletedTask;
-        
+
         /// <summary>
         /// Called when save failed to load.
         /// </summary>
         protected virtual async UniTask OnSaveLoadFailedAsync() => await UniTask.CompletedTask;
-        
+
         /// <summary>
         /// Called when save is saved.
         /// </summary>
         protected virtual async UniTask OnSaveSavedAsync() => await UniTask.CompletedTask;
-        
+
         /// <summary>
         /// Called when save failed to save.
         /// </summary>
         protected virtual async UniTask OnSaveSaveFailedAsync() => await UniTask.CompletedTask;
-        
+
         /// <summary>
         /// Save this save to disk.
         /// </summary>
@@ -78,6 +92,12 @@ namespace FastUnityCreationKit.Saving.Abstract
                 return false;
             }
 
+            // Perform actions before save is saved
+            await BeforeSaveSavedAsync();
+
+            // Invoke event for all scene objects
+            SaveAPI.InvokeOnFileSaved(this);
+
             // Write data for each save part
             // that metadata was registered for
             for (int index = 0; index < Metadata.Count; index++)
@@ -94,7 +114,7 @@ namespace FastUnityCreationKit.Saving.Abstract
                 }
 
                 // Write file data to disk
-                if (data.Save(this))
+                if (data.OnSave(this))
                 {
                     // Update last modified date
                     LastModified = DateTime.UtcNow;
@@ -115,7 +135,7 @@ namespace FastUnityCreationKit.Saving.Abstract
                     return false;
                 }
             }
-            
+
             await OnSaveSavedAsync();
             return true;
         }
@@ -182,14 +202,28 @@ namespace FastUnityCreationKit.Saving.Abstract
 
             // Setup save metadata as it's not loaded from disk
             // also call events based on status
-            if(status) 
+            if (status)
             {
-                saveObj.SetupMetadata();
+                // TODO: Add conversion subsystem for handling loading different save versions
+                
+                saveObj.SetupMetadata(); // We don't need to create new instances as they are loaded from disk
+
+                // Perform actions before save is loaded
+                await saveObj.BeforeSaveLoadedAsync();
+
+                // Invoke event for all scene objects
+                SaveAPI.InvokeOnFileLoaded(saveObj);
+
+                // Preload all save parts to prevent issues with loading
+                // ignore return from embedded method as we only need to load data
+                for (int index = 0; index < saveObj.Metadata.Count; index++)
+                    saveObj.GetOrLoadDataFor(saveObj.Metadata[index], false);
+
                 await saveObj.OnSaveLoadedAsync();
             }
             else
                 await saveObj.OnSaveLoadFailedAsync();
-            
+
             // Return status and save object
             return (status, saveObj);
         }
@@ -200,8 +234,11 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         /// Name of the save file, provided by user.
         /// </summary>
-        [OdinSerialize] [ShowInInspector]
-        [ReadOnly] [TabGroup("Debug")] [Required]
+        [OdinSerialize]
+        [ShowInInspector]
+        [ReadOnly]
+        [TabGroup("Debug")]
+        [Required]
         public string SaveName { get; set; }
 
         /// <summary>
@@ -222,24 +259,32 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <see cref="Application.persistentDataPath"/> in this property.
         /// This is main directory saves are stored in, should not end with '/'.
         /// </summary>
-        [ShowInInspector] [ReadOnly]
-        [TabGroup("Debug")] [Required]
+        [ShowInInspector]
+        [ReadOnly]
+        [TabGroup("Debug")]
+        [Required]
         public abstract string SaveDirectory { get; }
-        
+
         /// <summary>
         /// Name of the header file.
         /// </summary>
-        [ShowInInspector] [ReadOnly]
-        [TabGroup("Debug")] [Required]
+        [ShowInInspector]
+        [ReadOnly]
+        [TabGroup("Debug")]
+        [Required]
         public virtual string HeaderName => SaveAPI.DEFAULT_HEADER_NAME;
 
         // Automatically set to current DateTime
-        [OdinSerialize] [ShowInInspector]
-        [ReadOnly] [TabGroup("Debug")]
+        [OdinSerialize]
+        [ShowInInspector]
+        [ReadOnly]
+        [TabGroup("Debug")]
         public DateTime CreationDate { get; internal set; } = DateTime.UtcNow;
 
-        [OdinSerialize] [ShowInInspector]
-        [ReadOnly] [TabGroup("Debug")]
+        [OdinSerialize]
+        [ShowInInspector]
+        [ReadOnly]
+        [TabGroup("Debug")]
         public DateTime LastModified { get; internal set; } = DateTime.UtcNow;
 
         /// <summary>
@@ -255,7 +300,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// </summary>
         /// <typeparam name="TSaveFile">Type of the save file.</typeparam>
         /// <returns>Metadata for specified save part or null if not found.</returns>
-        public SaveFileMetadata<TSaveFile> GetMetadataFor<TSaveFile>()
+        [CanBeNull] public SaveFileMetadata<TSaveFile> GetMetadataFor<TSaveFile>()
             where TSaveFile : SaveFileBase, new()
         {
             foreach (SaveFileMetadata metadata in Metadata)
@@ -301,8 +346,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         /// Get data for specified save part.
         /// </summary>
-        [CanBeNull]
-        internal SaveFileBase GetLoadedDataFor([NotNull] SaveFileMetadata metadata)
+        [CanBeNull] internal SaveFileBase GetLoadedDataFor([NotNull] SaveFileMetadata metadata)
         {
             for (int index = 0; index < FileData.Count; index++)
             {
@@ -314,13 +358,13 @@ namespace FastUnityCreationKit.Saving.Abstract
             return null;
         }
 
-        internal void CreateDataFor([NotNull] SaveFileMetadata metadata)
+        [NotNull] internal SaveFileBase CreateDataFor([NotNull] SaveFileMetadata metadata, bool storeUserData = true)
         {
             // Check if data is already loaded
             if (HasLoadedDataFor(metadata))
             {
                 Guard<SaveLogConfig>.Warning($"Data for {metadata.FileName} already exists.");
-                return;
+                return null!;
             }
 
             // Create new metadata file and set-up file path
@@ -330,9 +374,46 @@ namespace FastUnityCreationKit.Saving.Abstract
             FileData.Add(readFile);
 
             // Store user data in file (from current state of game)
-            readFile.StoreUserData(this);
+            if (storeUserData)
+                readFile.StoreUserData(this);
 
             Guard<SaveLogConfig>.Verbose($"Created {metadata.FileName}.");
+            return readFile;
+        }
+
+        /// <summary>
+        /// Get data for specified save part.
+        /// </summary>
+        public SaveFileBase GetOrLoadDataFor([NotNull] SaveFileMetadata metadata, bool storeUserDataIfNew = true)
+        {
+            // Check if data is already loaded
+            SaveFileBase loadedData = GetLoadedDataFor(metadata);
+            if (loadedData != null)
+                return loadedData;
+
+            // Load data from disk or create if missing
+            string filePath = GetSaveFilePath(metadata.FileName);
+
+            // Loading has built-in debugging, so no need to log here
+            // if not found create new instance as fail-safe
+            if (!metadata.FromPath(filePath, out SaveFileBase readFile))
+            {
+                Guard<SaveLogConfig>.Verbose(
+                    $"Failed to load {metadata.FileName} from {filePath}. Creating new instance.");
+                
+                // Create new instance of save file
+                // also automatically adds it to FileData list
+                readFile = CreateDataFor(metadata, storeUserDataIfNew);
+            }
+            else
+            {
+                // Add loaded data to list
+                FileData.Add(readFile);
+            }
+
+            readFile!.OnLoad(this);
+            Guard<SaveLogConfig>.Verbose($"Loaded {metadata.FileName} from {filePath}.");
+            return readFile;
         }
 
         /// <summary>
@@ -342,53 +423,20 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// Can be used to efficiently store different maps (or sth) in different save files to chunk
         /// the data and reduce loading times.
         /// </summary>
-        public TSaveFile GetOrLoadDataFor<TSaveFile>()
+        [CanBeNull] public TSaveFile GetOrLoadDataFor<TSaveFile>()
             where TSaveFile : SaveFileBase, new()
         {
-            // Check if data is already loaded
-            TSaveFile loadedData = GetLoadedDataFor<TSaveFile>();
-            if (loadedData != null)
-                return loadedData;
-
-            // Load data from disk or create if missing
+            // Get metadata for specified save part
             SaveFileMetadata<TSaveFile> metadata = GetMetadataFor<TSaveFile>();
             if (metadata == null)
             {
-                Guard<SaveLogConfig>.Verbose($"No metadata found for {typeof(TSaveFile).Name}. Creating new instance.");
-
-                // Create new instance of metadata and register it as fail-safe
-                metadata = new SaveFileMetadata<TSaveFile>();
-                metadata.FileName = typeof(TSaveFile).Name;
-                Metadata.Add(metadata);
+                Guard<SaveLogConfig>.Error($"Failed to get metadata for {typeof(TSaveFile).Name}.");
+                return null;
             }
-
-            string filePath = GetSaveFilePath(metadata.FileName);
-
-
-            // Loading has built-in debugging, so no need to log here
-            // if not found create new instance as fail-safe
-            if (!metadata.TryLoad(filePath, out TSaveFile readFile))
-            {
-                // This part of code is handling save updates when new parts are added
-                // and old saves are loaded. It creates new instances of save files
-                // to prevent issues with missing data. Also loads data from current state of game.
-                metadata.NewFile();
-                readFile.FileName = metadata.FileName; // Names must match
-                readFile.FilePath = filePath;
-
-                // Save data from current state of game
-                // aka. update save file with current data
-                readFile.StoreUserData(this);
-
-                Guard<SaveLogConfig>.Verbose(
-                    $"Failed to load {typeof(TSaveFile).Name} from {filePath}. Creating new instance.");
-            }
-
-            // Add to loaded data, load data from file and return it
-            FileData.Add(readFile);
-            readFile.Load(this);
-            Guard<SaveLogConfig>.Verbose($"Loaded {typeof(TSaveFile).Name} from {filePath}.");
-            return readFile;
+            
+            // Get or load data for specified save part, safe cast as additional safety precaution
+            // It should be of the correct type, but it's better to be safe than sorry
+            return GetOrLoadDataFor(metadata) as TSaveFile;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
