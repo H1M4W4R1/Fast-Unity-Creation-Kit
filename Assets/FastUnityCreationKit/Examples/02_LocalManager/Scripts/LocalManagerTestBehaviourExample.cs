@@ -1,9 +1,8 @@
-﻿using FastUnityCreationKit.Examples.Unity._01_PersistentManager.Scripts;
-using FastUnityCreationKit.Unity;
+﻿using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Callbacks;
 using UnityEngine;
 
-namespace FastUnityCreationKit.Examples.Unity._02_LocalManager.Scripts
+namespace FastUnityCreationKit.Examples._02_LocalManager.Scripts
 {
     /// <summary>
     /// Behaviour used to demonstrate the usage of the persistent manager.

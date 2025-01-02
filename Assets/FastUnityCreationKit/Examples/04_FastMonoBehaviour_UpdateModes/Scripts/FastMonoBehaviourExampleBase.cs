@@ -1,7 +1,7 @@
 ﻿using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Callbacks;
 
-namespace FastUnityCreationKit.Examples.Unity._04_FastMonoBehaviour_UpdateModes.Scripts
+namespace FastUnityCreationKit.Examples._04_FastMonoBehaviour_UpdateModes.Scripts
 {
     public abstract class FastMonoBehaviourExampleBase : FastMonoBehaviour, IUpdateCallback
     {

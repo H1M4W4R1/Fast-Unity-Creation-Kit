@@ -1,6 +1,6 @@
 ﻿using FastUnityCreationKit.Unity;
 
-namespace FastUnityCreationKit.Examples.Unity._03_FastMonoBehaviour_TimeModes.Scripts
+namespace FastUnityCreationKit.Examples._03_FastMonoBehaviour_TimeModes.Scripts
 {
     public sealed class RealTimeFromStartupFastMonoBehaviourExample : TimeMonoBehaviourExample
     {

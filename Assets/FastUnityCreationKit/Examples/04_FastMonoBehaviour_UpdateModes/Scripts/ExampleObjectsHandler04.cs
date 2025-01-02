@@ -3,7 +3,7 @@ using FastUnityCreationKit.Unity.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace FastUnityCreationKit.Examples.Unity._04_FastMonoBehaviour_UpdateModes.Scripts
+namespace FastUnityCreationKit.Examples._04_FastMonoBehaviour_UpdateModes.Scripts
 {
     /// <summary>
     /// Internal class for handling example CK04 in Unity subsystem.

@@ -2,7 +2,7 @@
 using FastUnityCreationKit.Unity.Structure.Managers;
 using UnityEngine;
 
-namespace FastUnityCreationKit.Examples.Unity._01_PersistentManager.Scripts
+namespace FastUnityCreationKit.Examples._01_PersistentManager.Scripts
 {
     /// <summary>
     /// Represents a persistent manager.

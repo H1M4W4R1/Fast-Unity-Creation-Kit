@@ -1,4 +1,6 @@
 ﻿using FastUnityCreationKit.Structure.Singleton;
+using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Logging;
 
 namespace FastUnityCreationKit.Unity.Structure.Managers
 {
@@ -12,6 +14,15 @@ namespace FastUnityCreationKit.Unity.Structure.Managers
     public abstract class FastManager<TManagerType> : FastMonoBehaviour,
         IMonoBehaviourSingleton<TManagerType> where TManagerType : FastManager<TManagerType>, new()
     {
+        protected override void Awake()
+        {
+            // Check if types match
+            if (GetType() != typeof(TManagerType))
+                Guard<ValidationLogConfig>.Fatal("Type mismatch. Type of the manager should be the same as the generic type.");
+            
+            base.Awake();
+        }
+
         /// <summary>
         /// Gets the instance of the manager.
         /// </summary>

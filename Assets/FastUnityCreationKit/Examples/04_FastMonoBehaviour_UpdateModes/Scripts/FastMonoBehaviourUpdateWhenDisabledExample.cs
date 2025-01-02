@@ -1,8 +1,6 @@
 ﻿using FastUnityCreationKit.Unity;
-using FastUnityCreationKit.Unity.Callbacks;
-using UnityEngine;
 
-namespace FastUnityCreationKit.Examples.Unity._04_FastMonoBehaviour_UpdateModes.Scripts
+namespace FastUnityCreationKit.Examples._04_FastMonoBehaviour_UpdateModes.Scripts
 {
     /// <summary>
     /// You can update the object even when it is disabled.

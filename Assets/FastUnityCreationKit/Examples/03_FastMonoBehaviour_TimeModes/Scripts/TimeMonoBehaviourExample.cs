@@ -2,7 +2,7 @@
 using FastUnityCreationKit.Unity.Callbacks;
 using UnityEngine;
 
-namespace FastUnityCreationKit.Examples.Unity._03_FastMonoBehaviour_TimeModes.Scripts
+namespace FastUnityCreationKit.Examples._03_FastMonoBehaviour_TimeModes.Scripts
 {
     public abstract class TimeMonoBehaviourExample : FastMonoBehaviour, ICreateCallback, IDestroyCallback,
         IUpdateCallback

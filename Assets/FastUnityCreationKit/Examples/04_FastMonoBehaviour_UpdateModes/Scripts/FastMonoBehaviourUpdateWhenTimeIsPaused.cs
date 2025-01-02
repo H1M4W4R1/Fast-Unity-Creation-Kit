@@ -1,6 +1,6 @@
 ﻿using FastUnityCreationKit.Unity;
 
-namespace FastUnityCreationKit.Examples.Unity._04_FastMonoBehaviour_UpdateModes.Scripts
+namespace FastUnityCreationKit.Examples._04_FastMonoBehaviour_UpdateModes.Scripts
 {
     /// <summary>
     /// You can ignore paused time by using UpdateWhenTimePaused mode.
