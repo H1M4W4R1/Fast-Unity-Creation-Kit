@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Saving.Metadata;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Utility.Logging;
@@ -34,17 +35,38 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// Register metadata for save part.
         /// You should update <see cref="Metadata"/> list in this method.
         /// </summary>
-        protected abstract bool SetupMetadata();
+        protected abstract void SetupMetadata();
 
+        /// <summary>
+        /// Called when save is loaded.
+        /// </summary>
+        protected virtual async UniTask OnSaveLoadedAsync() => await UniTask.CompletedTask;
+        
+        /// <summary>
+        /// Called when save failed to load.
+        /// </summary>
+        protected virtual async UniTask OnSaveLoadFailedAsync() => await UniTask.CompletedTask;
+        
+        /// <summary>
+        /// Called when save is saved.
+        /// </summary>
+        protected virtual async UniTask OnSaveSavedAsync() => await UniTask.CompletedTask;
+        
+        /// <summary>
+        /// Called when save failed to save.
+        /// </summary>
+        protected virtual async UniTask OnSaveSaveFailedAsync() => await UniTask.CompletedTask;
+        
         /// <summary>
         /// Save this save to disk.
         /// </summary>
-        public bool Save()
+        public async UniTask<bool> Save()
         {
             // Write header file
             if (this is not TSelfSealed selfHeader)
             {
                 Guard<SaveLogConfig>.Error($"Failed to cast {typeof(TSelfSealed).Name} to {typeof(TSelfSealed).Name}.");
+                await OnSaveSaveFailedAsync();
                 return false;
             }
 
@@ -52,6 +74,7 @@ namespace FastUnityCreationKit.Saving.Abstract
             if (string.IsNullOrEmpty(SaveDirectory))
             {
                 Guard<SaveLogConfig>.Error("Save directory is not set.");
+                await OnSaveSaveFailedAsync();
                 return false;
             }
 
@@ -80,14 +103,20 @@ namespace FastUnityCreationKit.Saving.Abstract
                 else
                 {
                     Guard<SaveLogConfig>.Error($"Failed to save {metadata.FileName}.");
+                    await OnSaveSaveFailedAsync();
                     return false;
                 }
 
                 // Write header file to save directory
-                if (!SaveAPI.WriteHeaderFile<TSelfSealed, TSerializationProvider>(GetSaveFilePath(HeaderName), selfHeader))
+                if (!SaveAPI.WriteHeaderFile<TSelfSealed, TSerializationProvider>(GetSaveFilePath(HeaderName),
+                        selfHeader))
+                {
+                    await OnSaveSaveFailedAsync();
                     return false;
+                }
             }
-
+            
+            await OnSaveSavedAsync();
             return true;
         }
 
@@ -126,9 +155,9 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         /// Load save file from disk.
         /// </summary>
-        public static TSelfSealed Load(string saveName)
+        public static async UniTask<TSelfSealed> Load(string saveName)
         {
-            TryLoad(saveName, out TSelfSealed saveFile);
+            (bool _, TSelfSealed saveFile) = await TryLoad(saveName);
             return saveFile;
         }
 
@@ -136,9 +165,8 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// Try to load save file from disk.
         /// </summary>
         /// <param name="saveName">Name of the save file.</param>
-        /// <param name="saveFile">Loaded save file.</param>
         /// <returns>True if save file was loaded successfully.</returns>
-        public static bool TryLoad(string saveName, out TSelfSealed saveFile)
+        public static async UniTask<(bool, TSelfSealed)> TryLoad(string saveName)
         {
             // Create temporary instance of save to access necessary data
             // it's wasteful, but it's the only way to avoid issues with obsolete
@@ -151,8 +179,19 @@ namespace FastUnityCreationKit.Saving.Abstract
             // Load file from disk
             (bool status, TSelfSealed saveObj) =
                 SaveAPI.ReadHeaderFile<TSelfSealed, TSerializationProvider>(tempSave.GetSaveFolder());
-            saveFile = saveObj;
-            return status;
+
+            // Setup save metadata as it's not loaded from disk
+            // also call events based on status
+            if(status) 
+            {
+                saveObj.SetupMetadata();
+                await saveObj.OnSaveLoadedAsync();
+            }
+            else
+                await saveObj.OnSaveLoadFailedAsync();
+            
+            // Return status and save object
+            return (status, saveObj);
         }
     }
 
@@ -161,11 +200,8 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         /// Name of the save file, provided by user.
         /// </summary>
-        [OdinSerialize]
-        [ShowInInspector]
-        [ReadOnly]
-        [TabGroup("Debug")]
-        [Required]
+        [OdinSerialize] [ShowInInspector]
+        [ReadOnly] [TabGroup("Debug")] [Required]
         public string SaveName { get; set; }
 
         /// <summary>
@@ -186,32 +222,24 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <see cref="Application.persistentDataPath"/> in this property.
         /// This is main directory saves are stored in, should not end with '/'.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TabGroup("Debug")]
-        [Required]
+        [ShowInInspector] [ReadOnly]
+        [TabGroup("Debug")] [Required]
         public abstract string SaveDirectory { get; }
         
         /// <summary>
         /// Name of the header file.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TabGroup("Debug")]
-        [Required]
+        [ShowInInspector] [ReadOnly]
+        [TabGroup("Debug")] [Required]
         public virtual string HeaderName => SaveAPI.DEFAULT_HEADER_NAME;
 
         // Automatically set to current DateTime
-        [OdinSerialize]
-        [ShowInInspector]
-        [ReadOnly]
-        [TabGroup("Debug")]
+        [OdinSerialize] [ShowInInspector]
+        [ReadOnly] [TabGroup("Debug")]
         public DateTime CreationDate { get; internal set; } = DateTime.UtcNow;
 
-        [OdinSerialize]
-        [ShowInInspector]
-        [ReadOnly]
-        [TabGroup("Debug")]
+        [OdinSerialize] [ShowInInspector]
+        [ReadOnly] [TabGroup("Debug")]
         public DateTime LastModified { get; internal set; } = DateTime.UtcNow;
 
         /// <summary>
