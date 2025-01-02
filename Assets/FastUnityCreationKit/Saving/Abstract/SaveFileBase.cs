@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Saving.Metadata;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Saving.Metadata;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Utility.Serialization.Interfaces;
@@ -24,7 +25,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         where TSelfSealed : SaveFileBase<TSelfSealed, TSerializationProvider>, new()
         where TSerializationProvider : ISerializationProvider, new()
     {
-        public sealed override bool OnSave(SaveBase header)
+        internal sealed override async UniTask<bool> OnSave(SaveBase header)
         {
             // Check if the file path is not null or empty.
             if (string.IsNullOrEmpty(FilePath))
@@ -34,7 +35,7 @@ namespace FastUnityCreationKit.Saving.Abstract
             }
 
             // Store user data.
-            StoreUserData(header);
+            await BeforeSaveWritten(header);
 
             if (this is TSelfSealed saveFile)
                 return SaveAPI.WriteSaveFile<TSelfSealed, TSerializationProvider>(FilePath, saveFile);
@@ -42,8 +43,11 @@ namespace FastUnityCreationKit.Saving.Abstract
             Guard<SaveLogConfig>.Error("Save file is not of the correct type.");
             return false;
         }
-        
-        public sealed override void OnLoad(SaveBase header) => LoadUserData(header);
+
+        internal sealed override async UniTask OnLoad(SaveBase header)
+        {
+            await AfterSaveLoaded(header);
+        }
     }
 
     public abstract class SaveFileBase
@@ -68,21 +72,21 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         /// Saves the data to the file at <see cref="FilePath"/>.
         /// </summary>
-        public abstract bool OnSave(SaveBase header);
+        internal abstract UniTask<bool> OnSave(SaveBase header);
         
         /// <summary>
         /// Loads the data from the file at <see cref="FilePath"/>.
         /// </summary>
-        public abstract void OnLoad(SaveBase header);
+        internal abstract UniTask OnLoad(SaveBase header);
 
         /// <summary>
         /// Stores the user data to the save file.
         /// </summary>
-        public virtual void StoreUserData(SaveBase header) { }
+        public virtual async UniTask BeforeSaveWritten(SaveBase header) => await UniTask.CompletedTask;
         
         /// <summary>
         /// Loads the user data from the save file.
         /// </summary>
-        public virtual void LoadUserData(SaveBase header) { }
+        public virtual async UniTask AfterSaveLoaded(SaveBase header) => await UniTask.CompletedTask;
     }
 }

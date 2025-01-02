@@ -42,7 +42,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// Called before save is saved. It can be used to update data before saving as it's
         /// called before any data is written to disk.
         /// </summary>
-        protected virtual async UniTask BeforeSaveSavedAsync() => await UniTask.CompletedTask;
+        protected virtual async UniTask BeforeSaveWrittenAsync() => await UniTask.CompletedTask;
 
         /// <summary>
         /// Called before save is loaded. This event is a place to create all databases that will
@@ -64,12 +64,12 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         /// Called when save is saved.
         /// </summary>
-        protected virtual async UniTask OnSaveSavedAsync() => await UniTask.CompletedTask;
+        protected virtual async UniTask OnSaveWrittenAsync() => await UniTask.CompletedTask;
 
         /// <summary>
         /// Called when save failed to save.
         /// </summary>
-        protected virtual async UniTask OnSaveSaveFailedAsync() => await UniTask.CompletedTask;
+        protected virtual async UniTask OnSaveWriteFailedAsync() => await UniTask.CompletedTask;
 
         /// <summary>
         /// Save this save to disk.
@@ -80,7 +80,7 @@ namespace FastUnityCreationKit.Saving.Abstract
             if (this is not TSelfSealed selfHeader)
             {
                 Guard<SaveLogConfig>.Error($"Failed to cast {typeof(TSelfSealed).Name} to {typeof(TSelfSealed).Name}.");
-                await OnSaveSaveFailedAsync();
+                await OnSaveWriteFailedAsync();
                 return false;
             }
 
@@ -88,12 +88,12 @@ namespace FastUnityCreationKit.Saving.Abstract
             if (string.IsNullOrEmpty(SaveDirectory))
             {
                 Guard<SaveLogConfig>.Error("Save directory is not set.");
-                await OnSaveSaveFailedAsync();
+                await OnSaveWriteFailedAsync();
                 return false;
             }
 
             // Perform actions before save is saved
-            await BeforeSaveSavedAsync();
+            await BeforeSaveWrittenAsync();
 
             // Invoke event for all scene objects
             SaveAPI.InvokeOnFileSaved(this);
@@ -114,7 +114,7 @@ namespace FastUnityCreationKit.Saving.Abstract
                 }
 
                 // Write file data to disk
-                if (data.OnSave(this))
+                if (await data.OnSave(this))
                 {
                     // Update last modified date
                     LastModified = DateTime.UtcNow;
@@ -123,7 +123,7 @@ namespace FastUnityCreationKit.Saving.Abstract
                 else
                 {
                     Guard<SaveLogConfig>.Error($"Failed to save {metadata.FileName}.");
-                    await OnSaveSaveFailedAsync();
+                    await OnSaveWriteFailedAsync();
                     return false;
                 }
 
@@ -131,12 +131,12 @@ namespace FastUnityCreationKit.Saving.Abstract
                 if (!SaveAPI.WriteHeaderFile<TSelfSealed, TSerializationProvider>(GetSaveFilePath(HeaderName),
                         selfHeader))
                 {
-                    await OnSaveSaveFailedAsync();
+                    await OnSaveWriteFailedAsync();
                     return false;
                 }
             }
 
-            await OnSaveSavedAsync();
+            await OnSaveWrittenAsync();
             return true;
         }
 
@@ -154,7 +154,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// </summary>
         /// <param name="saveName">Name of the save file.</param>
         /// <returns>New instance of save file.</returns>
-        public static TSelfSealed New(string saveName)
+        public static async UniTask<TSelfSealed> New(string saveName)
         {
             TSelfSealed saveFile = new TSelfSealed()
             {
@@ -167,7 +167,7 @@ namespace FastUnityCreationKit.Saving.Abstract
             // Loop through metadata and create new instances of save files
             // to store all data in memory
             foreach (SaveFileMetadata metadata in saveFile.Metadata)
-                saveFile.CreateDataFor(metadata);
+                await saveFile.CreateDataFor(metadata);
 
             return saveFile;
         }
@@ -217,7 +217,7 @@ namespace FastUnityCreationKit.Saving.Abstract
                 // Preload all save parts to prevent issues with loading
                 // ignore return from embedded method as we only need to load data
                 for (int index = 0; index < saveObj.Metadata.Count; index++)
-                    saveObj.GetOrLoadDataFor(saveObj.Metadata[index], false);
+                    await saveObj.GetOrLoadDataFor(saveObj.Metadata[index], false);
 
                 await saveObj.OnSaveLoadedAsync();
             }
@@ -358,7 +358,7 @@ namespace FastUnityCreationKit.Saving.Abstract
             return null;
         }
 
-        [NotNull] internal SaveFileBase CreateDataFor([NotNull] SaveFileMetadata metadata, bool storeUserData = true)
+        internal async UniTask<SaveFileBase> CreateDataFor([NotNull] SaveFileMetadata metadata, bool storeUserData = true)
         {
             // Check if data is already loaded
             if (HasLoadedDataFor(metadata))
@@ -375,7 +375,7 @@ namespace FastUnityCreationKit.Saving.Abstract
 
             // Store user data in file (from current state of game)
             if (storeUserData)
-                readFile.StoreUserData(this);
+                await readFile.BeforeSaveWritten(this);
 
             Guard<SaveLogConfig>.Verbose($"Created {metadata.FileName}.");
             return readFile;
@@ -384,7 +384,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         /// Get data for specified save part.
         /// </summary>
-        public SaveFileBase GetOrLoadDataFor([NotNull] SaveFileMetadata metadata, bool storeUserDataIfNew = true)
+        public async UniTask<SaveFileBase> GetOrLoadDataFor([NotNull] SaveFileMetadata metadata, bool storeUserDataIfNew = true)
         {
             // Check if data is already loaded
             SaveFileBase loadedData = GetLoadedDataFor(metadata);
@@ -403,7 +403,7 @@ namespace FastUnityCreationKit.Saving.Abstract
                 
                 // Create new instance of save file
                 // also automatically adds it to FileData list
-                readFile = CreateDataFor(metadata, storeUserDataIfNew);
+                readFile = await CreateDataFor(metadata, storeUserDataIfNew);
             }
             else
             {
