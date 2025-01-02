@@ -1,4 +1,6 @@
-﻿using FastUnityCreationKit.Structure.Initialization;
+﻿using FastUnityCreationKit.Saving.Interfaces;
+using FastUnityCreationKit.Saving.Utility;
+using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.Unity.Callbacks;
 using FastUnityCreationKit.Unity.Interfaces;
 using FastUnityCreationKit.Utility;
@@ -71,6 +73,10 @@ namespace FastUnityCreationKit.Unity
             // Initialize the object if it implements the IInitializable interface.
             if (this is IInitializable initializable)
                 initializable.Initialize();
+            
+            // Register the object to the save system if it implements the ISaveableObject interface.
+            if(this is ISaveableObject saveableObject)
+                SaveAPI.RegisterSavableObject(saveableObject);
 
             NotifyObjectWasCreated();
 
@@ -98,7 +104,12 @@ namespace FastUnityCreationKit.Unity
         {
             NotifyObjectWasDestroyed();
             IsDestroyed = true;
+            
+            // Unregister the object from the save system if it implements the ISaveableObject interface.
+            if(this is ISaveableObject saveableObject)
+                SaveAPI.UnregisterSavableObject(saveableObject);
   
+            // Unregister this object from the object registry.
             FastMonoBehaviourManager.Instance.UnregisterFastMonoBehaviour(this);
         }
 
