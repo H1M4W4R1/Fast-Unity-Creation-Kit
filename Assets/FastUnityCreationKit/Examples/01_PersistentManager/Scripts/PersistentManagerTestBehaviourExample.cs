@@ -2,7 +2,7 @@
 using FastUnityCreationKit.Unity.Callbacks;
 using UnityEngine;
 
-namespace FastUnityCreationKit.Examples.Unity._01_PersistentManager.Scripts
+namespace FastUnityCreationKit.Examples._01_PersistentManager.Scripts
 {
     /// <summary>
     /// Behaviour used to demonstrate the usage of the persistent manager.
