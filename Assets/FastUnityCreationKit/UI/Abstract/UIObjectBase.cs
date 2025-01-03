@@ -66,12 +66,18 @@ namespace FastUnityCreationKit.UI.Abstract
         /// </summary>
         /// <typeparam name="TProviderType">The type of the data context provider.</typeparam>
         /// <returns>The data context provider of the specified type or null if not found.</returns>
+        /// <remarks>
+        /// It was found out that GetComponent is faster than Dictionary lookup, so it will remain
+        /// as is for now. The only faster way would be to cache the provider, but that would be
+        /// pretty hard to implement and maintain in a reliable way.
+        /// </remarks>
         public TProviderType GetProviderByType<TProviderType>() 
             where TProviderType : IDataContextProvider
         {
-            // Try to get provider on this object or parent if not found
-            TProviderType provider = GetComponent<TProviderType>() ??
-                                     GetComponentInParent<TProviderType>(true);
+            // Try to get provider on this object or cascade to parents until root
+            // Also handle inactive objects to guarantee that provided will be found
+            // if it exists in the hierarchy
+            TProviderType provider = GetComponentInParent<TProviderType>(true);
             
             // Check if provider is not null
             if (provider != null) return provider;
