@@ -85,6 +85,7 @@ namespace FastUnityCreationKit.Unity
             float deltaTime = TimeAPI.DeltaTime;
             
             // Loop through all FastMonoBehaviours and call their update methods
+            ExecuteForAll(FastMonoBehaviour.HandleTemporaryObject, deltaTime);
             ExecuteForAll(FastMonoBehaviour.HandlePreUpdate, deltaTime);
             ExecuteForAll(FastMonoBehaviour.HandleUpdate, deltaTime);
             ExecuteForAll(FastMonoBehaviour.HandlePostUpdate, deltaTime);

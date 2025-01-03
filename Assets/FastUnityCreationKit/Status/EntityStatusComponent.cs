@@ -4,6 +4,7 @@ using FastUnityCreationKit.Status.Abstract;
 using FastUnityCreationKit.Status.Interfaces;
 using FastUnityCreationKit.Status.References;
 using FastUnityCreationKit.Unity;
+using FastUnityCreationKit.Unity.Callbacks;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector;
@@ -13,7 +14,7 @@ namespace FastUnityCreationKit.Status
     /// <summary>
     /// This component is used to store entity status.
     /// </summary>
-    public sealed class EntityStatusComponent : FastMonoBehaviour
+    public sealed class EntityStatusComponent : FastMonoBehaviour, IUpdateCallback
     {
         /// <summary>
         /// List of all statuses that are applied to the entity.
@@ -199,7 +200,7 @@ namespace FastUnityCreationKit.Status
             AppliedStatusReference statusRef = GetStatusReference<TStatusType>();
 
             // If status is percentage status, return total percentage loops
-            if (statusRef.Status is IPercentageStatus percentageStatus)
+            if (statusRef.Status is IPercentageStatus)
                 return statusRef.statusLevel / IPercentageStatus.PERCENTAGE_SCALE;
 
             return statusRef.statusLevel;
@@ -217,7 +218,7 @@ namespace FastUnityCreationKit.Status
             AppliedStatusReference statusRef = GetStatusReference<TStatusType>();
 
             // If status is percentage status, return total percentage loops
-            if (statusRef.Status is IPercentageStatus percentageStatus)
+            if (statusRef.Status is IPercentageStatus)
             {
                 long percentageRemnant = statusRef.statusLevel % IPercentageStatus.PERCENTAGE_SCALE;
                 return percentageRemnant / (float) IPercentageStatus.PERCENTAGE_SCALE;
@@ -288,6 +289,20 @@ namespace FastUnityCreationKit.Status
         internal void DeleteStatusReference(AppliedStatusReference appliedStatusReference)
         {
             AppliedStatuses.Remove(appliedStatusReference);
+        }
+
+        public void OnObjectUpdated(float deltaTime)
+        {
+            // Loop through all statuses
+            for (int i = AppliedStatuses.Count - 1; i >= 0; i--)
+            {
+                AppliedStatusReference reference = AppliedStatuses[i];
+
+                // Check if status is temporary, if so, check if it should be destroyed
+                // and remove it if it should.
+                if (reference.Status is ITemporaryStatus temporaryStatus && temporaryStatus.ShouldBeDestroyed())
+                    temporaryStatus.RemoveStatusFromComponent(this).Forget();
+            }
         }
     }
 }

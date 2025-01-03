@@ -5,6 +5,7 @@ using FastUnityCreationKit.Unity.Callbacks;
 using FastUnityCreationKit.Unity.Interfaces;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Utility.Objects;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Unity
@@ -68,6 +69,14 @@ namespace FastUnityCreationKit.Unity
 
                 // Make the object persistent.
                 DontDestroyOnLoad(gameObject);
+                
+                // Check if is temporary object.
+                if(this is ITemporaryObject temporaryObject)
+                {
+                    // Log error in console if object is both persistent and temporary.
+                    Guard<ValidationLogConfig>.Warning(
+                        $"Object {name} is both persistent and temporary. This will cause severe issues!");
+                }
             }
 
             // Initialize the object if it implements the IInitializable interface.
@@ -133,6 +142,15 @@ namespace FastUnityCreationKit.Unity
             behaviour.NotifyObjectWasFixedUpdated();
         }
 
+        internal static void HandleTemporaryObject(FastMonoBehaviour behaviour, float deltaTime)
+        {
+            // Check if object is temporary, if not skip
+            if (behaviour is not ITemporaryObject temporaryObject) return;
+ 
+            if (temporaryObject.ShouldBeDestroyed())
+                Destroy(behaviour.gameObject);
+        }
+        
         protected virtual void NotifyObjectWasCreated()
         {
             if (this is ICreateCallback createCallback)
@@ -180,6 +198,8 @@ namespace FastUnityCreationKit.Unity
             if (this is IPostUpdateCallback postUpdateCallback)
                 postUpdateCallback.OnAfterObjectUpdated(deltaTime);
         }
+        
+  
 
         private void OnApplicationQuit()
         {

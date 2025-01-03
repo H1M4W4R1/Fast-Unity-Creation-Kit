@@ -19,6 +19,9 @@ saving and loading of objects when save file is created or
 loaded (beware that object must exist on scene when save 
 is loaded for it to receive the callback).
 
+Also supports `ITemporaryObject` which allows this behaviour
+to be automatically destroyed after conditions are met.
+
 ### Custom Update Mode
 FastMonoBehaviour provides several update modes. 
 - `MonoBehaviour` - update mode compatible with Unity's 
