@@ -1,5 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.Identification.Identifiers;
 using FastUnityCreationKit.Utility.Limits;
 using Sirenix.OdinInspector;
@@ -16,6 +17,7 @@ namespace FastUnityCreationKit.Economy
     /// Methods can be overriden to implement custom logic like health resource can't be taken
     /// if entity is invulnerable or can't be added if entity is dead.
     /// </remarks>
+    [SupportedFeature(typeof(ILimited))]
     public class ResourceContainer
     {
         /// <summary>

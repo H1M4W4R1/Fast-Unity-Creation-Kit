@@ -1,6 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Annotations.Data;
+using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Identification;
 using FastUnityCreationKit.Utility.Limits;
@@ -10,6 +11,7 @@ namespace FastUnityCreationKit.Economy
     [AutoCreatedObject(LocalConstants.RESOURCES_OBJECT_DIRECTORY)]
     [AddressableGroup(LocalConstants.RESOURCE_ADDRESSABLE_TAG)]
     [AutoRegisterIn(typeof(ResourceDatabase))]
+    [SupportedFeature(typeof(ILimited))]
     public abstract class ResourceBase : UniqueDefinitionBase
     {
         public ResourceDatabase Database => ResourceDatabase.Instance;
