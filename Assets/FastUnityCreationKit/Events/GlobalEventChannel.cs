@@ -45,7 +45,7 @@ namespace FastUnityCreationKit.Events
     /// </summary>
     public abstract class GlobalEventChannel<TSelf, TChannelData> : EventChannel<TChannelData>, ISingleton<TSelf>
         where TSelf : GlobalEventChannel<TSelf, TChannelData>, new()
-        where TChannelData : IEventChannelData
+        where TChannelData : notnull
     {
         /// <summary>
         /// Instance of the event channel.

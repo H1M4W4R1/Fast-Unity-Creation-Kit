@@ -18,7 +18,7 @@ namespace FastUnityCreationKit.Events
     /// and thus will make the code more maintainable and easier to understand.
     /// </remarks>
     public abstract class EventChannel<TChannelData> : EventChannelBase<EventChannelCallbackAsync<TChannelData>> 
-        where TChannelData : IEventChannelData
+        where TChannelData : notnull
     {
         /// <summary>
         /// Trigger the event channel with the data.

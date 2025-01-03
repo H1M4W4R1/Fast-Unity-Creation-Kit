@@ -12,5 +12,6 @@ namespace FastUnityCreationKit.Events.Abstract
     /// Represents callback that is invoked when the event channel is triggered.
     /// Also contains the data that is sent through the event channel.
     /// </summary>
-    public delegate UniTask EventChannelCallbackAsync<in TEventData>([NotNull] TEventData data) where TEventData : IEventChannelData;
+    public delegate UniTask EventChannelCallbackAsync<in TEventData>([NotNull] TEventData data)
+        where TEventData : notnull;
 }
