@@ -20,12 +20,14 @@ namespace FastUnityCreationKit.Economy
     [SupportedFeature(typeof(ILimited))]
     public class ResourceReference
     {
+        protected const string GROUP_INFO = "Info";
+        
         /// <summary>
         /// Resource identifier.
         /// </summary>
         [OdinSerialize]
         [ShowInInspector]
-        [TabGroup("Debug")]
+        [TitleGroup(GROUP_INFO, order: int.MinValue)]
         [ReadOnly]
         public Snowflake128 Identifier { get; private set; }
 
@@ -35,7 +37,7 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         [OdinSerialize]
         [ShowInInspector]
-        [TabGroup("Debug")]
+        [TitleGroup(GROUP_INFO)]
         [ReadOnly]
         public long Amount { get; internal set; }
 

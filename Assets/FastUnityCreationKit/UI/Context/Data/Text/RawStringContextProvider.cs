@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Text
         /// <summary>
         /// Text that will be rendered.
         /// </summary>
-        [TabGroup("Configuration")]
+        [TitleGroup(PROVIDER_CONFIGURATION)]
         [ShowInInspector]
         [SerializeField]
         private string text;

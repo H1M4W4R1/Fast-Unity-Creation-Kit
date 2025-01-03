@@ -19,19 +19,19 @@ namespace FastUnityCreationKit.UI.Features.Snapping
         /// <summary>
         /// Object that is currently snapped to.
         /// </summary>
-        [CanBeNull] [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        [CanBeNull] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         private TSnapObject _currentlySnappedTo;
         
         /// <summary>
         /// Original position of the object.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         private Vector2 _originalPosition;
         
         /// <summary>
         /// If true next pointer up event will execute snap.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         private bool _searchForSnapActive;
 
         /// <summary>
@@ -39,10 +39,10 @@ namespace FastUnityCreationKit.UI.Features.Snapping
         /// of transform position. It is recommended to use mouse position for snapping
         /// for better performance and user experience.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
         protected virtual bool UseMousePosition => true;
         
-        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
         protected virtual bool StartSnapped => false;
 
         public override void Setup()

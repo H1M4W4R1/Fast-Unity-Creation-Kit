@@ -10,20 +10,20 @@ namespace FastUnityCreationKit.UI.Features
     /// </summary>
     public sealed class DragFeature : UIFeature, IBeginDragHandler, IEndDragHandler, IDragHandler
     {
-        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         private bool _isDragging = false;
 
         /// <summary>
         /// If snapping is supported this should be set to false.
-        /// Also should be false if object should stay in new position.
+        /// Also, should be false if object should stay in new position.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
         public bool ReturnToOldPosition { get; } = false;
         
         /// <summary>
         /// If true object will be snapped to mouse position while being dragged.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
         public bool SnapToMousePosition { get; } = true;
         
         public void OnBeginDrag(PointerEventData eventData)

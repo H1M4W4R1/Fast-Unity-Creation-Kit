@@ -11,7 +11,7 @@ namespace FastUnityCreationKit.Economy
     {
         public ResourceDatabase()
         {
-            addressableTags = new[] {LocalConstants.RESOURCE_ADDRESSABLE_TAG};
+            addressableTags.Add(LocalConstants.RESOURCE_ADDRESSABLE_TAG);
         }
 
         /// <summary>

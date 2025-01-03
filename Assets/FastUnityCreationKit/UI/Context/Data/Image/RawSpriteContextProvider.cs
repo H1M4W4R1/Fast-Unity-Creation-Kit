@@ -8,7 +8,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Image
     /// </summary>
     public sealed class RawSpriteContextProvider : SpriteContextBaseProvider
     {
-        [SerializeField] [TabGroup("Configuration")] [Required]
+        [SerializeField] [Required] [TitleGroup(PROVIDER_CONFIGURATION)]
         [Tooltip("Sprite that will be returned by this context.")]
         private Sprite sprite;
         

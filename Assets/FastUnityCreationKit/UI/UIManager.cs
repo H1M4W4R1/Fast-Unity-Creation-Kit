@@ -20,7 +20,7 @@ namespace FastUnityCreationKit.UI
     {
         [SerializeField]
         [Tooltip("Starting order for window canvas.")]
-        [TabGroup("Configuration")]
+        [TitleGroup(GROUP_CONFIGURATION)]
         public int startOrder = 1000;
 
         /// <summary>

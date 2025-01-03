@@ -232,14 +232,14 @@ namespace FastUnityCreationKit.Saving.Abstract
 
     public abstract class SaveBase
     {
+        protected const string GROUP_DEBUG = "Debug";
+        protected const string GROUP_CONFIGURATION = "Configuration";
+        
         /// <summary>
         /// Name of the save file, provided by user.
         /// </summary>
-        [OdinSerialize]
-        [ShowInInspector]
-        [ReadOnly]
-        [TabGroup("Debug")]
-        [Required]
+        [OdinSerialize] [ShowInInspector] [ReadOnly]
+        [Required] [TitleGroup(GROUP_CONFIGURATION)]
         public string SaveName { get; set; }
 
         /// <summary>
@@ -260,32 +260,23 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <see cref="Application.persistentDataPath"/> in this property.
         /// This is main directory saves are stored in, should not end with '/'.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TabGroup("Debug")]
-        [Required]
+        [ShowInInspector] [ReadOnly]
+        [Required] [TitleGroup(GROUP_CONFIGURATION)]
         public abstract string SaveDirectory { get; }
 
         /// <summary>
         /// Name of the header file.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TabGroup("Debug")]
-        [Required]
+        [ShowInInspector] [ReadOnly]
+        [Required] [TitleGroup(GROUP_CONFIGURATION)]
         public virtual string HeaderName => SaveAPI.DEFAULT_HEADER_NAME;
 
         // Automatically set to current DateTime
-        [OdinSerialize]
-        [ShowInInspector]
-        [ReadOnly]
-        [TabGroup("Debug")]
+        [OdinSerialize] [ShowInInspector]
+        [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         public DateTime CreationDate { get; internal set; } = DateTime.UtcNow;
 
-        [OdinSerialize]
-        [ShowInInspector]
-        [ReadOnly]
-        [TabGroup("Debug")]
+        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         public DateTime LastModified { get; internal set; } = DateTime.UtcNow;
 
         /// <summary>

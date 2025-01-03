@@ -3,6 +3,7 @@ using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 
 namespace FastUnityCreationKit.UI.Context.Providers.Base
@@ -13,6 +14,8 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
     public abstract class DataContextProviderBase<TContextType> : FastMonoBehaviour, IDataContextProvider<TContextType>,
         ICreateCallback, IDestroyCallback
     {
+        protected const string PROVIDER_CONFIGURATION = "Provider Configuration";
+        
         public delegate void OnContextChangedHandler(TContextType context);
 
         /// <summary>
@@ -23,6 +26,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         /// <summary>
         /// Represents the dirty state of the data context.
         /// </summary>
+        [ShowInInspector] [ReadOnly] [TitleGroup(PROVIDER_CONFIGURATION)]
         public virtual bool IsDirty { get; private set; }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Image
     /// </summary>
     public sealed class AddressableSpriteContextProvider : SpriteContextBaseProvider
     {
-        [SerializeField] [TabGroup("Configuration")] [Required]
+        [SerializeField] [Required] [TitleGroup(PROVIDER_CONFIGURATION)]
         [Tooltip("Reference to the sprite that will be returned by this context.")]
         private AssetReferenceSprite spriteReference;
 

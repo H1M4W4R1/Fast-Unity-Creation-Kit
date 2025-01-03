@@ -10,6 +10,7 @@ using FastUnityCreationKit.Unity.Interfaces.Interaction;
 using FastUnityCreationKit.Unity.Time.Enums;
 using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Utility.Objects;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Unity
@@ -29,30 +30,39 @@ namespace FastUnityCreationKit.Unity
     [SupportedFeature(typeof(IInitializable))]
     public abstract class FastMonoBehaviour : MonoBehaviour
     {
+        protected const string GROUP_STATE = "State";
+        protected const string GROUP_DEBUG = "Debug";
+        protected const string GROUP_CONFIGURATION = "Configuration";
+        
         /// <summary>
         /// State of the object. If true, the object is disabled.
         /// </summary>
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         public bool IsDisabled { get; private set; }
 
         /// <summary>
         /// State of the object. If true, the object is enabled.
         /// Directly opposite of <see cref="IsDisabled"/>.
         /// </summary>
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         public bool IsEnabled => !IsDisabled;
 
         /// <summary>
         /// State of the object. If true, the object is destroyed.
         /// </summary>
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         public bool IsDestroyed { get; private set; }
 
         /// <summary>
         /// If true, the object will be updated even when disabled.
         /// </summary>
+        [ShowInInspector] [TitleGroup(GROUP_CONFIGURATION)]
         public virtual UpdateMode UpdateMode => UpdateMode.MonoBehaviour;
 
         /// <summary>
         /// Mode of time used for updating the object.
         /// </summary>
+        [ShowInInspector] [TitleGroup(GROUP_CONFIGURATION)]
         public virtual UpdateTime UpdateTimeConfig => UpdateTime.DeltaTime;
 
         /// <summary>

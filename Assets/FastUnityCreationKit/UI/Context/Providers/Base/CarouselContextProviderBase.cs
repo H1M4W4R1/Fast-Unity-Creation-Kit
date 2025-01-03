@@ -11,8 +11,8 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
     /// <typeparam name="TContextType">Type of context.</typeparam>
     public abstract class CarouselContextProviderBase<TContextType> : ListContextProviderBase<TContextType>
     {
-        [Required] [SerializeField] [TabGroup("Configuration")] private CarouselButton previousButton;
-        [Required] [SerializeField] [TabGroup("Configuration")] private CarouselButton nextButton;
+        [Required] [SerializeField] [TitleGroup(GROUP_CONFIGURATION)] private CarouselButton previousButton;
+        [Required] [SerializeField] [TitleGroup(GROUP_CONFIGURATION)] private CarouselButton nextButton;
 
         protected int CurrentIndex { get; private set; } = 0;
         

@@ -10,7 +10,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         DataContextProviderBase<TContextBase>
     {
         [SerializeField]
-        [TabGroup("Configuration")]
+        [TitleGroup(PROVIDER_CONFIGURATION)]
         [Required]
         private DataContextProviderBase<TContextBase> providerReference;
 

@@ -19,7 +19,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Text
     {
         bool IInitializable.InternalInitializationStatusStorage { get; set; }
         
-        [SerializeField] [TabGroup("Configuration")] [Required]
+        [Required] [SerializeField] [TitleGroup(PROVIDER_CONFIGURATION)]
         private LocalizedString localizedString;
         
         /// <summary>

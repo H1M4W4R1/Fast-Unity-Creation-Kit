@@ -14,7 +14,7 @@ namespace FastUnityCreationKit.Status
     {
         public StatusDatabase()
         {
-            addressableTags = new[] {LocalConstants.STATUS_ADDRESSABLE_TAG};
+            addressableTags.Add(LocalConstants.STATUS_ADDRESSABLE_TAG);
         }
 
         /// <summary>

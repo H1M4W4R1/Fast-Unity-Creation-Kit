@@ -12,10 +12,10 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         /// List of all elements in the carousel.
         /// </summary>
         [ItemNotNull] [NotNull] 
-        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         private readonly List<TContextType> _elements = new List<TContextType>();
         
-        [ShowInInspector] [ReadOnly] [TabGroup("Debug")]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         public int Count => _elements.Count;
 
         protected override void Setup()

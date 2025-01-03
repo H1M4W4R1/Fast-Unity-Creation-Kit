@@ -15,13 +15,13 @@ namespace FastUnityCreationKit.UI.Features.Snapping
         /// <summary>
         /// If true, an object is snapped to this object.
         /// </summary>
-        [ShowInInspector] [TabGroup("Debug")] [ReadOnly]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         public bool HasSnappedObject { get; private set; }
         
         /// <summary>
         /// If true, multiple objects can be snapped to this object.
         /// </summary>
-        [ShowInInspector] [TabGroup("Debug")] [ReadOnly]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
         public virtual bool MultipleSnapsPossible { get; private set; }
         
         /// <summary>

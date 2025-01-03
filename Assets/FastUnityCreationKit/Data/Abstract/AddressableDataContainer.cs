@@ -22,21 +22,24 @@ namespace FastUnityCreationKit.Data.Abstract
         IDataContainer<AddressableReferenceEntry<TDataType>>, IIndexableBy<AssetReferenceT<TDataType>, string>
         where TDataType : Object
     {
-        [Header("Addressable Asset Group")]
+        protected const string GROUP_CONFIGURATION = "Configuration";
+        protected const string GROUP_DEBUG = "Debug";
+        protected const string GROUP_PREVIEW = "Preview";
+        
         [Required]
         [SerializeField]
-        [NotNull] [TabGroup("Configuration", Order = -1)]
+        [NotNull] [TitleGroup(GROUP_CONFIGURATION)]
         [ListDrawerSettings(ShowFoldout = false)]
         [ReadOnly] [Tooltip("Tags are defined by developer and are used to filter the addressable assets.")]
-        protected string[] addressableTags = Array.Empty<string>();
+        protected List<string> addressableTags = new List<string>();
         
         /// <summary>
         /// Internal data container.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [OdinSerialize] [TabGroup("Debug")] [NonSerialized]
+        [ShowInInspector] [ReadOnly] [OdinSerialize] [NonSerialized] [TitleGroup(GROUP_DEBUG, order: int.MaxValue)]
         protected readonly AddressableDataContainerStorageObject internalContainer = new();
       
-        [ShowInInspector] [ReadOnly] [TabGroup("Configuration")]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
         [Tooltip("This setting is configured by the developer and is used to determine how the data is merged.")]
         protected virtual Addressables.MergeMode MergeMode => Addressables.MergeMode.Union; 
 
