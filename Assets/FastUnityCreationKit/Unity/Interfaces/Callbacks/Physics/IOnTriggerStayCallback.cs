@@ -1,22 +1,37 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using FastUnityCreationKit.Utility.Extensions;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace FastUnityCreationKit.Unity.Interfaces.Callbacks.Physics
 {
-    public interface IOnTriggerStayCallback<in TComponentTypeOrInterface> : IOnTriggerStayCallback
+    [Preserve]
+    public interface IOnTriggerStayCallback<in TComponentTypeOrInterface> :
+        IOnTriggerStayCallback
     {
-        void OnTriggerStay([NotNull] Collider other, [NotNull] TComponentTypeOrInterface otherComponent);
+        void OnTriggerStayed([NotNull] Collider collider, [NotNull] TComponentTypeOrInterface other);
 
-        void IOnTriggerStayCallback._OnTriggerStay(Collider other)
+        [Preserve] [UsedImplicitly]
+        internal void ProcessTriggerStay(Collider collider)
         {
-            if(other.gameObject.TryGetComponent(out TComponentTypeOrInterface otherComponent))
-                OnTriggerStay(other, otherComponent);
+            if (collider.gameObject.TryGetComponent(out TComponentTypeOrInterface other))
+                OnTriggerStayed(collider, other);
         }
-        
     }
-    
+
     public interface IOnTriggerStayCallback
     {
-        internal void _OnTriggerStay([NotNull] Collider other);
+        internal void _OnTriggerStay([NotNull] Collider collider)
+        {
+            // Get the generic interface
+            Type genericInterface = typeof(IOnTriggerStayCallback<>);
+            this.CallGenericCascadeInterfaces(genericInterface, nameof(IMethodMarker.ProcessTriggerStay), collider);
+        }
+
+        public interface IMethodMarker
+        {
+            internal void ProcessTriggerStay(Collider collider);
+        }
     }
 }

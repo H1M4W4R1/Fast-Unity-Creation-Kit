@@ -1,22 +1,37 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using FastUnityCreationKit.Utility.Extensions;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace FastUnityCreationKit.Unity.Interfaces.Callbacks.Physics
 {
-    public interface IOnTriggerExitCallback<in TComponentTypeOrInterface> : IOnTriggerExitCallback
+    [Preserve]
+    public interface IOnTriggerExitCallback<in TComponentTypeOrInterface> :
+        IOnTriggerExitCallback
     {
-        void OnTriggerExit([NotNull] Collider other, [NotNull] TComponentTypeOrInterface otherComponent);
+        void OnTriggerExited([NotNull] Collider collider, [NotNull] TComponentTypeOrInterface other);
 
-        void IOnTriggerExitCallback._OnTriggerExit(Collider other)
+        [Preserve] [UsedImplicitly]
+        internal void ProcessTriggerExit(Collider collider)
         {
-            if(other.gameObject.TryGetComponent(out TComponentTypeOrInterface otherComponent))
-                OnTriggerExit(other, otherComponent);
+            if (collider.gameObject.TryGetComponent(out TComponentTypeOrInterface other))
+                OnTriggerExited(collider, other);
         }
-        
     }
-    
-    public interface IOnTriggerExitCallback 
+
+    public interface IOnTriggerExitCallback
     {
-        internal void _OnTriggerExit([NotNull] Collider other);
+        internal void _OnTriggerExit([NotNull] Collider collider)
+        {
+            // Get the generic interface
+            Type genericInterface = typeof(IOnTriggerExitCallback<>);
+            this.CallGenericCascadeInterfaces(genericInterface, nameof(IMethodMarker.ProcessTriggerExit), collider);
+        }
+
+        public interface IMethodMarker
+        {
+            internal void ProcessTriggerExit(Collider collider);
+        }
     }
 }

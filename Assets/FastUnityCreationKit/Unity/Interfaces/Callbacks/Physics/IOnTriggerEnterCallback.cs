@@ -1,22 +1,37 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using FastUnityCreationKit.Utility.Extensions;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace FastUnityCreationKit.Unity.Interfaces.Callbacks.Physics
 {
-    public interface IOnTriggerEnterCallback<in TComponentTypeOrInterface> : IOnTriggerEnterCallback
+    [Preserve]
+    public interface IOnTriggerEnterCallback<in TComponentTypeOrInterface> :
+        IOnTriggerEnterCallback
     {
-        void OnTriggerEnter([NotNull] Collider other, [NotNull] TComponentTypeOrInterface otherComponent);
+        void OnTriggerEntered([NotNull] Collider collider, [NotNull] TComponentTypeOrInterface other);
 
-        void IOnTriggerEnterCallback._OnTriggerEnter(Collider other)
+        [Preserve] [UsedImplicitly]
+        internal void ProcessTriggerEnter(Collider collider)
         {
-            if(other.gameObject.TryGetComponent(out TComponentTypeOrInterface otherComponent))
-                OnTriggerEnter(other, otherComponent);
+            if (collider.gameObject.TryGetComponent(out TComponentTypeOrInterface other))
+                OnTriggerEntered(collider, other);
         }
-        
     }
-    
+
     public interface IOnTriggerEnterCallback
     {
-        internal void _OnTriggerEnter([NotNull] Collider other);
+        internal void _OnTriggerEnter([NotNull] Collider collider)
+        {
+            // Get the generic interface
+            Type genericInterface = typeof(IOnTriggerEnterCallback<>);
+            this.CallGenericCascadeInterfaces(genericInterface, nameof(IMethodMarker.ProcessTriggerEnter), collider);
+        }
+
+        public interface IMethodMarker
+        {
+            internal void ProcessTriggerEnter(Collider collider);
+        }
     }
 }

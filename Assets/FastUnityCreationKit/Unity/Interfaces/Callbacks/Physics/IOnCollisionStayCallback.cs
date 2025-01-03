@@ -1,22 +1,37 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using FastUnityCreationKit.Utility.Extensions;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace FastUnityCreationKit.Unity.Interfaces.Callbacks.Physics
 {
-    public interface IOnCollisionStayCallback<in TComponentTypeOrInterface> : IOnCollisionStayCallback
+    [Preserve]
+    public interface IOnCollisionStayCallback<in TComponentTypeOrInterface> :
+        IOnCollisionStayCallback
     {
-        void OnCollisionStay([NotNull] Collision collision, [NotNull] TComponentTypeOrInterface other);
+        void OnCollisionStayed([NotNull] Collision collision, [NotNull] TComponentTypeOrInterface other);
 
-        void IOnCollisionStayCallback._OnCollisionStay(Collision collision)
+        [Preserve] [UsedImplicitly]
+        internal void ProcessCollisionStay(Collision collision)
         {
-            if(collision.gameObject.TryGetComponent(out TComponentTypeOrInterface other))
-                OnCollisionStay(collision, other);
+            if (collision.gameObject.TryGetComponent(out TComponentTypeOrInterface other))
+                OnCollisionStayed(collision, other);
         }
-        
     }
-    
+
     public interface IOnCollisionStayCallback
     {
-        internal void _OnCollisionStay([NotNull] Collision collision);
+        internal void _OnCollisionStay([NotNull] Collision collision)
+        {
+            // Get the generic interface
+            Type genericInterface = typeof(IOnCollisionStayCallback<>);
+            this.CallGenericCascadeInterfaces(genericInterface, nameof(IMethodMarker.ProcessCollisionStay), collision);
+        }
+
+        public interface IMethodMarker
+        {
+            internal void ProcessCollisionStay(Collision collision);
+        }
     }
 }
