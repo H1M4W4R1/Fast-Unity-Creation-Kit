@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
-using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Callbacks;
 using UnityEngine;
 

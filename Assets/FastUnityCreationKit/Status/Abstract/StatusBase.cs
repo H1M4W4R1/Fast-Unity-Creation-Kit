@@ -1,8 +1,10 @@
 ﻿using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Annotations.Data;
+using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Identification;
+using FastUnityCreationKit.Status.Interfaces;
 using FastUnityCreationKit.Status.References;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Limits;
@@ -11,7 +13,10 @@ using FastUnityCreationKit.Utility.Logging;
 namespace FastUnityCreationKit.Status.Abstract
 {
     /// <summary>
-    /// This class represents a core status that is used to store status data.
+    /// This class represents a core status that is used to store status data. <br/><br/>
+    /// It is strongly recommended to use <see cref="EntityStatusComponent"/> to store status data.
+    /// Otherwise, you will need to implement low-level features from <see cref="SupportedFeatureAttribute"/>
+    /// list manually.
     /// </summary> 
     /// <remarks>
     /// Supports int64 limits.
@@ -19,6 +24,9 @@ namespace FastUnityCreationKit.Status.Abstract
     [AutoCreatedObject(LocalConstants.STATUS_OBJECT_DIRECTORY)]
     [AddressableGroup(LocalConstants.STATUS_ADDRESSABLE_TAG)]
     [AutoRegisterIn(typeof(StatusDatabase))]
+    [SupportedFeature(typeof(IPercentageStatus))]
+    [SupportedFeature(typeof(ILimited))]
+    [SupportedFeature(typeof(ITemporaryStatus))]
     public abstract class StatusBase : UniqueDefinitionBase
     {
         /// <summary>

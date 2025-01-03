@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Saving.Interfaces;
+﻿using FastUnityCreationKit.Annotations.Info;
+using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.Unity.Callbacks;
@@ -14,34 +15,43 @@ namespace FastUnityCreationKit.Unity
     /// Base class for all MonoBehaviours compatible with the FastUnityCreationKit.
     /// Used to automatically handle interface processing.
     /// </summary>
+    [SupportedFeature(typeof(ICreateCallback))] [SupportedFeature(typeof(IDestroyCallback))]
+    [SupportedFeature(typeof(IEnabledCallback))] [SupportedFeature(typeof(IDisabledCallback))]
+    [SupportedFeature(typeof(IFixedUpdateCallback))] [SupportedFeature(typeof(IPreUpdateCallback))]
+    [SupportedFeature(typeof(IUpdateCallback))] [SupportedFeature(typeof(IPostUpdateCallback))]
+    [SupportedFeature(typeof(IQuitCallback))] [SupportedFeature(typeof(ISaveableObject))]
+    [SupportedFeature(typeof(ITemporaryObject))] [SupportedFeature(typeof(IPersistent))]
+    [SupportedFeature(typeof(IClickable))] [SupportedFeature(typeof(IHoverable))]
+    [SupportedFeature(typeof(IDoubleClickable))] [SupportedFeature(typeof(ISelectable))]
+    [SupportedFeature(typeof(IInitializable))]
     public abstract class FastMonoBehaviour : MonoBehaviour
     {
         /// <summary>
         /// State of the object. If true, the object is disabled.
         /// </summary>
         public bool IsDisabled { get; private set; }
-        
+
         /// <summary>
         /// State of the object. If true, the object is enabled.
         /// Directly opposite of <see cref="IsDisabled"/>.
         /// </summary>
         public bool IsEnabled => !IsDisabled;
-        
+
         /// <summary>
         /// State of the object. If true, the object is destroyed.
         /// </summary>
         public bool IsDestroyed { get; private set; }
-        
+
         /// <summary>
         /// If true, the object will be updated even when disabled.
         /// </summary>
         public virtual UpdateMode UpdateMode => UpdateMode.MonoBehaviour;
-        
+
         /// <summary>
         /// Mode of time used for updating the object.
         /// </summary>
         public virtual UpdateTime UpdateTimeConfig => UpdateTime.DeltaTime;
-        
+
         /// <summary>
         /// Avoid overriding the Awake method. Implement the <see cref="IInitializable"/> interface instead
         /// and use the <see cref="IInitializable.OnInitialize"/> method.
@@ -69,9 +79,9 @@ namespace FastUnityCreationKit.Unity
 
                 // Make the object persistent.
                 DontDestroyOnLoad(gameObject);
-                
+
                 // Check if is temporary object.
-                if(this is ITemporaryObject temporaryObject)
+                if (this is ITemporaryObject temporaryObject)
                 {
                     // Log error in console if object is both persistent and temporary.
                     Guard<ValidationLogConfig>.Warning(
@@ -82,9 +92,9 @@ namespace FastUnityCreationKit.Unity
             // Initialize the object if it implements the IInitializable interface.
             if (this is IInitializable initializable)
                 initializable.Initialize();
-            
+
             // Register the object to the save system if it implements the ISaveableObject interface.
-            if(this is ISaveableObject saveableObject)
+            if (this is ISaveableObject saveableObject)
                 SaveAPI.RegisterSavableObject(saveableObject);
 
             NotifyObjectWasCreated();
@@ -113,11 +123,11 @@ namespace FastUnityCreationKit.Unity
         {
             NotifyObjectWasDestroyed();
             IsDestroyed = true;
-            
+
             // Unregister the object from the save system if it implements the ISaveableObject interface.
-            if(this is ISaveableObject saveableObject)
+            if (this is ISaveableObject saveableObject)
                 SaveAPI.UnregisterSavableObject(saveableObject);
-  
+
             // Unregister this object from the object registry.
             FastMonoBehaviourManager.Instance.UnregisterFastMonoBehaviour(this);
         }
@@ -146,11 +156,11 @@ namespace FastUnityCreationKit.Unity
         {
             // Check if object is temporary, if not skip
             if (behaviour is not ITemporaryObject temporaryObject) return;
- 
+
             if (temporaryObject.ShouldBeDestroyed())
                 Destroy(behaviour.gameObject);
         }
-        
+
         protected virtual void NotifyObjectWasCreated()
         {
             if (this is ICreateCallback createCallback)
@@ -198,12 +208,11 @@ namespace FastUnityCreationKit.Unity
             if (this is IPostUpdateCallback postUpdateCallback)
                 postUpdateCallback.OnAfterObjectUpdated(deltaTime);
         }
-        
-  
+
 
         private void OnApplicationQuit()
         {
-            if(this is IQuitCallback quitCallback)
+            if (this is IQuitCallback quitCallback)
                 quitCallback.OnQuit();
         }
     }

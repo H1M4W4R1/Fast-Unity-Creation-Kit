@@ -1,7 +1,7 @@
-﻿using FastUnityCreationKit.UI.Context.Providers.Utility;
+﻿using FastUnityCreationKit.Annotations.Info;
+using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.UI.Utility;
-using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Callbacks;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
@@ -12,6 +12,7 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     /// The base class for all UI objects in Fast Unity Creation Kit.
     /// </summary>
+    [SupportedFeature(typeof(IRenderable))]
     public abstract class UIObjectBase : UIBehaviour, IUpdateCallback, ICreateCallback, IDestroyCallback
     {
         private RectTransform _rectTransform;
