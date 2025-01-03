@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FastUnityCreationKit.Unity.Time
+namespace FastUnityCreationKit.Unity.Time.Enums
 {
     /// <summary>
     /// Defines the update mode of the FastMonoBehaviour.
@@ -24,15 +24,5 @@ namespace FastUnityCreationKit.Unity.Time
         /// If this flag is set updates will not be called.
         /// </summary>
         Forbidden = 4
-    }
-
-    /// <summary>
-    /// Used to define the time used for updating the object.
-    /// </summary>
-    public enum UpdateTime
-    {
-        DeltaTime = 0,
-        UnscaledDeltaTime = 1,
-        RealtimeSinceStartup = 2
     }
 }

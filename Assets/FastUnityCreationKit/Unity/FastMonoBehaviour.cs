@@ -7,6 +7,7 @@ using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 using FastUnityCreationKit.Unity.Interfaces.Configuration;
 using FastUnityCreationKit.Unity.Interfaces.Interaction;
 using FastUnityCreationKit.Unity.Time;
+using FastUnityCreationKit.Unity.Time.Enums;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using FastUnityCreationKit.Utility.Objects;

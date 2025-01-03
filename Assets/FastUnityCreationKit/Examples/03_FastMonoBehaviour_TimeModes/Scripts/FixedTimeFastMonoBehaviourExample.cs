@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 using FastUnityCreationKit.Unity.Time;
+using FastUnityCreationKit.Unity.Time.Enums;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._03_FastMonoBehaviour_TimeModes.Scripts

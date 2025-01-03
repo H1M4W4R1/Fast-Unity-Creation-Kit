@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FastUnityCreationKit.Identification.Identifiers;
+using FastUnityCreationKit.Unity.Time.Enums;
 
 namespace FastUnityCreationKit.Unity.Time
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FastUnityCreationKit.Structure.Singleton;
 using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Time;
+using FastUnityCreationKit.Unity.Time.Enums;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Unity

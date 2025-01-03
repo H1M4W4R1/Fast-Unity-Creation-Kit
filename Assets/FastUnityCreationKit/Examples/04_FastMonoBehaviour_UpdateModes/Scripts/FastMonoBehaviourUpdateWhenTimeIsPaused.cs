@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Time;
+using FastUnityCreationKit.Unity.Time.Enums;
 
 namespace FastUnityCreationKit.Examples._04_FastMonoBehaviour_UpdateModes.Scripts
 {
