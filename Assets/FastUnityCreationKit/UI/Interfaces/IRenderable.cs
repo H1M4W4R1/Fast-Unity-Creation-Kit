@@ -20,33 +20,30 @@ namespace FastUnityCreationKit.UI.Interfaces
             get
             {
                 // Check if this object is UIObject, if so, get data context
-                if (this is UIObjectBase uiObject) return uiObject.GetDataContext<TDataContextSealed>();
+                if (this is UIObjectWithContextBase<TDataContextSealed> uiObject) 
+                    return uiObject.GetDataContext();
 
                 // Log error if this object is not UIObject
-                Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on {GetType().GetCompilableNiceFullName()}.");
+                Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on " +
+                                                    $"{GetType().GetCompilableNiceFullName()}.");
                 return default;
             }
         }
-
-        void IRenderable.TryRender(bool forceRender)
+        
+        void IRenderable.Render(bool forceRender)
         {
-            // Check if this object is UIObject
-            if (this is not UIObjectBase uiObject)
-            {
-                Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on {GetType().GetCompilableNiceFullName()}.");
-                return;
-            }
-
-            // Render this object
+            // Render this object if data context for this object is valid
             if (DataContext.IsValid)
             {
-                if (forceRender || DataContext.IsDirty)
-                {
-                    Render(DataContext.Context);
-                    DataContext.Consume();
+                // If data context is not dirty and rendering is not enforced, do not render
+                if (!forceRender && !DataContext.IsDirty) return;
+                
+                // Run internal rendering and consume data context
+                // marking it as not dirty
+                Render(DataContext.Context);
+                DataContext.Consume();
                     
-                    Guard<UserInterfaceLogConfig>.Verbose($"Rendered {GetType().GetCompilableNiceFullName()} [was enforced: {forceRender}].");
-                }
+                Guard<UserInterfaceLogConfig>.Verbose($"Rendered {GetType().GetCompilableNiceFullName()} [was enforced: {forceRender}].");
             }
             else
             {
@@ -66,6 +63,10 @@ namespace FastUnityCreationKit.UI.Interfaces
     /// </summary>
     public interface IRenderable
     {
-        internal void TryRender(bool forceRender = false);
+        /// <summary>
+        /// This method can be used to render the object. It checks
+        /// if context has changed. If it did not, it will not render.
+        /// </summary>
+        internal void Render(bool forceRender = false);
     }
 }

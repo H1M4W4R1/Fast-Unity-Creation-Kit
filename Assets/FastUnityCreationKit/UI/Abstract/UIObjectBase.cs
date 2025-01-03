@@ -1,11 +1,8 @@
 ﻿using FastUnityCreationKit.Annotations.Info;
-using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 using FastUnityCreationKit.Utility.Logging;
-using JetBrains.Annotations;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Abstract
@@ -13,23 +10,17 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     /// The base class for all UI objects in Fast Unity Creation Kit.
     /// </summary>
-    [SupportedFeature(typeof(IRenderable))]
-    public abstract class UIObjectBase : UIBehaviour, IUpdateCallback, ICreateCallback, IDestroyCallback
+    public abstract class UIObjectBase : UIBehaviour, ICreateCallback, IDestroyCallback
     {
-        private RectTransform _rectTransform;
-        public RectTransform RectTransform => _rectTransform;
-        
-        public void OnObjectUpdated(float deltaTime)
-        {
-            // Check if this object is IRenderable, if so, try to render
-            if (this is IRenderable renderable)
-                renderable.TryRender();
-        }
+        /// <summary>
+        /// Rect transform of this object.
+        /// </summary>
+        public RectTransform RectTransform { get; private set; }
 
-        public void OnObjectCreated()
+        public virtual void OnObjectCreated()
         {
             // Get rect transform
-            _rectTransform = GetComponent<RectTransform>();
+            RectTransform = GetComponent<RectTransform>();
          
             // Register this object
             UIManager.Instance.RegisterUserInterfaceObject(this);
@@ -41,7 +32,7 @@ namespace FastUnityCreationKit.UI.Abstract
             // Check if this object is IRenderable, if so, try to render
             if (this is IRenderable renderable)
             {
-                renderable.TryRender(true);
+                renderable.Render(true);
                 Guard<UserInterfaceLogConfig>.Verbose($"UI object {name} has been rendered correctly for the first time.");
             }
 
@@ -61,57 +52,8 @@ namespace FastUnityCreationKit.UI.Abstract
         {
         }
 
-        /// <summary>
-        /// Gets the data context provider of the specified type.
-        /// </summary>
-        /// <typeparam name="TProviderType">The type of the data context provider.</typeparam>
-        /// <returns>The data context provider of the specified type or null if not found.</returns>
-        /// <remarks>
-        /// It was found out that GetComponent is faster than Dictionary lookup, so it will remain
-        /// as is for now. The only faster way would be to cache the provider, but that would be
-        /// pretty hard to implement and maintain in a reliable way.
-        /// </remarks>
-        public TProviderType GetProviderByType<TProviderType>() 
-            where TProviderType : IDataContextProvider
-        {
-            // Try to get provider on this object or cascade to parents until root
-            // Also handle inactive objects to guarantee that provided will be found
-            // if it exists in the hierarchy
-            TProviderType provider = GetComponentInParent<TProviderType>(true);
-            
-            // Check if provider is not null
-            if (provider != null) return provider;
-            
-            // if not found, log error
-            Guard<UserInterfaceLogConfig>.Error($"Data context provider of type {typeof(TProviderType).GetCompilableNiceFullName()} not found on {name} or its parent.");
-            return default;
-        }
-        
-        /// <summary>
-        /// Attempts to get the data context provider of the specified type.
-        /// This method exists to access provider without the need to actually provide the data context.
-        /// </summary>
-        /// <typeparam name="TDataContext">The type of the data context.</typeparam>
-        /// <returns>The data context provider of the specified type or null if not found.</returns>
-        [CanBeNull] public IDataContextProvider<TDataContext> GetProviderFor<TDataContext>()
-            => GetProviderByType<IDataContextProvider<TDataContext>>();
-        
-        /// <summary>
-        /// Gets the data context of the specified type.
-        /// This method can be overriden for very stupid use cases that may not require
-        /// provider to be used.
-        /// </summary>
-        /// <typeparam name="TDataContext">The type of the data context.</typeparam>
-        /// <returns>The data context of the specified type.</returns>
-        public virtual DataContextInfo<TDataContext> GetDataContext<TDataContext>()
-        {
-            IDataContextProvider<TDataContext> provider = GetProviderFor<TDataContext>();
 
-            // Check if provider is not null
-            return provider != null ? new DataContextInfo<TDataContext>(provider, provider.Provide()) : default;
-        }
-
-        public void OnObjectDestroyed()
+        public virtual void OnObjectDestroyed()
         {
             // Teardown object
             Teardown();

@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.UI.Elements.Base
     /// Represents generic sprite renderer. Can be for example your icon or image.
     /// </summary>
     [RequireComponent(typeof(Image))]
-    public abstract class UISpriteBase : UIObjectBase, IRenderable<Sprite> 
+    public abstract class UISpriteBase : UIObjectWithContextBase<Sprite>, IRenderable<Sprite> 
     {
         /// <summary>
         /// Cached reference to Unity's Image component.

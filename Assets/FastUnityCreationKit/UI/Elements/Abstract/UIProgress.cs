@@ -6,7 +6,7 @@ namespace FastUnityCreationKit.UI.Elements.Abstract
     /// <summary>
     /// Represents a progress element (usually a progress bar)
     /// </summary>
-    public abstract class UIProgress : UIObjectBase, IRenderable<float>
+    public abstract class UIProgress : UIObjectWithContextBase<float>, IRenderable<float>
     {
         protected const float PROGRESS_MULTIPLIER = 100f;
         

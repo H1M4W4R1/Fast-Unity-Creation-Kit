@@ -17,11 +17,17 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         protected const string PROVIDER_CONFIGURATION = "Provider Configuration";
         
         public delegate void OnContextChangedHandler(TContextType context);
+        public delegate void OnProviderDestroyedHandler();
 
         /// <summary>
         /// Notified when the context has changed.
         /// </summary>
         public event OnContextChangedHandler OnContextChanged;
+        
+        /// <summary>
+        /// Notified when the provider has been destroyed.
+        /// </summary>
+        public event OnProviderDestroyedHandler OnProviderDestroyed;
 
         /// <summary>
         /// Represents the dirty state of the data context.
@@ -53,6 +59,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
 
         /// <summary>
         /// Resets the dirty state of the data context.
+        /// Can be overriden to provide custom logic for consuming the data context.
         /// </summary>
         public virtual void Consume() => IsDirty = false;
 
@@ -63,7 +70,12 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         }
 
         public void OnObjectCreated() => Setup();
-        public void OnObjectDestroyed() => TearDown();
+
+        public void OnObjectDestroyed()
+        {
+            TearDown();
+            OnProviderDestroyed?.Invoke();
+        }
         
     }
 }

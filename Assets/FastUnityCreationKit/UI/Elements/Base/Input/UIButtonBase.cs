@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
-using FastUnityCreationKit.UI.Elements.Callbacks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,10 +25,6 @@ namespace FastUnityCreationKit.UI.Elements.Base.Input
 
         internal void _OnClick()
         {
-            // Perform callback to the provider if it exists
-            IButtonClickedProviderCallback provider = GetProviderByType<IButtonClickedProviderCallback>();
-            provider?.OnButtonClicked(this);
-            
             OnClick();
         }
         

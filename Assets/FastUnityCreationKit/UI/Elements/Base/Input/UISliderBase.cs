@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
-using FastUnityCreationKit.UI.Elements.Callbacks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,10 +25,6 @@ namespace FastUnityCreationKit.UI.Elements.Base.Input
         
         internal void _OnValueChanged(float value)
         {
-            // Perform callback to the provider if it exists
-            ISliderValueChangedProviderCallback provider = GetProviderByType<ISliderValueChangedProviderCallback>();
-            provider?.OnSliderValueChanged(this, value);
-            
             OnValueChanged(value);
         }
         
