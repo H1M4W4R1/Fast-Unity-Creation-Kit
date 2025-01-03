@@ -1,7 +1,6 @@
-﻿using FastUnityCreationKit.Utility.Logging;
-using Unity.Logging;
+﻿using Unity.Logging;
 
-namespace FastUnityCreationKit.Utility
+namespace FastUnityCreationKit.Utility.Logging
 {
     /// <summary>
     /// Represents the log configuration for any entity-related logs.

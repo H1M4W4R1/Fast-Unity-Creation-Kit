@@ -1,7 +1,6 @@
-﻿using FastUnityCreationKit.Utility.Logging;
-using Unity.Logging;
+﻿using Unity.Logging;
 
-namespace FastUnityCreationKit.Utility
+namespace FastUnityCreationKit.Utility.Logging
 {
     public sealed class ValidationLogConfig : LogConfigBase
     {
