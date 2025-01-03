@@ -3,7 +3,9 @@ using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Time.Enums;
 using FastUnityCreationKit.Utility.Logging;
+using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Unity.Time.Timers
 {
@@ -12,28 +14,50 @@ namespace FastUnityCreationKit.Unity.Time.Timers
     /// </summary>
     public abstract class TimerBase : IDisposable
     {
-        /// <summary>
-        /// Span format options for the timer.
-        /// </summary>
-        public virtual string TimeFormat => @"{0:hh\:mm\:ss}";
-
-        /// <summary>
-        /// Remaining time of the timer.
-        /// </summary>
-        [OdinSerialize]
-        private TimeSpan _remainingTime;
+        protected const string GROUP_CONFIGURATION = "Configuration";
+        protected const string GROUP_STATE = "State";
 
         /// <summary>
         /// Enable or disable the timer.
         /// </summary>
         [OdinSerialize]
-        public bool Enabled { get; set; } = true;
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_STATE)]
+        public bool Enabled { get; private set; }
 
         /// <summary>
         /// The time the timer is used to count down.
         /// </summary>
         [OdinSerialize]
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_CONFIGURATION)]
         public TimeSpan TotalTime { get; protected set; }
+
+        /// <summary>
+        /// Defines if time should be reset to full or to zero during reset.
+        /// </summary>
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_CONFIGURATION)]
+        protected virtual bool ResetTimeToFull => true;
+
+        /// <summary>
+        /// Remaining time of the timer.
+        /// </summary>
+        // ReSharper disable once Unity.RedundantHideInInspectorAttribute, required for Odin
+        [OdinSerialize]
+        [HideInInspector]
+        private TimeSpan _remainingTime;
+
+        /// <summary>
+        /// Span format options for the timer.
+        /// </summary>
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_CONFIGURATION)]
+        public virtual string TimeFormat => @"hh\:mm\:ss";
 
         /// <summary>
         /// Time scale of the timer, also takes into account the global time scale
@@ -41,37 +65,58 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// is 0.5f the timer will be updated at 0.25f (if it takes global time scale into account).
         /// </summary>
         [OdinSerialize]
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_CONFIGURATION)]
         public float TimeScale { get; set; } = 1f;
 
         /// <summary>
         /// By default, the timer won't update when time is paused.
         /// And update same as MonoBehaviour.
         /// </summary>
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_CONFIGURATION)]
         public virtual UpdateMode UpdateMode => UpdateMode.MonoBehaviour;
 
         /// <summary>
         /// By default, timer will use delta time.
         /// </summary>
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_CONFIGURATION)]
         public virtual UpdateTime UpdateTime => UpdateTime.DeltaTime;
 
         /// <summary>
         /// If timer is temporary, it will be destroyed when it finishes.
         /// </summary>
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_CONFIGURATION)]
         public abstract bool RestartOnElapsed { get; }
 
         /// <summary>
         /// Check if the timer should be disposed when it finishes.
         /// </summary>
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_CONFIGURATION)]
         public abstract bool DisposeOnElapsed { get; }
 
         /// <summary>
         /// The time remaining until the timer finishes.
         /// </summary>
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_STATE)]
         public TimeSpan RemainingTime => _remainingTime;
 
         /// <summary>
         /// True if the timer has finished.
         /// </summary>
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_STATE)]
         public bool HasFinished => _remainingTime.Ticks <= 0;
 
         /// <summary>
@@ -107,7 +152,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// to work when disabled or disposed).
         /// </remarks>
         public async UniTask Finish() => await SetRemainingTime(TimeSpan.Zero);
-        
+
         /// <summary>
         /// Set the remaining time of the timer.
         /// </summary>
@@ -119,10 +164,10 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             // When time is larger than the remaining time, the difference will be negative.
             // So the time passed will be negative, which is correct.
             TimeSpan difference = _remainingTime - time;
-            
+
             // Set the new time.
             _remainingTime = time;
-            
+
             // Trigger events for the difference.
             await OnTimePassed((float) difference.TotalSeconds);
         }
@@ -136,37 +181,43 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         /// Reset the timer to its initial state.
         /// </summary>
-        public void Reset()
+        public void Reset(bool toFullTime = false, bool withEvents = true)
         {
-            _remainingTime = TotalTime;
-            OnReset();
+            // Stop the timer if it's enabled.
+            if (Enabled) Stop(withEvents);
+            
+            // Reset the timer to full time or to zero. and trigger events.
+            _remainingTime = ResetTimeToFull || toFullTime ? TotalTime : TimeSpan.Zero;
+            if (withEvents) OnReset();
         }
 
         /// <summary>
         /// Start the timer.
         /// </summary>
-        public void Start()
+        public void Start(bool withEvents = true)
         {
             Enabled = true;
-            OnStarted();
+            OnFrameRenderedEvent.RegisterEventListener(OnFrameRenderedHandler);
+            if (withEvents) OnStarted();
         }
 
         /// <summary>
         /// Stop the timer.
         /// </summary>
-        public void Stop()
+        public void Stop(bool withEvents = true)
         {
             Enabled = false;
-            OnStopped();
+            OnFrameRenderedEvent.UnregisterEventListener(OnFrameRenderedHandler);
+            if (withEvents) OnStopped();
         }
 
         /// <summary>
         /// Restart the timer.
         /// </summary>
-        public void Restart()
+        public void Restart(bool withEvents = true)
         {
-            Reset();
-            Start();
+            Reset(false, withEvents);
+            Start(withEvents);
         }
 
         /// <summary>
@@ -183,8 +234,6 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         {
             TotalTime = totalTime;
             _remainingTime = totalTime;
-
-            OnFrameRenderedEvent.RegisterEventListener(OnFrameRenderedHandler);
             CheckConfiguration();
         }
 

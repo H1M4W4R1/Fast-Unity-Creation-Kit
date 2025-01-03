@@ -11,9 +11,9 @@ namespace FastUnityCreationKit.Unity.Time.Timers
     public abstract class OneShotTimerBase : TimerBase
     {
         // OneShotTimer can only be skipped by Advance method.
-        private new void Start() => base.Start();
-        private new void Reset() => base.Reset();
-        private new void Stop() => base.Stop();
+        private new void Start(bool withEvents) => base.Start(withEvents);
+        private new void Reset(bool toFull, bool withEvents) => base.Reset(toFull, withEvents);
+        private new void Stop(bool withEvents) => base.Stop(withEvents);
 
         /// <summary>
         /// Run timer once (if not already running).
@@ -24,7 +24,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             if (Enabled) return;
             
             // Reset the timer to default time value.
-            Reset();
+            Reset(true);
             
             // Start the timer.
             Start();
@@ -33,20 +33,14 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         /// If timer was completed stop it.
         /// </summary>
-        protected override UniTask OnCompleted()
-        {
-            Enabled = false;
-            return UniTask.CompletedTask;
-        }
+        protected override UniTask OnCompleted() => UniTask.CompletedTask;
 
         protected OneShotTimerBase(float totalTimeSeconds) : base(totalTimeSeconds)
         {
-            Enabled = false;
         }
-        
+
         protected OneShotTimerBase(TimeSpan totalTime) : base(totalTime)
         {
-            Enabled = false;
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿using FastUnityCreationKit.Annotations.Info;
+﻿using System;
+using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Physics;
 using FastUnityCreationKit.Unity.Interfaces.Configuration;
 using FastUnityCreationKit.Unity.Interfaces.Interaction;
 using FastUnityCreationKit.Unity.Time.Enums;
@@ -82,7 +84,7 @@ namespace FastUnityCreationKit.Unity
                 DontDestroyOnLoad(gameObject);
 
                 // Check if is temporary object.
-                if (this is ITemporaryObject temporaryObject)
+                if (this is ITemporaryObject)
                 {
                     // Log error in console if object is both persistent and temporary.
                     Guard<ValidationLogConfig>.Warning(
@@ -210,6 +212,41 @@ namespace FastUnityCreationKit.Unity
                 postUpdateCallback.OnAfterObjectUpdated(deltaTime);
         }
 
+        protected void OnTriggerEnter(Collider other)
+        {
+            if (this is IOnTriggerEnterCallback triggerEnterCallback)
+                triggerEnterCallback._OnTriggerEnter(other);
+        }
+        
+        protected void OnTriggerExit(Collider other)
+        {
+            if (this is IOnTriggerExitCallback triggerExitCallback)
+                triggerExitCallback._OnTriggerExit(other);
+        }
+        
+        protected void OnTriggerStay(Collider other)
+        {
+            if (this is IOnTriggerStayCallback triggerStayCallback)
+                triggerStayCallback._OnTriggerStay(other);
+        }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (this is IOnCollisionEnterCallback collisionEnterCallback)
+                collisionEnterCallback._OnCollisionEnter(other);
+        }
+        
+        private void OnCollisionExit(Collision other)
+        {
+            if (this is IOnCollisionExitCallback collisionExitCallback)
+                collisionExitCallback._OnCollisionExit(other);
+        }
+        
+        private void OnCollisionStay(Collision other)
+        {
+            if (this is IOnCollisionStayCallback collisionStayCallback)
+                collisionStayCallback._OnCollisionStay(other);
+        }
 
         private void OnApplicationQuit()
         {
