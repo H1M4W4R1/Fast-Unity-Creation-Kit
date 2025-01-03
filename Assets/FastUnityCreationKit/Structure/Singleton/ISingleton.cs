@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.Utility;
-using FastUnityCreationKit.Utility.Logging;
+﻿using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using Sirenix.Utilities;
 using Object = UnityEngine.Object;
@@ -37,7 +36,7 @@ namespace FastUnityCreationKit.Structure.Singleton
             if (typeof(TSelf).ImplementsOrInherits(typeof(Object)))
             {
                 Guard<ValidationLogConfig>.Error(
-                    $"Type {typeof(TSelf).Name} is a UnityEngine.Object. Unity.Object cannot be used as a singleton." +
+                    $"Type {typeof(TSelf).GetCompilableNiceFullName()} is a UnityEngine.Object. Unity.Object cannot be used as a singleton." +
                     $"For MonoBehaviour singletons use IMonoBehaviourSingleton<TSelf>.");
                 return default!;
             }

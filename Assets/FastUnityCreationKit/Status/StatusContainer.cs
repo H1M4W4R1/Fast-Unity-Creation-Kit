@@ -3,7 +3,6 @@ using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Status.Abstract;
 using FastUnityCreationKit.Status.Interfaces;
 using FastUnityCreationKit.Unity.Events;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 
 namespace FastUnityCreationKit.Status
@@ -35,7 +34,7 @@ namespace FastUnityCreationKit.Status
             // If status does not exist, return false
             if (ReferenceEquals(status, null))
             {
-                Guard<ValidationLogConfig>.Error($"Status {typeof(TStatusType).Name} not found in the database.");
+                Guard<ValidationLogConfig>.Error($"Status {typeof(TStatusType).FullName} not found in the database.");
                 return false;
             }
 
@@ -51,7 +50,7 @@ namespace FastUnityCreationKit.Status
             reference = new AppliedStatusReference(this, status, nLevels);
             data.Add(reference);
             Guard<EntityLogConfig>.Info(
-                $"Status {typeof(TStatusType).Name} added  with level {nLevels}.");
+                $"Status {typeof(TStatusType).FullName} added  with level {nLevels}.");
             return true;
         }
 
@@ -78,7 +77,7 @@ namespace FastUnityCreationKit.Status
 
             // Otherwise, remove status and return true
             await DecreaseLevel<TStatusType>(nLevels);
-            Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} removed from container.");
+            Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).FullName} removed from container.");
             return true;
         }
 
@@ -96,7 +95,7 @@ namespace FastUnityCreationKit.Status
 
             // Otherwise, remove status
             await DecreaseLevel<TStatusType>(reference.statusLevel);
-            Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} cleared.");
+            Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).FullName} cleared.");
         }
 
         /// <summary>
@@ -141,12 +140,12 @@ namespace FastUnityCreationKit.Status
             {
                 await reference.AddLevel(this, nLevels * IPercentageStatus.PERCENTAGE_SCALE);
                 Guard<EntityLogConfig>.Info(
-                    $"Status {typeof(TStatusType).Name} increased by {(nLevels * IPercentageStatus.PERCENTAGE_SCALE):P} [{nLevels} levels].");
+                    $"Status {typeof(TStatusType).FullName} increased by {(nLevels * IPercentageStatus.PERCENTAGE_SCALE):P} [{nLevels} levels].");
             }
             else
             {
                 await reference.AddLevel(this, nLevels);
-                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} increased by {nLevels} levels.");
+                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).FullName} increased by {nLevels} levels.");
             }
 
 
@@ -173,12 +172,12 @@ namespace FastUnityCreationKit.Status
             {
                 await reference.TakeLevel(this, nLevels * IPercentageStatus.PERCENTAGE_SCALE);
                 Guard<EntityLogConfig>.Info(
-                    $"Status {typeof(TStatusType).Name} decreased by {(nLevels * IPercentageStatus.PERCENTAGE_SCALE):P}");
+                    $"Status {typeof(TStatusType).FullName} decreased by {(nLevels * IPercentageStatus.PERCENTAGE_SCALE):P}");
             }
             else
             {
                 await reference.TakeLevel(this, nLevels);
-                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} decreased by {nLevels} [{nLevels} levels].");
+                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).FullName} decreased by {nLevels} [{nLevels} levels].");
             }
 
 
@@ -218,7 +217,7 @@ namespace FastUnityCreationKit.Status
                 return percentageRemnant / (float) IPercentageStatus.PERCENTAGE_SCALE;
             }
 
-            Guard<ValidationLogConfig>.Error($"Status {typeof(TStatusType).Name} is not a percentage status.");
+            Guard<ValidationLogConfig>.Error($"Status {typeof(TStatusType).FullName} is not a percentage status.");
             return 0;
         }
 
@@ -232,11 +231,11 @@ namespace FastUnityCreationKit.Status
             if (reference?.Status is IPercentageStatus)
             {
                 await reference.AddLevel(this, (long) (percentage * IPercentageStatus.PERCENTAGE_SCALE));
-                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} increased by {percentage:P}.");
+                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).FullName} increased by {percentage:P}.");
             }
             else
                 Guard<ValidationLogConfig>.Error(
-                    $"Status {typeof(TStatusType).Name} is not a percentage status.");
+                    $"Status {typeof(TStatusType).FullName} is not a percentage status.");
 
             return false;
         }
@@ -251,11 +250,11 @@ namespace FastUnityCreationKit.Status
             if (reference?.Status is IPercentageStatus)
             {
                 await reference.TakeLevel(this, (long) (percentage * IPercentageStatus.PERCENTAGE_SCALE));
-                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} decreased by {percentage:P}.");
+                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).FullName} decreased by {percentage:P}.");
             }
             else
                 Guard<ValidationLogConfig>.Error(
-                    $"Status {typeof(TStatusType).Name} is not a percentage status.");
+                    $"Status {typeof(TStatusType).FullName} is not a percentage status.");
 
             return false;
         }
@@ -273,7 +272,7 @@ namespace FastUnityCreationKit.Status
                     return data[i];
             }
 
-            Guard<EntityLogConfig>.Warning($"Status {typeof(TStatusType).Name} not found .");
+            Guard<EntityLogConfig>.Warning($"Status {typeof(TStatusType).FullName} not found .");
             return null;
         }
 

@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.Utility;
-using FastUnityCreationKit.Utility.Logging;
+﻿using FastUnityCreationKit.Utility.Logging;
 
 namespace FastUnityCreationKit.UI.Context.Providers.Base
 {

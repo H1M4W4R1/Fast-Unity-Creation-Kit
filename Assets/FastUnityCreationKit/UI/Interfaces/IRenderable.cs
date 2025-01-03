@@ -2,6 +2,7 @@
 using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Utility.Logging;
+using Sirenix.Utilities;
 
 namespace FastUnityCreationKit.UI.Interfaces
 {
@@ -23,7 +24,7 @@ namespace FastUnityCreationKit.UI.Interfaces
                 if (this is UIObjectBase uiObject) return uiObject.GetDataContext<TDataContextSealed>();
 
                 // Log error if this object is not UIObject
-                Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on {GetType().Name}.");
+                Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on {GetType().GetCompilableNiceFullName()}.");
                 return default;
             }
         }
@@ -33,7 +34,7 @@ namespace FastUnityCreationKit.UI.Interfaces
             // Check if this object is UIObject
             if (this is not UIObjectBase uiObject)
             {
-                Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on {GetType().Name}.");
+                Guard<UserInterfaceLogConfig>.Error($"IRenderable is not supported on {GetType().GetCompilableNiceFullName()}.");
                 return;
             }
 
@@ -45,12 +46,12 @@ namespace FastUnityCreationKit.UI.Interfaces
                     Render(DataContext.Context);
                     DataContext.Consume();
                     
-                    Guard<UserInterfaceLogConfig>.Verbose($"Rendered {GetType().Name} [was enforced: {forceRender}].");
+                    Guard<UserInterfaceLogConfig>.Verbose($"Rendered {GetType().GetCompilableNiceFullName()} [was enforced: {forceRender}].");
                 }
             }
             else
             {
-                Guard<UserInterfaceLogConfig>.Error($"Data context is not valid for {GetType().Name}.");
+                Guard<UserInterfaceLogConfig>.Error($"Data context is not valid for {GetType().GetCompilableNiceFullName()}.");
             }
         }
         

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;

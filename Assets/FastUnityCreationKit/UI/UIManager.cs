@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Elements.Core;
 using FastUnityCreationKit.UI.Utility;
-using FastUnityCreationKit.Unity.Interfaces;
 using FastUnityCreationKit.Unity.Interfaces.Configuration;
 using FastUnityCreationKit.Unity.Structure.Managers;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI
@@ -60,7 +60,7 @@ namespace FastUnityCreationKit.UI
         /// <param name="inStack">Window stack to open window in.</param>
         /// <param name="autoTransferToTop">Should the stack be transferred to top.</param>
         /// <typeparam name="TWindowType">Type of window to open.</typeparam>
-        /// <returns>Opened window or null if not found.</returns>
+        /// <returns>Opened window or null if not found.</returns> 
         [CanBeNull] public TWindowType OpenWindow<TWindowType>(WindowStack inStack = null, bool autoTransferToTop = true)
             where TWindowType : UIWindow
         {
@@ -68,7 +68,7 @@ namespace FastUnityCreationKit.UI
             if (window == null)
             {
                 Guard<UserInterfaceLogConfig>.Fatal(
-                    $"Window of type {typeof(TWindowType).Name} not found in database.");
+                    $"Window of type {typeof(TWindowType).GetCompilableNiceFullName()} not found in database.");
                 return null;
             }
 
@@ -93,7 +93,7 @@ namespace FastUnityCreationKit.UI
                 Guard<UserInterfaceLogConfig>.Info($"Moved window {instance.name} and it's stack to top.");
             }
 
-            Guard<UserInterfaceLogConfig>.Info($"Opened window of type {typeof(TWindowType).Name}.");
+            Guard<UserInterfaceLogConfig>.Info($"Opened window of type {typeof(TWindowType).GetCompilableNiceFullName()}.");
 
             // Set order of windows to be nicely displayed
             SortWindows();
@@ -172,7 +172,7 @@ namespace FastUnityCreationKit.UI
                 }
             }
 
-            Guard<UserInterfaceLogConfig>.Info($"Closed all windows of type {typeof(TWindowType).Name}.");
+            Guard<UserInterfaceLogConfig>.Info($"Closed all windows of type {typeof(TWindowType).GetCompilableNiceFullName()}.");
 
             // Sort windows after closing
             SortWindows();

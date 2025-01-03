@@ -1,9 +1,9 @@
 ﻿using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 
 namespace FastUnityCreationKit.UI.Context.Providers.Base
 {
@@ -38,7 +38,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         [CanBeNull] public virtual TContextType ProvideAt(int index)
         {
             Guard<ValidationLogConfig>.Warning(
-                $"ProvideAt method on {GetType().Name} is not overridden. Are you accessing wrong provider? " +
+                $"ProvideAt method on {GetType().GetCompilableNiceFullName()} is not overridden. Are you accessing wrong provider? " +
                 "Executing fallback to default Provide method.");
             Provide();
             return default;

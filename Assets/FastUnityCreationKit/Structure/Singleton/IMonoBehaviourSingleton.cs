@@ -1,6 +1,6 @@
-﻿using FastUnityCreationKit.Utility;
-using FastUnityCreationKit.Utility.Logging;
+﻿using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -24,7 +24,7 @@ namespace FastUnityCreationKit.Structure.Singleton
 #if UNITY_EDITOR
             if (!typeof(TSelf).IsSubclassOf(typeof(MonoBehaviour)))
             {
-                Guard<ValidationLogConfig>.Error($"Type {typeof(TSelf).Name} is not a MonoBehaviour. " +
+                Guard<ValidationLogConfig>.Error($"Type {typeof(TSelf).GetCompilableNiceFullName()} is not a MonoBehaviour. " +
                                                        $"For regular C# classes use ISingleton<TSelf>.");
                 return default!;
             }
@@ -40,7 +40,7 @@ namespace FastUnityCreationKit.Structure.Singleton
             if (Instance) return Instance;
 
             // Create a new instance
-            Instance = new GameObject(typeof(TSelf).Name).AddComponent<TSelf>();
+            Instance = new GameObject(typeof(TSelf).GetCompilableNiceFullName()).AddComponent<TSelf>();
 
             // Return the instance, most likely won't be null as long as TSelf is a MonoBehaviour
             return Instance!;

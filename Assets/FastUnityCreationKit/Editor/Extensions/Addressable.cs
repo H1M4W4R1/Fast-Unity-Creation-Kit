@@ -1,9 +1,9 @@
 ﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
@@ -56,7 +56,7 @@ namespace FastUnityCreationKit.Editor.Extensions
                 if (e == null)
                 {
                     Guard<ValidationLogConfig>.Warning(
-                        $"Cannot get asset reference for {objType.Name} object. Entry is not found.");
+                        $"Cannot get asset reference for {objType.GetCompilableNiceFullName()} object. Entry is not found.");
                     return (null, null);
                 }
 
@@ -71,7 +71,7 @@ namespace FastUnityCreationKit.Editor.Extensions
             }
 
             Guard<ValidationLogConfig>.Error(
-                $"Cannot get asset reference for {objType.Name} object. Addressable settings are not found.");
+                $"Cannot get asset reference for {objType.GetCompilableNiceFullName()} object. Addressable settings are not found.");
 
             return (null, null);
         }

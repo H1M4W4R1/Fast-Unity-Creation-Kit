@@ -5,6 +5,7 @@ using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Abstract
@@ -76,7 +77,7 @@ namespace FastUnityCreationKit.UI.Abstract
             if (provider != null) return provider;
             
             // if not found, log error
-            Guard<UserInterfaceLogConfig>.Error($"Data context provider of type {typeof(TProviderType).Name} not found on {name} or its parent.");
+            Guard<UserInterfaceLogConfig>.Error($"Data context provider of type {typeof(TProviderType).GetCompilableNiceFullName()} not found on {name} or its parent.");
             return default;
         }
         

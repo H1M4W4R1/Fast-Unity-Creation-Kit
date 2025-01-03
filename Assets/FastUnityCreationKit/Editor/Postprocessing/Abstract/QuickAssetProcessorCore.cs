@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using NUnit.Framework;
 using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.Compilation;
-using UnityEngine;
 using Assembly = System.Reflection.Assembly;
 using Object = UnityEngine.Object;
 
@@ -104,7 +102,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
             {
                 // If asset postprocessor type is not found, log an error
                 Guard<ValidationLogConfig>.Error(
-                    $"Asset postprocessor type not found in '{assetPostprocessorBaseType.Name}'.");
+                    $"Asset postprocessor type not found in '{assetPostprocessorBaseType.GetCompilableNiceFullName()}'.");
             }
             else
             {
@@ -125,7 +123,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
             if (assetPreprocessorType == null)
             {
                 Guard<ValidationLogConfig>.Error(
-                    $"Asset preprocessor type not found in '{assetPostprocessorBaseType.Name}'.");
+                    $"Asset preprocessor type not found in '{assetPostprocessorBaseType.GetCompilableNiceFullName()}'.");
             }
             else
             {
@@ -147,7 +145,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
             if (scriptProcessorType == null)
             {
                 Guard<ValidationLogConfig>.Error(
-                    $"Asset preprocessor type not found in '{assetPostprocessorBaseType.Name}'.");
+                    $"Asset preprocessor type not found in '{assetPostprocessorBaseType.GetCompilableNiceFullName()}'.");
             }
             else
             {
@@ -166,7 +164,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
             if (foundMethod == null)
             {
                 Guard<ValidationLogConfig>.Error(
-                    $"{methodName} method not found in '{type.Name}'.");
+                    $"{methodName} method not found in '{type.GetCompilableNiceFullName()}'.");
             }
             else
             {

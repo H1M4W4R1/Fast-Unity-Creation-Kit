@@ -7,7 +7,6 @@ using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Editor.Extensions;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Extensions;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
@@ -49,7 +48,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                     if (!IsAddressableContainer(registerAttribute.Type))
                     {
                         Guard<ValidationLogConfig>.Error(
-                            $"Cannot register {obj.name} in {registerAttribute.Type.Name}. " +
+                            $"Cannot register {obj.name} in {registerAttribute.Type.GetCompilableNiceFullName()}. " +
                             $"Type is not a valid AddressableDataContainer.");
                         continue;
                     }
@@ -62,7 +61,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                     if (IsAddressableContainer(registerAttribute.Type))
                     {
                         Guard<ValidationLogConfig>.Error(
-                            $"Cannot register {obj.name} in {registerAttribute.Type.Name}. " +
+                            $"Cannot register {obj.name} in {registerAttribute.Type.GetCompilableNiceFullName()}. " +
                             $"Type is a valid AddressableDataContainer. Object is not addressable.");
                         continue;
                     }
@@ -101,7 +100,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             if (foundBaseClass == null)
             {
                 Guard<ValidationLogConfig>.Error(
-                    $"Cannot register {obj.name} in {registerAttribute.Type.Name}. " +
+                    $"Cannot register {obj.name} in {registerAttribute.Type.GetCompilableNiceFullName()}. " +
                     $"[AutoRegisterIn] not found on any base class.");
                 return;
             }
@@ -118,7 +117,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             if (database == null)
             {
                 Guard<ValidationLogConfig>.Error(
-                    $"Cannot register {obj.name} in {databaseSubtype.Name} ({databaseType.Name}). Database instance not found. " +
+                    $"Cannot register {obj.name} in {databaseSubtype.GetCompilableNiceFullName()} ({databaseType.GetCompilableNiceFullName()}). Database instance not found. " +
                     $"Are you sure it has public 'Instance' property?");
                 return;
             }
@@ -131,7 +130,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             if (registerMethod == null || checkMethod == null)
             {
                 Guard<ValidationLogConfig>.Error(
-                    $"Cannot register {obj.name} in {databaseSubtype.Name}. 'Add' or 'Contains' method not found. " +
+                    $"Cannot register {obj.name} in {databaseSubtype.GetCompilableNiceFullName()}. 'Add' or 'Contains' method not found. " +
                     $"Are you sure it exists and is public?");
                 return;
             }
@@ -149,7 +148,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                 registerMethod.Invoke(database, new[] {objToRegister});
 
                 Guard<ValidationLogConfig>.Debug(
-                    $"Registered {obj.name} in {databaseSubtype.Name} database.");
+                    $"Registered {obj.name} in {databaseSubtype.GetCompilableNiceFullName()} database.");
                 
                 // Reserialize database!
                 if(database is Object unityObject)
@@ -162,7 +161,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                 // Warn that adding failed, probably trying to add Addressable Asset to non-addressable
                 // database.  
                 Guard<ValidationLogConfig>.Warning(
-                    $"Failed to register {obj.name} in {databaseSubtype.Name}. " +
+                    $"Failed to register {obj.name} in {databaseSubtype.GetCompilableNiceFullName()}. " +
                     $"Are you trying to add Addressable Asset to non-addressable database?");
             }
         }

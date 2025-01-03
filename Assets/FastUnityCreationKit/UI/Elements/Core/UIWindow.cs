@@ -1,10 +1,10 @@
 ﻿using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Utility;
-using FastUnityCreationKit.Unity.Interfaces;
 using FastUnityCreationKit.Unity.Interfaces.Interaction;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -69,7 +69,7 @@ namespace FastUnityCreationKit.UI.Elements.Core
             // Move window to top of stack.
             windowStack.Windows.Remove(this);
             windowStack.Windows.Add(this);
-            Guard<UserInterfaceLogConfig>.Info($"Window {GetType().Name} moved to top of stack.");
+            Guard<UserInterfaceLogConfig>.Info($"Window {GetType().GetCompilableNiceFullName()} moved to top of stack.");
             
             // Sort windows in manager as window was clicked.
             UIManager.Instance.SortWindows();
@@ -94,7 +94,7 @@ namespace FastUnityCreationKit.UI.Elements.Core
             if(notifyManager)
                 UIManager.Instance.SortWindows();
             
-            Guard<UserInterfaceLogConfig>.Info($"Window {GetType().Name} closed.");
+            Guard<UserInterfaceLogConfig>.Info($"Window {GetType().GetCompilableNiceFullName()} closed.");
         }
 
         /// <summary>

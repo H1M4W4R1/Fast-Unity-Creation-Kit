@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using Unity.Mathematics;
 using UnityEngine;

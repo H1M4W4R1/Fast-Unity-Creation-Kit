@@ -3,9 +3,9 @@ using FastUnityCreationKit.Annotations.Data;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Editor.Validation.Abstract;
 using FastUnityCreationKit.Editor.Validation.Data;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector.Editor.Validation;
+using Sirenix.Utilities;
 
 [assembly: RegisterValidator(typeof(NoDuplicatesValidator.InternalRootObjectValidator))]
 [assembly: RegisterValidator(typeof(NoDuplicatesValidator.InternalValueValidator))]
@@ -33,7 +33,7 @@ namespace FastUnityCreationKit.Editor.Validation.Data
                 // Remove the duplicate item
                 if (foundDuplicate)
                 {
-                    Guard<ValidationLogConfig>.Error($"Duplicate item found in {value.GetType().Name}: {list[i]}");
+                    Guard<ValidationLogConfig>.Error($"Duplicate item found in {value.GetType().GetCompilableNiceFullName()}: {list[i]}");
                     list.RemoveAt(i);
                 }
             }

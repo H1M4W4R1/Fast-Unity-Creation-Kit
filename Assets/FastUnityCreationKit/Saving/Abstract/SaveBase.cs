@@ -11,6 +11,7 @@ using FastUnityCreationKit.Utility.Serialization.Providers;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Saving.Abstract
@@ -79,7 +80,7 @@ namespace FastUnityCreationKit.Saving.Abstract
             // Write header file
             if (this is not TSelfSealed selfHeader)
             {
-                Guard<SaveLogConfig>.Error($"Failed to cast {typeof(TSelfSealed).Name} to {typeof(TSelfSealed).Name}.");
+                Guard<SaveLogConfig>.Error($"Failed to cast {typeof(TSelfSealed).GetCompilableNiceFullName()} to {typeof(TSelfSealed).GetCompilableNiceFullName()}.");
                 await OnSaveWriteFailedAsync();
                 return false;
             }
@@ -430,7 +431,7 @@ namespace FastUnityCreationKit.Saving.Abstract
             SaveFileMetadata<TSaveFile> metadata = GetMetadataFor<TSaveFile>();
             if (metadata == null)
             {
-                Guard<SaveLogConfig>.Error($"Failed to get metadata for {typeof(TSaveFile).Name}.");
+                Guard<SaveLogConfig>.Error($"Failed to get metadata for {typeof(TSaveFile).GetCompilableNiceFullName()}.");
                 return null;
             }
             

@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.Structure.Singleton;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 
 namespace FastUnityCreationKit.Unity.Structure.Managers

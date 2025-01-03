@@ -4,11 +4,8 @@ using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Editor.Extensions;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
-using UnityEditor;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Editor.Postprocessing.Annotations

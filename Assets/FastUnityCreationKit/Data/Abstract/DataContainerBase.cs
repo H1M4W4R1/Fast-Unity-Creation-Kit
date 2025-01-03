@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using FastUnityCreationKit.Data.Interfaces;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;

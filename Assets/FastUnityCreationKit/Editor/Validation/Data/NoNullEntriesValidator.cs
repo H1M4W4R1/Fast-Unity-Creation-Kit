@@ -3,10 +3,10 @@ using FastUnityCreationKit.Annotations.Data;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Editor.Validation.Abstract;
 using FastUnityCreationKit.Editor.Validation.Data;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Extensions;
 using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector.Editor.Validation;
+using Sirenix.Utilities;
 
 [assembly: RegisterValidator(typeof(NoNullEntriesValidator.InternalValueValidator))]
 [assembly: RegisterValidator(typeof(NoNullEntriesValidator.InternalRootObjectValidator))]
@@ -22,7 +22,7 @@ namespace FastUnityCreationKit.Editor.Validation.Data
             {
                 if (list[i].IsNull())
                 {
-                    Guard<ValidationLogConfig>.Error($"Removing null item found in {value.GetType().Name} at index {i}");
+                    Guard<ValidationLogConfig>.Error($"Removing null item found in {value.GetType().GetCompilableNiceFullName()} at index {i}");
                     list.RemoveAt(i);
                 }
             }

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Interfaces;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
@@ -112,14 +112,14 @@ namespace FastUnityCreationKit.Data.Containers
         {
             if (!IsPreloaded)
             {
-                Guard<ValidationLogConfig>.Error($"Database {GetType().Name} is not preloaded.");
+                Guard<ValidationLogConfig>.Error($"Database {GetType().GetCompilableNiceFullName()} is not preloaded.");
                 return null;
             }
             
             // Check if index is within bounds
             if (index < 0 || index >= _preloadedObjectsContainer.Count)
             {
-                Guard<ValidationLogConfig>.Error($"Index {index} is out of bounds for database {GetType().Name}.");
+                Guard<ValidationLogConfig>.Error($"Index {index} is out of bounds for database {GetType().GetCompilableNiceFullName()}.");
                 return null;
             }
             
@@ -153,7 +153,7 @@ namespace FastUnityCreationKit.Data.Containers
                 }
 
                 // Load the database 
-                _databaseInstanceAcquireHandle = Addressables.LoadAssetAsync<TSelfSealed>(typeof(TSelfSealed).Name);
+                _databaseInstanceAcquireHandle = Addressables.LoadAssetAsync<TSelfSealed>(typeof(TSelfSealed).GetCompilableNiceFullName());
                 _databaseInstanceAcquireHandle.WaitForCompletion();
 
                 _instance = _databaseInstanceAcquireHandle.Result;

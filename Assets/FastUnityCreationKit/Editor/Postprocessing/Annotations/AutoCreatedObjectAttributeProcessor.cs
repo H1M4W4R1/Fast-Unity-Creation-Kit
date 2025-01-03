@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
 using FastUnityCreationKit.Editor.Postprocessing.Interfaces;
-using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -99,14 +98,14 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             if (!typeof(ScriptableObject).IsAssignableFrom(type)) return (false, null);
 
             // Check if type has AutoCreatedObjectAttribute
-            AutoCreatedObjectAttribute attribute = type.GetCustomAttribute<AutoCreatedObjectAttribute>(true);
+            AutoCreatedObjectAttribute attribute = CustomAttributeExtensions.GetCustomAttribute<AutoCreatedObjectAttribute>(type, true);
             if (attribute == null) return (false, null);
 
             // Ensure type is sealed, if not log warning and process further
             if (!type.IsSealed)
             {
                 Guard<ValidationLogConfig>.Warning(
-                    $"Type {type.Name} is not sealed. Non-sealed types are unsafe. Please add 'sealed' keyword to the class.");
+                    $"Type {type.FullName} is not sealed. Non-sealed types are unsafe. Please add 'sealed' keyword to the class.");
             }
 
             // We can't create generic types, this will result in big no-no
@@ -115,7 +114,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             if (type.IsGenericType)
             {
                 Guard<ValidationLogConfig>.Error(
-                    $"Type {type.Name} is generic. Generic types are not supported for auto-creation.");
+                    $"Type {type.FullName} is generic. Generic types are not supported for auto-creation.");
                 return (false, null);
             }
 
@@ -131,8 +130,8 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
 
             // Save object 
             // Get postprocessor instance 
-            CreateAsset($"{assetDirectory}{type.Name}.asset", obj);
-            Guard<ValidationLogConfig>.Debug($"Created {type.Name} at {assetDirectory}{type.Name}.asset");
+            CreateAsset($"{assetDirectory}{NameOf(type)}.asset", obj);
+            Guard<ValidationLogConfig>.Debug($"Created {type.FullName} at {assetDirectory}{NameOf(type)}.asset");
 
             return (true, obj);
         }
@@ -177,6 +176,8 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
         /// Checks if the asset already exists.
         /// </summary>
         private static bool CheckIfExists(string path, Type type) =>
-            AssetDatabase.LoadAssetAtPath($"{path}{type.Name}.asset", type) != null;
+            AssetDatabase.LoadAssetAtPath($"{path}{NameOf(type)}.asset", type) != null;
+
+        private static string NameOf(Type type) => type.GetCompilableNiceFullName();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.Unity;
-using FastUnityCreationKit.Unity.Time;
 using FastUnityCreationKit.Unity.Time.Enums;
 
 namespace FastUnityCreationKit.UI.Abstract
