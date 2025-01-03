@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Unity;
+using FastUnityCreationKit.Unity.Time;
 
 namespace FastUnityCreationKit.Examples._03_FastMonoBehaviour_TimeModes.Scripts
 {

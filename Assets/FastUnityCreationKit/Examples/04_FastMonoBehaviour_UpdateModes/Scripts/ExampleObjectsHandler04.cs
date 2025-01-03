@@ -1,5 +1,5 @@
 ﻿using FastUnityCreationKit.Unity;
-using FastUnityCreationKit.Unity.Data;
+using FastUnityCreationKit.Unity.Time;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

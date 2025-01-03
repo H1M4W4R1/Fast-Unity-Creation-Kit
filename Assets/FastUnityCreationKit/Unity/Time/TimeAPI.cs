@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using FastUnityCreationKit.Identification.Identifiers;
-using FastUnityCreationKit.Unity.Data;
-using UnityEngine;
 
-namespace FastUnityCreationKit.Unity
+namespace FastUnityCreationKit.Unity.Time
 {
     /// <summary>
     /// Used to handle custom timing system.
@@ -24,22 +22,22 @@ namespace FastUnityCreationKit.Unity
         /// Current delta time, takes Unity Time.timeScale into account and
         /// TimeAPI multiplier / pausing.
         /// </summary>
-        public static float DeltaTime => IsTimePaused ? 0f : Time.deltaTime * TimeMultiplier;
+        public static float DeltaTime => IsTimePaused ? 0f : UnityEngine.Time.deltaTime * TimeMultiplier;
 
         /// <summary>
         /// Unscaled delta time, same as Time.unscaledDeltaTime.
         /// </summary>
-        public static float UnscaledDeltaTime => Time.unscaledDeltaTime;
+        public static float UnscaledDeltaTime => UnityEngine.Time.unscaledDeltaTime;
         
         /// <summary>
         /// Realtime since startup, same as Time.realtimeSinceStartup.
         /// </summary>
-        public static float RealtimeSinceStartup => Time.realtimeSinceStartup;
+        public static float RealtimeSinceStartup => UnityEngine.Time.realtimeSinceStartup;
         
         /// <summary>
         /// Fixed delta time, same as Time.fixedDeltaTime.
         /// </summary>
-        public static float FixedDeltaTime => Time.fixedDeltaTime;
+        public static float FixedDeltaTime => UnityEngine.Time.fixedDeltaTime;
         
         /// <summary>
         /// List of all objects that paused the time.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FastUnityCreationKit.Unity
+namespace FastUnityCreationKit.Unity.Time
 {
     /// <summary>
     /// Defines the update mode of the FastMonoBehaviour.

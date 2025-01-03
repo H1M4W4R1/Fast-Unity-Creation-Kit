@@ -4,7 +4,7 @@ using FastUnityCreationKit.Identification.Identifiers;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
-namespace FastUnityCreationKit.Unity.Data
+namespace FastUnityCreationKit.Unity.Time
 {
     /// <summary>
     /// Represents a pause object - used to pause the game.

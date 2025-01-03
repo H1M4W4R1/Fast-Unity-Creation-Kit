@@ -41,13 +41,13 @@ namespace FastUnityCreationKit.Unity.Interfaces.Interaction
             OnClick(eventData);
             
             // Check if the time between the last click and the current click is less than the double click threshold.
-            if (Time.time - LastClickTime < DoubleClickTimeThreshold)
+            if (UnityEngine.Time.unscaledTime - LastClickTime < DoubleClickTimeThreshold)
             {
                 OnDoubleClick();
             }
             else
             {
-                LastClickTime = Time.time;
+                LastClickTime = UnityEngine.Time.unscaledTime;
             }
         }
     }
