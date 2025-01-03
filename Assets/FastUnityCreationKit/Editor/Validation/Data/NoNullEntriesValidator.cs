@@ -4,6 +4,7 @@ using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Editor.Validation.Abstract;
 using FastUnityCreationKit.Editor.Validation.Data;
 using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Extensions;
 using FastUnityCreationKit.Utility.Logging;
 using Sirenix.OdinInspector.Editor.Validation;
 

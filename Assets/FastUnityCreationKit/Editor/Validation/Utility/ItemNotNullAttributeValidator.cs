@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FastUnityCreationKit.Editor.Validation.Utility;
 using FastUnityCreationKit.Utility;
+using FastUnityCreationKit.Utility.Extensions;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor.Validation;
 

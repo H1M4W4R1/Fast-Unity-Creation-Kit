@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace FastUnityCreationKit.Utility
+namespace FastUnityCreationKit.Utility.Extensions
 {
     public static class NullExtensions
     {
