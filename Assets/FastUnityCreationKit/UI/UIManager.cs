@@ -4,6 +4,7 @@ using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Elements.Core;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Unity.Interfaces;
+using FastUnityCreationKit.Unity.Interfaces.Configuration;
 using FastUnityCreationKit.Unity.Structure.Managers;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;

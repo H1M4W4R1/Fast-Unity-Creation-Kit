@@ -18,7 +18,7 @@ namespace FastUnityCreationKit.Economy
     /// if entity is invulnerable or can't be added if entity is dead.
     /// </remarks>
     [SupportedFeature(typeof(ILimited))]
-    public class ResourceContainer
+    public class ResourceReference
     {
         /// <summary>
         /// Resource identifier.

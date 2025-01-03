@@ -1,29 +1,23 @@
-﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Status.Abstract;
 using FastUnityCreationKit.Status.Interfaces;
-using FastUnityCreationKit.Status.References;
-using FastUnityCreationKit.Unity;
-using FastUnityCreationKit.Unity.Callbacks;
+using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
-using Sirenix.OdinInspector;
 
 namespace FastUnityCreationKit.Status
 {
     /// <summary>
     /// This component is used to store entity status.
     /// </summary>
-    public sealed class EntityStatusComponent : FastMonoBehaviour, IUpdateCallback
+    public class StatusContainer : DataContainerBase<AppliedStatusReference>
     {
-        /// <summary>
-        /// List of all statuses that are applied to the entity.
-        /// </summary>
-        [ShowInInspector]
-        [TabGroup("Debug")]
-        [ReadOnly]
-        public List<AppliedStatusReference> AppliedStatuses { get; } = new List<AppliedStatusReference>();
-
+        public StatusContainer()
+        {
+            OnFrameRenderedEvent.RegisterEventListener(HandleFrameRendered);
+        }
+        
         /// <summary>
         /// Adds status of type <typeparamref name="TStatusType"/> to the entity.
         /// </summary>
@@ -55,9 +49,9 @@ namespace FastUnityCreationKit.Status
 
             // Create new status reference
             reference = new AppliedStatusReference(this, status, nLevels);
-            AppliedStatuses.Add(reference);
+            data.Add(reference);
             Guard<EntityLogConfig>.Info(
-                $"Status {typeof(TStatusType).Name} added to the entity {name} with level {nLevels}.");
+                $"Status {typeof(TStatusType).Name} added  with level {nLevels}.");
             return true;
         }
 
@@ -84,7 +78,7 @@ namespace FastUnityCreationKit.Status
 
             // Otherwise, remove status and return true
             await DecreaseLevel<TStatusType>(nLevels);
-            Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} removed from the entity {name}.");
+            Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} removed from container.");
             return true;
         }
 
@@ -102,7 +96,7 @@ namespace FastUnityCreationKit.Status
 
             // Otherwise, remove status
             await DecreaseLevel<TStatusType>(reference.statusLevel);
-            Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} cleared from the entity {name}.");
+            Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).Name} cleared.");
         }
 
         /// <summary>
@@ -110,9 +104,9 @@ namespace FastUnityCreationKit.Status
         /// </summary>
         public async UniTask ClearAll()
         {
-            for (int i = AppliedStatuses.Count - 1; i >= 0; i--)
+            for (int i = data.Count - 1; i >= 0; i--)
             {
-                AppliedStatusReference reference = AppliedStatuses[i];
+                AppliedStatusReference reference = data[i];
 
                 long nLevels = reference.statusLevel;
 
@@ -123,7 +117,7 @@ namespace FastUnityCreationKit.Status
                     await reference.TakeLevel(this, nLevels);
             }
 
-            Guard<EntityLogConfig>.Info($"All statuses cleared from the entity {name}.");
+            Guard<EntityLogConfig>.Info($"All statuses cleared.");
         }
 
         /// <summary>
@@ -273,13 +267,13 @@ namespace FastUnityCreationKit.Status
             where TStatusType : StatusBase
         {
             // Search for status reference
-            for (int i = 0; i < AppliedStatuses.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                if (AppliedStatuses[i].Status is TStatusType)
-                    return AppliedStatuses[i];
+                if (data[i].Status is TStatusType)
+                    return data[i];
             }
 
-            Guard<EntityLogConfig>.Warning($"Status {typeof(TStatusType).Name} not found in the entity {name}.");
+            Guard<EntityLogConfig>.Warning($"Status {typeof(TStatusType).Name} not found .");
             return null;
         }
 
@@ -288,20 +282,37 @@ namespace FastUnityCreationKit.Status
         /// </summary>
         internal void DeleteStatusReference(AppliedStatusReference appliedStatusReference)
         {
-            AppliedStatuses.Remove(appliedStatusReference);
+            data.Remove(appliedStatusReference);
         }
-
-        public void OnObjectUpdated(float deltaTime)
+        
+        /// <summary>
+        /// When frame is rendered, this method is called to handle status updates.
+        /// </summary>
+        private async UniTask HandleFrameRendered()
         {
-            // Loop through all statuses
-            for (int i = AppliedStatuses.Count - 1; i >= 0; i--)
+            // Loop through all statuses and handle
+            // removing temporary statuses.
+            for (int i = data.Count - 1; i >= 0; i--)
             {
-                AppliedStatusReference reference = AppliedStatuses[i];
+                AppliedStatusReference reference = data[i];
 
                 // Check if status is temporary, if so, check if it should be destroyed
                 // and remove it if it should.
                 if (reference.Status is ITemporaryStatus temporaryStatus && temporaryStatus.ShouldBeDestroyed())
                     temporaryStatus.RemoveStatusFromComponent(this).Forget();
+            }
+            
+            // Loop through all statuses and handle
+            // updating statuses.
+            for (int i = data.Count - 1; i >= 0; i--)
+            {
+                AppliedStatusReference reference = data[i];
+
+                // Handle status update
+                // we need to wait for update to be processed to prevent 
+                // race conditions.
+                if (reference.Status)
+                    await reference.Status.OnUpdate(this);
             }
         }
     }

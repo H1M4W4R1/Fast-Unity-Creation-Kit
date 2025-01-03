@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FastUnityCreationKit.Structure.Singleton;
+using FastUnityCreationKit.Unity.Events;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Unity
@@ -89,6 +90,9 @@ namespace FastUnityCreationKit.Unity
             ExecuteForAll(FastMonoBehaviour.HandlePreUpdate, deltaTime);
             ExecuteForAll(FastMonoBehaviour.HandleUpdate, deltaTime);
             ExecuteForAll(FastMonoBehaviour.HandlePostUpdate, deltaTime);
+            
+            // Call the OnFrameRenderedEvent
+            OnFrameRenderedEvent.TriggerEvent();
         }
 
         /// <summary>
@@ -97,12 +101,14 @@ namespace FastUnityCreationKit.Unity
         public void FixedUpdate()
         {
             ExecuteForAll(FastMonoBehaviour.HandleFixedUpdate, TimeAPI.FixedDeltaTime);
+            
+            // Call the OnFixedFrameRenderedEvent
+            OnFixedFrameRenderedEvent.TriggerEvent();
         }
 
         private void ExecuteForAll(Action<FastMonoBehaviour, float> action, float deltaTime)
         {
             float realDeltaTime = TimeAPI.UnscaledDeltaTime;
-            float fixedDeltaTime = TimeAPI.FixedDeltaTime;
             float timeSinceStartup = TimeAPI.RealtimeSinceStartup;
             
             // Execute for all known FastMonoBehaviours

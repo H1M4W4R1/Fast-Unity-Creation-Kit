@@ -8,19 +8,19 @@ namespace FastUnityCreationKit.Status.Example
         [Button("Ignite")]
         public async void Ignite()
         {
-            await GetComponent<EntityStatusComponent>().AddStatus<BurningStatus>(10);
+            await GetComponent<StatusContainer>().AddStatus<BurningStatus>(10);
         }
         
         [Button("Frenzy")]
         public async void Frenzy()
         {
-            await GetComponent<EntityStatusComponent>().AddStatus<FrenzyStatus>(10);
+            await GetComponent<StatusContainer>().AddStatus<FrenzyStatus>(10);
         }
         
         [Button("Remove All Statuses")]
         public async void RemoveAllStatuses()
         {
-            await GetComponent<EntityStatusComponent>().ClearAll();
+            await GetComponent<StatusContainer>().ClearAll();
         }
         
     }

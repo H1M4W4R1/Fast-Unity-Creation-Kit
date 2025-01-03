@@ -1,6 +1,6 @@
 ﻿using UnityEngine.EventSystems;
 
-namespace FastUnityCreationKit.Unity.Interfaces
+namespace FastUnityCreationKit.Unity.Interfaces.Interaction
 {
     /// <summary>
     /// Represents an object that can be clicked.

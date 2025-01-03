@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.Unity.Interfaces;
+using FastUnityCreationKit.Unity.Interfaces.Configuration;
 using FastUnityCreationKit.Unity.Structure.Managers;
 using UnityEngine;
 

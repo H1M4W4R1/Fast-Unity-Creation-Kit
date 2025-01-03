@@ -6,7 +6,7 @@ using FastUnityCreationKit.Utility.Limits;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 
-namespace FastUnityCreationKit.Status.References
+namespace FastUnityCreationKit.Status
 {
     /// <summary>
     /// This class represents a reference to a status that is applied to the target.
@@ -30,7 +30,7 @@ namespace FastUnityCreationKit.Status.References
         [ShowInInspector] [ReadOnly]
         internal long statusLevel;
         
-        public AppliedStatusReference(EntityStatusComponent context, [NotNull] StatusBase status, long statusLevel = 0)
+        public AppliedStatusReference(StatusContainer context, [NotNull] StatusBase status, long statusLevel = 0)
         {
             this.statusIdentifier = status.Id;
             this.statusLevel = statusLevel;
@@ -39,7 +39,7 @@ namespace FastUnityCreationKit.Status.References
             status.OnStatusApplied(context).Forget();
         }
 
-        private async UniTask CheckLimitsAndRaiseEvents(EntityStatusComponent context)
+        private async UniTask CheckLimitsAndRaiseEvents(StatusContainer context)
         {
             // Acquire limit information from referenced status
             LimitHit limitHit = Status.EnsureLimitsFor(this);
@@ -59,13 +59,13 @@ namespace FastUnityCreationKit.Status.References
             }
         }
 
-        public async UniTask AddLevel(EntityStatusComponent context, long stacks)
+        public async UniTask AddLevel(StatusContainer context, long stacks)
              => await ModifyLevel(context, stacks);
 
-        public async UniTask TakeLevel(EntityStatusComponent context, long stacks)
+        public async UniTask TakeLevel(StatusContainer context, long stacks)
             => await ModifyLevel(context, -stacks);
 
-        private async UniTask ModifyLevel(EntityStatusComponent context, long stacks)
+        private async UniTask ModifyLevel(StatusContainer context, long stacks)
         {
             // Get current status level
             long previousStacks = statusLevel;

@@ -13,7 +13,8 @@
 		"GUID:fdeae16a364a4a8cb0c588a136da08d2",
 		"GUID:387ea1f5b44d4415bf16b8f6206d7fef",
 		"GUID:fd228c28e14f1a34cbe508676c914dd7",
-		"FastUnityCreationKit.Annotations"
+		"FastUnityCreationKit.Annotations",
+		"GUID:576b80f1aa0140249d412a4010d49ed8"
 	]
 	
 }

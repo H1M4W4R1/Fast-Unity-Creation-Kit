@@ -2,7 +2,7 @@
 using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.UI.Utility;
-using FastUnityCreationKit.Unity.Callbacks;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;
 using UnityEngine;

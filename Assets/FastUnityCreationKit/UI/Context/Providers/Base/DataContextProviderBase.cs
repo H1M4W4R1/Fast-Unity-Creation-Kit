@@ -1,6 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.Unity;
-using FastUnityCreationKit.Unity.Callbacks;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 using FastUnityCreationKit.Utility;
 using FastUnityCreationKit.Utility.Logging;
 using JetBrains.Annotations;

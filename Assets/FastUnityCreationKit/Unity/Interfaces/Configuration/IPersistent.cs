@@ -1,4 +1,4 @@
-﻿namespace FastUnityCreationKit.Unity.Interfaces
+﻿namespace FastUnityCreationKit.Unity.Interfaces.Configuration
 {
     /// <summary>
     /// Makes an object persistent across multiple scenes, can only apply to <see cref="FastMonoBehaviour"/> objects.

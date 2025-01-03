@@ -1,5 +1,5 @@
 ﻿using FastUnityCreationKit.Unity;
-using FastUnityCreationKit.Unity.Callbacks;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 
 namespace FastUnityCreationKit.Examples._04_FastMonoBehaviour_UpdateModes.Scripts
 {

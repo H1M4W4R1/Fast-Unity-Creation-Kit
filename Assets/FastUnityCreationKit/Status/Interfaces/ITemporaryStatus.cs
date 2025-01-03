@@ -18,8 +18,8 @@ namespace FastUnityCreationKit.Status.Interfaces
         /// Override this implementation to define the behavior of the status when
         /// ITemporaryObjects removal conditions are met for current status.
         /// </summary>
-        async UniTask ITemporaryStatus.RemoveStatusFromComponent(EntityStatusComponent component)   
-            => await component.Clear<TSelf>();
+        async UniTask ITemporaryStatus.RemoveStatusFromComponent(StatusContainer container)   
+            => await container.Clear<TSelf>();
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ namespace FastUnityCreationKit.Status.Interfaces
     /// </summary>
     public interface ITemporaryStatus : ITemporaryObject
     {
-        public UniTask RemoveStatusFromComponent([NotNull] EntityStatusComponent component);
+        public UniTask RemoveStatusFromComponent([NotNull] StatusContainer container);
 
 
     }
