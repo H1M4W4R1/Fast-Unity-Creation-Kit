@@ -18,6 +18,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
  
         public override AssetDeleteResult PreprocessDeletedAsset(string assetPath, RemoveAssetOptions options)
         {
+            if (CurrentAssetType == null) return AssetDeleteResult.DidNotDelete;
             if (!CurrentAssetType.HasAttribute<ICantDeleteAssetAttribute>()) return AssetDeleteResult.DidNotDelete;
             
             Guard<ValidationLogConfig>.Error($"Asset at path '{assetPath}' is not allowed to be deleted.");
@@ -26,6 +27,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
 
         public override AssetMoveResult PreprocessMovedAsset(string fromPath, string toPath)
         {
+            if (CurrentAssetType == null) return AssetMoveResult.DidNotMove;
             if (!CurrentAssetType.HasAttribute<ICantMoveAssetAttribute>()) return AssetMoveResult.DidNotMove;
             
             Guard<ValidationLogConfig>.Error($"Asset at path '{fromPath}' is not allowed to be moved.");

@@ -98,7 +98,6 @@ namespace FastUnityCreationKit.Editor.Extensions
                 string guid = AssetDatabase.AssetPathToGUID(assetPath);
 
                 bool modified = false;
-                bool created = false;
 
                 // Check if entry already exists
                 AddressableAssetEntry e = settings.FindAssetEntry(guid);
@@ -111,7 +110,6 @@ namespace FastUnityCreationKit.Editor.Extensions
                     e.SetAddress(obj.name);
 
                     modified = true;
-                    created = true;
                     e.ReadOnly = readOnly;
                     
                     NotifyAddressables(settings, group, e, AddressableAssetSettings.ModificationEvent.EntryCreated);

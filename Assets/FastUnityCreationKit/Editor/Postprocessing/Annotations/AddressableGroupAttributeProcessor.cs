@@ -21,6 +21,8 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
 
         public override void PostprocessCreatedAsset(string assetPath)
         {
+            // Skip if asset is not available
+            if (!IsAssetAvailable) return;
             TryUpdateAddressableGroup(CurrentAsset);
         }
 

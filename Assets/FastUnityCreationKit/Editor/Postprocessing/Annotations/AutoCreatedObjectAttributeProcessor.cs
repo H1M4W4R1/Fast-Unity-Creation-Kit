@@ -75,7 +75,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             foreach (Type type in assembly.GetTypes())
             {
                 // Check if type is abstract or interface  
-                if (type.IsAbstract || type.IsInterface) continue;
+                if (type.IsInterface || type.IsAbstract) continue;
 
                 (bool success, ScriptableObject obj) = TryCreateScriptableObject(type);
                 if (success) createdCount++;
@@ -88,6 +88,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             // Save assets that were created we do this to ensure that the assets are saved
             AssetDatabase.SaveAssets();
         }
+
 
         /// <summary>
         /// Tries to create a scriptable object from the specified type.

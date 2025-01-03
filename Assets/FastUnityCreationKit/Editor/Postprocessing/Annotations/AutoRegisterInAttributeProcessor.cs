@@ -25,6 +25,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
         protected override bool AssetIsRequired => true;
         public override void PostprocessCreatedAsset(string assetPath) 
         {
+            if(!IsAssetAvailable) return;
             TryToRegisterInContainers(CurrentAsset); 
         }
 
