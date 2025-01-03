@@ -36,7 +36,5 @@
         /// <param name="index">Index of the data context.</param>
         /// <returns>Data context at the specified index.</returns>
         public object ProvideAtRaw(int index);
-
-        void Consume();
     }
 }

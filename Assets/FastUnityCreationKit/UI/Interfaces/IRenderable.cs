@@ -38,11 +38,8 @@ namespace FastUnityCreationKit.UI.Interfaces
                 // If data context is not dirty and rendering is not enforced, do not render
                 if (!forceRender && !DataContext.IsDirty) return;
                 
-                // Run internal rendering and consume data context
-                // marking it as not dirty
+                // Run internal rendering
                 Render(DataContext.Context);
-                DataContext.Consume();
-                    
                 Guard<UserInterfaceLogConfig>.Verbose($"Rendered {GetType().GetCompilableNiceFullName()} [was enforced: {forceRender}].");
             }
             else

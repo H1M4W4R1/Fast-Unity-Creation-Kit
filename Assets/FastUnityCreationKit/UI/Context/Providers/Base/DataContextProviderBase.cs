@@ -12,7 +12,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
     /// Represents a data context provider.
     /// </summary>
     public abstract class DataContextProviderBase<TContextType> : FastMonoBehaviour, IDataContextProvider<TContextType>,
-        ICreateCallback, IDestroyCallback
+        ICreateCallback, IDestroyCallback, IUpdateCallback
     {
         protected const string PROVIDER_CONFIGURATION = "Provider Configuration";
         
@@ -20,20 +20,23 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         public delegate void OnProviderDestroyedHandler();
 
         /// <summary>
-        /// Notified when the context has changed.
+        /// Invoked when the context has changed.
         /// </summary>
         public event OnContextChangedHandler OnContextChanged;
         
         /// <summary>
-        /// Notified when the provider has been destroyed.
+        /// Invoked when the provider has been destroyed.
+        /// Can be used to detach from the provider and clean up resources.
         /// </summary>
         public event OnProviderDestroyedHandler OnProviderDestroyed;
 
         /// <summary>
         /// Represents the dirty state of the data context.
+        /// Setting to true will notify all subscribers that the context has changed
+        /// within the next frame.
         /// </summary>
         [ShowInInspector] [ReadOnly] [TitleGroup(PROVIDER_CONFIGURATION)]
-        public virtual bool IsDirty { get; private set; }
+        public bool IsDirty { get; set; }
 
         /// <summary>
         /// Provides the data context.
@@ -55,18 +58,25 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         }
         
         protected virtual void Setup() {}
+        
         protected virtual void TearDown() {}
 
         /// <summary>
-        /// Resets the dirty state of the data context.
-        /// Can be overriden to provide custom logic for consuming the data context.
+        /// Notifies this provider that the context has changed.
+        /// All subscribers will be instantly notified about the change.
         /// </summary>
-        public virtual void Consume() => IsDirty = false;
-
+        /// <remarks>
+        /// If you want more performance it's recommended to avoid this method
+        /// in favor of <see cref="IsDirty"/>
+        /// </remarks>
         protected virtual void NotifyContextHasChanged()
         {
+            // Ensure that context is mark as dirty to guarantee that it will be updated
+            // on each subscriber
             IsDirty = true;
+            
             OnContextChanged?.Invoke(Provide());
+            IsDirty = false;
         }
 
         public void OnObjectCreated() => Setup();
@@ -76,6 +86,12 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
             TearDown();
             OnProviderDestroyed?.Invoke();
         }
-        
+
+        public void OnObjectUpdated(float deltaTime)
+        {
+            // Check if data context is dirty
+            // if so, notify that the context has changed
+            if (IsDirty) NotifyContextHasChanged();
+        }
     }
 }

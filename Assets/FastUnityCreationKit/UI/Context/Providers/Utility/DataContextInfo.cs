@@ -11,8 +11,6 @@
 
         public bool IsDirty => Provider.IsDirty;
 
-        public void Consume() => Provider.Consume();
-        
         public DataContextInfo(IDataContextProvider<TDataContext> provider, TDataContext context)
         {
             IsValid = provider != null;
