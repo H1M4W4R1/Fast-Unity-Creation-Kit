@@ -27,7 +27,10 @@ namespace FastUnityCreationKit.Unity
     [SupportedFeature(typeof(ITemporaryObject))] [SupportedFeature(typeof(IPersistent))]
     [SupportedFeature(typeof(IClickable))] [SupportedFeature(typeof(IHoverable))]
     [SupportedFeature(typeof(IDoubleClickable))] [SupportedFeature(typeof(ISelectable))]
-    [SupportedFeature(typeof(IInitializable))]
+    [SupportedFeature(typeof(IInitializable))] [SupportedFeature(typeof(IOnTriggerEnterCallback))]
+    [SupportedFeature(typeof(IOnTriggerExitCallback))] [SupportedFeature(typeof(IOnTriggerStayCallback))]
+    [SupportedFeature(typeof(IOnCollisionEnterCallback))] [SupportedFeature(typeof(IOnCollisionExitCallback))]
+    [SupportedFeature(typeof(IOnCollisionStayCallback))]
     public abstract class FastMonoBehaviour : MonoBehaviour
     {
         protected const string GROUP_STATE = "State";
