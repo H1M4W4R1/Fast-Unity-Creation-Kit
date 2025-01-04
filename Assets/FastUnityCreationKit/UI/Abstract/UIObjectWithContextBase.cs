@@ -52,7 +52,7 @@ namespace FastUnityCreationKit.UI.Abstract
         }
 
         /// <summary>
-        /// Gets the data context of the specified type.
+        /// Gets the data context for this object.
         /// This method can be overriden for very stupid use cases that may not require
         /// provider to be used.
         /// </summary>
