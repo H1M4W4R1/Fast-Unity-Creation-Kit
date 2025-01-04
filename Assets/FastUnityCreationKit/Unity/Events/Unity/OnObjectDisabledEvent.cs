@@ -20,23 +20,8 @@ namespace FastUnityCreationKit.Unity.Events.Unity
 
     public static class OnObjectDisabledEvent
     {
-        public static void TriggerEvent(CKMonoBehaviour objectInstance)
-        {
-            Type withType = objectInstance.GetType();
-
-#if UNITY_EDITOR
-            if (!withType.IsSubclassOf(typeof(CKMonoBehaviour)))
-                Guard<ValidationLogConfig>.Error(
-                    $"{withType.FullName} is not a subclass of {nameof(CKMonoBehaviour)}.");
-#endif
-
-            object convertedInstance = Convert.ChangeType(objectInstance, withType);
-
-            MethodInfo method = typeof(OnObjectDisabledEvent<>)
-                .MakeGenericType(withType)
-                .GetMethod(nameof(TriggerEvent), BindingFlags.Public | BindingFlags.Static);
-
-            method?.Invoke(null, new[] {convertedInstance});
-        }
+        public static void TriggerEvent([NotNull] CKMonoBehaviour objectInstance) =>
+            EventAPI.TriggerGenericEventWithData(typeof(OnObjectDisabledEvent<>), objectInstance,
+                objectInstance.GetType());
     }
 }

@@ -6,9 +6,8 @@
     public interface ITemporaryObject
     {
         /// <summary>
-        /// This method should be called when the object is no longer needed.
+        /// Gets a value indicating whether this object has expired.
         /// </summary>
-        bool ShouldBeDestroyed();
-        
+        bool HasExpired { get; }
     }
 }

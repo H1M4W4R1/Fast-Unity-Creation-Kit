@@ -8,20 +8,20 @@ using UnityEngine.Scripting;
 namespace FastUnityCreationKit.Unity.Events.Unity
 {
     /// <summary>
-    /// Called when an object is destroyed.
+    /// Event that is called when an object is created.
     /// </summary>
     [Preserve]
     [UsedImplicitly]
-    public sealed class
-        OnObjectDestroyedEvent<TObjectType> : GlobalEventChannel<OnObjectDestroyedEvent<TObjectType>, TObjectType>
+    public sealed class OnObjectExpiredEvent<TObjectType> :
+        GlobalEventChannel<OnObjectExpiredEvent<TObjectType>, TObjectType>
         where TObjectType : CKMonoBehaviour
     {
     }
 
-    public static class OnObjectDestroyedEvent
+    public static class OnObjectExpiredEvent
     {
         public static void TriggerEvent([NotNull] CKMonoBehaviour objectInstance) =>
-            EventAPI.TriggerGenericEventWithData(typeof(OnObjectDestroyedEvent<>), objectInstance,
+            EventAPI.TriggerGenericEventWithData(typeof(OnObjectExpiredEvent<>), objectInstance,
                 objectInstance.GetType());
     }
 }

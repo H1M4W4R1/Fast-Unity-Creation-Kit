@@ -297,7 +297,7 @@ namespace FastUnityCreationKit.Status
 
                 // Check if status is temporary, if so, check if it should be destroyed
                 // and remove it if it should.
-                if (reference.Status is ITemporaryStatus temporaryStatus && temporaryStatus.ShouldBeDestroyed())
+                if (reference.Status is ITemporaryStatus {HasExpired: true} temporaryStatus)
                     temporaryStatus.RemoveStatusFromComponent(this).Forget();
             }
             
