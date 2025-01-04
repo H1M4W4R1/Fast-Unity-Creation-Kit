@@ -9,7 +9,7 @@ using UnityEngine;
 namespace FastUnityCreationKit.Unity
 {
     /// <summary>
-    /// This class is implementation of FastMonoBehaviour processing.
+    /// This class is implementation of <see cref="CKMonoBehaviour"/> processing.
     /// Should not be used directly.
     /// </summary>
     public sealed class CKEventsManager : MonoBehaviour,
@@ -31,7 +31,7 @@ namespace FastUnityCreationKit.Unity
         public bool IsTimePaused => TimeAPI.IsTimePaused;
         
         /// <summary>
-        /// List of all known FastMonoBehaviours in the scene.
+        /// List of all known <see cref="CKMonoBehaviour"/> in the scene.
         /// </summary>
         private readonly List<CKMonoBehaviour> _fastMonoBehaviours = new();
 
@@ -45,7 +45,7 @@ namespace FastUnityCreationKit.Unity
         }
 
         /// <summary>
-        /// Removes the specified object from the list of known FastMonoBehaviours.
+        /// Removes the specified object from the list of known <see cref="CKMonoBehaviour"/>.
         /// </summary>
         internal void UnregisterFastMonoBehaviour(CKMonoBehaviour ckMonoBehaviour)
         {
@@ -54,7 +54,7 @@ namespace FastUnityCreationKit.Unity
         }
 
         /// <summary>
-        /// Used to set up the instance of the FastMonoBehaviourManager.
+        /// Used to set up the instance of the <see cref="CKEventsManager"/>.
         /// </summary>
         private void Awake()
         {
@@ -76,7 +76,7 @@ namespace FastUnityCreationKit.Unity
         }
 
         /// <summary>
-        /// This is main update loop of the FastMonoBehaviour system.
+        /// This is main update loop of the <see cref="CKMonoBehaviour"/> system.
         /// This allows for quick updating of multiple objects based on their interfaces.
         /// May be slightly slower (shouldn't be due to lack of P-Invoke operations) than Unity's built-in update loop,
         /// but allows for more control over the update process.
@@ -87,7 +87,7 @@ namespace FastUnityCreationKit.Unity
             // including time scale
             float deltaTime = TimeAPI.DeltaTime;
             
-            // Loop through all FastMonoBehaviours and call their update methods
+            // Loop through all behaviours and call their update methods
             ExecuteForAll(CKMonoBehaviour.HandleTemporaryObject, deltaTime);
             ExecuteForAll(CKMonoBehaviour.HandlePreUpdate, deltaTime);
             ExecuteForAll(CKMonoBehaviour.HandleUpdate, deltaTime);
@@ -113,12 +113,9 @@ namespace FastUnityCreationKit.Unity
             float realDeltaTime = TimeAPI.UnscaledDeltaTime;
             float timeSinceStartup = TimeAPI.RealtimeSinceStartup;
             
-            // Execute for all known FastMonoBehaviours
-            for (int fastMonoBehaviourIndex = 0;
-                 fastMonoBehaviourIndex < _fastMonoBehaviours.Count;
+            for (int fastMonoBehaviourIndex = 0; fastMonoBehaviourIndex < _fastMonoBehaviours.Count;
                  fastMonoBehaviourIndex++)
-            {
-                // Get the FastMonoBehaviour
+            { 
                 CKMonoBehaviour ckMonoBehaviour = _fastMonoBehaviours[fastMonoBehaviourIndex];
                 
                 // Skip destroyed objects

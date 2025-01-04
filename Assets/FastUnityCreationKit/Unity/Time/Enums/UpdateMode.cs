@@ -3,7 +3,7 @@
 namespace FastUnityCreationKit.Unity.Time.Enums
 {
     /// <summary>
-    /// Defines the update mode of the FastMonoBehaviour.
+    /// Defines the update mode of the <see cref="CKMonoBehaviour"/>.
     /// </summary>
     [Flags]
     public enum UpdateMode
