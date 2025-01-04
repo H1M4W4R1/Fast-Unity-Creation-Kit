@@ -41,9 +41,8 @@ namespace FastUnityCreationKit.Unity.Features
         /// <summary>
         ///     GameObject this feature is attached to.
         /// </summary>
-        [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
+        [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] [NotNull]
         // ReSharper disable once NullableWarningSuppressionIsUsed
-        [NotNull]
         protected GameObject GameObject { [UsedImplicitly] get; private set; } = null!;
 
         bool IInitializable.InternalInitializationStatusStorage { get; set; }
