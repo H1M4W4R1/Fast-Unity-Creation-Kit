@@ -1,0 +1,14 @@
+{
+	"name": "FastUnityCreationKit.Core",
+	"allowUnsafeCode": true,
+	"references": [
+		"Unity.Addressables",
+		"Unity.Burst",
+		"Unity.Collections",
+		"Unity.Mathematics",
+		"Unity.Logging",
+		"Unity.ResourceManager",
+		"UniTask"
+	]
+	
+}

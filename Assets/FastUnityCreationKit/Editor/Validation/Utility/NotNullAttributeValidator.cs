@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FastUnityCreationKit.Editor.Validation.Utility;
-using FastUnityCreationKit.Utility.Extensions;
+using FastUnityCreationKit.Core.Extensions;
 using Sirenix.OdinInspector.Editor.Validation;
 
 [assembly: RegisterValidator(typeof(SystemDiagnosticsNotNullAttributeValidator))]

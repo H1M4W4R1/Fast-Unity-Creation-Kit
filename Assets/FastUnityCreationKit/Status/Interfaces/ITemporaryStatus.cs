@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Status.Abstract;
-using FastUnityCreationKit.Utility.Objects;
+using FastUnityCreationKit.Core.Objects;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Status.Interfaces

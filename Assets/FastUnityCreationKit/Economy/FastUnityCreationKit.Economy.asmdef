@@ -2,13 +2,12 @@
 	"name": "FastUnityCreationKit.Economy",
 	"allowUnsafeCode": true,
 	"references": [
-		"GUID:d8b63aba1907145bea998dd612889d6b",
-		"GUID:073b3eb3f1a67e64399bd59e9e28db00",
-		"GUID:877cb650da554d888813e8f994e2e639",
-		"GUID:2088dbdb78944d69805c321ad476fa6f",
-		"GUID:fdeae16a364a4a8cb0c588a136da08d2",
-		"GUID:f51ebe6a0ceec4240a699833d6309b23",
-		"FastUnityCreationKit.Annotations"
+		"Unity.Mathematics",
+		"UniTask",
+		"FastUnityCreationKit.Annotations",
+		"FastUnityCreationKit.Core",
+		"FastUnityCreationKit.Data",
+		"FastUnityCreationKit.Identification"
 	]
 	
 }

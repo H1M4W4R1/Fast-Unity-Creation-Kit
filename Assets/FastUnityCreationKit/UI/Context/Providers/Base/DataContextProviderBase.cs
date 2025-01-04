@@ -1,7 +1,7 @@
 ﻿using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;

@@ -3,7 +3,7 @@ using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Status.Abstract;
 using FastUnityCreationKit.Status.Interfaces;
 using FastUnityCreationKit.Unity.Events;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 
 namespace FastUnityCreationKit.Status
 {

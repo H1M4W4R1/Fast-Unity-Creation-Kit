@@ -5,8 +5,8 @@ using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Identification;
 using FastUnityCreationKit.Status.Interfaces;
-using FastUnityCreationKit.Utility.Limits;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Limits;
+using FastUnityCreationKit.Core.Logging;
 
 namespace FastUnityCreationKit.Status.Abstract
 {

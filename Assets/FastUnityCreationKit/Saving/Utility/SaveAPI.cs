@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using FastUnityCreationKit.Saving.Abstract;
 using FastUnityCreationKit.Saving.Interfaces;
-using FastUnityCreationKit.Utility.Logging;
-using FastUnityCreationKit.Utility.Serialization.Interfaces;
-using FastUnityCreationKit.Utility.Serialization.Providers;
+using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.Core.Serialization.Interfaces;
+using FastUnityCreationKit.Core.Serialization.Providers;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Saving.Utility

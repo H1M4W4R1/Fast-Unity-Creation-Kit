@@ -2,10 +2,7 @@
 	"name": "FastUnityCreationKit.Crafting",
 	"allowUnsafeCode": true,
 	"references": [
-		"GUID:d8b63aba1907145bea998dd612889d6b",
-		"GUID:073b3eb3f1a67e64399bd59e9e28db00",
-		"GUID:d3aa6e1b35374463a406d9558c94f82f",
-		"GUID:f51ebe6a0ceec4240a699833d6309b23"
+		"GUID:d3aa6e1b35374463a406d9558c94f82f"	
 	]
 	
 }

@@ -2,7 +2,7 @@
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Abstract

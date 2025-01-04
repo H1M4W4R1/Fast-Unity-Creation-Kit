@@ -4,7 +4,7 @@ using FastUnityCreationKit.Annotations.Data;
 using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Identification;
-using FastUnityCreationKit.Utility.Limits;
+using FastUnityCreationKit.Core.Limits;
 
 namespace FastUnityCreationKit.Economy
 {

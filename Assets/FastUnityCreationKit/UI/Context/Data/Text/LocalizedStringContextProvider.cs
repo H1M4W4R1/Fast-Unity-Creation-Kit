@@ -1,6 +1,6 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.UI.Utility;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Localization;

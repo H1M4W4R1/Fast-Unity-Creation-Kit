@@ -14,7 +14,7 @@
 		"FastUnityCreationKit.Structure",
 		"FastUnityCreationKit.UI",
 		"FastUnityCreationKit.Unity",
-		"FastUnityCreationKit.Utility"
+		"FastUnityCreationKit.Core"
 	]
 	
 }

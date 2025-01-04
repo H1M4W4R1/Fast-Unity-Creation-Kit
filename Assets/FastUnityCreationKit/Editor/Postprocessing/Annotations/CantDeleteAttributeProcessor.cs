@@ -1,7 +1,7 @@
 ﻿using FastUnityCreationKit.Annotations.Interfaces;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
-using FastUnityCreationKit.Utility.Extensions;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Extensions;
+using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using UnityEditor;
 

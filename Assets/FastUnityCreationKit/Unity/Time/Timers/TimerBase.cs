@@ -2,7 +2,7 @@
 using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Time.Enums;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;

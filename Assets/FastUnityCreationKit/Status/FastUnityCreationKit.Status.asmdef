@@ -2,19 +2,13 @@
 	"name": "FastUnityCreationKit.Status",
 	"allowUnsafeCode": true,
 	"references": [
-		"GUID:d8b63aba1907145bea998dd612889d6b",
-		"GUID:2665a8d13d1b3f18800f46e256720795",
-		"GUID:e0cd26848372d4e5c891c569017e11f1",
-		"GUID:f51ebe6a0ceec4240a699833d6309b23",
-		"GUID:2088dbdb78944d69805c321ad476fa6f",
-		"GUID:877cb650da554d888813e8f994e2e639",
-		"GUID:9e24947de15b9834991c9d8411ea37cf",
-		"GUID:84651a3751eca9349aac36a66bba901b",
-		"GUID:fdeae16a364a4a8cb0c588a136da08d2",
-		"GUID:387ea1f5b44d4415bf16b8f6206d7fef",
-		"GUID:fd228c28e14f1a34cbe508676c914dd7",
+		"UniTask",
 		"FastUnityCreationKit.Annotations",
-		"GUID:576b80f1aa0140249d412a4010d49ed8"
+		"FastUnityCreationKit.Core",
+		"FastUnityCreationKit.Data",
+		"FastUnityCreationKit.Identification",
+		"FastUnityCreationKit.Unity",
+		"FastUnityCreationKit.Events"
 	]
 	
 }

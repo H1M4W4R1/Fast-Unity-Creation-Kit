@@ -4,7 +4,7 @@ using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Editor.Extensions;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Object = UnityEngine.Object;
 

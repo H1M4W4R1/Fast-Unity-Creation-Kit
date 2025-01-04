@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using FastUnityCreationKit.Editor.Validation.Utility;
-using FastUnityCreationKit.Utility.Extensions;
+using FastUnityCreationKit.Core.Extensions;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor.Validation;
 

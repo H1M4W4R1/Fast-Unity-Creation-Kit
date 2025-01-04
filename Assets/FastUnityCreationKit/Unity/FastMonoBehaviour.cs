@@ -8,8 +8,8 @@ using FastUnityCreationKit.Unity.Interfaces.Callbacks.Physics;
 using FastUnityCreationKit.Unity.Interfaces.Configuration;
 using FastUnityCreationKit.Unity.Interfaces.Interaction;
 using FastUnityCreationKit.Unity.Time.Enums;
-using FastUnityCreationKit.Utility.Logging;
-using FastUnityCreationKit.Utility.Objects;
+using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.Core.Objects;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

@@ -1,6 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Elements.Abstract;
 using FastUnityCreationKit.UI.Utility;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using UnityEngine;
 using UnityEngine.UI;
 

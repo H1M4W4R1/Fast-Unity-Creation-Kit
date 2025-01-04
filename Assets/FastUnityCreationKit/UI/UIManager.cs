@@ -5,7 +5,7 @@ using FastUnityCreationKit.UI.Elements.Core;
 using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Unity.Interfaces.Configuration;
 using FastUnityCreationKit.Unity.Structure.Managers;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;

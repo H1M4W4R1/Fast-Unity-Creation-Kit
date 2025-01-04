@@ -1,6 +1,6 @@
 ﻿using System;
 using FastUnityCreationKit.Editor.Postprocessing.Interfaces;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using UnityEditor;
 using Object = UnityEngine.Object;
 

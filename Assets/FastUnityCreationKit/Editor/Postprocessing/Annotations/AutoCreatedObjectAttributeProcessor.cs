@@ -4,7 +4,7 @@ using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
 using FastUnityCreationKit.Editor.Postprocessing.Interfaces;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Sirenix.Utilities;
 using UnityEditor;

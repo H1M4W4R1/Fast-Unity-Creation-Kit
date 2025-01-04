@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Utility.Logging;
+﻿using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Sirenix.Utilities;
 using Object = UnityEngine.Object;

@@ -1,7 +1,7 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Utility;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using Sirenix.Utilities;
 
 namespace FastUnityCreationKit.UI.Interfaces

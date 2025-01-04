@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Interfaces;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;

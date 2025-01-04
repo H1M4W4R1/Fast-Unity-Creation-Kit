@@ -2,7 +2,7 @@
 using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Identification.Identifiers;
 using FastUnityCreationKit.Status.Abstract;
-using FastUnityCreationKit.Utility.Limits;
+using FastUnityCreationKit.Core.Limits;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 

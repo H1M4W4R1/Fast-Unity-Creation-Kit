@@ -1,5 +1,5 @@
 ﻿using System;
-using FastUnityCreationKit.Utility.Extensions;
+using FastUnityCreationKit.Core.Extensions;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Scripting;

@@ -3,7 +3,7 @@ using FastUnityCreationKit.Annotations.Data;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Editor.Validation.Abstract;
 using FastUnityCreationKit.Editor.Validation.Data;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using Sirenix.OdinInspector.Editor.Validation;
 using Sirenix.Utilities;
 

@@ -1,0 +1,8 @@
+{
+	"name": "FastUnityCreationKit.Structure",
+	"allowUnsafeCode": true,
+	"references": [
+		"FastUnityCreationKit.Core"
+	]
+	
+}

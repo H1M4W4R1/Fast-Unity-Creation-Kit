@@ -2,18 +2,18 @@
 	"name": "FastUnityCreationKit.Editor",
 	"allowUnsafeCode": true,
 	"references": [
-		"GUID:d8b63aba1907145bea998dd612889d6b",
-		"GUID:2665a8d13d1b3f18800f46e256720795",
-		"GUID:e0cd26848372d4e5c891c569017e11f1",
-		"GUID:9e24947de15b9834991c9d8411ea37cf",
-		"GUID:84651a3751eca9349aac36a66bba901b",
-		"GUID:f51ebe6a0ceec4240a699833d6309b23",
-		"GUID:877cb650da554d888813e8f994e2e639",
-		"GUID:2088dbdb78944d69805c321ad476fa6f",
-		"GUID:7817862aebd6484ebccd5bd352d21955",
-		"GUID:fdeae16a364a4a8cb0c588a136da08d2",
-		"GUID:66f422d75030436eb76b555c1ef1ec8c",
-		"Unity.Addressables.Editor"
+		"Unity.Addressables",
+		"Unity.Addressables.Editor",
+		"Unity.Burst",
+		"Unity.Collections",
+		"Unity.Mathematics",
+		"Unity.Logging",
+		"Unity.ResourceManager",
+		"UniTask",
+		"FastUnityCreationKit.Annotations",
+		"FastUnityCreationKit.Core",
+		"FastUnityCreationKit.Data",
+		"FastUnityCreationKit.Identification"	
 	],
 	"includePlatforms": ["Editor"]	
 }

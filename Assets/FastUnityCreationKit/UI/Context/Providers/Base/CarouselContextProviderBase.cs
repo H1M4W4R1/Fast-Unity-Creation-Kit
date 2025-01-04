@@ -1,5 +1,5 @@
 ﻿using FastUnityCreationKit.UI.Elements.Utility.Internal.Carousel;
-using FastUnityCreationKit.Utility.Logging;
+using FastUnityCreationKit.Core.Logging;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

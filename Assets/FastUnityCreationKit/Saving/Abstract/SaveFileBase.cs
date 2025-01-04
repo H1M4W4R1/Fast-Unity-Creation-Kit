@@ -1,9 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Saving.Metadata;
 using FastUnityCreationKit.Saving.Utility;
-using FastUnityCreationKit.Utility.Logging;
-using FastUnityCreationKit.Utility.Serialization.Interfaces;
-using FastUnityCreationKit.Utility.Serialization.Providers;
+using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.Core.Serialization.Interfaces;
+using FastUnityCreationKit.Core.Serialization.Providers;
 
 namespace FastUnityCreationKit.Saving.Abstract
 {
