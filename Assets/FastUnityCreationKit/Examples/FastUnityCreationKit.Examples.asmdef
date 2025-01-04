@@ -2,6 +2,7 @@
 	"name": "FastUnityCreationKit.Examples",
 	"allowUnsafeCode": true,
 	"references": [		
+		"UniTask",
 		"FastUnityCreationKit.Annotations",
 		"FastUnityCreationKit.Crafting",
 		"FastUnityCreationKit.Data",

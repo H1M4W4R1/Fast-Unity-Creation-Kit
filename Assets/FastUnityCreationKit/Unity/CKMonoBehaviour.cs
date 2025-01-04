@@ -9,6 +9,7 @@ using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Core.Objects;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Unity
 {
@@ -30,11 +31,20 @@ namespace FastUnityCreationKit.Unity
         protected const string GROUP_STATE = "State";
         protected const string GROUP_DEBUG = "Debug";
         protected const string GROUP_CONFIGURATION = "Configuration";
+
+        /// <summary>
+        /// Check if the object uses the update mode
+        /// Used to render the update mode in the inspector.
+        /// </summary>
+        private bool UsesUpdateMode => this is IUpdateCallback ||
+                                       this is IPreUpdateCallback ||
+                                       this is IPostUpdateCallback;
         
         /// <summary>
         /// State of the object. If true, the object is disabled.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
+        // ReSharper disable once Unity.RedundantAttributeOnTarget
+        [HideInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         public bool IsDisabled { get; private set; }
 
         /// <summary>
@@ -54,12 +64,14 @@ namespace FastUnityCreationKit.Unity
         /// If true, the object will be updated even when disabled.
         /// </summary>
         [ShowInInspector] [TitleGroup(GROUP_CONFIGURATION)]
+        [ShowIf(nameof(UsesUpdateMode))]
         public virtual UpdateMode UpdateMode => UpdateMode.MonoBehaviour;
 
         /// <summary>
         /// Mode of time used for updating the object.
         /// </summary>
         [ShowInInspector] [TitleGroup(GROUP_CONFIGURATION)]
+        [ShowIf(nameof(UsesUpdateMode))]
         public virtual UpdateTime UpdateTimeConfig => UpdateTime.DeltaTime;
 
         /// <summary>
