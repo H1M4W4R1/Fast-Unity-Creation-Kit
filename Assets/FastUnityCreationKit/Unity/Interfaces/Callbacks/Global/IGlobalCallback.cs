@@ -1,9 +1,12 @@
-﻿namespace FastUnityCreationKit.Unity.Interfaces.Callbacks.Global
+﻿using UnityEngine;
+
+namespace FastUnityCreationKit.Unity.Interfaces.Callbacks.Global
 {
     /// <summary>
     /// Represents a global callback.
     /// </summary>
-    public interface IGlobalCallback
+    [HideInInspector]
+    public interface IGlobalCallback : ICKBehaviourCallback
     {
         
     }

@@ -71,7 +71,7 @@ namespace FastUnityCreationKit.UI.Abstract
         // UI objects are always updated (even when disabled or when time is paused) and
         // they are updated using unscaled delta time - to prevent UI from being dependent on time scale.
         public override UpdateTime UpdateTimeConfig => UpdateTime.UnscaledDeltaTime;
-        public override UpdateMode UpdateMode => UpdateMode.UpdateWhenDisabled | UpdateMode.UpdateWhenTimePaused;
+        public override UpdateMode UpdateMode => UpdateMode.Always;
 
 #endregion
     }

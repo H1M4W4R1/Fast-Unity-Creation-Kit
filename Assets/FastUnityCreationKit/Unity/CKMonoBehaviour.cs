@@ -3,6 +3,7 @@ using FastUnityCreationKit.Core.Objects;
 using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Structure.Initialization;
+using FastUnityCreationKit.Unity.Editor;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Global;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
@@ -68,6 +69,8 @@ namespace FastUnityCreationKit.Unity
         ///     If true, the object will be updated even when disabled.
         /// </summary>
         [ShowInInspector] [TitleGroup(GROUP_CONFIGURATION)] [ShowIf(nameof(HasAnyUpdateCallback))]
+        [Tooltip("Defines when object will be updated. Can switch this object to be updated even if time is " +
+                 "paused or object is disabled (or both) which is not supported by classic Unity MonoBehaviours.")]
         public virtual UpdateMode UpdateMode => UpdateMode.MonoBehaviour;
 
         /// <summary>
@@ -75,6 +78,11 @@ namespace FastUnityCreationKit.Unity
         /// </summary>
         [ShowInInspector] [TitleGroup(GROUP_CONFIGURATION)] [ShowIf(nameof(HasAnyUpdateCallback))]
         public virtual UpdateTime UpdateTimeConfig => UpdateTime.DeltaTime;
+
+#if UNITY_EDITOR
+        [ShowInInspector] [TitleGroup(GROUP_DEBUG)]
+        public EventsView EventsView = new();
+#endif
 
         /// <summary>
         ///     Avoid overriding the Awake method. Implement the <see cref="IInitializable" /> interface instead
@@ -212,7 +220,7 @@ namespace FastUnityCreationKit.Unity
             if (this is IOnObjectPreUpdateCallback preUpdateCallback)
                 preUpdateCallback.OnBeforeObjectUpdate(deltaTime);
 
-            if(this is IOnObjectPreUpdateGlobalCallback globalPreUpdateCallback)
+            if (this is IOnObjectPreUpdateGlobalCallback globalPreUpdateCallback)
                 globalPreUpdateCallback.TriggerOnObjectPreUpdateEvent(this);
         }
 
@@ -258,12 +266,6 @@ namespace FastUnityCreationKit.Unity
             // Unregister this object from the object registry.
             CKEventsManager.Instance.UnregisterFastMonoBehaviour(this);
         }
-
-        protected void OnApplicationQuit()
-        {
-            if (this is IOnApplicationQuitCallback quitCallback) quitCallback.OnQuit();
-        }
-
 #endregion
     }
 }

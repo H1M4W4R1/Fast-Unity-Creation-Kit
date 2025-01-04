@@ -106,7 +106,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
 #region UPDATE_CONFIGURATION
 
         // UI context should be verified for change even if time is paused
-        public override UpdateMode UpdateMode => UpdateMode.UpdateWhenDisabled | UpdateMode.UpdateWhenTimePaused;
+        public override UpdateMode UpdateMode => UpdateMode.Always;
 
         // UI updates should be independent of the time scale
         public override UpdateTime UpdateTimeConfig => UpdateTime.UnscaledDeltaTime;

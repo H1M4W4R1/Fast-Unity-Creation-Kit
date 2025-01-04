@@ -1,6 +1,6 @@
 ﻿namespace FastUnityCreationKit.Unity.Interfaces.Callbacks.Local
 {
-    public interface IOnObjectExpiredCallback
+    public interface IOnObjectExpiredCallback : ILocalCallback
     {
         void OnObjectExpired();
     }

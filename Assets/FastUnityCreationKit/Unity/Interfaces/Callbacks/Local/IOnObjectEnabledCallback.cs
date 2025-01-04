@@ -1,6 +1,6 @@
 ﻿namespace FastUnityCreationKit.Unity.Interfaces.Callbacks.Local
 {
-    public interface IOnObjectEnabledCallback
+    public interface IOnObjectEnabledCallback : ILocalCallback
     {
         void OnObjectEnabled();
     }

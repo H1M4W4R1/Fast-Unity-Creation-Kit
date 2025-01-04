@@ -9,6 +9,9 @@ namespace FastUnityCreationKit.Unity.Time.Enums
     {
         // Regular MonoBehaviour update (only when enabled and timeScale > 0)
         MonoBehaviour = 0,
+        
+        // Regular UI update mode, used to quickly set-up UI objects
+        Always = UpdateWhenDisabled | UpdateWhenTimePaused,
 
         // Update even when disabled
         UpdateWhenDisabled = 1,
