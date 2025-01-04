@@ -1,7 +1,7 @@
-﻿using FastUnityCreationKit.Structure.Singleton;
-using FastUnityCreationKit.Core.Logging;
+﻿using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.Structure.Singleton;
 
-namespace FastUnityCreationKit.Unity.Structure.Managers
+namespace FastUnityCreationKit.Unity
 {
     /// <summary>
     /// This class represents a manager that is used to manage a specific feature in the game.

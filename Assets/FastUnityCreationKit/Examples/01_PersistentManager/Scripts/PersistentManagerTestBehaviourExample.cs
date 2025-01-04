@@ -18,7 +18,7 @@ namespace FastUnityCreationKit.Examples._01_PersistentManager.Scripts
             if(_tempTimerValue <= 0)
             {
                 _tempTimerValue = 1;
-                Debug.Log($"Update called with random value {PersistentManagerExample.Instance.GetRandomNumber()}.");
+                Debug.Log($"Update called with random value {PersistentObjectManagerExample.Instance.GetRandomNumber()}.");
             }
             else
             {

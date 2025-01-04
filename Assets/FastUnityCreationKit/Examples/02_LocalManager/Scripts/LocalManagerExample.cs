@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Unity.Structure.Managers;
+﻿using FastUnityCreationKit.Unity;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._02_LocalManager.Scripts

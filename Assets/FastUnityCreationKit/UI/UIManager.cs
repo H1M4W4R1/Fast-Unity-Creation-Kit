@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Elements.Core;
 using FastUnityCreationKit.UI.Utility;
-using FastUnityCreationKit.Unity.Interfaces.Configuration;
-using FastUnityCreationKit.Unity.Structure.Managers;
 using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.Core.Objects;
+using FastUnityCreationKit.Unity;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -16,7 +16,7 @@ namespace FastUnityCreationKit.UI
     /// <summary>
     /// UI manager - used to manage all UI elements.
     /// </summary>
-    public sealed class UIManager : FastManager<UIManager>, IPersistent
+    public sealed class UIManager : FastManager<UIManager>, IPersistentObject
     {
         [SerializeField]
         [Tooltip("Starting order for window canvas.")]

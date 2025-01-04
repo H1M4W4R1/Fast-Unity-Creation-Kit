@@ -7,6 +7,7 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     /// Feature that can be added to a UI object.
     /// </summary>
+    /// TODO: Decouple Features from UI to Unity package to make it more reusable.
     [RequireComponent(typeof(UIObjectBase))]
     public abstract class UIFeature : UIBehaviour, ICreateCallback, IDestroyCallback, IInitializable
     {

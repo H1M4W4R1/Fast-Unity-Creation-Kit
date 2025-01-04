@@ -5,7 +5,6 @@ using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Physics;
-using FastUnityCreationKit.Unity.Interfaces.Configuration;
 using FastUnityCreationKit.Unity.Interfaces.Interaction;
 using FastUnityCreationKit.Unity.Time.Enums;
 using FastUnityCreationKit.Core.Logging;
@@ -24,7 +23,7 @@ namespace FastUnityCreationKit.Unity
     [SupportedFeature(typeof(IFixedUpdateCallback))] [SupportedFeature(typeof(IPreUpdateCallback))]
     [SupportedFeature(typeof(IUpdateCallback))] [SupportedFeature(typeof(IPostUpdateCallback))]
     [SupportedFeature(typeof(IQuitCallback))] [SupportedFeature(typeof(ISaveableObject))]
-    [SupportedFeature(typeof(ITemporaryObject))] [SupportedFeature(typeof(IPersistent))]
+    [SupportedFeature(typeof(ITemporaryObject))] [SupportedFeature(typeof(IPersistentObject))]
     [SupportedFeature(typeof(IClickable))] [SupportedFeature(typeof(IHoverable))]
     [SupportedFeature(typeof(IDoubleClickable))] [SupportedFeature(typeof(ISelectable))]
     [SupportedFeature(typeof(IInitializable))] [SupportedFeature(typeof(IOnTriggerEnterCallback))]
@@ -78,7 +77,7 @@ namespace FastUnityCreationKit.Unity
             FastMonoBehaviourManager.Instance.RegisterFastMonoBehaviour(this);
 
             // Check if supports persistent interface.
-            if (this is IPersistent)
+            if (this is IPersistentObject)
             {
                 // Ensure that object is on the root level as Unity only allows root level objects to be made persistent.
                 if (transform.parent)

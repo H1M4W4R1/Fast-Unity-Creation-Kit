@@ -1,5 +1,5 @@
-﻿using FastUnityCreationKit.Unity.Interfaces.Configuration;
-using FastUnityCreationKit.Unity.Structure.Managers;
+﻿using FastUnityCreationKit.Core.Objects;
+using FastUnityCreationKit.Unity;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._01_PersistentManager.Scripts
@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.Examples._01_PersistentManager.Scripts
     /// This manager will be automatically created if requested for first time (if not created before)
     /// and moved to the [DontDestroyOnLoad] scene.
     /// </summary>
-    public sealed class PersistentManagerExample : FastManager<PersistentManagerExample>, IPersistent
+    public sealed class PersistentObjectManagerExample : FastManager<PersistentObjectManagerExample>, IPersistentObject
     {
         /// <summary>
         /// Example method to be called from manager.
