@@ -5,11 +5,11 @@ using FastUnityCreationKit.Unity;
 using Sirenix.OdinInspector.Editor.Validation;
 using Sirenix.Serialization;
 
-[assembly: RegisterValidator(typeof(CKMonoBehaviourRootObjectValidator))]
+[assembly: RegisterValidator(typeof(NoOdinSerializeOnCKMonoBehaviourRootObjectValidator))]
 
 namespace FastUnityCreationKit.Editor.Validation.Unity
 {
-    public sealed class CKMonoBehaviourRootObjectValidator : RootObjectValidator<CKMonoBehaviour>
+    public sealed class NoOdinSerializeOnCKMonoBehaviourRootObjectValidator : RootObjectValidator<CKMonoBehaviour>
     {
         protected override void Validate(ValidationResult result)
         {
