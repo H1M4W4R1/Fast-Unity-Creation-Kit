@@ -4,7 +4,7 @@ using UnityEngine;
 namespace FastUnityCreationKit.Examples._02_LocalManager.Scripts
 {
     /// </summary>
-    public sealed class LocalManagerExample : FastManager<LocalManagerExample>
+    public sealed class LocalManagerExample : CKManager<LocalManagerExample>
     {
         /// <summary>
         /// Example method to be called from manager.

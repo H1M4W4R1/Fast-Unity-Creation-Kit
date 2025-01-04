@@ -12,8 +12,8 @@ namespace FastUnityCreationKit.Unity
     /// This class is implementation of FastMonoBehaviour processing.
     /// Should not be used directly.
     /// </summary>
-    public sealed class FastMonoBehaviourManager : MonoBehaviour,
-        IMonoBehaviourSingleton<FastMonoBehaviourManager> // Can't be FMB to prevent infinite loop
+    public sealed class CKEventsManager : MonoBehaviour,
+        IMonoBehaviourSingleton<CKEventsManager> // Can't be FMB to prevent infinite loop
     {
         /// <summary>
         /// If true it means the object was destroyed.
@@ -22,8 +22,8 @@ namespace FastUnityCreationKit.Unity
         /// </summary>
         public static bool WasDestroyed { get; set; }
 
-        public static FastMonoBehaviourManager Instance =>
-            IMonoBehaviourSingleton<FastMonoBehaviourManager>.GetInstance();
+        public static CKEventsManager Instance =>
+            IMonoBehaviourSingleton<CKEventsManager>.GetInstance();
         
         // We can't use Time.timeScale because when it's 0 then this
         // object won't receive updates. We need to create a custom
@@ -33,24 +33,24 @@ namespace FastUnityCreationKit.Unity
         /// <summary>
         /// List of all known FastMonoBehaviours in the scene.
         /// </summary>
-        private readonly List<FastMonoBehaviour> _fastMonoBehaviours = new();
+        private readonly List<CKMonoBehaviour> _fastMonoBehaviours = new();
 
         /// <summary>
         /// Returns the first object found in the scene of the specified type.
         /// </summary>
-        internal void RegisterFastMonoBehaviour(FastMonoBehaviour fastMonoBehaviour)
+        internal void RegisterFastMonoBehaviour(CKMonoBehaviour ckMonoBehaviour)
         {
-            if (!_fastMonoBehaviours.Contains(fastMonoBehaviour))
-                _fastMonoBehaviours.Add(fastMonoBehaviour);
+            if (!_fastMonoBehaviours.Contains(ckMonoBehaviour))
+                _fastMonoBehaviours.Add(ckMonoBehaviour);
         }
 
         /// <summary>
         /// Removes the specified object from the list of known FastMonoBehaviours.
         /// </summary>
-        internal void UnregisterFastMonoBehaviour(FastMonoBehaviour fastMonoBehaviour)
+        internal void UnregisterFastMonoBehaviour(CKMonoBehaviour ckMonoBehaviour)
         {
-            if (_fastMonoBehaviours.Contains(fastMonoBehaviour))
-                _fastMonoBehaviours.Remove(fastMonoBehaviour);
+            if (_fastMonoBehaviours.Contains(ckMonoBehaviour))
+                _fastMonoBehaviours.Remove(ckMonoBehaviour);
         }
 
         /// <summary>
@@ -88,10 +88,10 @@ namespace FastUnityCreationKit.Unity
             float deltaTime = TimeAPI.DeltaTime;
             
             // Loop through all FastMonoBehaviours and call their update methods
-            ExecuteForAll(FastMonoBehaviour.HandleTemporaryObject, deltaTime);
-            ExecuteForAll(FastMonoBehaviour.HandlePreUpdate, deltaTime);
-            ExecuteForAll(FastMonoBehaviour.HandleUpdate, deltaTime);
-            ExecuteForAll(FastMonoBehaviour.HandlePostUpdate, deltaTime);
+            ExecuteForAll(CKMonoBehaviour.HandleTemporaryObject, deltaTime);
+            ExecuteForAll(CKMonoBehaviour.HandlePreUpdate, deltaTime);
+            ExecuteForAll(CKMonoBehaviour.HandleUpdate, deltaTime);
+            ExecuteForAll(CKMonoBehaviour.HandlePostUpdate, deltaTime);
             
             // Call the OnFrameRenderedEvent
             OnFrameRenderedEvent.TriggerEvent();
@@ -102,13 +102,13 @@ namespace FastUnityCreationKit.Unity
         /// </summary>
         public void FixedUpdate()
         {
-            ExecuteForAll(FastMonoBehaviour.HandleFixedUpdate, TimeAPI.FixedDeltaTime);
+            ExecuteForAll(CKMonoBehaviour.HandleFixedUpdate, TimeAPI.FixedDeltaTime);
             
             // Call the OnFixedFrameRenderedEvent
             OnFixedFrameRenderedEvent.TriggerEvent();
         }
 
-        private void ExecuteForAll(Action<FastMonoBehaviour, float> action, float deltaTime)
+        private void ExecuteForAll(Action<CKMonoBehaviour, float> action, float deltaTime)
         {
             float realDeltaTime = TimeAPI.UnscaledDeltaTime;
             float timeSinceStartup = TimeAPI.RealtimeSinceStartup;
@@ -119,22 +119,22 @@ namespace FastUnityCreationKit.Unity
                  fastMonoBehaviourIndex++)
             {
                 // Get the FastMonoBehaviour
-                FastMonoBehaviour fastMonoBehaviour = _fastMonoBehaviours[fastMonoBehaviourIndex];
+                CKMonoBehaviour ckMonoBehaviour = _fastMonoBehaviours[fastMonoBehaviourIndex];
                 
                 // Skip destroyed objects
-                if(fastMonoBehaviour.IsDestroyed) continue;
+                if(ckMonoBehaviour.IsDestroyed) continue;
                 
                 // Skip if update is forbidden
-                if((fastMonoBehaviour.UpdateMode & UpdateMode.Forbidden) != 0) continue;
+                if((ckMonoBehaviour.UpdateMode & UpdateMode.Forbidden) != 0) continue;
                 
                 // Skip disabled objects if they don't update when disabled
-                if(fastMonoBehaviour.IsDisabled && (fastMonoBehaviour.UpdateMode & UpdateMode.UpdateWhenDisabled) == 0) continue;
+                if(ckMonoBehaviour.IsDisabled && (ckMonoBehaviour.UpdateMode & UpdateMode.UpdateWhenDisabled) == 0) continue;
                 
                 // Skip objects that don't update when time is paused
-                if (IsTimePaused && (fastMonoBehaviour.UpdateMode & UpdateMode.UpdateWhenTimePaused) == 0) continue;
+                if (IsTimePaused && (ckMonoBehaviour.UpdateMode & UpdateMode.UpdateWhenTimePaused) == 0) continue;
                 
                 // Execute the action
-                action(fastMonoBehaviour, fastMonoBehaviour.UpdateTimeConfig switch
+                action(ckMonoBehaviour, ckMonoBehaviour.UpdateTimeConfig switch
                 {
                     UpdateTime.DeltaTime => deltaTime,
                     UpdateTime.UnscaledDeltaTime => realDeltaTime,

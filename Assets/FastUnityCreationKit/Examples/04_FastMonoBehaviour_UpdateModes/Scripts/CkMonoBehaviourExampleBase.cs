@@ -3,7 +3,7 @@ using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 
 namespace FastUnityCreationKit.Examples._04_FastMonoBehaviour_UpdateModes.Scripts
 {
-    public abstract class FastMonoBehaviourExampleBase : FastMonoBehaviour, IUpdateCallback
+    public abstract class CkMonoBehaviourExampleBase : CKMonoBehaviour, IUpdateCallback
     {
         public void OnObjectUpdated(float deltaTime)
         {

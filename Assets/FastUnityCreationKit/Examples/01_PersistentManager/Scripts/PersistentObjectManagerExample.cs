@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.Examples._01_PersistentManager.Scripts
     /// This manager will be automatically created if requested for first time (if not created before)
     /// and moved to the [DontDestroyOnLoad] scene.
     /// </summary>
-    public sealed class PersistentObjectManagerExample : FastManager<PersistentObjectManagerExample>, IPersistentObject
+    public sealed class PersistentObjectManagerExample : CKManager<PersistentObjectManagerExample>, IPersistentObject
     {
         /// <summary>
         /// Example method to be called from manager.

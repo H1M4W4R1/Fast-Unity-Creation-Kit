@@ -11,7 +11,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
     /// <summary>
     /// Represents a data context provider.
     /// </summary>
-    public abstract class DataContextProviderBase<TContextType> : FastMonoBehaviour, IDataContextProvider<TContextType>,
+    public abstract class DataContextProviderBase<TContextType> : CKMonoBehaviour, IDataContextProvider<TContextType>,
         ICreateCallback, IDestroyCallback, IUpdateCallback
     {
         protected const string PROVIDER_CONFIGURATION = "Provider Configuration";

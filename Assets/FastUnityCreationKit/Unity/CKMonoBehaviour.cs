@@ -30,7 +30,7 @@ namespace FastUnityCreationKit.Unity
     [SupportedFeature(typeof(IOnTriggerExitCallback))] [SupportedFeature(typeof(IOnTriggerStayCallback))]
     [SupportedFeature(typeof(IOnCollisionEnterCallback))] [SupportedFeature(typeof(IOnCollisionExitCallback))]
     [SupportedFeature(typeof(IOnCollisionStayCallback))]
-    public abstract class FastMonoBehaviour : MonoBehaviour
+    public abstract class CKMonoBehaviour : MonoBehaviour
     {
         protected const string GROUP_STATE = "State";
         protected const string GROUP_DEBUG = "Debug";
@@ -74,7 +74,7 @@ namespace FastUnityCreationKit.Unity
         protected virtual void Awake()
         {
             // Register this object to the object registry.
-            FastMonoBehaviourManager.Instance.RegisterFastMonoBehaviour(this);
+            CKEventsManager.Instance.RegisterFastMonoBehaviour(this);
 
             // Check if supports persistent interface.
             if (this is IPersistentObject)
@@ -144,30 +144,30 @@ namespace FastUnityCreationKit.Unity
                 SaveAPI.UnregisterSavableObject(saveableObject);
 
             // Unregister this object from the object registry.
-            FastMonoBehaviourManager.Instance.UnregisterFastMonoBehaviour(this);
+            CKEventsManager.Instance.UnregisterFastMonoBehaviour(this);
         }
 
-        internal static void HandlePreUpdate(FastMonoBehaviour behaviour, float deltaTime)
+        internal static void HandlePreUpdate(CKMonoBehaviour behaviour, float deltaTime)
         {
             behaviour.NotifyObjectWasPreUpdated(deltaTime);
         }
 
-        internal static void HandleUpdate(FastMonoBehaviour behaviour, float deltaTime)
+        internal static void HandleUpdate(CKMonoBehaviour behaviour, float deltaTime)
         {
             behaviour.NotifyObjectWasUpdated(deltaTime);
         }
 
-        internal static void HandlePostUpdate(FastMonoBehaviour behaviour, float deltaTime)
+        internal static void HandlePostUpdate(CKMonoBehaviour behaviour, float deltaTime)
         {
             behaviour.NotifyObjectWasPostUpdated(deltaTime);
         }
 
-        internal static void HandleFixedUpdate(FastMonoBehaviour behaviour, float deltaTime)
+        internal static void HandleFixedUpdate(CKMonoBehaviour behaviour, float deltaTime)
         {
             behaviour.NotifyObjectWasFixedUpdated();
         }
 
-        internal static void HandleTemporaryObject(FastMonoBehaviour behaviour, float deltaTime)
+        internal static void HandleTemporaryObject(CKMonoBehaviour behaviour, float deltaTime)
         {
             // Check if object is temporary, if not skip
             if (behaviour is not ITemporaryObject temporaryObject) return;

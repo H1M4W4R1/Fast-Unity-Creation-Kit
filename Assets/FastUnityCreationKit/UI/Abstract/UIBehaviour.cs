@@ -3,7 +3,7 @@ using FastUnityCreationKit.Unity.Time.Enums;
 
 namespace FastUnityCreationKit.UI.Abstract
 {
-    public abstract class UIBehaviour : FastMonoBehaviour
+    public abstract class UIBehaviour : CKMonoBehaviour
     {
 #region UPDATE_CONFIGURATION
 

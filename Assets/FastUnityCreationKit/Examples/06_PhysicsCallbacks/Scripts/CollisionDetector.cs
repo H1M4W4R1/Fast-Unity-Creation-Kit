@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._06_PhysicsCallbacks.Scripts
 {
-    public sealed class CollisionDetector : FastMonoBehaviour, IOnCollisionEnterCallback<CollisionSourceA>,
+    public sealed class CollisionDetector : CKMonoBehaviour, IOnCollisionEnterCallback<CollisionSourceA>,
         IOnCollisionEnterCallback<CollisionSourceB>
     {
         public void OnCollisionEntered(Collision collision, CollisionSourceA other)

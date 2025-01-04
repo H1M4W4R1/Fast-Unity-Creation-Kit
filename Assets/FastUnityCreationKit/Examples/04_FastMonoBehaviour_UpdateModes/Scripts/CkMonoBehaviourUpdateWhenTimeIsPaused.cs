@@ -8,7 +8,7 @@ namespace FastUnityCreationKit.Examples._04_FastMonoBehaviour_UpdateModes.Script
     /// Like UI elements that should be updated even when the game is paused, because
     /// UI should remain interactive.
     /// </summary>
-    public sealed class FastMonoBehaviourUpdateWhenTimeIsPaused : FastMonoBehaviourExampleBase
+    public sealed class CkMonoBehaviourUpdateWhenTimeIsPaused : CkMonoBehaviourExampleBase
     {
         public override UpdateMode UpdateMode => UpdateMode.UpdateWhenTimePaused;
     }

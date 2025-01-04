@@ -16,7 +16,7 @@ namespace FastUnityCreationKit.UI
     /// <summary>
     /// UI manager - used to manage all UI elements.
     /// </summary>
-    public sealed class UIManager : FastManager<UIManager>, IPersistentObject
+    public sealed class UIManager : CKManager<UIManager>, IPersistentObject
     {
         [SerializeField]
         [Tooltip("Starting order for window canvas.")]

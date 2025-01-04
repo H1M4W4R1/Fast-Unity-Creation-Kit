@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._03_FastMonoBehaviour_TimeModes.Scripts
 {
-    public abstract class TimeMonoBehaviourExample : FastMonoBehaviour, ICreateCallback, IDestroyCallback,
+    public abstract class TimeMonoBehaviourExample : CKMonoBehaviour, ICreateCallback, IDestroyCallback,
         IUpdateCallback
     {
         protected abstract string GetMessage(float deltaTime);

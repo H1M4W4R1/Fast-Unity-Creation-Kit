@@ -7,7 +7,7 @@ namespace FastUnityCreationKit.Examples._02_LocalManager.Scripts
     /// <summary>
     /// Behaviour used to demonstrate the usage of the persistent manager.
     /// </summary>
-    public sealed class LocalManagerTestBehaviourExample : FastMonoBehaviour, IUpdateCallback
+    public sealed class LocalManagerTestBehaviourExample : CKMonoBehaviour, IUpdateCallback
     {
         private float _tempTimerValue;
         
