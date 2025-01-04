@@ -22,16 +22,16 @@ namespace FastUnityCreationKit.Unity.Features.Physics.Any
             [NotNull] GameObject other) =>
             await UniTask.CompletedTask;
 
-        protected async void OnTriggerEnter(Collider other)
+        protected async void OnTriggerEnter([NotNull] Collider other)
         {
             CurrentInteractionCont++;
             await OnTriggerEnteredBy(other, other.gameObject);
         }
 
-        protected async void OnTriggerExit(Collider other) =>
+        protected async void OnTriggerExit([NotNull] Collider other) =>
             await OnTriggerExitedBy(other, other.gameObject);
 
-        protected async void OnTriggerStay(Collider other)
+        protected async void OnTriggerStay([NotNull] Collider other)
         {
             await OnTriggerStayedBy(other, other.gameObject);
             CurrentInteractionCont--;

@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Structure.Singleton;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Unity
 {
@@ -25,6 +26,6 @@ namespace FastUnityCreationKit.Unity
         /// <summary>
         /// Gets the instance of the manager.
         /// </summary>
-        public static TManagerType Instance => IMonoBehaviourSingleton<TManagerType>.GetInstance();
+        [NotNull] public static TManagerType Instance => IMonoBehaviourSingleton<TManagerType>.GetInstance();
     }
 }

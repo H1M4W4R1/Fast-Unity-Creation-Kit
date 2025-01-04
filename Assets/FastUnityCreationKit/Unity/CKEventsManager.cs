@@ -4,6 +4,7 @@ using FastUnityCreationKit.Structure.Singleton;
 using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Time;
 using FastUnityCreationKit.Unity.Time.Enums;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Unity
@@ -22,7 +23,7 @@ namespace FastUnityCreationKit.Unity
         /// </summary>
         public static bool WasDestroyed { get; set; }
 
-        public static CKEventsManager Instance =>
+        [NotNull] public static CKEventsManager Instance =>
             IMonoBehaviourSingleton<CKEventsManager>.GetInstance();
         
         // We can't use Time.timeScale because when it's 0 then this
@@ -33,12 +34,12 @@ namespace FastUnityCreationKit.Unity
         /// <summary>
         /// List of all known <see cref="CKMonoBehaviour"/> in the scene.
         /// </summary>
-        private readonly List<CKMonoBehaviour> _fastMonoBehaviours = new();
+        [NotNull] [ItemNotNull] private readonly List<CKMonoBehaviour> _fastMonoBehaviours = new();
 
         /// <summary>
         /// Returns the first object found in the scene of the specified type.
         /// </summary>
-        internal void RegisterFastMonoBehaviour(CKMonoBehaviour ckMonoBehaviour)
+        internal void RegisterFastMonoBehaviour([NotNull] CKMonoBehaviour ckMonoBehaviour)
         {
             if (!_fastMonoBehaviours.Contains(ckMonoBehaviour))
                 _fastMonoBehaviours.Add(ckMonoBehaviour);
@@ -47,7 +48,7 @@ namespace FastUnityCreationKit.Unity
         /// <summary>
         /// Removes the specified object from the list of known <see cref="CKMonoBehaviour"/>.
         /// </summary>
-        internal void UnregisterFastMonoBehaviour(CKMonoBehaviour ckMonoBehaviour)
+        internal void UnregisterFastMonoBehaviour([NotNull] CKMonoBehaviour ckMonoBehaviour)
         {
             if (_fastMonoBehaviours.Contains(ckMonoBehaviour))
                 _fastMonoBehaviours.Remove(ckMonoBehaviour);

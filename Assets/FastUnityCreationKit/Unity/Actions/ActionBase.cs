@@ -27,6 +27,7 @@ namespace FastUnityCreationKit.Unity.Actions
         [ReadOnly]
         [TitleGroup(GROUP_COOLDOWN)]
         [ShowIf(COOLDOWN_TIMER_WAS_SET)]
+        [CanBeNull]
         protected ActionCooldown CooldownTimer { get; set; }
 
         /// <summary>
@@ -103,6 +104,7 @@ namespace FastUnityCreationKit.Unity.Actions
             [ShowInInspector]
             [ReadOnly]
             [TitleGroup(GROUP_CONFIGURATION)]
+            [NotNull]
             private ActionBase OwnerReference { get; set; }
 
             protected override bool ResetTimeToFull => false;

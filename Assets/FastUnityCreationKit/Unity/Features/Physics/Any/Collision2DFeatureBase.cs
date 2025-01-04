@@ -19,19 +19,19 @@ namespace FastUnityCreationKit.Unity.Features.Physics.Any
         protected virtual async UniTask OnCollisionStayWith([NotNull] Collision2D collision, [NotNull] GameObject other)
             => await UniTask.CompletedTask;
         
-        protected async void OnCollisionEnter2D(Collision2D other)
+        protected async void OnCollisionEnter2D([NotNull] Collision2D other)
         {
             CurrentInteractionCont++;
             await OnCollisionEnterWith(other, other.gameObject);
         }
         
-        protected async void OnCollisionExit2D(Collision2D other)
+        protected async void OnCollisionExit2D([NotNull] Collision2D other)
         {
             await OnCollisionExitWith(other, other.gameObject);
             CurrentInteractionCont--;
         }
         
-        protected async void OnCollisionStay2D(Collision2D other)
+        protected async void OnCollisionStay2D([NotNull] Collision2D other)
         {
             await OnCollisionStayWith(other, other.gameObject);
         }
