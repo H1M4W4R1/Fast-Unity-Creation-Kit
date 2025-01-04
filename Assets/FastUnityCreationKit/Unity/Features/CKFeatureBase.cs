@@ -3,7 +3,7 @@ using FastUnityCreationKit.Unity.Time.Enums;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace FastUnityCreationKit.Unity
+namespace FastUnityCreationKit.Unity.Features
 {
     /// <summary>
     /// Base class for features that are attached to specific object.

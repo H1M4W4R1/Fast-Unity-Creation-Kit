@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Extensions;
 using FastUnityCreationKit.Unity;
+using FastUnityCreationKit.Unity.Features;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Features

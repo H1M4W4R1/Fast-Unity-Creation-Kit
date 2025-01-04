@@ -312,13 +312,13 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </summary>
         private float GetDeltaTime()
         {
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
             return UpdateTime switch
             {
                 UpdateTime.DeltaTime => TimeAPI.DeltaTime,
                 UpdateTime.UnscaledDeltaTime => TimeAPI.UnscaledDeltaTime,
-                UpdateTime.RealtimeSinceStartup => throw new NotSupportedException(
-                    "RealtimeSinceStartup is not supported for timers."),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new NotSupportedException(
+                    $"{UpdateTime} is not supported for timers.")
             };
         }
 
