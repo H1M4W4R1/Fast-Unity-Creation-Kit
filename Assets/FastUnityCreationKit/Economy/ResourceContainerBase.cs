@@ -1,6 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Core.Limits;
+using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Identification.Identifiers;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
@@ -10,22 +11,48 @@ using Unity.Mathematics;
 namespace FastUnityCreationKit.Economy
 {
     /// <summary>
-    ///     This is default implementation of a resource container. If any custom logic is needed,
-    ///     this class should be inherited and custom logic should be implemented.
+    ///     This is an implementation of container for specific resource type.     
+    /// </summary>
+    /// <typeparam name="TResourceType">Type of resource that this container can store.</typeparam>
+    /// <remarks>
+    ///     Methods can be overriden to implement custom logic like health resource can't be taken
+    ///     if entity is invulnerable or can't be added if entity is dead.
+    /// </remarks>
+    public abstract class ResourceContainerBase<TResourceType> : ResourceContainerBase
+        where TResourceType : ResourceBase, new()
+    {
+        public ResourceContainerBase()
+        {
+            // Get resource from database
+            TResourceType resource = ResourceDatabase.Instance.GetResource<TResourceType>();
+            if (resource == null)
+            {
+                Guard<ValidationLogConfig>.Fatal(
+                    $"Resource of type {typeof(TResourceType).Name} was not found in the database.");
+                return;
+            }
+
+            // Assign container identifier to guarantee that resource is set
+            Identifier = resource.Id;
+        }
+    }
+
+    /// <summary>
+    ///     This is default implementation of a resource container.
     /// </summary>
     /// <remarks>
     ///     Methods can be overriden to implement custom logic like health resource can't be taken
     ///     if entity is invulnerable or can't be added if entity is dead.
     /// </remarks>
-    public class ResourceReference
+    public abstract class ResourceContainerBase
     {
         protected const string GROUP_INFO = "Info";
 
         /// <summary>
-        ///     Resource identifier.
+        ///     Resource identifier. This is used to get the resource from the database.
         /// </summary>
         [OdinSerialize] [ShowInInspector] [TitleGroup(GROUP_INFO, order: int.MinValue)] [ReadOnly]
-        public Snowflake128 Identifier { get; private set; }
+        public Snowflake128 Identifier { get; protected set; }
 
         /// <summary>
         ///     Amount of resource stored currently in the container.

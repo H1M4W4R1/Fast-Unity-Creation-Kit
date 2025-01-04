@@ -41,7 +41,7 @@ namespace FastUnityCreationKit.Economy
         /// <typeparam name="TResource">Type of resource to get.</typeparam>
         /// <returns>Resource of specified type or null if not found.</returns>
         [CanBeNull] public TResource GetResource<TResource>()
-            where TResource : ResourceBase
+            where TResource : ResourceBase, new()
         {
             EnsurePreloaded();
 
