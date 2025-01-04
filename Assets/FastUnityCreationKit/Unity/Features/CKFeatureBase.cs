@@ -12,7 +12,7 @@ namespace FastUnityCreationKit.Unity.Features
     /// It is strongly recommended to add <see cref="RequireComponent"/> attribute to the derived class
     /// where type is set to same as <see cref="TFeaturedObject"/>.
     /// </remarks>
-    public abstract class CKFeatureBase<TFeaturedObject> : CKFeatureBase 
+    public abstract class CKFeatureBase<TFeaturedObject> : CKFeatureBase, IInitializable
         where TFeaturedObject : Component
     {
         /// <summary>
@@ -21,13 +21,13 @@ namespace FastUnityCreationKit.Unity.Features
         [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         protected TFeaturedObject FeaturedObject { get; private set; }
 
-        public sealed override void OnInitialize()
+        public new void OnInitialize()
         {
-            base.OnInitialize();
             FeaturedObject = GetComponent<TFeaturedObject>();
+            base.OnInitialize();
         }
     }
-    
+
     /// <summary>
     /// Represents a feature of GameObject.
     /// It can be as simple as UI object being able to snap or draggable to
@@ -44,9 +44,17 @@ namespace FastUnityCreationKit.Unity.Features
         [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         protected GameObject GameObject { get; private set; }
 
-        public virtual void OnInitialize()
+        /// <summary>
+        /// Called when the initialization of the feature is completed.
+        /// </summary>
+        protected virtual void OnInitializeCompleted()
+        {
+        }
+
+        public void OnInitialize()
         {
             GameObject = gameObject;
+            OnInitializeCompleted();
         }
 
 #region UPDATE_CONFIGURATION
