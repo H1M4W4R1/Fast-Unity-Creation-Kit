@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Identification.Abstract.Identifiers
+﻿using System.Text;
+
+namespace FastUnityCreationKit.Identification.Abstract.Identifiers
 {
     /// <summary>
     /// Represents identifier with number data for given number type.
@@ -10,7 +12,16 @@
         /// Gets value of the identifier.
         /// </summary>
         public TNumber Value { get; }
-        
+
+        string IIdentifier.GetDebugTooltipText()
+        {
+            StringBuilder tooltipBuilder = new();
+            tooltipBuilder.AppendLine("<b>Identifier data</b>");
+            tooltipBuilder.AppendLine($"<color=#00FFFF>Value:</color> {ToString()}");
+            tooltipBuilder.AppendLine($""); // spacer
+            tooltipBuilder.Append($"<color=#00FFFF>Is created:</color> {(IsCreated ? "<color=green>Yes</color>" : "<color=red>No</color>")}");
+            return tooltipBuilder.ToString();
+        }
     }
 
     /// <summary>
@@ -20,6 +31,7 @@
     /// </summary>
     public interface INumberIdentifier : IIdentifier
     {
-        
+     
+
     }
 }

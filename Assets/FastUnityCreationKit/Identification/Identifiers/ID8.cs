@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 using FastUnityCreationKit.Identification.Abstract.Identifiers;
 using Unity.Burst;
 
@@ -45,9 +46,11 @@ namespace FastUnityCreationKit.Identification.Identifiers
         }
 
         [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString() => value.ToString();
+        public override string ToString() => $"{value:X2}";
 
         /// <inheritdoc/>
         public byte Value => value;
+
+     
     }
 }

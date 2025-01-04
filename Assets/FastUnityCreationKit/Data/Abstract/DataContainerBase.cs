@@ -14,8 +14,9 @@ namespace FastUnityCreationKit.Data.Abstract
     {
         /// <summary>
         /// Data storage.  
-        /// </summary>
+        /// </summary> 
         [ShowInInspector] [ReadOnly] [OdinSerialize] [NonSerialized]
+        [Required]
         protected readonly List<TDataType> data = new();
         
         /// <summary>
@@ -46,7 +47,7 @@ namespace FastUnityCreationKit.Data.Abstract
                 return;
             }
             
-            this.data.Add(obj);
+            data.Add(obj);
         }
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace FastUnityCreationKit.Data.Abstract
         
         /// <summary>
         /// Count of the data items in the container.
-        /// </summary>
+        /// </summary> 
         public virtual int Count => data.Count;
         
         /// <summary>

@@ -49,7 +49,7 @@ namespace FastUnityCreationKit.Identification.Identifiers
         }
 
         [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString() => value.ToString();
+        public override string ToString() => $"{value:X8}";
         
         /// <inheritdoc/>
         public uint Value => value;

@@ -51,7 +51,7 @@ namespace FastUnityCreationKit.Identification.Identifiers
         public override unsafe int GetHashCode() => vectorized.GetHashCode();
 
         [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString() => value.ToString();
+        public override string ToString() => $"{value:X16}";
         
         /// <inheritdoc/>
         public ulong Value => value;

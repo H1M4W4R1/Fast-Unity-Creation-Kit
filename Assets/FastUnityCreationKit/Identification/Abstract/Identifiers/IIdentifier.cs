@@ -11,5 +11,10 @@
         /// Checks if the identifier was created.
         /// </summary>
         public bool IsCreated { get; }
+        
+        /// <summary>
+        /// Get nicely-formatted string representation of the identifier.
+        /// </summary>
+        public string GetDebugTooltipText();
     }
 }

@@ -46,7 +46,7 @@ namespace FastUnityCreationKit.Identification.Identifiers
         }
 
         [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString() => value.ToString();
+        public override string ToString() => $"{value:X4}";
         
         /// <inheritdoc/>
         public ushort Value => value;
