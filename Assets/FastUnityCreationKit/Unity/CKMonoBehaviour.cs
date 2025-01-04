@@ -185,7 +185,7 @@ namespace FastUnityCreationKit.Unity
             Destroy(behaviour.gameObject);
         }
 
-        protected virtual void NotifyObjectWasCreated()
+        private void NotifyObjectWasCreated()
         {
             if (this is ICreateCallback createCallback) createCallback.OnObjectCreated();
 
@@ -193,7 +193,7 @@ namespace FastUnityCreationKit.Unity
                 OnObjectCreatedEvent.TriggerEvent(this);
         }
 
-        protected virtual void NotifyObjectWasDestroyed()
+        private void NotifyObjectWasDestroyed()
         {
             if (this is IDestroyCallback destroyCallback) destroyCallback.OnObjectDestroyed();
 
@@ -201,7 +201,7 @@ namespace FastUnityCreationKit.Unity
                 OnObjectDestroyedEvent.TriggerEvent(this);
         }
 
-        protected virtual void NotifyObjectWasEnabled()
+        private void NotifyObjectWasEnabled()
         {
             if (this is IEnabledCallback enabledCallback) enabledCallback.OnObjectEnabled();
 
@@ -209,7 +209,7 @@ namespace FastUnityCreationKit.Unity
                 OnObjectEnabledEvent.TriggerEvent(this);
         }
 
-        protected virtual void NotifyObjectWasDisabled()
+        private void NotifyObjectWasDisabled()
         {
             if (this is IDisabledCallback disabledCallback) disabledCallback.OnObjectDisabled();
 
@@ -217,7 +217,7 @@ namespace FastUnityCreationKit.Unity
                 OnObjectDisabledEvent.TriggerEvent(this);
         }
 
-        protected virtual void NotifyObjectWasFixedUpdated()
+        private void NotifyObjectWasFixedUpdated()
         {
             if (this is IFixedUpdateCallback fixedUpdateCallback) fixedUpdateCallback.OnObjectFixedUpdated();
 
@@ -225,7 +225,7 @@ namespace FastUnityCreationKit.Unity
                 OnObjectFixedUpdateEvent.TriggerEvent(this);
         }
 
-        protected virtual void NotifyObjectWasPreUpdated(float deltaTime)
+        private void NotifyObjectWasPreUpdated(float deltaTime)
         {
             if (this is IPreUpdateCallback preUpdateCallback) preUpdateCallback.OnBeforeObjectUpdated(deltaTime);
 
@@ -233,7 +233,7 @@ namespace FastUnityCreationKit.Unity
                 OnObjectPreUpdateEvent.TriggerEvent(this);
         }
 
-        protected virtual void NotifyObjectWasUpdated(float deltaTime)
+        private void NotifyObjectWasUpdated(float deltaTime)
         {
             if (this is IUpdateCallback updateCallback) updateCallback.OnObjectUpdated(deltaTime);
 
@@ -241,7 +241,7 @@ namespace FastUnityCreationKit.Unity
                 OnObjectUpdateEvent.TriggerEvent(this);
         }
 
-        protected virtual void NotifyObjectWasPostUpdated(float deltaTime)
+        private void NotifyObjectWasPostUpdated(float deltaTime)
         {
             if (this is IPostUpdateCallback postUpdateCallback) postUpdateCallback.OnAfterObjectUpdated(deltaTime);
 
