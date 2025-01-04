@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Editor;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
@@ -22,14 +23,14 @@ namespace FastUnityCreationKit.Editor.Drawers
                 if (parent?.ValueEntry?.WeakSmartValue is CKMonoBehaviour) break;
                 parent = parent.Parent;
             }
-            
+
             // We can draw this property only if it's parent is CKMonoBehaviour
             if (parent == null)
             {
                 EditorGUILayout.LabelField("<color=red>Owner is not CKMonoBehaviour</color>");
                 return;
             }
-            
+
             // Get CKMonoBehaviour instance
             CKMonoBehaviour ownerBehaviour = (CKMonoBehaviour) parent.ValueEntry.WeakSmartValue;
 
@@ -38,18 +39,23 @@ namespace FastUnityCreationKit.Editor.Drawers
             foreach (Type ifx in ownerBehaviour.GetType().GetInterfaces())
             {
                 // Skip hidden interfaces
-                if(ifx.GetCustomAttribute<HideInInspector>() != null) continue;
-                
+                if (ifx.GetCustomAttribute<HideInInspector>() != null) continue;
+
                 // Skip generic types, we want to handle only concrete types
                 if (ifx.IsGenericType) continue;
                 if (!ifx.ImplementsOrInherits(typeof(ICKBehaviourCallback))) continue;
-                
+
                 count++;
             }
 
             GUIContent eventsLabel = new GUIContent("Registered Events");
             GUIContent eventsCountLabel = new GUIContent(count.ToString());
-            eventsLabel.tooltip = ValueEntry.SmartValue.BuildTooltip(ownerBehaviour);
+
+            (string eventsTooltip, string countTooltip) =
+                ValueEntry.SmartValue.BuildTooltip(ownerBehaviour);
+
+            eventsLabel.tooltip = eventsTooltip;
+            eventsCountLabel.tooltip = countTooltip;
             
             // Draw count label
             EditorGUILayout.LabelField(eventsLabel, eventsCountLabel);

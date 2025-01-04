@@ -20,13 +20,13 @@ namespace FastUnityCreationKit.Unity.Editor
         /// <summary>
         /// Builds a tooltip for the given <see cref="CKMonoBehaviour"/>.
         /// </summary>
-        [NotNull] public string BuildTooltip([NotNull] CKMonoBehaviour behaviour)
+        public (string, string countTooltip) BuildTooltip([NotNull] CKMonoBehaviour behaviour)
         {
-            Type behaviourType = behaviour.GetType();
+          Type behaviourType = behaviour.GetType();
 
-            StringBuilder sb = new StringBuilder("<size=16><color=#00FFFF><b>Events</b></color></size>");
-            sb.AppendLine();
-            sb.AppendLine("<b>Local events</b>");
+            StringBuilder sb0 = new("<size=16><color=#00FFFF><b>Events</b></color></size>");
+            sb0.AppendLine();
+            sb0.AppendLine("<b>Local events</b>");
 
             int localEventsCount = 0;
 
@@ -42,11 +42,11 @@ namespace FastUnityCreationKit.Unity.Editor
                 Type knownLocalEvent = knownLocalEvents[index];
                 if (!behaviourType.ImplementsOrInherits(knownLocalEvent)) continue;
 
-                sb.AppendLine($"<color=green>{knownLocalEvent.GetLabel()}</color>");
+                sb0.AppendLine($"<color=green>{knownLocalEvent.GetLabel()}</color>");
                 localEventsCount++;
             }
 
-            if (localEventsCount == 0) sb.AppendLine("<color=white>No local events found</color>");
+            if (localEventsCount == 0) sb0.AppendLine("<color=white>No local events found</color>");
 
             // --------------------------------
             //
@@ -56,19 +56,19 @@ namespace FastUnityCreationKit.Unity.Editor
             
             int globalEventsCount = 0;
 
-            sb.AppendLine();
-            sb.AppendLine("<b>Global events</b>");
+            sb0.AppendLine();
+            sb0.AppendLine("<b>Global events</b>");
             List<Type> knownGlobalEvents = typeof(IGlobalCallback).GetSameAssemblyInterfacesByRootInterface();
             for (int index = 0; index < knownGlobalEvents.Count; index++)
             {
                 Type knownGlobalEvent = knownGlobalEvents[index];
                 if (!behaviourType.ImplementsOrInherits(knownGlobalEvent)) continue;
 
-                sb.AppendLine($"{knownGlobalEvent.GetLabel()}");
+                sb0.AppendLine($"{knownGlobalEvent.GetLabel()}");
                 globalEventsCount++;
             }
 
-            if (globalEventsCount == 0) sb.AppendLine("<color=white>No global events found</color>");
+            if (globalEventsCount == 0) sb0.AppendLine("<color=white>No global events found</color>");
             
             // --------------------------------
             //
@@ -78,22 +78,36 @@ namespace FastUnityCreationKit.Unity.Editor
             
             int customEventsCount = 0;
             
-            sb.AppendLine();
-            sb.AppendLine("<b>Custom events</b>");
+            sb0.AppendLine();
+            sb0.AppendLine("<b>Custom events</b>");
             List<Type> knownCustomEvents = typeof(ICustomCallback).GetSameAssemblyInterfacesByRootInterface();
             for (int index = 0; index < knownCustomEvents.Count; index++)
             {
                 Type knownCustomEvent = knownCustomEvents[index];
                 if (!behaviourType.ImplementsOrInherits(knownCustomEvent)) continue;
 
-                sb.AppendLine($"{knownCustomEvent.GetLabel()}");
+                sb0.AppendLine($"{knownCustomEvent.GetLabel()}");
                 customEventsCount++;
             }
 
-            if (customEventsCount == 0) sb.AppendLine("<color=white>No custom events found</color>");
+            if (customEventsCount == 0) sb0.Append("<color=white>No custom events found</color>");
 
-            return sb.ToString();
+            // --------------------------------
+            //
+            // Handle drawing event count tooltip
+            //
+            // --------------------------------
+            
+            StringBuilder sb1 = new("<size=16><color=#00FFFF><b>Events</b></color></size>");
+            sb1.AppendLine();
+            sb1.AppendLine($"<b>Local events</b>: {(localEventsCount > 0 ? localEventsCount : "<color=white>None</color>")}");
+            sb1.AppendLine($"<b>Global events</b>: {(globalEventsCount > 0 ? globalEventsCount : "<color=white>None</color>")}");
+            sb1.Append($"<b>Custom events</b>: {(customEventsCount > 0 ? customEventsCount : "<color=white>None</color>")}");
+            
+            return (sb0.ToString(), sb1.ToString());
         }
+
+  
     }
 #endif
 }
