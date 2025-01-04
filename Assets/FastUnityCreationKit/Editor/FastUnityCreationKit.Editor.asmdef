@@ -13,7 +13,8 @@
 		"FastUnityCreationKit.Annotations",
 		"FastUnityCreationKit.Core",
 		"FastUnityCreationKit.Data",
-		"FastUnityCreationKit.Identification"	
+		"FastUnityCreationKit.Identification",
+		"FastUnityCreationKit.Unity"	
 	],
 	"includePlatforms": ["Editor"]	
 }

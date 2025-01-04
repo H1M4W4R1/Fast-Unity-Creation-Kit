@@ -20,7 +20,7 @@ namespace FastUnityCreationKit.Unity.Events.Unity
         /// <summary>
         /// Trigger the event for the specified type.
         /// </summary>
-        public static void Trigger(CKMonoBehaviour objectInstance)
+        public static void TriggerEvent(CKMonoBehaviour objectInstance)
         {
             // Get type from instance to reduce parameter count.
             Type withType = objectInstance.GetType();
@@ -36,7 +36,7 @@ namespace FastUnityCreationKit.Unity.Events.Unity
             // Get the method to trigger the event.
             MethodInfo method = typeof(OnObjectCreatedEvent<>)
                 .MakeGenericType(withType)
-                .GetMethod(nameof(Trigger));
+                .GetMethod(nameof(TriggerEvent), BindingFlags.Public | BindingFlags.Static);
             
             method?.Invoke(null, new[] {convertedInstance});
         }

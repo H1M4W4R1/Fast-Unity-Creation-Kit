@@ -27,7 +27,7 @@ namespace FastUnityCreationKit.Unity
     [SupportedFeature(typeof(IClickable))] [SupportedFeature(typeof(IHoverable))]
     [SupportedFeature(typeof(IDoubleClickable))] [SupportedFeature(typeof(ISelectable))]
     [SupportedFeature(typeof(IInitializable))] 
-    public abstract class CKMonoBehaviour : SerializedMonoBehaviour
+    public abstract class CKMonoBehaviour : MonoBehaviour
     {
         protected const string GROUP_STATE = "State";
         protected const string GROUP_DEBUG = "Debug";
@@ -190,7 +190,7 @@ namespace FastUnityCreationKit.Unity
                 createCallback.OnObjectCreated();
             
             // Trigger the event for the object.
-            OnObjectCreatedEvent.Trigger(this);
+            OnObjectCreatedEvent.TriggerEvent(this);
         }
 
         protected virtual void NotifyObjectWasDestroyed()
@@ -198,7 +198,7 @@ namespace FastUnityCreationKit.Unity
             if (this is IDestroyCallback destroyCallback)
                 destroyCallback.OnObjectDestroyed();
             
-            OnObjectDestroyedEvent.Trigger(this);
+            OnObjectDestroyedEvent.TriggerEvent(this);
         }
 
         protected virtual void NotifyObjectWasEnabled()
@@ -206,7 +206,7 @@ namespace FastUnityCreationKit.Unity
             if (this is IEnabledCallback enabledCallback)
                 enabledCallback.OnObjectEnabled();
             
-            OnObjectEnabledEvent.Trigger(this);
+            OnObjectEnabledEvent.TriggerEvent(this);
         }
 
         protected virtual void NotifyObjectWasDisabled()
@@ -214,7 +214,7 @@ namespace FastUnityCreationKit.Unity
             if (this is IDisabledCallback disabledCallback)
                 disabledCallback.OnObjectDisabled();
             
-            OnObjectDisabledEvent.Trigger(this);
+            OnObjectDisabledEvent.TriggerEvent(this);
         }
 
         protected virtual void NotifyObjectWasFixedUpdated()
