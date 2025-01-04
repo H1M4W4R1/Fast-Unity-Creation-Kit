@@ -1,7 +1,6 @@
 ﻿using FastUnityCreationKit.Identification.Identifiers;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine;
 
 namespace FastUnityCreationKit.Identification
 {

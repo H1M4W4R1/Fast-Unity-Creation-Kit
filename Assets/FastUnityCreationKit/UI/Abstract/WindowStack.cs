@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using FastUnityCreationKit.UI.Elements.Core;
-using FastUnityCreationKit.UI.Utility;
 using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 

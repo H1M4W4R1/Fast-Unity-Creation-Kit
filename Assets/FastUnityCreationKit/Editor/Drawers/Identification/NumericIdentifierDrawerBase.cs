@@ -1,5 +1,4 @@
-﻿using System.Text;
-using FastUnityCreationKit.Identification.Abstract.Identifiers;
+﻿using FastUnityCreationKit.Identification.Abstract.Identifiers;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;

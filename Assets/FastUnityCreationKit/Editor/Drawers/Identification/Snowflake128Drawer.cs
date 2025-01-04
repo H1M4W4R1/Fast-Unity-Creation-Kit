@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using FastUnityCreationKit.Identification.Identifiers;
+﻿using FastUnityCreationKit.Identification.Identifiers;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
