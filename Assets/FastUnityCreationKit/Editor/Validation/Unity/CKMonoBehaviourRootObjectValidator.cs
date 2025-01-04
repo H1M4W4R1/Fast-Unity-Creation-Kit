@@ -15,7 +15,7 @@ namespace FastUnityCreationKit.Editor.Validation.Unity
             // Get type
             Type withType = this.Value.GetType();
 
-            // Check if has any [OdinSerialize] fields
+            // Check if type has any [OdinSerialize] fields
             foreach (FieldInfo field in withType.GetFields(BindingFlags.Instance | BindingFlags.Public |
                                                            BindingFlags.NonPublic))
             {
@@ -25,7 +25,7 @@ namespace FastUnityCreationKit.Editor.Validation.Unity
                 return;
             }
 
-            // Check if has any [OdinSerialize] properties
+            // Check if type has any [OdinSerialize] properties
             foreach (PropertyInfo property in withType.GetProperties(BindingFlags.Instance | BindingFlags.Public |
                                                                      BindingFlags.NonPublic))
             {

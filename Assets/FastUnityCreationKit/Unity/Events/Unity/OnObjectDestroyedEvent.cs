@@ -2,12 +2,16 @@
 using System.Reflection;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Events;
+using JetBrains.Annotations;
+using UnityEngine.Scripting;
 
 namespace FastUnityCreationKit.Unity.Events.Unity
 {
     /// <summary>
     /// Called when an object is destroyed.
     /// </summary>
+    [Preserve]
+    [UsedImplicitly]
     public sealed class
         OnObjectDestroyedEvent<TObjectType> : GlobalEventChannel<OnObjectDestroyedEvent<TObjectType>, TObjectType>
         where TObjectType : CKMonoBehaviour
@@ -23,10 +27,11 @@ namespace FastUnityCreationKit.Unity.Events.Unity
         {
             // Get type from instance to reduce parameter count.
             Type withType = objectInstance.GetType();
-            
+
 #if UNITY_EDITOR
             if (!withType.IsSubclassOf(typeof(CKMonoBehaviour)))
-                Guard<ValidationLogConfig>.Error($"{withType.FullName} is not a subclass of CKMonoBehaviour.");
+                Guard<ValidationLogConfig>.Error(
+                    $"{withType.FullName} is not a subclass of {nameof(CKMonoBehaviour)}.");
 #endif
 
             // Convert the object instance to the correct type.

@@ -2,13 +2,17 @@
 using System.Reflection;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Events;
+using JetBrains.Annotations;
+using UnityEngine.Scripting;
 
 namespace FastUnityCreationKit.Unity.Events.Unity
 {
     /// <summary>
     /// Called when an object is enabled.
     /// </summary>
-    public sealed class OnObjectEnabledEvent<TObjectType> : 
+    [Preserve]
+    [UsedImplicitly]
+    public sealed class OnObjectEnabledEvent<TObjectType> :
         GlobalEventChannel<OnObjectEnabledEvent<TObjectType>, TObjectType>
         where TObjectType : CKMonoBehaviour
     {
@@ -22,7 +26,8 @@ namespace FastUnityCreationKit.Unity.Events.Unity
 
 #if UNITY_EDITOR
             if (!withType.IsSubclassOf(typeof(CKMonoBehaviour)))
-                Guard<ValidationLogConfig>.Error($"{withType.FullName} is not a subclass of CKMonoBehaviour.");
+                Guard<ValidationLogConfig>.Error(
+                    $"{withType.FullName} is not a subclass of {nameof(CKMonoBehaviour)}.");
 #endif
 
             object convertedInstance = Convert.ChangeType(objectInstance, withType);
