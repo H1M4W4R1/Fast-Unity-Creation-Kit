@@ -7,6 +7,7 @@ using FastUnityCreationKit.Unity.Interfaces.Interaction;
 using FastUnityCreationKit.Unity.Time.Enums;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Core.Objects;
+using FastUnityCreationKit.Unity.Events.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -187,24 +188,33 @@ namespace FastUnityCreationKit.Unity
         {
             if (this is ICreateCallback createCallback)
                 createCallback.OnObjectCreated();
+            
+            // Trigger the event for the object.
+            OnObjectCreatedEvent.Trigger(this);
         }
 
         protected virtual void NotifyObjectWasDestroyed()
         {
             if (this is IDestroyCallback destroyCallback)
                 destroyCallback.OnObjectDestroyed();
+            
+            OnObjectDestroyedEvent.Trigger(this);
         }
 
         protected virtual void NotifyObjectWasEnabled()
         {
             if (this is IEnabledCallback enabledCallback)
                 enabledCallback.OnObjectEnabled();
+            
+            OnObjectEnabledEvent.Trigger(this);
         }
 
         protected virtual void NotifyObjectWasDisabled()
         {
             if (this is IDisabledCallback disabledCallback)
                 disabledCallback.OnObjectDisabled();
+            
+            OnObjectDisabledEvent.Trigger(this);
         }
 
         protected virtual void NotifyObjectWasFixedUpdated()
