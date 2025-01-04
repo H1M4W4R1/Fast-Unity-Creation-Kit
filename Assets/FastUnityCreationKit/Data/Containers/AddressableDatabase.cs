@@ -104,7 +104,14 @@ namespace FastUnityCreationKit.Data.Containers
 
         [NotNull] public TSelfSealed EnsurePreloaded()
         {
-            if (!IsPreloaded) Preload();
+            // If database is already preloaded, return the instance
+            if (IsPreloaded) return (TSelfSealed) this;
+            
+            // Preload the database
+            UniTask preloadOperation = Preload();
+                
+            // Wait for the operation to complete, fail or be cancelled
+            while (preloadOperation.Status == UniTaskStatus.Pending) ;
 
             return (TSelfSealed) this;
         }
@@ -112,7 +119,7 @@ namespace FastUnityCreationKit.Data.Containers
         /// <summary>
         ///     Preload the database.
         /// </summary>
-        public async void Preload(bool waitForComplete = true)
+        public async UniTask Preload(bool waitForComplete = true)
         {
             if (waitForComplete)
                 await _Preload();
