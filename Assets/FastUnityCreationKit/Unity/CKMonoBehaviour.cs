@@ -3,14 +3,12 @@ using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Structure.Initialization;
-using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
-using FastUnityCreationKit.Unity.Interfaces.Callbacks.Physics;
 using FastUnityCreationKit.Unity.Interfaces.Interaction;
 using FastUnityCreationKit.Unity.Time.Enums;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Core.Objects;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks;
 using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace FastUnityCreationKit.Unity
 {
@@ -26,11 +24,8 @@ namespace FastUnityCreationKit.Unity
     [SupportedFeature(typeof(ITemporaryObject))] [SupportedFeature(typeof(IPersistentObject))]
     [SupportedFeature(typeof(IClickable))] [SupportedFeature(typeof(IHoverable))]
     [SupportedFeature(typeof(IDoubleClickable))] [SupportedFeature(typeof(ISelectable))]
-    [SupportedFeature(typeof(IInitializable))] [SupportedFeature(typeof(IOnTriggerEnterCallback))]
-    [SupportedFeature(typeof(IOnTriggerExitCallback))] [SupportedFeature(typeof(IOnTriggerStayCallback))]
-    [SupportedFeature(typeof(IOnCollisionEnterCallback))] [SupportedFeature(typeof(IOnCollisionExitCallback))]
-    [SupportedFeature(typeof(IOnCollisionStayCallback))]
-    public abstract class CKMonoBehaviour : MonoBehaviour
+    [SupportedFeature(typeof(IInitializable))] 
+    public abstract class CKMonoBehaviour : SerializedMonoBehaviour
     {
         protected const string GROUP_STATE = "State";
         protected const string GROUP_DEBUG = "Debug";
@@ -222,42 +217,6 @@ namespace FastUnityCreationKit.Unity
         {
             if (this is IPostUpdateCallback postUpdateCallback)
                 postUpdateCallback.OnAfterObjectUpdated(deltaTime);
-        }
-
-        protected void OnTriggerEnter(Collider other)
-        {
-            if (this is IOnTriggerEnterCallback triggerEnterCallback)
-                triggerEnterCallback._OnTriggerEnter(other);
-        }
-        
-        protected void OnTriggerExit(Collider other)
-        {
-            if (this is IOnTriggerExitCallback triggerExitCallback)
-                triggerExitCallback._OnTriggerExit(other);
-        }
-        
-        protected void OnTriggerStay(Collider other)
-        {
-            if (this is IOnTriggerStayCallback triggerStayCallback)
-                triggerStayCallback._OnTriggerStay(other);
-        }
-
-        private void OnCollisionEnter(Collision other)
-        {
-            if (this is IOnCollisionEnterCallback collisionEnterCallback)
-                collisionEnterCallback._OnCollisionEnter(other);
-        }
-        
-        private void OnCollisionExit(Collision other)
-        {
-            if (this is IOnCollisionExitCallback collisionExitCallback)
-                collisionExitCallback._OnCollisionExit(other);
-        }
-        
-        private void OnCollisionStay(Collision other)
-        {
-            if (this is IOnCollisionStayCallback collisionStayCallback)
-                collisionStayCallback._OnCollisionStay(other);
         }
 
         private void OnApplicationQuit()

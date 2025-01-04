@@ -12,7 +12,8 @@ namespace FastUnityCreationKit.UI.Features.Snapping
     /// <summary>
     /// Represents a feature that allows snapping to a specific position.
     /// </summary>
-    public abstract class SnapToFeatureBase<TSnapObject> : UIFeature, IPointerUpHandler, IPointerDownHandler
+    public abstract class SnapToFeatureBase<TSnapObject> : UIObjectFeatureBase, 
+        IPointerUpHandler, IPointerDownHandler
         where TSnapObject : UIObjectBase, ISnapTarget<TSnapObject>
     {
         /// <summary>
@@ -52,7 +53,7 @@ namespace FastUnityCreationKit.UI.Features.Snapping
 
         private void Start()
         {
-            // Snap to closest object after everything is initialized
+            // Snap to the closest object after everything is initialized
             if(StartSnapped)
                 ExecuteSnap(transform.position);
         }

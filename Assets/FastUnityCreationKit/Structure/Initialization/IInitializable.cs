@@ -21,7 +21,7 @@
         /// <summary>
         /// Internal initialization method.
         /// </summary>
-        protected void OnInitialize();
+        void OnInitialize();
         
         /// <summary>
         /// Ensures that the object is initialized.

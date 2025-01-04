@@ -8,7 +8,7 @@ namespace FastUnityCreationKit.UI.Features
     /// <summary>
     /// Allows object to be dragged. Combines well with snapping feature.
     /// </summary>
-    public sealed class DragFeature : UIFeature, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public sealed class DragFeature : UIObjectFeatureBase, IBeginDragHandler, IEndDragHandler, IDragHandler
     {
         [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         private bool _isDragging = false;
@@ -42,7 +42,7 @@ namespace FastUnityCreationKit.UI.Features
                 return;
             
             // Update position
-            RectTransform rt = objectBaseReference.RectTransform;
+            RectTransform rt = FeaturedObject.RectTransform;
             if(SnapToMousePosition)
                 rt.position = eventData.position;
             else

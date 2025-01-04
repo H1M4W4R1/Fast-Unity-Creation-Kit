@@ -29,7 +29,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Text
         
         private string _cachedString;
 
-        void IInitializable.OnInitialize()
+        public void OnInitialize()
         {
             // Subscribe to string changed event
             localizedString.StringChanged += OnStringChanged;

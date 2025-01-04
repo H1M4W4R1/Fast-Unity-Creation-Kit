@@ -1,8 +1,10 @@
 ﻿using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.UI.Utility;
-using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
 using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.Unity;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks;
+using FastUnityCreationKit.Unity.Time.Enums;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Abstract
@@ -10,7 +12,7 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     /// The base class for all UI objects in Fast Unity Creation Kit.
     /// </summary>
-    public abstract class UIObjectBase : UIBehaviour, ICreateCallback, IDestroyCallback
+    public abstract class UIObjectBase : CKMonoBehaviour, ICreateCallback, IDestroyCallback
     {
         /// <summary>
         /// Rect transform of this object.
@@ -61,5 +63,15 @@ namespace FastUnityCreationKit.UI.Abstract
             // Unregister this object
             UIManager.Instance.UnregisterUserInterfaceObject(this);
         }
+        
+#region UPDATE_CONFIGURATION
+
+        // UI objects are always updated (even when disabled or when time is paused) and
+        // they are updated using unscaled delta time - to prevent UI from being dependent on time scale.
+        public override UpdateTime UpdateTimeConfig => UpdateTime.UnscaledDeltaTime;
+        public override UpdateMode UpdateMode => UpdateMode.UpdateWhenDisabled | UpdateMode.UpdateWhenTimePaused;
+
+#endregion
+
     }
 }

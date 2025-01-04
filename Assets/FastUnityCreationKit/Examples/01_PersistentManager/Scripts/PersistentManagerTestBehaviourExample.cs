@@ -1,5 +1,5 @@
 ﻿using FastUnityCreationKit.Unity;
-using FastUnityCreationKit.Unity.Interfaces.Callbacks.Basic;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._01_PersistentManager.Scripts
