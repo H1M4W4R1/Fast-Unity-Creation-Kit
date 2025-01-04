@@ -26,7 +26,9 @@ namespace FastUnityCreationKit.Structure.Singleton
             {
                 Guard<ValidationLogConfig>.Error($"Type {typeof(TSelf).GetCompilableNiceFullName()} is not a MonoBehaviour. " +
                                                        $"For regular C# classes use ISingleton<TSelf>.");
-                return default!;
+                
+                // ReSharper disable once NullableWarningSuppressionIsUsed
+                return null!;
             }
 #endif
 
@@ -43,6 +45,7 @@ namespace FastUnityCreationKit.Structure.Singleton
             Instance = new GameObject(typeof(TSelf).GetCompilableNiceFullName()).AddComponent<TSelf>();
 
             // Return the instance, most likely won't be null as long as TSelf is a MonoBehaviour
+            // ReSharper disable once NullableWarningSuppressionIsUsed
             return Instance!;
         }
     }

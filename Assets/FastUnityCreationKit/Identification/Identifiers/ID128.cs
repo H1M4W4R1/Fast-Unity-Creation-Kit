@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Identification.Abstract.Identifiers;
+using JetBrains.Annotations;
 using Unity.Burst;
 using Unity.Mathematics;
 
@@ -38,10 +39,11 @@ namespace FastUnityCreationKit.Identification.Identifiers
         public override bool Equals(object obj) => obj is ID128 other && Equals(other);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override unsafe int GetHashCode() => value.GetHashCode() + isCreated.GetHashCode();
+        public override int GetHashCode() => value.GetHashCode() + isCreated.GetHashCode();
 
         [BurstDiscard]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [NotNull]
         public override string ToString() => $"{value.x:X8}{value.y:X8}-{value.z:X8}{value.w:X8}";
 
         /// <inheritdoc/>

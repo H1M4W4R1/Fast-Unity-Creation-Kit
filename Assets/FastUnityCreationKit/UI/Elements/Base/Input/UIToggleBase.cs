@@ -14,6 +14,7 @@ namespace FastUnityCreationKit.UI.Elements.Base.Input
         /// <summary>
         /// Internal reference to the toggle.
         /// </summary>
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] private Toggle _toggle = null!;
 
         public override void Setup()

@@ -9,9 +9,9 @@ namespace FastUnityCreationKit.Core.Logging
     public sealed class EntityLogConfig : LogConfigBase
     {
         public override LogLevel MinimumLevel => LogLevel.Verbose;
-        
+
         public override ConsoleWriteInfo ConsoleOut => new(LogLevel.Verbose);
-        
+
         public override FileWriteInfo[] Files => new[]
         {
             new FileWriteInfo(

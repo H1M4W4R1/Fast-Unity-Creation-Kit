@@ -72,7 +72,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
         }
 
         private static void TryRegisterInContainer([NotNull] Object obj,
-            AutoRegisterInAttribute registerAttribute,
+            [NotNull] AutoRegisterInAttribute registerAttribute,
             Func<Object, Type, AutoRegisterInAttribute, object> getRegistryObjectRequestAction)
         {
             // Get object type and base type used to define database
@@ -186,7 +186,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             return kvp;
         }
 
-        private static object SelfObjectReference([NotNull] Object obj,
+        [NotNull] private static object SelfObjectReference([NotNull] Object obj,
             [NotNull] Type foundBaseClass,
             AutoRegisterInAttribute registerAttribute) => obj;
     }

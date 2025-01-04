@@ -60,7 +60,8 @@ namespace FastUnityCreationKit.Unity.Actions
         public async UniTask Execute()
         {
             // Check if action has cooldown.
-            if (HasCooldown && CooldownTimer.Enabled)
+            // ReSharper disable once NullableWarningSuppressionIsUsed
+            if (HasCooldown && CooldownTimer!.Enabled)
             {
                 // Execute action during cooldown.
                 await OnExecutedDuringCooldown();
@@ -72,7 +73,7 @@ namespace FastUnityCreationKit.Unity.Actions
 
             // Perform cooldown start if timer is present.
             if (HasCooldown)
-                CooldownTimer.Run();
+                CooldownTimer?.Run();
         }
 
         public UniTask Reset()

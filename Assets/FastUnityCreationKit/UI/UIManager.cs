@@ -210,11 +210,13 @@ namespace FastUnityCreationKit.UI
         /// </summary>
         /// <typeparam name="TUserInterfaceObjectType">Type of object to get.</typeparam>
         /// <returns>Enumerator of all objects of type TUserInterfaceObjectType.</returns>
-        public IEnumerable<TUserInterfaceObjectType> GetAllObjectsOfType<TUserInterfaceObjectType>()
+        [ItemNotNull] public IEnumerable<TUserInterfaceObjectType> GetAllObjectsOfType<TUserInterfaceObjectType>()
             where TUserInterfaceObjectType : UIObjectBase
         {
             UserInterfaceObjectTable<TUserInterfaceObjectType> table = GetTableFor<TUserInterfaceObjectType>();
             for (int i = 0; i < table.Count; i++)
+                // ReSharper disable once AssignNullToNotNullAttribute
+                // Can't be null as index is always in range
                 yield return table[i];
         }
         

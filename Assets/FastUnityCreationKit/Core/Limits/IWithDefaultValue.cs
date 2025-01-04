@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Core.Limits
+﻿using JetBrains.Annotations;
+
+namespace FastUnityCreationKit.Core.Limits
 {
     /// <summary>
     /// Represents a default value for a number.
@@ -9,6 +11,6 @@
         /// <summary>
         /// Default value for the number.
         /// </summary>
-        public TNumber DefaultValue { get; }
+        [NotNull] public TNumber DefaultValue { get; }
     }
 }

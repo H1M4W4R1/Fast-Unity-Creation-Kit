@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.Identification.Abstract.Identifiers
+﻿using JetBrains.Annotations;
+
+namespace FastUnityCreationKit.Identification.Abstract.Identifiers
 {
     /// <summary>
     /// Represents an identifier - a value that can be used to identify an object.
@@ -15,6 +17,6 @@
         /// <summary>
         /// Get nicely-formatted string representation of the identifier.
         /// </summary>
-        public string GetDebugTooltipText();
+        [NotNull] public string GetDebugTooltipText();
     }
 }

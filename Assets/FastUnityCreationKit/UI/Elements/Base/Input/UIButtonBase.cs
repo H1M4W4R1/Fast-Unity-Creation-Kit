@@ -15,6 +15,7 @@ namespace FastUnityCreationKit.UI.Elements.Base.Input
         /// Internal reference to the button.
         /// </summary>
         [NotNull]
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         private Button _button = null!;
 
         public override void Setup()

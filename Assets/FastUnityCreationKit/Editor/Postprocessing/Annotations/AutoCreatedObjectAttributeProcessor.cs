@@ -24,24 +24,25 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
         /// <summary>
         /// Count scripts modified in specified assets.
         /// </summary>
-        private static int CountScripts(string[] assets)
+        private static int CountScripts([NotNull] string[] assets)
         {
             // Count scripts
             int count = 0;
             for (int index = 0; index < assets.Length; index++)
             {
                 string asset = assets[index];
-                if (asset.EndsWith(".cs")) count++;
+                if (asset.EndsWith(".cs", StringComparison.Ordinal)) count++;
             }
 
             return count;
         }
 
-        public void PostprocessAllAssets(string[] importedAssets,
-            string[] deletedAssets,
-            string[] movedAssets,
-            string[] movedFromAssetPaths)
+        public void PostprocessAllAssets([NotNull] string[] importedAssets,
+            [NotNull] string[] deletedAssets,
+            [NotNull] string[] movedAssets,
+            [NotNull] string[] movedFromAssetPaths)
         {
+            if (movedFromAssetPaths == null) throw new ArgumentNullException(nameof(movedFromAssetPaths));
             // We are primarily interested in new and deleted scripts 
             int totalCount = CountScripts(importedAssets) + CountScripts(deletedAssets) + CountScripts(movedAssets);
             Guard<ValidationLogConfig>.Verbose($"Processing scripts. Found {totalCount} modifications.");
@@ -66,7 +67,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                 ProcessAssembly(assembly);
         }
 
-        private static void ProcessAssembly(Assembly assembly)
+        private static void ProcessAssembly([NotNull] Assembly assembly)
         {
             int createdCount = 0;
 
@@ -76,7 +77,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                 // Check if type is abstract or interface  
                 if (type.IsInterface || type.IsAbstract) continue;
 
-                (bool success, ScriptableObject obj) = TryCreateScriptableObject(type);
+                (bool success, ScriptableObject _) = TryCreateScriptableObject(type);
                 if (success) createdCount++;
             }
 
@@ -136,7 +137,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             return (true, obj);
         }
 
-        private static string ValidateAndGetDirectoryPath(AutoCreatedObjectAttribute attribute)
+        [NotNull] private static string ValidateAndGetDirectoryPath([NotNull] AutoCreatedObjectAttribute attribute)
         {
             string subDirectory = attribute.SubDirectory;
 

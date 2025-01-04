@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.Identification.Identifiers;
 using FastUnityCreationKit.Core.Limits;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using Unity.Mathematics;
@@ -41,7 +42,7 @@ namespace FastUnityCreationKit.Economy
         [ReadOnly]
         public long Amount { get; internal set; }
 
-        public ResourceBase Resource => ResourceDatabase.Instance.GetResource(Identifier);
+        [CanBeNull] public ResourceBase Resource => ResourceDatabase.Instance.GetResource(Identifier);
 
         public long ContainerMaxLimit =>
             (long) (this is IWithMaxLimit maxLimitContainer ? maxLimitContainer.MaxLimit : long.MaxValue);
@@ -100,6 +101,8 @@ namespace FastUnityCreationKit.Economy
             // Check if amount exceeds max limit
             if (!HasSpaceFor(amount) && !force)
             {
+                if(ReferenceEquals(Resource, null)) return amount;
+                
                 await Resource.OnResourceAddFailedAsync(this, amount, SpaceLeft);
                 await OnResourceAddFailedAsync(amount, SpaceLeft);
                 return amount;
@@ -113,6 +116,10 @@ namespace FastUnityCreationKit.Economy
 
             // Get added amount and call events
             long addedAmount = Amount - startAmount;
+            
+            // Prevent null reference exception
+            if(ReferenceEquals(Resource, null)) return 0L;
+            
             await Resource.OnResourceAddedAsync(this, addedAmount);
             await OnResourceAddedAsync(addedAmount);
             await Resource.OnResourceChangedAsync(this, startAmount, Amount);
@@ -147,6 +154,7 @@ namespace FastUnityCreationKit.Economy
             // Check if amount is less than min limit, if so, return false when force is false
             if (!HasEnough(amount) && !force)
             {
+                if(ReferenceEquals(Resource, null)) return amount;
                 await Resource.OnResourceRemoveFailedAsync(this, amount, AmountLeft);
                 await OnResourceRemoveFailedAsync(amount, AmountLeft);
                 return amount;
@@ -160,6 +168,10 @@ namespace FastUnityCreationKit.Economy
 
             // Get removed amount and call events
             long removedAmount = startAmount - Amount;
+            
+            // Prevent null reference exception
+            if(ReferenceEquals(Resource, null)) return 0L;
+            
             await Resource.OnResourceRemovedAsync(this, removedAmount);
             await OnResourceRemovedAsync(removedAmount);
             await Resource.OnResourceChangedAsync(this, startAmount, Amount);
@@ -180,6 +192,9 @@ namespace FastUnityCreationKit.Economy
             long oldAmount = Amount;
             Amount = amount;
             await CheckLimitsAndRaiseEvents();
+            
+            // Prevent null reference exception
+            if(ReferenceEquals(Resource, null)) return;
             
             // Call events
             await Resource.OnResourceChangedAsync(this, oldAmount, Amount);
@@ -239,6 +254,9 @@ namespace FastUnityCreationKit.Economy
 
         protected virtual async UniTask CheckLimitsAndRaiseEvents()
         {
+            // Check if resource is null
+            if(ReferenceEquals(Resource, null)) return;
+            
             // Acquire limit information from referenced status
             // Beware that this only ensures resource limits not container limits to prevent 
             // events being raised with container limits.

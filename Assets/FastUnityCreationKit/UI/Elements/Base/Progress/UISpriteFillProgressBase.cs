@@ -9,6 +9,7 @@ namespace FastUnityCreationKit.UI.Elements.Base.Progress
     [RequireComponent(typeof(Image))]
     public abstract class UISpriteFillProgressBase : UIProgress
     {
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] private Image _image = null!;
 
         public override void Setup()

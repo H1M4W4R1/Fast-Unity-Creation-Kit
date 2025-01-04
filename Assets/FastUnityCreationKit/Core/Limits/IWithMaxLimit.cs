@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Limits
 {
@@ -15,7 +16,7 @@ namespace FastUnityCreationKit.Core.Limits
         /// <summary>
         /// Maximum limit for the number.
         /// </summary>
-        public new TNumber MaxLimit { get; }
+        [NotNull] public new TNumber MaxLimit { get; }
         
         float IWithMaxLimit.MaxLimit => Convert.ToSingle(MaxLimit);
     }

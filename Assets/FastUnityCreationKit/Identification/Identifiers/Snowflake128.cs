@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using FastUnityCreationKit.Identification.Abstract.Identifiers;
+using JetBrains.Annotations;
 using Unity.Mathematics;
 
 namespace FastUnityCreationKit.Identification.Identifiers
@@ -71,8 +72,7 @@ namespace FastUnityCreationKit.Identification.Identifiers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Snowflake128 left, Snowflake128 right) => !left.Equals(right);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString() =>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull] public override string ToString() =>
              $"{timestamp:X16}-{identifierData:X8}-{additionalData:X4}-{reserved:X2}-{created:X2}";
         
        public static Snowflake128 Empty => default;

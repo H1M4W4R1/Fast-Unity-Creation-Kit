@@ -81,6 +81,7 @@ namespace FastUnityCreationKit.Saving.Utility
         /// <summary>
         /// Read all saves in a directory.
         /// </summary>
+        [NotNull] [ItemNotNull]
         public static List<TSaveHeader> GetAllSavesIn<TSaveHeader>(string directoryPath)
             where TSaveHeader : SaveBase, new() =>
             GetAllSavesIn<TSaveHeader, OdinBinarySerializationProvider>(directoryPath);
@@ -88,6 +89,8 @@ namespace FastUnityCreationKit.Saving.Utility
         /// <summary>
         /// Get all saves in a directory.
         /// </summary>
+        [NotNull]
+        [ItemNotNull]
         public static List<TSaveHeader> GetAllSavesIn<TSaveHeader, THeaderSerializationProvider>(string directoryPath)
             where TSaveHeader : SaveBase, new()
             where THeaderSerializationProvider : ISerializationProvider, new()
@@ -168,13 +171,13 @@ namespace FastUnityCreationKit.Saving.Utility
         /// <summary>
         /// Write header file to path
         /// </summary>
-        public static bool WriteHeaderFile<THeaderFile>(string headerPath, THeaderFile headerFile) where THeaderFile : SaveBase =>
+        public static bool WriteHeaderFile<THeaderFile>(string headerPath, [NotNull] THeaderFile headerFile) where THeaderFile : SaveBase =>
             WriteHeaderFile<THeaderFile, OdinBinarySerializationProvider>(headerPath, headerFile);
 
         /// <summary>
         /// Write header file to path
         /// </summary>
-        public static bool WriteHeaderFile<THeaderFile, TSerializationProvider>(string headerPath, THeaderFile headerFile)
+        public static bool WriteHeaderFile<THeaderFile, TSerializationProvider>(string headerPath, [NotNull] THeaderFile headerFile)
             where THeaderFile : SaveBase
             where TSerializationProvider : ISerializationProvider, new()
         {
@@ -225,13 +228,13 @@ namespace FastUnityCreationKit.Saving.Utility
         /// <summary>
         /// Write save file to path
         /// </summary>
-        public static bool WriteSaveFile<TSaveFile>(string toPath, TSaveFile saveFile) where TSaveFile : SaveFileBase =>
+        public static bool WriteSaveFile<TSaveFile>(string toPath, [NotNull] TSaveFile saveFile) where TSaveFile : SaveFileBase =>
             WriteSaveFile<TSaveFile, OdinBinarySerializationProvider>(toPath, saveFile);
 
         /// <summary>
         /// Write save file to path
         /// </summary>
-        public static bool WriteSaveFile<TSaveFile, TSerializationProvider>(string toPath, TSaveFile saveFile)
+        public static bool WriteSaveFile<TSaveFile, TSerializationProvider>(string toPath, [NotNull] TSaveFile saveFile)
             where TSaveFile : SaveFileBase
             where TSerializationProvider : ISerializationProvider, new()
         {

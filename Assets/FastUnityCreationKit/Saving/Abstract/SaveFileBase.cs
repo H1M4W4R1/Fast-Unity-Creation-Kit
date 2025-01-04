@@ -20,8 +20,7 @@ namespace FastUnityCreationKit.Saving.Abstract
     /// Base class for save files.
     /// Save file is used to represents partial data of a save. For full save data <see cref="SaveBase{TSelfSealed,TSerializationProvider}"/>
     /// </summary>
-    public abstract class SaveFileBase<TSelfSealed, TSerializationProvider> : SaveFileBase,
-        IWithSerializationProvider<TSerializationProvider>
+    public abstract class SaveFileBase<TSelfSealed, TSerializationProvider> : SaveFileBase
         where TSelfSealed : SaveFileBase<TSelfSealed, TSerializationProvider>, new()
         where TSerializationProvider : ISerializationProvider, new()
     {

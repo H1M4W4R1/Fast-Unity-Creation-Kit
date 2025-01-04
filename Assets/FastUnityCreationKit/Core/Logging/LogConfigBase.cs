@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using JetBrains.Annotations;
 using Unity.Logging;
 using Unity.Logging.Sinks;
 using UnityEngine;
@@ -12,9 +13,9 @@ namespace FastUnityCreationKit.Core.Logging
 	/// </summary>
     public abstract class LogConfigBase
     {
-	    public string OutputTemplate => "[{Level}] {Timestamp} - {Message}";
+	    [NotNull] public string OutputTemplate => "[{Level}] {Timestamp} - {Message}";
 	    public abstract LogLevel MinimumLevel { get; }
-	    public virtual FileWriteInfo[] Files { get; } = Array.Empty<FileWriteInfo>();
+	    [NotNull] public virtual FileWriteInfo[] Files { get; } = Array.Empty<FileWriteInfo>();
 	    public virtual ConsoleWriteInfo ConsoleOut { get; } = new ConsoleWriteInfo();
    
 

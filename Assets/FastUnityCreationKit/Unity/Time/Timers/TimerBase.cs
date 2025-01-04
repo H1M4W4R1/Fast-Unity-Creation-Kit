@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Time.Enums;
 using FastUnityCreationKit.Core.Logging;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -20,104 +21,85 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         /// Enable or disable the timer.
         /// </summary>
-        [OdinSerialize]
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_STATE)]
-        public bool Enabled { get; private set; }
+        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public bool Enabled
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// The time the timer is used to count down.
         /// </summary>
-        [OdinSerialize]
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_CONFIGURATION)]
-        public TimeSpan TotalTime { get; protected set; }
+        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] public TimeSpan TotalTime
+        {
+            get;
+            protected set;
+        }
 
         /// <summary>
         /// Defines if time should be reset to full or to zero during reset.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_CONFIGURATION)]
-        protected virtual bool ResetTimeToFull => true;
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] protected virtual bool ResetTimeToFull
+            => true;
 
         /// <summary>
         /// Remaining time of the timer.
         /// </summary>
         // ReSharper disable once Unity.RedundantHideInInspectorAttribute, required for Odin
-        [OdinSerialize]
-        [HideInInspector]
-        private TimeSpan _remainingTime;
+        [OdinSerialize] [HideInInspector] private TimeSpan _remainingTime;
 
         /// <summary>
         /// Span format options for the timer.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_CONFIGURATION)]
-        public virtual string TimeFormat => @"hh\:mm\:ss";
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] [NotNull] public virtual string TimeFormat
+            => @"hh\:mm\:ss";
 
         /// <summary>
         /// Time scale of the timer, also takes into account the global time scale
         /// when updating the timer - when global time scale is 0.5f and timer time scale
         /// is 0.5f the timer will be updated at 0.25f (if it takes global time scale into account).
         /// </summary>
-        [OdinSerialize]
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_CONFIGURATION)]
-        public float TimeScale { get; set; } = 1f;
+        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] public float TimeScale
+        {
+            get;
+            set;
+        } = 1f;
 
         /// <summary>
         /// By default, the timer won't update when time is paused.
         /// And update same as MonoBehaviour.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_CONFIGURATION)]
-        public virtual UpdateMode UpdateMode => UpdateMode.MonoBehaviour;
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] public virtual UpdateMode UpdateMode
+            => UpdateMode.MonoBehaviour;
 
         /// <summary>
         /// By default, timer will use delta time.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_CONFIGURATION)]
-        public virtual UpdateTime UpdateTime => UpdateTime.DeltaTime;
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] public virtual UpdateTime UpdateTime
+            => UpdateTime.DeltaTime;
 
         /// <summary>
         /// If timer is temporary, it will be destroyed when it finishes.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_CONFIGURATION)]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
         public abstract bool RestartOnElapsed { get; }
 
         /// <summary>
         /// Check if the timer should be disposed when it finishes.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_CONFIGURATION)]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
         public abstract bool DisposeOnElapsed { get; }
 
         /// <summary>
         /// The time remaining until the timer finishes.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_STATE)]
-        public TimeSpan RemainingTime => _remainingTime;
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public TimeSpan RemainingTime => _remainingTime;
 
         /// <summary>
         /// True if the timer has finished.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_STATE)]
-        public bool HasFinished => _remainingTime.Ticks <= 0;
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public bool HasFinished
+            => _remainingTime.Ticks <= 0;
 
         /// <summary>
         /// Used to add time to the timer (used to slow down the timer).
@@ -185,7 +167,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         {
             // Stop the timer if it's enabled.
             if (Enabled) Stop(withEvents);
-            
+
             // Reset the timer to full time or to zero. and trigger events.
             _remainingTime = ResetTimeToFull || toFullTime ? TotalTime : TimeSpan.Zero;
             if (withEvents) OnReset();
@@ -272,7 +254,8 @@ namespace FastUnityCreationKit.Unity.Time.Timers
                 // Prevent further updates.
                 Stop();
 
-                if (RestartOnElapsed) Restart(); // also automatically starts the timer again.
+                if (RestartOnElapsed)
+                    Restart(); // also automatically starts the timer again.
                 else if (DisposeOnElapsed) Dispose();
             }
         }
@@ -327,7 +310,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </summary>
         public bool ShouldBeDestroyed() => HasFinished;
 
-        public override string ToString() => _remainingTime.ToString(TimeFormat);
+        [NotNull] public override string ToString() => _remainingTime.ToString(TimeFormat);
 
         public void Dispose()
         {

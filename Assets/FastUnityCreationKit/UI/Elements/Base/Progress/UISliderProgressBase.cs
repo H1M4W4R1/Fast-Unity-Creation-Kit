@@ -8,6 +8,7 @@ namespace FastUnityCreationKit.UI.Elements.Base.Progress
     [RequireComponent(typeof(Slider))]
     public abstract class UISliderProgressBase : UIProgress
     {
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] private Slider _slider = null!;
 
         public override void Setup()

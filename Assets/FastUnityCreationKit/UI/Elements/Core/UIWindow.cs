@@ -24,11 +24,13 @@ namespace FastUnityCreationKit.UI.Elements.Core
         /// <summary>
         /// Internal reference to Unity's Canvas component.
         /// </summary>
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] protected Canvas canvas = null!;
 
         /// <summary>
         /// Internal reference to Unity's CanvasGroup component.
         /// </summary>
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] protected CanvasGroup canvasGroup = null!;
 
         /// <summary>
@@ -47,7 +49,7 @@ namespace FastUnityCreationKit.UI.Elements.Core
         /// Set window stack for window.
         /// </summary>
         /// <param name="stack">Window stack to set.</param>
-        public void SetWindowStack([NotNull] WindowStack stack) =>
+        public void SetWindowStack([CanBeNull] WindowStack stack) =>
             windowStack = stack;
 
         /// <summary>
@@ -102,7 +104,7 @@ namespace FastUnityCreationKit.UI.Elements.Core
         /// </summary>
         /// <typeparam name="TWindowType">Type of window to open.</typeparam>
         /// <returns>Opened window or null if not found.</returns>
-        public TWindowType OpenChildWindow<TWindowType>()
+        [CanBeNull] public TWindowType OpenChildWindow<TWindowType>()
             where TWindowType : UIWindow => UIManager.Instance.OpenWindow<TWindowType>(windowStack);
 
         public override void AfterFirstRenderOrCreated()

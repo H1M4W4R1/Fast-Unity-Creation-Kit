@@ -15,6 +15,7 @@ namespace FastUnityCreationKit.UI.Elements.Base.Input
         /// Internal reference to the slider component.
         /// </summary>
         [NotNull]
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         private Slider _slider = null!;
 
         public override void Setup()

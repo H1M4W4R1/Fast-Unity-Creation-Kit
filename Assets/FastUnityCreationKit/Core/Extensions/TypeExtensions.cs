@@ -21,10 +21,7 @@ namespace FastUnityCreationKit.Core.Extensions
                 // Check if the interface is a generic interface
                 // that is of desired type
                 if (!ifx.IsGenericType || ifx.GetGenericTypeDefinition() != genericInterface) continue;
-                
-                // Get the generic type of the interface
-                Type genericType = ifx.GetGenericArguments()[0];
-
+          
                 // Get the method info of the generic method
                 MethodInfo methodInfo = ifx.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             
@@ -36,7 +33,7 @@ namespace FastUnityCreationKit.Core.Extensions
         /// <summary>
         /// Check if the type has the attribute
         /// </summary>
-        public static bool HasAttribute<TAttribute>(this Type type, bool inherit = true)
+        public static bool HasAttribute<TAttribute>([NotNull] this Type type, bool inherit = true)
         {
             // Get the attribute from the current type
             foreach (object customAttribute in type.GetCustomAttributes(inherit))
@@ -52,7 +49,8 @@ namespace FastUnityCreationKit.Core.Extensions
         /// <summary>
         /// Get the attribute from the type
         /// </summary>
-        public static TAttribute GetAttribute<TAttribute>(this Type type, bool inherit = true)
+        [CanBeNull]
+        public static TAttribute GetAttribute<TAttribute>([NotNull] this Type type, bool inherit = true)
         {
             // Get the attribute from the current type
             foreach (object customAttribute in type.GetCustomAttributes(inherit))

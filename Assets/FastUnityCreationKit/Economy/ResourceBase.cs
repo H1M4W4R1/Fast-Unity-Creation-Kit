@@ -36,6 +36,7 @@ namespace FastUnityCreationKit.Economy
         public LimitHit CheckLimitsFor(ResourceReference reference)
         {
             // Check if resource is limited
+            // ReSharper disable once Unity.NoNullPatternMatching
             if (this is not ILimited) return LimitHit.None;
 
             // Check if container is for this resource

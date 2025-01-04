@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Reflection;
 using FastUnityCreationKit.Core.Logging;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Extensions
 {
     public static class ObjectExtensions
     {
-        public static T CastTo<T>(this object o)
+        [CanBeNull] public static T CastTo<T>([NotNull] this object o)
         {
             if (o is T o1) return o1;
 
@@ -15,7 +16,7 @@ namespace FastUnityCreationKit.Core.Extensions
             return default;
         }
 
-        public static object CastToReflected(this object o, Type type)
+        [CanBeNull] public static object CastToReflected([NotNull] this object o, [NotNull] Type type)
         {
             MethodInfo methodInfo =
                 typeof(ObjectExtensions).GetMethod(nameof(CastTo), BindingFlags.Static | BindingFlags.Public);

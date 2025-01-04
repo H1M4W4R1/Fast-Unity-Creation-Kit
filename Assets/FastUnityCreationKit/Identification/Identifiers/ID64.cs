@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Identification.Abstract.Identifiers;
+using JetBrains.Annotations;
 using Unity.Burst;
 using Unity.Mathematics;
 
@@ -48,10 +49,9 @@ namespace FastUnityCreationKit.Identification.Identifiers
         public override bool Equals(object obj) => obj is ID64 other && Equals(other);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override unsafe int GetHashCode() => vectorized.GetHashCode();
+        public override int GetHashCode() => vectorized.GetHashCode();
 
-        [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString() => $"{value:X16}";
+        [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull] public override string ToString() => $"{value:X16}";
         
         /// <inheritdoc/>
         public ulong Value => value;

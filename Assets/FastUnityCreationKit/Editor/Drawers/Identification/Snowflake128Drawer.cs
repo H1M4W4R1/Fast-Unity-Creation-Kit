@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.Editor.Drawers.Identification
     [UsedImplicitly]
     public sealed class Snowflake128Drawer : OdinValueDrawer<Snowflake128>
     {
-        protected override void DrawPropertyLayout(GUIContent label)
+        protected override void DrawPropertyLayout([NotNull] GUIContent label)
         {
             // Get string value
             string stringValue = this.ValueEntry.SmartValue.ToString();

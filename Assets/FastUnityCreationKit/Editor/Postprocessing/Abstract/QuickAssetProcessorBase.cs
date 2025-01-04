@@ -1,7 +1,8 @@
-﻿using FastUnityCreationKit.Editor.Postprocessing.Interfaces;
+﻿using System;
+using FastUnityCreationKit.Editor.Postprocessing.Interfaces;
 using JetBrains.Annotations;
 using UnityEditor;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
 {
@@ -17,7 +18,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
         /// <summary>
         /// Instance of the derived class.
         /// </summary>
-        protected static TSelfSealed Instance => _instance ??= new TSelfSealed();
+        [NotNull] protected static TSelfSealed Instance => _instance ??= new TSelfSealed();
 
         /// <summary>
         /// Order of the postprocessor. Default is 0.
@@ -84,7 +85,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
             }
 
             [UsedImplicitly]
-            internal static void OnWillSaveAssets(string[] paths)
+            internal static void OnWillSaveAssets([NotNull] string[] paths)
             {
                 // Handle all saved assets
                 foreach (string path in paths)
@@ -107,11 +108,12 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
             }
             
             [UsedImplicitly]
-            internal static void OnPostprocessAllAssets(string[] importedAssets,
-                string[] deletedAssets,
-                string[] movedAssets,
-                string[] movedFromAssetPaths)
+            internal static void OnPostprocessAllAssets([NotNull] string[] importedAssets,
+                [NotNull] string[] deletedAssets,
+                [NotNull] string[] movedAssets,
+                [NotNull] string[] movedFromAssetPaths)
             {
+                if (movedFromAssetPaths == null) throw new ArgumentNullException(nameof(movedFromAssetPaths));
                 if(Instance is IPostprocessAllAssets postprocessAllAssets)
                     postprocessAllAssets.PostprocessAllAssets(importedAssets, deletedAssets, movedAssets, movedFromAssetPaths);
                 

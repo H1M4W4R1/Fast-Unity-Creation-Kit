@@ -21,6 +21,7 @@ namespace FastUnityCreationKit.Unity.Features
         /// </summary>
         [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         [NotNull]
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         protected TFeaturedObject FeaturedObject { get; private set; } = null!;
 
         public new void OnInitialize()
@@ -44,6 +45,7 @@ namespace FastUnityCreationKit.Unity.Features
         /// GameObject this feature is attached to.
         /// </summary>
         [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] protected GameObject GameObject { get; private set; } = null!;
 
         /// <summary>

@@ -3,6 +3,7 @@ using FastUnityCreationKit.Saving.Abstract;
 using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Structure.Singleton;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Data.Containers
 {
@@ -20,12 +21,12 @@ namespace FastUnityCreationKit.Data.Containers
         /// <summary>
         /// Singleton instance.
         /// </summary>
-        public static TSelfSealed Instance => ISingleton<TSelfSealed>.GetInstance();
+        [NotNull] public static TSelfSealed Instance => ISingleton<TSelfSealed>.GetInstance();
         
         /// <summary>
         /// Register data to the database.
         /// </summary>
-        public static void RegisterData(TDataType data)
+        public static void RegisterData([NotNull] TDataType data)
         {
             if(!Instance.Contains(data))
                 Instance.Add(data);
@@ -34,7 +35,7 @@ namespace FastUnityCreationKit.Data.Containers
         /// <summary>
         /// Remove data from the database.
         /// </summary>
-        public static void UnregisterData(TDataType data)
+        public static void UnregisterData([NotNull] TDataType data)
         {
             Instance.Remove(data);
         }

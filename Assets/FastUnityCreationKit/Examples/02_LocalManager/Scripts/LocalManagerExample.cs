@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._02_LocalManager.Scripts
 {
-    /// </summary>
     public sealed class LocalManagerExample : CKManager<LocalManagerExample>
     {
         /// <summary>

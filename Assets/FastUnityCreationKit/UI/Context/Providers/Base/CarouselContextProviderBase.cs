@@ -14,7 +14,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         [Required] [SerializeField] [TitleGroup(GROUP_CONFIGURATION)] private CarouselButton previousButton;
         [Required] [SerializeField] [TitleGroup(GROUP_CONFIGURATION)] private CarouselButton nextButton;
 
-        protected int CurrentIndex { get; private set; } = 0;
+        protected int CurrentIndex { get; private set; }
         
         public virtual bool WrapForward => true;
         public virtual bool WrapBackward => true;

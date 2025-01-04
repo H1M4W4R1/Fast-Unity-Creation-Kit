@@ -17,6 +17,7 @@ namespace FastUnityCreationKit.Status
         /// Reference to status instance within the database.
         /// </summary>
         [ShowInInspector] [ReadOnly]
+        [CanBeNull]
         public StatusBase Status => StatusDatabase.Instance.GetStatusByIdentifier(statusIdentifier);
         
         /// <summary>
@@ -41,6 +42,8 @@ namespace FastUnityCreationKit.Status
 
         private async UniTask CheckLimitsAndRaiseEvents(StatusContainer context)
         {
+            if(ReferenceEquals(Status, null)) return;
+            
             // Acquire limit information from referenced status
             LimitHit limitHit = Status.EnsureLimitsFor(this);
             switch (limitHit)
@@ -78,6 +81,8 @@ namespace FastUnityCreationKit.Status
             // also we need to check limits if status went negative and min limit is zero.
             if (previousStacks != statusLevel)
             {
+                if(ReferenceEquals(Status, null)) return;
+                
                 await Status.OnStatusLevelChanged(context, statusLevel - previousStacks);
                 await CheckLimitsAndRaiseEvents(context);
             }
@@ -88,7 +93,7 @@ namespace FastUnityCreationKit.Status
                 // Notify that status was removed only if it's level was changed
                 // level change equal to zero means that status level was 0 earlier
                 // and thus status was probably non-existent.
-                if(previousStacks != statusLevel)
+                if(previousStacks != statusLevel && !ReferenceEquals(Status, null))
                     await Status.OnStatusRemoved(context);
                 
                 // Remove status reference from target

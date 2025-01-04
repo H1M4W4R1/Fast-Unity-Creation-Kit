@@ -1,5 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using Unity.Logging;
 
 namespace FastUnityCreationKit.Core.Logging
@@ -84,6 +85,7 @@ namespace FastUnityCreationKit.Core.Logging
         public readonly TLogType logConfiguration;
         public readonly Logger logger;
         
+        // ReSharper disable once UnusedParameter.Local
         public LoggerWrapper(bool uselessVariableToAvoidCompilationIssues)
         {
             logConfiguration = new TLogType();
@@ -98,10 +100,10 @@ namespace FastUnityCreationKit.Core.Logging
     public static class Guard
     {
 
-        public static LoggerConfig SetMinimumLevel(this LoggerConfig config, LogLevel level) => 
+        public static LoggerConfig SetMinimumLevel([NotNull] this LoggerConfig config, LogLevel level) => 
             config.MinimumLevel.SetMinimumLevel(level);
 
-        public static LoggerConfig SetMinimumLevel(this LoggerMinimumLevelConfig config, LogLevel level)
+        public static LoggerConfig SetMinimumLevel([NotNull] this LoggerMinimumLevelConfig config, LogLevel level)
         {
             switch (level)
             {

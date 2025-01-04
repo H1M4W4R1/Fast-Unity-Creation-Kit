@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Limits
 {
@@ -15,7 +16,7 @@ namespace FastUnityCreationKit.Core.Limits
         /// <summary>
         /// Minimum limit for the number.
         /// </summary>
-        public new TNumber MinLimit { get; }
+        [NotNull] public new TNumber MinLimit { get; }
         
         float IWithMinLimit.MinLimit => Convert.ToSingle(MinLimit);
     }

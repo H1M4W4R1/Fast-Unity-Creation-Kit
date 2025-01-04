@@ -12,6 +12,7 @@ namespace FastUnityCreationKit.UI.Elements.Base
         /// <summary>
         /// Internal reference to the TextMeshProUGUI component.
         /// </summary>
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] private TextMeshProUGUI _textMeshProUGUI = null!;
         
         /// <summary>

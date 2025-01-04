@@ -1,7 +1,6 @@
 ﻿# Required Plugins
 - DOTween Pro
 - Odin Validator, Inspector and Serializer
-- Quantum Console
 - UniTask
 
 # Required Unity Packages

@@ -25,6 +25,7 @@ namespace FastUnityCreationKit.Unity.Actions
         /// Total cooldown time for the action (set after each execution).
         /// Can be changed at runtime. Can be overriden to provide custom value.
         /// </summary>
+        // ReSharper disable NullableWarningSuppressionIsUsed
         [ShowInInspector]
         [TitleGroup("Cooldown")]
         [Unit(Units.Second)]
@@ -43,6 +44,7 @@ namespace FastUnityCreationKit.Unity.Actions
         [ShowInInspector]
         [ProgressBar(0, nameof(CooldownTime))]
         public float CooldownLeft => CooldownTimer!.Enabled ? (float) CooldownTimer.RemainingTime.TotalSeconds : 0f;
+        // ReSharper restore NullableWarningSuppressionIsUsed
 
         protected ActionBaseWithCooldown() => Initialize();
 

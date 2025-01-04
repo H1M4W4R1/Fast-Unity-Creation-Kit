@@ -8,6 +8,7 @@ using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Core.Objects;
 using FastUnityCreationKit.Unity.Events.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -194,22 +195,22 @@ namespace FastUnityCreationKit.Unity
 
 #endregion
 
-        internal static void HandlePreUpdate(CKMonoBehaviour behaviour, float deltaTime)
+        internal static void HandlePreUpdate([NotNull] CKMonoBehaviour behaviour, float deltaTime)
         {
             behaviour.NotifyObjectWasPreUpdated(deltaTime);
         }
 
-        internal static void HandleUpdate(CKMonoBehaviour behaviour, float deltaTime)
+        internal static void HandleUpdate([NotNull] CKMonoBehaviour behaviour, float deltaTime)
         {
             behaviour.NotifyObjectWasUpdated(deltaTime);
         }
 
-        internal static void HandlePostUpdate(CKMonoBehaviour behaviour, float deltaTime)
+        internal static void HandlePostUpdate([NotNull] CKMonoBehaviour behaviour, float deltaTime)
         {
             behaviour.NotifyObjectWasPostUpdated(deltaTime);
         }
 
-        internal static void HandleFixedUpdate(CKMonoBehaviour behaviour, float deltaTime)
+        internal static void HandleFixedUpdate([NotNull] CKMonoBehaviour behaviour, float deltaTime)
         {
             behaviour.NotifyObjectWasFixedUpdated();
         }

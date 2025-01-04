@@ -81,7 +81,7 @@ namespace FastUnityCreationKit.Data.Containers
         [TitleGroup(GROUP_PREVIEW)]
         public int PreloadedCount => _preloadedObjectsContainer.Count;
 
-        public TSelfSealed EnsurePreloaded()
+        [NotNull] public TSelfSealed EnsurePreloaded()
         {
             if (!IsPreloaded)
                 Preload();
@@ -165,7 +165,7 @@ namespace FastUnityCreationKit.Data.Containers
             _preloadCount++;
             return;
             
-            bool IsValidLocation(IResourceLocation location, int index) =>
+            bool IsValidLocation([NotNull] IResourceLocation location, int index) =>
                 IsValidType(location.ResourceType);
             
             bool IsValidType([NotNull] Type type)

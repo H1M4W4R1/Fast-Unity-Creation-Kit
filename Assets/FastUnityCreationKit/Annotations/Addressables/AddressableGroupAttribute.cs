@@ -19,7 +19,7 @@
         public AddressableGroupAttribute(string groupName)
         {
             GroupName = groupName;
-            Labels = new string[] {groupName};
+            Labels = new[] {groupName};
         }
         
     }

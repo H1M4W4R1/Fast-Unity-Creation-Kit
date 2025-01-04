@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.Editor.Drawers
     [UsedImplicitly]
     public sealed class TimeSpanDrawer : OdinValueDrawer<TimeSpan>
     {
-        protected override void DrawPropertyLayout(GUIContent label)
+        protected override void DrawPropertyLayout([NotNull] GUIContent label)
         {
             // Set tooltip for the property if it is not set.
             if(string.IsNullOrEmpty(label.tooltip))   

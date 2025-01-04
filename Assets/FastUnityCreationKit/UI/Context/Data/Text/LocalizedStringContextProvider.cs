@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.Structure.Initialization;
-using FastUnityCreationKit.Core.Logging;
+﻿using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -70,6 +69,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Text
             }
         }
 
+        [NotNull]
         public override string Provide()
         {
             return LocalizedText;

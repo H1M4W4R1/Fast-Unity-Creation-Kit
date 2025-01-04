@@ -13,13 +13,13 @@ namespace FastUnityCreationKit.UI.Context.Providers.Utility
 
         public bool IsDirty => Provider?.IsDirty ?? false;
 
-        public DataContextInfo(IDataContextProvider<TDataContext> provider, TDataContext context)
+        public DataContextInfo(
+            [CanBeNull] IDataContextProvider<TDataContext> provider,
+            [CanBeNull] TDataContext context)
         {
             IsValid = provider != null;
             Provider = provider;
             Context = context;
         }
-		
-        
     }
 }

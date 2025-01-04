@@ -3,6 +3,7 @@ using FastUnityCreationKit.Data;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Identification.Identifiers;
 using FastUnityCreationKit.Status.Abstract;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Status
 {
@@ -22,6 +23,7 @@ namespace FastUnityCreationKit.Status
         /// </summary>
         /// <typeparam name="TStatusType">Type of the status.</typeparam>
         /// <returns>Status with the type or null if not found.</returns> 
+        [CanBeNull]
         public TStatusType GetStatus<TStatusType>() where TStatusType : StatusBase
         {
             EnsurePreloaded();
@@ -42,6 +44,7 @@ namespace FastUnityCreationKit.Status
         /// </summary>
         /// <param name="identifier">Identifier of the status.</param>
         /// <returns>Status with the identifier or null if not found.</returns>
+        [CanBeNull]
         public StatusBase GetStatusByIdentifier(Snowflake128 identifier)
         {
             EnsurePreloaded();

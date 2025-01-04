@@ -29,7 +29,7 @@ namespace FastUnityCreationKit.UI.Abstract
         internal void DeleteWindow([NotNull] UIWindow window)
         {
             Windows.Remove(window);
-            window.SetWindowStack(null!);
+            window.SetWindowStack(null);
             Guard<UserInterfaceLogConfig>.Verbose($"Window {window.name} has been removed from stack.");
         }
 

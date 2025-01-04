@@ -1,4 +1,5 @@
-﻿using Unity.Burst;
+﻿using JetBrains.Annotations;
+using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace FastUnityCreationKit.Core.Extensions
         /// Converts Color to Hex string.
         /// </summary>
         /// <param name="color">Color to convert.</param>
-        public static string ToHex(this Color color)
+        [NotNull] public static string ToHex(this Color color)
         {
             return $"#{ColorUtility.ToHtmlStringRGBA(color)}";
         }
@@ -19,7 +20,7 @@ namespace FastUnityCreationKit.Core.Extensions
         /// Converts Hex string to Color. "#" is optional.
         /// </summary>
         /// <param name="hex">Hex string to convert.</param>
-        public static Color FromHex(string hex)
+        public static Color FromHex([NotNull] string hex)
         {
             ColorUtility.TryParseHtmlString(hex.TrimStart('#'), out Color color);
             return color;

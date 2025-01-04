@@ -11,14 +11,14 @@ namespace FastUnityCreationKit.UI.Features
     public sealed class DragFeature : UIObjectFeatureBase, IBeginDragHandler, IEndDragHandler, IDragHandler
     {
         [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        private bool _isDragging = false;
+        private bool _isDragging;
 
         /// <summary>
         /// If snapping is supported this should be set to false.
         /// Also, should be false if object should stay in new position.
         /// </summary>
         [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
-        public bool ReturnToOldPosition { get; } = false;
+        public bool ReturnToOldPosition { get; }
         
         /// <summary>
         /// If true object will be snapped to mouse position while being dragged.

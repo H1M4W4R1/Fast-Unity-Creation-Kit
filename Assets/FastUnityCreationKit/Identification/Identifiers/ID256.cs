@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Identification.Abstract.Identifiers;
+using JetBrains.Annotations;
 using Unity.Burst;
 using Unity.Mathematics;
 
@@ -41,12 +42,13 @@ namespace FastUnityCreationKit.Identification.Identifiers
         public override bool Equals(object obj) => obj is ID256 other && Equals(other);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override unsafe int GetHashCode() => value.GetHashCode() + isCreated.GetHashCode();
+        public override int GetHashCode() => value.GetHashCode() + isCreated.GetHashCode();
 
         [BurstDiscard]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [NotNull]
         public override string ToString() => $"{value.c0.x:X8}{value.c0.y:X8}-{value.c0.z:X8}{value.c0.w:X8}-" +
-                                            $"{value.c1.x:X8}{value.c1.y:X8}-{value.c1.z:X8}{value.c1.w:X8}";
+                                             $"{value.c1.x:X8}{value.c1.y:X8}-{value.c1.z:X8}{value.c1.w:X8}";
 
         /// <inheritdoc/>
         public uint4x2 Value => value;

@@ -16,8 +16,8 @@ namespace FastUnityCreationKit.UI.Abstract
         /// <summary>
         /// Rect transform of this object.
         /// </summary>
-        [NotNull]
-        public RectTransform RectTransform { get; private set; } = null!;
+        // ReSharper disable once NullableWarningSuppressionIsUsed
+        [NotNull] public RectTransform RectTransform { get; private set; } = null!;
 
         public virtual void OnObjectCreated()
         {

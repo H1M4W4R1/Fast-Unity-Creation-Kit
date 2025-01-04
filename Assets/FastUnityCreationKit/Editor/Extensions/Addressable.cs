@@ -19,9 +19,6 @@ namespace FastUnityCreationKit.Editor.Extensions
         {
             AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
 
-            // Get object type
-            Type objType = obj.GetType();
-
             // Check if settings exist
             // When Addressable settings are not found object can't be addressable
             if (!settings) return false;
@@ -36,7 +33,8 @@ namespace FastUnityCreationKit.Editor.Extensions
         }
 
 
-        public static (string, AssetReference) GetAssetReference(this Object obj, [CanBeNull] Type targetType = null)
+        public static (string, AssetReference) GetAssetReference([NotNull] this Object obj,
+            [CanBeNull] Type targetType = null)
         {
             AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
 
@@ -111,7 +109,7 @@ namespace FastUnityCreationKit.Editor.Extensions
 
                     modified = true;
                     e.ReadOnly = readOnly;
-                    
+
                     NotifyAddressables(settings, group, e, AddressableAssetSettings.ModificationEvent.EntryCreated);
                 }
                 else if (e.parentGroup != group)
@@ -121,10 +119,10 @@ namespace FastUnityCreationKit.Editor.Extensions
                     e.SetAddress(obj.name);
                     modified = true;
                     e.ReadOnly = readOnly;
-                    
+
                     NotifyAddressables(settings, group, e, AddressableAssetSettings.ModificationEvent.EntryMoved);
                 }
-  
+
                 // Validate labels
                 e.ReadOnly = false;
                 for (int i = 0; i < labels.Length; i++)
@@ -153,8 +151,8 @@ namespace FastUnityCreationKit.Editor.Extensions
         {
             List<AddressableAssetEntry> mod = new List<AddressableAssetEntry> {entry};
 
-            group.SetDirty(AddressableAssetSettings.ModificationEvent.EntryAdded, mod, false, true);
-            settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryAdded, mod, true);
+            group.SetDirty(evt, mod, false, true);
+            settings.SetDirty(evt, mod, true);
         }
     }
 }

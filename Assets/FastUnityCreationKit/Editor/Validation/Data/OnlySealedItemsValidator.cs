@@ -3,6 +3,7 @@ using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Editor.Validation.Abstract;
 using FastUnityCreationKit.Editor.Validation.Data;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor.Validation;
 
 [assembly: RegisterValidator(typeof(OnlySealedItemsValidator.InternalValueValidator))]
@@ -12,7 +13,7 @@ namespace FastUnityCreationKit.Editor.Validation.Data
     public sealed class OnlySealedItemsValidator : QuickAttributeBasedValidator<
         OnlySealedItemsValidator, OnlySealedElementsAttribute, IDataContainer>
     {
-        public override void Validate(ValidationResult result, IDataContainer value)
+        public override void Validate(ValidationResult result, [NotNull] IDataContainer value)
         {
             IList list = value.RawData;
             for (int i = list.Count - 1; i >= 0; i--)

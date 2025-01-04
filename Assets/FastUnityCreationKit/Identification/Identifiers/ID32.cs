@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FastUnityCreationKit.Identification.Abstract.Identifiers;
+using JetBrains.Annotations;
 using Unity.Burst;
 
 namespace FastUnityCreationKit.Identification.Identifiers
@@ -9,8 +10,7 @@ namespace FastUnityCreationKit.Identification.Identifiers
     /// <summary>
     /// Represents 32-bit non-unique identifier.
     /// </summary>
-    [BurstCompile]
-    [StructLayout(LayoutKind.Explicit)]
+    [BurstCompile] [StructLayout(LayoutKind.Explicit)]
     public readonly struct ID32 : INumberIdentifier<uint>, IEquatable<ID32>
     {
         [FieldOffset(0)] public readonly uint value;
@@ -24,8 +24,8 @@ namespace FastUnityCreationKit.Identification.Identifiers
         /// <summary>
         /// Creates new ID32 identifier with given value.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ID32(uint value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public ID32(
+            uint value)
         {
             this.value = value;
             isCreated = 1;
@@ -33,14 +33,13 @@ namespace FastUnityCreationKit.Identification.Identifiers
             reserved1 = 0;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(ID32 other) => other.value == value && other.isCreated == isCreated;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(
+            ID32 other) => other.value == value && other.isCreated == isCreated;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj) => obj is ID32 other && Equals(other);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(
+            object obj) => obj is ID32 other && Equals(other);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override unsafe int GetHashCode()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public override unsafe int GetHashCode()
         {
             fixed (uint* p = &value)
             {
@@ -48,9 +47,9 @@ namespace FastUnityCreationKit.Identification.Identifiers
             }
         }
 
-        [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull]
         public override string ToString() => $"{value:X8}";
-        
+
         /// <inheritdoc/>
         public uint Value => value;
     }

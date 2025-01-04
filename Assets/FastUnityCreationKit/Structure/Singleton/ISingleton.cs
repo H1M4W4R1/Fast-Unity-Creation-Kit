@@ -38,6 +38,8 @@ namespace FastUnityCreationKit.Structure.Singleton
                 Guard<ValidationLogConfig>.Error(
                     $"Type {typeof(TSelf).GetCompilableNiceFullName()} is a UnityEngine.Object. Unity.Object cannot be used as a singleton." +
                     $"For MonoBehaviour singletons use IMonoBehaviourSingleton<TSelf>.");
+                
+                // ReSharper disable once NullableWarningSuppressionIsUsed
                 return default!;
             }
 #endif
@@ -49,6 +51,7 @@ namespace FastUnityCreationKit.Structure.Singleton
             Instance = new TSelf();
 
             // Return the instance
+            // ReSharper disable once NullableWarningSuppressionIsUsed
             return Instance!;
         }
     }

@@ -1,11 +1,12 @@
 ﻿using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Extensions
 {
     public static class NullExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNull(this object obj)
+        public static bool IsNull([CanBeNull] this object obj)
         {
             return obj switch
             {

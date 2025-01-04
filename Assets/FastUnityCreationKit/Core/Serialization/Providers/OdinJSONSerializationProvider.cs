@@ -13,7 +13,7 @@ namespace FastUnityCreationKit.Core.Serialization.Providers
     /// </summary>
     public sealed class OdinJsonSerializationProvider : ISerializationProvider
     {
-        public bool WriteData<TSaveFile>(string filePath, [NotNull] TSaveFile saveData)
+        public bool WriteData<TSaveFile>([CanBeNull] string filePath, [NotNull] TSaveFile saveData)
         {
             // Forbid empty path
             if (string.IsNullOrEmpty(filePath)) return false;

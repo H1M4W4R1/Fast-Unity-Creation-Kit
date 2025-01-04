@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using FastUnityCreationKit.Core.Logging;
+using JetBrains.Annotations;
 using NUnit.Framework;
 using Sirenix.Utilities;
 using UnityEditor;
@@ -156,7 +157,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
             }
         }
 
-        private static void TryRegisterMethod(Type type, string methodName, List<MethodInfo> table)
+        private static void TryRegisterMethod([NotNull] Type type, [NotNull] string methodName, List<MethodInfo> table)
         {
             // Search for the method in the type
             MethodInfo foundMethod =
@@ -282,7 +283,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Abstract
 
         public sealed class AssetModifiedPostprocessor : AssetPostprocessor
         {
-            public object OnAssetCreated(string path) => null;
+            [CanBeNull] public object OnAssetCreated(string path) => null;
 
             internal static void OnPostprocessAllAssets(string[] importedAssets,
                 string[] deletedAssets,

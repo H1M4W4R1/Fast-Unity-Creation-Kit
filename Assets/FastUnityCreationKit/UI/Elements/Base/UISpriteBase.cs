@@ -15,6 +15,7 @@ namespace FastUnityCreationKit.UI.Elements.Base
         /// <summary>
         /// Cached reference to Unity's Image component.
         /// </summary>
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] private Image _image = null!;
 
         /// <summary>

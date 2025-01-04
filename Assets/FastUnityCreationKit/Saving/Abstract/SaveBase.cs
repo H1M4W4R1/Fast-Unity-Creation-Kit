@@ -28,8 +28,7 @@ namespace FastUnityCreationKit.Saving.Abstract
     /// <summary>
     /// Base class for save files.
     /// </summary>
-    public abstract class SaveBase<TSelfSealed, TSerializationProvider> : SaveBase,
-        IWithSerializationProvider<TSerializationProvider>
+    public abstract class SaveBase<TSelfSealed, TSerializationProvider> : SaveBase
         where TSelfSealed : SaveBase<TSelfSealed, TSerializationProvider>, new()
         where TSerializationProvider : ISerializationProvider, new()
     {
@@ -269,6 +268,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// </summary>
         [ShowInInspector] [ReadOnly]
         [Required] [TitleGroup(GROUP_CONFIGURATION)]
+        [NotNull]
         public virtual string HeaderName => SaveAPI.DEFAULT_HEADER_NAME;
 
         // Automatically set to current DateTime
@@ -323,6 +323,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// </summary>
         /// <typeparam name="TSaveFile">Save file type.</typeparam>
         /// <returns>Loaded data for specified save part or null if not found (or not loaded).</returns>
+        [CanBeNull]
         public TSaveFile GetLoadedDataFor<TSaveFile>() where TSaveFile : SaveFileBase
         {
             for (int index = 0; index < FileData.Count; index++)
@@ -356,7 +357,7 @@ namespace FastUnityCreationKit.Saving.Abstract
             if (HasLoadedDataFor(metadata))
             {
                 Guard<SaveLogConfig>.Warning($"Data for {metadata.FileName} already exists.");
-                return null!;
+                return null;
             }
 
             // Create new metadata file and set-up file path
@@ -402,8 +403,15 @@ namespace FastUnityCreationKit.Saving.Abstract
                 // Add loaded data to list
                 FileData.Add(readFile);
             }
+            
+            // Check if file is loaded properly
+            if (readFile == null)
+            {
+                Guard<SaveLogConfig>.Error($"Failed to load {metadata.FileName} from {filePath}.");
+                return null;
+            }
 
-            readFile!.OnLoad(this);
+            await readFile.OnLoad(this);
             Guard<SaveLogConfig>.Verbose($"Loaded {metadata.FileName} from {filePath}.");
             return readFile;
         }
@@ -431,10 +439,8 @@ namespace FastUnityCreationKit.Saving.Abstract
             return GetOrLoadDataFor(metadata) as TSaveFile;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string GetSaveFolder() => $"{SaveDirectory.TrimEnd('/', '\\')}/{SaveName}";
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull] public string GetSaveFolder() => $"{SaveDirectory.TrimEnd('/', '\\')}/{SaveName}";
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string GetSaveFilePath(string fileName) => $"{GetSaveFolder()}/{fileName}";
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull] public string GetSaveFilePath(string fileName) => $"{GetSaveFolder()}/{fileName}";
     }
 }

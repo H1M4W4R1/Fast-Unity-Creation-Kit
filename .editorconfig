@@ -1,0 +1,10 @@
+root = true
+
+# Ignore generated code
+[*generated.cs]
+generated_code = true
+
+# Ignore all Plugins
+[/Assets/Plugins/**]
+generated_code = true
+

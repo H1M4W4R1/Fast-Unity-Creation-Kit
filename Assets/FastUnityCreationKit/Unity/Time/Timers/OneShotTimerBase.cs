@@ -1,5 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Unity.Time.Timers
 {
@@ -11,9 +12,9 @@ namespace FastUnityCreationKit.Unity.Time.Timers
     public abstract class OneShotTimerBase : TimerBase
     {
         // OneShotTimer can only be skipped by Advance method.
-        private new void Start(bool withEvents) => base.Start(withEvents);
-        private new void Reset(bool toFull, bool withEvents) => base.Reset(toFull, withEvents);
-        private new void Stop(bool withEvents) => base.Stop(withEvents);
+        [UsedImplicitly] private new void Start(bool withEvents) => base.Start(withEvents);
+        [UsedImplicitly] private new void Reset(bool toFull, bool withEvents) => base.Reset(toFull, withEvents);
+        [UsedImplicitly] private new void Stop(bool withEvents) => base.Stop(withEvents);
 
         /// <summary>
         /// Run timer once (if not already running).

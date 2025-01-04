@@ -1,5 +1,6 @@
 ﻿using System;
 using FastUnityCreationKit.Core.Serialization.Interfaces;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Core.Serialization
 {
@@ -8,7 +9,7 @@ namespace FastUnityCreationKit.Core.Serialization
         /// <summary>
         /// Converts the current instance to the target type.
         /// </summary>
-        public static TTargetType Convert<TTargetType>(this IConvertibleTo<TTargetType> convertible) 
+        public static TTargetType Convert<TTargetType>([NotNull] this IConvertibleTo<TTargetType> convertible) 
             => convertible.Convert();
 
         /// <summary>
