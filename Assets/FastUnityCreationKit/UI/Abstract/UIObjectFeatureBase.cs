@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Unity.Features;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Abstract
@@ -8,7 +9,7 @@ namespace FastUnityCreationKit.UI.Abstract
     ///     Feature that can be added to a UI object.
     /// </summary>
     [RequireComponent(typeof(UIObjectBase))]
-    public abstract class UIObjectFeatureBase : CKFeatureBase<UIObjectBase>, ICreateCallback, IDestroyCallback
+    public abstract class UIObjectFeatureBase : CKFeatureBase<UIObjectBase>, IOnObjectCreatedCallback, IOnObjectDestroyedCallback
     {
         public void OnObjectCreated()
         {

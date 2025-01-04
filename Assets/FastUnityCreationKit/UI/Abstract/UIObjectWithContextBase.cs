@@ -1,5 +1,4 @@
-﻿using FastUnityCreationKit.Annotations.Info;
-using FastUnityCreationKit.Core.Logging;
+﻿using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.UI.Context.Providers.Base;
 using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Interfaces;
@@ -11,7 +10,6 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     ///     Represents a UI object with context.
     /// </summary>
-    [SupportedFeature(typeof(IRenderable))]
     public abstract class UIObjectWithContextBase<TDataContext> : UIObjectBase
         where TDataContext : notnull
     {

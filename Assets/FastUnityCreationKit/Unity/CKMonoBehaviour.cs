@@ -1,11 +1,11 @@
-﻿using FastUnityCreationKit.Annotations.Info;
-using FastUnityCreationKit.Core.Logging;
+﻿using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Core.Objects;
 using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Structure.Initialization;
-using FastUnityCreationKit.Unity.Events.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Global;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
 using FastUnityCreationKit.Unity.Interfaces.Interaction;
 using FastUnityCreationKit.Unity.Time.Enums;
 using JetBrains.Annotations;
@@ -18,23 +18,6 @@ namespace FastUnityCreationKit.Unity
     ///     Base class for all MonoBehaviours compatible with the FastUnityCreationKit.
     ///     Used to automatically handle interface processing.
     /// </summary>
-    [SupportedFeature(typeof(ICreateCallback))]
-    [SupportedFeature(typeof(IDestroyCallback))]
-    [SupportedFeature(typeof(IEnabledCallback))]
-    [SupportedFeature(typeof(IDisabledCallback))]
-    [SupportedFeature(typeof(IFixedUpdateCallback))]
-    [SupportedFeature(typeof(IPreUpdateCallback))]
-    [SupportedFeature(typeof(IUpdateCallback))]
-    [SupportedFeature(typeof(IPostUpdateCallback))]
-    [SupportedFeature(typeof(IQuitCallback))]
-    [SupportedFeature(typeof(ISaveableObject))]
-    [SupportedFeature(typeof(ITemporaryObject))]
-    [SupportedFeature(typeof(IPersistentObject))]
-    [SupportedFeature(typeof(IClickable))]
-    [SupportedFeature(typeof(IHoverable))]
-    [SupportedFeature(typeof(IDoubleClickable))]
-    [SupportedFeature(typeof(ISelectable))]
-    [SupportedFeature(typeof(IInitializable))]
     public abstract class CKMonoBehaviour : MonoBehaviour
     {
         protected const string GROUP_STATE = "State";
@@ -44,16 +27,16 @@ namespace FastUnityCreationKit.Unity
         /// <summary>
         ///     Check if the object uses the update mode
         ///     Used to render the update mode in the inspector.
-        ///     Does not account for <see cref="IFixedUpdateCallback" />
+        ///     Does not account for <see cref="IOnObjectFixedUpdateCallback" />
         /// </summary>
-        protected bool HasAnyUpdateCallback => this is IUpdateCallback ||
-                                               this is IPreUpdateCallback ||
-                                               this is IPostUpdateCallback;
+        protected bool HasAnyUpdateCallback => this is IOnObjectUpdateCallback ||
+                                               this is IOnObjectPreUpdateCallback ||
+                                               this is IOnObjectPostUpdateCallback;
 
         /// <summary>
         ///     Check if the object raises any global events.
         /// </summary>
-        protected bool RaisesAnyGlobalEvent => RaisedGlobalEvents != CKGlobalEvents.None;
+        protected bool RaisesAnyGlobalEvent => this is IGlobalCallback;
 
         /// <summary>
         ///     State of the object. If true, the object is disabled.
@@ -80,13 +63,6 @@ namespace FastUnityCreationKit.Unity
             get;
             private set;
         }
-
-        /// <summary>
-        ///     Configure which global events are raised by this object.
-        ///     By default <see cref="CKMonoBehaviour" /> raises no global events to avoid performance issues.
-        /// </summary>
-        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] [ShowIf(nameof(RaisesAnyGlobalEvent))]
-        public CKGlobalEvents RaisedGlobalEvents { get; protected set; }
 
         /// <summary>
         ///     If true, the object will be updated even when disabled.
@@ -169,100 +145,92 @@ namespace FastUnityCreationKit.Unity
             behaviour.NotifyObjectWasFixedUpdated();
         }
 
-        internal static void HandleTemporaryObject(CKMonoBehaviour behaviour, float deltaTime)
+        internal static void HandleTemporaryObject([NotNull] CKMonoBehaviour behaviour, float deltaTime)
+        {
+            behaviour.NotifyObjectHasExpired();
+        }
+
+        private void NotifyObjectHasExpired()
         {
             // Check if object is temporary, if not skip
-            if (behaviour is not ITemporaryObject temporaryObject) return;
+            if (this is not ITemporaryObject temporaryObject) return;
 
             // If object is not expired, skip
             if (!temporaryObject.HasExpired) return;
 
             // Notify object was expired
-            if ((behaviour.RaisedGlobalEvents & CKGlobalEvents.ObjectExpiredEvent) > 0)
-                OnObjectExpiredEvent.TriggerEvent(behaviour);
+            if (this is IOnObjectExpiredCallback expiredCallback) expiredCallback.OnObjectExpired();
 
-            // Destroy the object
-            Destroy(behaviour.gameObject);
+            // Notify global object was expired
+            if (this is IOnObjectExpiredGlobalCallback globalExpiredCallback)
+                globalExpiredCallback.TriggerOnObjectExpiredEvent(this);
         }
 
         private void NotifyObjectWasCreated()
         {
-            if (this is ICreateCallback createCallback) createCallback.OnObjectCreated();
+            if (this is IOnObjectCreatedCallback createCallback) createCallback.OnObjectCreated();
 
-            if ((RaisedGlobalEvents & CKGlobalEvents.ObjectCreatedEvent) > 0)
-                OnObjectCreatedEvent.TriggerEvent(this);
+            if (this is IOnObjectCreatedGlobalCallback globalCreateCallback)
+                globalCreateCallback.TriggerOnObjectCreatedEvent(this);
         }
 
         private void NotifyObjectWasDestroyed()
         {
-            if (this is IDestroyCallback destroyCallback) destroyCallback.OnObjectDestroyed();
+            if (this is IOnObjectDestroyedCallback destroyCallback) destroyCallback.OnObjectDestroyed();
 
-            if ((RaisedGlobalEvents & CKGlobalEvents.ObjectDestroyedEvent) > 0)
-                OnObjectDestroyedEvent.TriggerEvent(this);
+            if (this is IOnObjectDestroyedGlobalCallback globalDestroyCallback)
+                globalDestroyCallback.TriggerOnObjectDestroyedEvent(this);
         }
 
         private void NotifyObjectWasEnabled()
         {
-            if (this is IEnabledCallback enabledCallback) enabledCallback.OnObjectEnabled();
+            if (this is IOnObjectEnabledCallback enabledCallback) enabledCallback.OnObjectEnabled();
 
-            if ((RaisedGlobalEvents & CKGlobalEvents.ObjectEnabledEvent) > 0)
-                OnObjectEnabledEvent.TriggerEvent(this);
+            if (this is IOnObjectEnabledGlobalCallback globalEnabledCallback)
+                globalEnabledCallback.TriggerOnObjectEnabledEvent(this);
         }
 
         private void NotifyObjectWasDisabled()
         {
-            if (this is IDisabledCallback disabledCallback) disabledCallback.OnObjectDisabled();
+            if (this is IOnObjectDisabledCallback disabledCallback) disabledCallback.OnObjectDisabled();
 
-            if ((RaisedGlobalEvents & CKGlobalEvents.ObjectDisabledEvent) > 0)
-                OnObjectDisabledEvent.TriggerEvent(this);
+            if (this is IOnObjectDisabledGlobalCallback globalDisabledCallback)
+                globalDisabledCallback.TriggerOnObjectDisabledEvent(this);
         }
 
         private void NotifyObjectWasFixedUpdated()
         {
-            if (this is IFixedUpdateCallback fixedUpdateCallback) fixedUpdateCallback.OnObjectFixedUpdated();
+            if (this is IOnObjectFixedUpdateCallback fixedUpdateCallback)
+                fixedUpdateCallback.OnObjectFixedUpdate();
 
-            if ((RaisedGlobalEvents & CKGlobalEvents.ObjectFixedUpdateEvent) > 0)
-                OnObjectFixedUpdateEvent.TriggerEvent(this);
+            if (this is IOnObjectFixedUpdateGlobalCallback globalFixedUpdateCallback)
+                globalFixedUpdateCallback.TriggerOnObjectFixedUpdateEvent(this);
         }
 
         private void NotifyObjectWasPreUpdated(float deltaTime)
         {
-            if (this is IPreUpdateCallback preUpdateCallback) preUpdateCallback.OnBeforeObjectUpdated(deltaTime);
+            if (this is IOnObjectPreUpdateCallback preUpdateCallback)
+                preUpdateCallback.OnBeforeObjectUpdate(deltaTime);
 
-            if ((RaisedGlobalEvents & CKGlobalEvents.ObjectPreUpdateEvent) > 0)
-                OnObjectPreUpdateEvent.TriggerEvent(this);
+            if(this is IOnObjectPreUpdateGlobalCallback globalPreUpdateCallback)
+                globalPreUpdateCallback.TriggerOnObjectPreUpdateEvent(this);
         }
 
         private void NotifyObjectWasUpdated(float deltaTime)
         {
-            if (this is IUpdateCallback updateCallback) updateCallback.OnObjectUpdated(deltaTime);
+            if (this is IOnObjectUpdateCallback updateCallback) updateCallback.OnObjectUpdate(deltaTime);
 
-            if ((RaisedGlobalEvents & CKGlobalEvents.ObjectUpdateEvent) > 0)
-                OnObjectUpdateEvent.TriggerEvent(this);
+            if (this is IOnObjectUpdateGlobalCallback globalUpdateCallback)
+                globalUpdateCallback.TriggerOnObjectUpdateEvent(this);
         }
 
         private void NotifyObjectWasPostUpdated(float deltaTime)
         {
-            if (this is IPostUpdateCallback postUpdateCallback) postUpdateCallback.OnAfterObjectUpdated(deltaTime);
+            if (this is IOnObjectPostUpdateCallback postUpdateCallback)
+                postUpdateCallback.OnAfterObjectUpdate(deltaTime);
 
-            if ((RaisedGlobalEvents & CKGlobalEvents.ObjectPostUpdateEvent) > 0)
-                OnObjectPostUpdateEvent.TriggerEvent(this);
-        }
-
-        /// <summary>
-        ///     Enable global event for this object.
-        /// </summary>
-        protected void EnableGlobalEvent(CKGlobalEvents globalEvent)
-        {
-            RaisedGlobalEvents |= globalEvent;
-        }
-
-        /// <summary>
-        ///     Disable global event for this object.
-        /// </summary>
-        protected void DisableGlobalEvent(CKGlobalEvents globalEvent)
-        {
-            RaisedGlobalEvents &= ~globalEvent;
+            if (this is IOnObjectPostUpdateGlobalCallback globalPostUpdateCallback)
+                globalPostUpdateCallback.TriggerOnObjectPostUpdateEvent(this);
         }
 
 #region UNITY_EVENTS_IMPLEMENTATION
@@ -293,7 +261,7 @@ namespace FastUnityCreationKit.Unity
 
         protected void OnApplicationQuit()
         {
-            if (this is IQuitCallback quitCallback) quitCallback.OnQuit();
+            if (this is IOnApplicationQuitCallback quitCallback) quitCallback.OnQuit();
         }
 
 #endregion

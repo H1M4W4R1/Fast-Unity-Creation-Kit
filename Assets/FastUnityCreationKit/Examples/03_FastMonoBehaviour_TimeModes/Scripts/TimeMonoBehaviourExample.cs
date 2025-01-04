@@ -1,12 +1,13 @@
 ﻿using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
 using FastUnityCreationKit.Unity.Time;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._03_FastMonoBehaviour_TimeModes.Scripts
 {
-    public abstract class TimeMonoBehaviourExample : CKMonoBehaviour, ICreateCallback, IDestroyCallback,
-        IUpdateCallback
+    public abstract class TimeMonoBehaviourExample : CKMonoBehaviour, IOnObjectCreatedCallback, IOnObjectDestroyedCallback,
+        IOnObjectUpdateCallback
     {
         public void OnObjectCreated()
         {
@@ -18,7 +19,7 @@ namespace FastUnityCreationKit.Examples._03_FastMonoBehaviour_TimeModes.Scripts
             TimeAPI.SetTimeScale(1f);
         }
 
-        public void OnObjectUpdated(float deltaTime)
+        public void OnObjectUpdate(float deltaTime)
         {
             Debug.Log(GetMessage(deltaTime));
         }

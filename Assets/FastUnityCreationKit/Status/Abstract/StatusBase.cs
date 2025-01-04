@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Annotations.Data;
-using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Core.Limits;
 using FastUnityCreationKit.Core.Logging;
@@ -22,9 +21,6 @@ namespace FastUnityCreationKit.Status.Abstract
     [AutoCreatedObject(LocalConstants.STATUS_OBJECT_DIRECTORY)]
     [AddressableGroup(LocalConstants.STATUS_ADDRESSABLE_TAG)]
     [AutoRegisterIn(typeof(StatusDatabase))]
-    [SupportedFeature(typeof(IPercentageStatus))]
-    [SupportedFeature(typeof(ILimited))]
-    [SupportedFeature(typeof(ITemporaryStatus))]
     public abstract class StatusBase : UniqueDefinitionBase
     {
         /// <summary>

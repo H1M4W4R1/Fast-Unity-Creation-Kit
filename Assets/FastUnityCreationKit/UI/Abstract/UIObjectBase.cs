@@ -2,6 +2,7 @@
 using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
 using FastUnityCreationKit.Unity.Time.Enums;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     ///     The base class for all UI objects in Fast Unity Creation Kit.
     /// </summary>
-    public abstract class UIObjectBase : CKMonoBehaviour, ICreateCallback, IDestroyCallback
+    public abstract class UIObjectBase : CKMonoBehaviour, IOnObjectCreatedCallback, IOnObjectDestroyedCallback
     {
         /// <summary>
         ///     Rect transform of this object.

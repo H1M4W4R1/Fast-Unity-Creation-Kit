@@ -2,6 +2,7 @@
 using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
 using FastUnityCreationKit.Unity.Time.Enums;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -13,7 +14,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
     /// </summary>
     public abstract class DataContextProviderBase<TContextType> : CKMonoBehaviour,
         IDataContextProvider<TContextType>,
-        ICreateCallback, IDestroyCallback, IUpdateCallback
+        IOnObjectCreatedCallback, IOnObjectDestroyedCallback, IOnObjectUpdateCallback
     {
         public delegate void OnContextChangedHandler(TContextType context);
 
@@ -58,7 +59,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
             OnProviderDestroyed?.Invoke();
         }
 
-        public void OnObjectUpdated(float deltaTime)
+        public void OnObjectUpdate(float deltaTime)
         {
             // Check if data context is dirty
             // if so, notify that the context has changed
