@@ -6,13 +6,12 @@ using UnityEngine.UI;
 namespace FastUnityCreationKit.UI.Elements.Base.Input
 {
     /// <summary>
-    /// Represents a button.
+    ///     Represents a button.
     /// </summary>
-    [RequireComponent(typeof(Button))]
-    public abstract class UIButtonBase : UIObjectBase
+    [RequireComponent(typeof(Button))] public abstract class UIButtonBase : UIObjectBase
     {
         /// <summary>
-        /// Internal reference to the button.
+        ///     Internal reference to the button.
         /// </summary>
         [NotNull]
         // ReSharper disable once NullableWarningSuppressionIsUsed
@@ -32,19 +31,25 @@ namespace FastUnityCreationKit.UI.Elements.Base.Input
         }
 
         /// <summary>
-        /// Event that is invoked when the button is clicked.
+        ///     Event that is invoked when the button is clicked.
         /// </summary>
         protected abstract void OnClick();
 
         /// <summary>
-        /// Changes the interactable state of the button.
+        ///     Changes the interactable state of the button.
         /// </summary>
         /// <param name="interactable">Interactable state.</param>
-        public void SetInteractable(bool interactable) => _button.interactable = interactable;
+        public void SetInteractable(bool interactable)
+        {
+            _button.interactable = interactable;
+        }
 
         /// <summary>
-        /// Simulates a click on the button.
+        ///     Simulates a click on the button.
         /// </summary>
-        public void SimulateClick() => _OnClick();
+        public void SimulateClick()
+        {
+            _OnClick();
+        }
     }
 }

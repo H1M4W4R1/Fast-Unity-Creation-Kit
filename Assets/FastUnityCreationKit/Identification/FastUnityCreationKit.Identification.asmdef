@@ -1,11 +1,8 @@
 {
-	"name": "FastUnityCreationKit.Identification",
-	"allowUnsafeCode": true,
-	"references": [
-		"Unity.Burst",
-		"Unity.Mathematics"
-		
-		
-	]
-	
+  "name": "FastUnityCreationKit.Identification",
+  "allowUnsafeCode": true,
+  "references": [
+    "Unity.Burst",
+    "Unity.Mathematics"
+  ]
 }

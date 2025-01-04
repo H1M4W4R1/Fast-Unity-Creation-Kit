@@ -4,6 +4,5 @@
     {
         public const string RESOURCES_OBJECT_DIRECTORY = "Economy";
         public const string RESOURCE_ADDRESSABLE_TAG = "Economy";
-          
     }
 }

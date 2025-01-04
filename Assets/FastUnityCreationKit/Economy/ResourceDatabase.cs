@@ -15,46 +15,44 @@ namespace FastUnityCreationKit.Economy
         }
 
         /// <summary>
-        /// Get resource by identifier.
+        ///     Get resource by identifier.
         /// </summary>
         /// <param name="identifier">Identifier of resource to get.</param>
         /// <returns>Resource with specified identifier or null if not found.</returns>
         [CanBeNull] public ResourceBase GetResource(Snowflake128 identifier)
         {
             EnsurePreloaded();
-            
-            for(int i = 0; i < PreloadedCount; i++)
+
+            for (int i = 0; i < PreloadedCount; i++)
             {
                 ResourceBase resource = GetElementAt(i);
                 if (!resource) continue;
-                
+
                 // If resource has the same identifier
-                if (resource.Id == identifier)
-                    return resource;
+                if (resource.Id == identifier) return resource;
             }
-            
+
             return null;
         }
-        
+
         /// <summary>
-        /// Get resource of specified type.
+        ///     Get resource of specified type.
         /// </summary>
         /// <typeparam name="TResource">Type of resource to get.</typeparam>
         /// <returns>Resource of specified type or null if not found.</returns>
-        [CanBeNull] public TResource GetResource<TResource>() 
+        [CanBeNull] public TResource GetResource<TResource>()
             where TResource : ResourceBase
         {
             EnsurePreloaded();
-            
-            for(int i = 0; i < PreloadedCount; i++)
+
+            for (int i = 0; i < PreloadedCount; i++)
             {
                 ResourceBase resource = GetElementAt(i);
                 if (!resource) continue;
-                
-                if (resource is TResource castedResource)
-                    return castedResource;
+
+                if (resource is TResource castedResource) return castedResource;
             }
-            
+
             return null;
         }
     }

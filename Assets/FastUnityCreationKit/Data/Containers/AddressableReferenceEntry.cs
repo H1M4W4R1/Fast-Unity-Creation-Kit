@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEditor;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
@@ -11,10 +12,6 @@ namespace FastUnityCreationKit.Data.Containers
     public sealed class AddressableReferenceEntry<TEntryType> : IEquatable<AddressableReferenceEntry<TEntryType>>
         where TEntryType : Object
     {
-        [ShowInInspector] [ReadOnly] [OdinSerialize] public string Address { get; private set; }
-
-        [ShowInInspector] [ReadOnly] [OdinSerialize] public AssetReferenceT<TEntryType> Entry { get; private set; }
-
         public AddressableReferenceEntry(string address, AssetReferenceT<TEntryType> entry)
         {
             Address = address;
@@ -33,6 +30,15 @@ namespace FastUnityCreationKit.Data.Containers
             Entry = (AssetReferenceT<TEntryType>) entry;
         }
 
+        [ShowInInspector] [ReadOnly] [OdinSerialize] public string Address { get; private set; }
+
+        [ShowInInspector] [ReadOnly] [OdinSerialize] public AssetReferenceT<TEntryType> Entry { get; private set; }
+
+        public bool Equals(AddressableReferenceEntry<TEntryType> other)
+        {
+            return Address == other?.Address;
+        }
+
         public static bool operator ==([CanBeNull] AddressableReferenceEntry<TEntryType> a, [CanBeNull] object obj)
         {
             if (ReferenceEquals(a, null)) return obj == null;
@@ -42,9 +48,9 @@ namespace FastUnityCreationKit.Data.Containers
             // If object was deleted from the project folder
             // then check if we're comparing with null
 #if UNITY_EDITOR
-            UnityEditor.AssetDatabase.GUIDToAssetPath(a.Entry.AssetGUID);
-            if (!UnityEditor.AssetDatabase.AssetPathExists(
-                    UnityEditor.AssetDatabase.GUIDToAssetPath(a.Entry.AssetGUID)))
+            AssetDatabase.GUIDToAssetPath(a.Entry.AssetGUID);
+            if (!AssetDatabase.AssetPathExists(
+                    AssetDatabase.GUIDToAssetPath(a.Entry.AssetGUID)))
                 return obj == null;
 #endif
 
@@ -78,11 +84,6 @@ namespace FastUnityCreationKit.Data.Containers
         public override bool Equals(object obj)
         {
             return this == obj;
-        }
-
-        public bool Equals(AddressableReferenceEntry<TEntryType> other)
-        {
-            return Address == other?.Address;
         }
 
         public override int GetHashCode()

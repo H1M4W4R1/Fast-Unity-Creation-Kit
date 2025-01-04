@@ -2,8 +2,7 @@
 
 namespace FastUnityCreationKit.Unity.Events.Unity
 {
-    [Flags]
-    public enum CKGlobalEvents : uint
+    [Flags] public enum CKGlobalEvents : uint
     {
         None = 0,
         ObjectCreatedEvent = 1 << 0,
@@ -15,8 +14,8 @@ namespace FastUnityCreationKit.Unity.Events.Unity
         ObjectPostUpdateEvent = 1 << 6,
         ObjectFixedUpdateEvent = 1 << 7,
         ObjectExpiredEvent = 1 << 8,
-        
-        
+
+
         All = 0xFFFFFFFF
     }
 }

@@ -6,8 +6,15 @@ using FastUnityCreationKit.Editor.Validation.Data;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor.Validation;
 
-[assembly: RegisterValidator(typeof(OnlySealedItemsValidator.InternalValueValidator))]
-[assembly: RegisterValidator(typeof(OnlySealedItemsValidator.InternalRootObjectValidator))]
+[assembly:
+    RegisterValidator(
+        typeof(QuickAttributeBasedValidator<OnlySealedItemsValidator, OnlySealedElementsAttribute, IDataContainer>.
+            InternalValueValidator))]
+[assembly:
+    RegisterValidator(
+        typeof(QuickAttributeBasedValidator<OnlySealedItemsValidator, OnlySealedElementsAttribute, IDataContainer>.
+            InternalRootObjectValidator))]
+
 namespace FastUnityCreationKit.Editor.Validation.Data
 {
     public sealed class OnlySealedItemsValidator : QuickAttributeBasedValidator<
@@ -20,16 +27,15 @@ namespace FastUnityCreationKit.Editor.Validation.Data
             {
                 // Skip if the type is sealed
                 if (list[i].GetType().IsSealed) continue;
-                
+
                 // Copy value to avoid closure issues, which may cause the index to be incorrect
                 // when compiler improves code performance
                 int index = i;
-                
+
                 // Add error if the type is not sealed
                 result.AddError($"Type [{list[i].GetType()}] is not sealed. It cannot be stored in the container.")
                     .WithFix(() => list.RemoveAt(index));
-            }     
+            }
         }
     }
-    
 }

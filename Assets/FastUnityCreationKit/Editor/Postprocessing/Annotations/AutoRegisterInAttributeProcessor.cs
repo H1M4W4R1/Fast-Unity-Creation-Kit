@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FastUnityCreationKit.Annotations.Data;
+using FastUnityCreationKit.Core.Extensions;
+using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Editor.Extensions;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
-using FastUnityCreationKit.Core.Extensions;
-using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Sirenix.Utilities;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
@@ -22,14 +22,17 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
     public sealed class AutoRegisterInAttributeProcessor : QuickAssetProcessor<AutoRegisterInAttributeProcessor>
     {
         protected override bool AssetIsRequired => true;
-        public override void PostprocessCreatedAsset(string assetPath) 
+
+        public override void PostprocessCreatedAsset(string assetPath)
         {
-            if(!IsAssetAvailable) return;
-            TryToRegisterInContainers(CurrentAsset); 
+            if (!IsAssetAvailable) return;
+            TryToRegisterInContainers(CurrentAsset);
         }
 
-        internal static bool IsAddressableContainer(Type type) =>
-            type.ImplementsOpenGenericClass(typeof(AddressableDataContainer<>));
+        internal static bool IsAddressableContainer(Type type)
+        {
+            return type.ImplementsOpenGenericClass(typeof(AddressableDataContainer<>));
+        }
 
         internal static void TryToRegisterInContainers([NotNull] Object obj)
         {
@@ -41,7 +44,6 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
 
             // Ensure object is registered in specified databases
             foreach (AutoRegisterInAttribute registerAttribute in registerInAttribute)
-            {
                 if (obj.IsAddressable())
                 {
                     // Addressable object can only be registered in addressable database
@@ -49,7 +51,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                     {
                         Guard<ValidationLogConfig>.Error(
                             $"Cannot register {obj.name} in {registerAttribute.Type.GetCompilableNiceFullName()}. " +
-                            $"Type is not a valid AddressableDataContainer.");
+                            "Type is not a valid AddressableDataContainer.");
                         continue;
                     }
 
@@ -62,16 +64,16 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                     {
                         Guard<ValidationLogConfig>.Error(
                             $"Cannot register {obj.name} in {registerAttribute.Type.GetCompilableNiceFullName()}. " +
-                            $"Type is a valid AddressableDataContainer. Object is not addressable.");
+                            "Type is a valid AddressableDataContainer. Object is not addressable.");
                         continue;
                     }
 
                     TryRegisterInContainer(obj, registerAttribute, SelfObjectReference);
                 }
-            }
         }
 
-        private static void TryRegisterInContainer([NotNull] Object obj,
+        private static void TryRegisterInContainer(
+            [NotNull] Object obj,
             [NotNull] AutoRegisterInAttribute registerAttribute,
             Func<Object, Type, AutoRegisterInAttribute, object> getRegistryObjectRequestAction)
         {
@@ -89,7 +91,8 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                     baseClass.GetCustomAttributes<AutoRegisterInAttribute>(false);
 
                 // Get first attribute that matches the specified type
-                AutoRegisterInAttribute attribute = attributes.FirstOrDefault(a => a.Type == registerAttribute.Type);
+                AutoRegisterInAttribute attribute =
+                    attributes.FirstOrDefault(a => a.Type == registerAttribute.Type);
 
                 // Check if attribute is not null, if found, assign it to the base class
                 if (attribute == null) continue;
@@ -101,7 +104,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             {
                 Guard<ValidationLogConfig>.Error(
                     $"Cannot register {obj.name} in {registerAttribute.Type.GetCompilableNiceFullName()}. " +
-                    $"[AutoRegisterIn] not found on any base class.");
+                    "[AutoRegisterIn] not found on any base class.");
                 return;
             }
 
@@ -110,7 +113,8 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             Type databaseType = typeof(AddressableDatabase<,>).MakeGenericType(databaseSubtype, foundBaseClass);
 
             // Get instance of the database
-            PropertyInfo property = databaseType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+            PropertyInfo property =
+                databaseType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
             object database = property?.GetValue(null);
 
             // Check if database is not null
@@ -118,7 +122,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             {
                 Guard<ValidationLogConfig>.Error(
                     $"Cannot register {obj.name} in {databaseSubtype.GetCompilableNiceFullName()} ({databaseType.GetCompilableNiceFullName()}). Database instance not found. " +
-                    $"Are you sure it has public 'Instance' property?");
+                    "Are you sure it has public 'Instance' property?");
                 return;
             }
 
@@ -131,7 +135,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             {
                 Guard<ValidationLogConfig>.Error(
                     $"Cannot register {obj.name} in {databaseSubtype.GetCompilableNiceFullName()}. 'Add' or 'Contains' method not found. " +
-                    $"Are you sure it exists and is public?");
+                    "Are you sure it exists and is public?");
                 return;
             }
 
@@ -141,18 +145,16 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                 object objToRegister = getRegistryObjectRequestAction(obj, foundBaseClass, registerAttribute);
 
                 // Ensure object is not already registered
-                if (checkMethod.Invoke(database, new[] {objToRegister}) is true)
-                    return;
+                if (checkMethod.Invoke(database, new[] {objToRegister}) is true) return;
 
                 // Register object in database (add kvp)
                 registerMethod.Invoke(database, new[] {objToRegister});
 
                 Guard<ValidationLogConfig>.Debug(
                     $"Registered {obj.name} in {databaseSubtype.GetCompilableNiceFullName()} database.");
-                
+
                 // Reserialize database!
-                if(database is Object unityObject)
-                    EditorUtility.SetDirty(unityObject);
+                if (database is Object unityObject) EditorUtility.SetDirty(unityObject);
             }
             catch (Exception exception)
             {
@@ -162,11 +164,12 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                 // database.  
                 Guard<ValidationLogConfig>.Warning(
                     $"Failed to register {obj.name} in {databaseSubtype.GetCompilableNiceFullName()}. " +
-                    $"Are you trying to add Addressable Asset to non-addressable database?");
+                    "Are you trying to add Addressable Asset to non-addressable database?");
             }
         }
 
-        private static object GetAddressableObjectToRegister([NotNull] Object obj,
+        private static object GetAddressableObjectToRegister(
+            [NotNull] Object obj,
             [NotNull] Type foundBaseClass,
             AutoRegisterInAttribute registerAttribute)
         {
@@ -186,8 +189,12 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             return kvp;
         }
 
-        [NotNull] private static object SelfObjectReference([NotNull] Object obj,
+        [NotNull] private static object SelfObjectReference(
+            [NotNull] Object obj,
             [NotNull] Type foundBaseClass,
-            AutoRegisterInAttribute registerAttribute) => obj;
+            AutoRegisterInAttribute registerAttribute)
+        {
+            return obj;
+        }
     }
 }

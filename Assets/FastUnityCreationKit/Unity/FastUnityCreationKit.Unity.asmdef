@@ -1,14 +1,13 @@
 {
-	"name": "FastUnityCreationKit.Unity",
-	"allowUnsafeCode": true,
-	"references": [
-		"UniTask",
-		"FastUnityCreationKit.Annotations",
-		"FastUnityCreationKit.Core",
-		"FastUnityCreationKit.Events",
-		"FastUnityCreationKit.Identification",
-		"FastUnityCreationKit.Saving",
-		"FastUnityCreationKit.Structure"
-	]
-	
+  "name": "FastUnityCreationKit.Unity",
+  "allowUnsafeCode": true,
+  "references": [
+    "UniTask",
+    "FastUnityCreationKit.Annotations",
+    "FastUnityCreationKit.Core",
+    "FastUnityCreationKit.Events",
+    "FastUnityCreationKit.Identification",
+    "FastUnityCreationKit.Saving",
+    "FastUnityCreationKit.Structure"
+  ]
 }

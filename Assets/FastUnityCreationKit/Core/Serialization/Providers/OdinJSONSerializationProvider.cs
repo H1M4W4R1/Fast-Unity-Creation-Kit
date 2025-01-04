@@ -8,8 +8,8 @@ using Sirenix.Serialization;
 namespace FastUnityCreationKit.Core.Serialization.Providers
 {
     /// <summary>
-    /// Serialization provider that uses Odin Serializer to serialize and deserialize data
-    /// to and from JSON format.
+    ///     Serialization provider that uses Odin Serializer to serialize and deserialize data
+    ///     to and from JSON format.
     /// </summary>
     public sealed class OdinJsonSerializationProvider : ISerializationProvider
     {
@@ -23,8 +23,10 @@ namespace FastUnityCreationKit.Core.Serialization.Providers
 
             // Write data to file and check if it was successful
             bool status = IOExtensions.TryWriteBytes(filePath, binaryData);
-            if (status) Guard<SaveLogConfig>.Verbose($"Successfully wrote data to path: {filePath}.");
-            else Guard<SaveLogConfig>.Error($"Failed to write data to path: {filePath}.");
+            if (status)
+                Guard<SaveLogConfig>.Verbose($"Successfully wrote data to path: {filePath}.");
+            else
+                Guard<SaveLogConfig>.Error($"Failed to write data to path: {filePath}.");
             return status;
         }
 
@@ -40,8 +42,8 @@ namespace FastUnityCreationKit.Core.Serialization.Providers
             // Read data from file, check if it was successful
             // if not, return default value
             (bool status, byte[] data) = IOExtensions.TryReadBytes(savePath);
-            if(!status) return (false, default);
-            
+            if (!status) return (false, default);
+
             // Deserialize data
             TSaveFile deserializedValue =
                 SerializationUtility.DeserializeValue<TSaveFile>(data, DataFormat.JSON);

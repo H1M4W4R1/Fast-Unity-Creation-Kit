@@ -3,7 +3,7 @@
 namespace FastUnityCreationKit.UI.Context.Providers.Utility
 {
     /// <summary>
-    /// Represents a data context info used to store data context and its provider.
+    ///     Represents a data context info used to store data context and its provider.
     /// </summary>
     public readonly ref struct DataContextInfo<TDataContext>
     {

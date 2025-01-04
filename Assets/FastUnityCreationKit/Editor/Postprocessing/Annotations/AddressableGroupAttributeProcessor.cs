@@ -2,17 +2,19 @@
 using System.Reflection;
 using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Annotations.Utility;
+using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Editor.Extensions;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
-using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
 {
     [UsedImplicitly]
-    [Order(int.MinValue)] // Execute before any other processors for created assets to have correct addressable group
-    public sealed class AddressableGroupAttributeProcessor : QuickAssetProcessor<AddressableGroupAttributeProcessor>
+    [Order(int.MinValue)]
+    // Execute before any other processors for created assets to have correct addressable group
+    public sealed class
+        AddressableGroupAttributeProcessor : QuickAssetProcessor<AddressableGroupAttributeProcessor>
     {
         protected override bool AssetIsRequired => true;
 
@@ -36,7 +38,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
                 if (obj.SetAddressableGroup(groupAttribute.GroupName, true, groupAttribute.Labels))
                     Guard<ValidationLogConfig>.Debug(
                         $"Found AddressableGroupAttribute and assigned {obj.name} to addressable group {groupAttribute.GroupName}");
-                
+
                 return true;
             }
 

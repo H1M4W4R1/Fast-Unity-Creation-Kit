@@ -1,5 +1,5 @@
-﻿using FastUnityCreationKit.UI.Interfaces;
-using FastUnityCreationKit.Core.Logging;
+﻿using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.UI.Interfaces;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
 using FastUnityCreationKit.Unity.Time.Enums;
@@ -9,12 +9,12 @@ using UnityEngine;
 namespace FastUnityCreationKit.UI.Abstract
 {
     /// <summary>
-    /// The base class for all UI objects in Fast Unity Creation Kit.
+    ///     The base class for all UI objects in Fast Unity Creation Kit.
     /// </summary>
     public abstract class UIObjectBase : CKMonoBehaviour, ICreateCallback, IDestroyCallback
     {
         /// <summary>
-        /// Rect transform of this object.
+        ///     Rect transform of this object.
         /// </summary>
         // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] public RectTransform RectTransform { get; private set; } = null!;
@@ -43,6 +43,16 @@ namespace FastUnityCreationKit.UI.Abstract
             AfterFirstRenderOrCreated();
         }
 
+
+        public virtual void OnObjectDestroyed()
+        {
+            // Teardown object
+            Teardown();
+
+            // Unregister this object
+            UIManager.Instance.UnregisterUserInterfaceObject(this);
+        }
+
         public virtual void Setup()
         {
         }
@@ -53,16 +63,6 @@ namespace FastUnityCreationKit.UI.Abstract
 
         public virtual void Teardown()
         {
-        }
-
-
-        public virtual void OnObjectDestroyed()
-        {
-            // Teardown object
-            Teardown();
-
-            // Unregister this object
-            UIManager.Instance.UnregisterUserInterfaceObject(this);
         }
 
 #region UPDATE_CONFIGURATION

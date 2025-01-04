@@ -1,9 +1,8 @@
 {
-	"name": "FastUnityCreationKit.Events",
-	"allowUnsafeCode": true,
-	"references": [
-		"UniTask",
-		"FastUnityCreationKit.Structure"
-	]
-	
+  "name": "FastUnityCreationKit.Events",
+  "allowUnsafeCode": true,
+  "references": [
+    "UniTask",
+    "FastUnityCreationKit.Structure"
+  ]
 }

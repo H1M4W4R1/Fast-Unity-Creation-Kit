@@ -1,14 +1,14 @@
 ﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Status.Abstract;
 using FastUnityCreationKit.Status.Interfaces;
 using FastUnityCreationKit.Unity.Events;
-using FastUnityCreationKit.Core.Logging;
 
 namespace FastUnityCreationKit.Status
 {
     /// <summary>
-    /// This component is used to store entity status.
+    ///     This component is used to store entity status.
     /// </summary>
     public class StatusContainer : DataContainerBase<AppliedStatusReference>
     {
@@ -16,14 +16,14 @@ namespace FastUnityCreationKit.Status
         {
             OnFrameRenderedEvent.RegisterEventListener(HandleFrameRendered);
         }
-        
+
         /// <summary>
-        /// Adds status of type <typeparamref name="TStatusType"/> to the entity.
+        ///     Adds status of type <typeparamref name="TStatusType" /> to the entity.
         /// </summary>
         /// <param name="nLevels">Number of levels to add. Default is 1.</param>
         /// <returns>True if status was added, false if status already exists.</returns>
         /// <remarks>
-        /// If status already exists, it's level will be increased by <paramref name="nLevels"/>.
+        ///     If status already exists, it's level will be increased by <paramref name="nLevels" />.
         /// </remarks>
         public async UniTask<bool> AddStatus<TStatusType>(long nLevels = 1)
             where TStatusType : StatusBase
@@ -34,7 +34,8 @@ namespace FastUnityCreationKit.Status
             // If status does not exist, return false
             if (ReferenceEquals(status, null))
             {
-                Guard<ValidationLogConfig>.Error($"Status {typeof(TStatusType).FullName} not found in the database.");
+                Guard<ValidationLogConfig>.Error(
+                    $"Status {typeof(TStatusType).FullName} not found in the database.");
                 return false;
             }
 
@@ -55,14 +56,16 @@ namespace FastUnityCreationKit.Status
         }
 
         /// <summary>
-        /// Checks if status of type <typeparamref name="TStatusType"/> is applied to the entity.
+        ///     Checks if status of type <typeparamref name="TStatusType" /> is applied to the entity.
         /// </summary>
         public bool HasStatus<TStatusType>()
-            where TStatusType : StatusBase =>
-            GetStatusReference<TStatusType>() != null;
+            where TStatusType : StatusBase
+        {
+            return GetStatusReference<TStatusType>() != null;
+        }
 
         /// <summary>
-        /// Removes status of type <typeparamref name="TStatusType"/> from the entity.
+        ///     Removes status of type <typeparamref name="TStatusType" /> from the entity.
         /// </summary>
         /// <param name="nLevels">Number of levels to remove. Default is 1.</param>
         /// <returns>True if status was removed, false if status does not exist.</returns>
@@ -82,7 +85,7 @@ namespace FastUnityCreationKit.Status
         }
 
         /// <summary>
-        /// Clears status of type <typeparamref name="TStatusType"/> from the entity.
+        ///     Clears status of type <typeparamref name="TStatusType" /> from the entity.
         /// </summary>
         public async UniTask Clear<TStatusType>()
             where TStatusType : StatusBase
@@ -99,7 +102,7 @@ namespace FastUnityCreationKit.Status
         }
 
         /// <summary>
-        /// Clears all statuses from the entity.
+        ///     Clears all statuses from the entity.
         /// </summary>
         public async UniTask ClearAll()
         {
@@ -116,11 +119,11 @@ namespace FastUnityCreationKit.Status
                     await reference.TakeLevel(this, nLevels);
             }
 
-            Guard<EntityLogConfig>.Info($"All statuses cleared.");
+            Guard<EntityLogConfig>.Info("All statuses cleared.");
         }
 
         /// <summary>
-        /// Increases the level of status of type <typeparamref name="TStatusType"/>.
+        ///     Increases the level of status of type <typeparamref name="TStatusType" />.
         /// </summary>
         /// <param name="nLevels">Number of levels to increase. Default is 1.</param>
         /// <typeparam name="TStatusType">Type of status to increase.</typeparam>
@@ -132,20 +135,20 @@ namespace FastUnityCreationKit.Status
             AppliedStatusReference reference = GetStatusReference<TStatusType>();
 
             // If status does not exist, add status
-            if (reference == null)
-                return await AddStatus<TStatusType>(nLevels);
+            if (reference == null) return await AddStatus<TStatusType>(nLevels);
 
             // Otherwise, increase status level
             if (reference.Status is IPercentageStatus)
             {
                 await reference.AddLevel(this, nLevels * IPercentageStatus.PERCENTAGE_SCALE);
                 Guard<EntityLogConfig>.Info(
-                    $"Status {typeof(TStatusType).FullName} increased by {(nLevels * IPercentageStatus.PERCENTAGE_SCALE):P} [{nLevels} levels].");
+                    $"Status {typeof(TStatusType).FullName} increased by {nLevels * IPercentageStatus.PERCENTAGE_SCALE:P} [{nLevels} levels].");
             }
             else
             {
                 await reference.AddLevel(this, nLevels);
-                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).FullName} increased by {nLevels} levels.");
+                Guard<EntityLogConfig>.Info(
+                    $"Status {typeof(TStatusType).FullName} increased by {nLevels} levels.");
             }
 
 
@@ -153,7 +156,7 @@ namespace FastUnityCreationKit.Status
         }
 
         /// <summary>
-        /// Decreases the level of status of type <typeparamref name="TStatusType"/>.
+        ///     Decreases the level of status of type <typeparamref name="TStatusType" />.
         /// </summary>
         /// <param name="nLevels">Number of levels to decrease. Default is 1.</param>
         /// <typeparam name="TStatusType">Type of status to decrease.</typeparam>
@@ -172,12 +175,13 @@ namespace FastUnityCreationKit.Status
             {
                 await reference.TakeLevel(this, nLevels * IPercentageStatus.PERCENTAGE_SCALE);
                 Guard<EntityLogConfig>.Info(
-                    $"Status {typeof(TStatusType).FullName} decreased by {(nLevels * IPercentageStatus.PERCENTAGE_SCALE):P}");
+                    $"Status {typeof(TStatusType).FullName} decreased by {nLevels * IPercentageStatus.PERCENTAGE_SCALE:P}");
             }
             else
             {
                 await reference.TakeLevel(this, nLevels);
-                Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).FullName} decreased by {nLevels} [{nLevels} levels].");
+                Guard<EntityLogConfig>.Info(
+                    $"Status {typeof(TStatusType).FullName} decreased by {nLevels} [{nLevels} levels].");
             }
 
 
@@ -185,7 +189,7 @@ namespace FastUnityCreationKit.Status
         }
 
         /// <summary>
-        /// Gets the level of status of type <typeparamref name="TStatusType"/>.
+        ///     Gets the level of status of type <typeparamref name="TStatusType" />.
         /// </summary>
         public long GetLevel<TStatusType>()
             where TStatusType : StatusBase
@@ -200,7 +204,7 @@ namespace FastUnityCreationKit.Status
         }
 
         /// <summary>
-        /// Gets the percentage of status of type <typeparamref name="TStatusType"/>.
+        ///     Gets the percentage of status of type <typeparamref name="TStatusType" />.
         /// </summary>
         /// <typeparam name="TStatusType">Type of status to get percentage of.</typeparam>
         /// <returns>Percentage of status level.</returns>
@@ -234,8 +238,10 @@ namespace FastUnityCreationKit.Status
                 Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).FullName} increased by {percentage:P}.");
             }
             else
+            {
                 Guard<ValidationLogConfig>.Error(
                     $"Status {typeof(TStatusType).FullName} is not a percentage status.");
+            }
 
             return false;
         }
@@ -253,39 +259,39 @@ namespace FastUnityCreationKit.Status
                 Guard<EntityLogConfig>.Info($"Status {typeof(TStatusType).FullName} decreased by {percentage:P}.");
             }
             else
+            {
                 Guard<ValidationLogConfig>.Error(
                     $"Status {typeof(TStatusType).FullName} is not a percentage status.");
+            }
 
             return false;
         }
 
         /// <summary>
-        /// Gets a reference to the status of type <typeparamref name="TStatusType"/> that 
+        ///     Gets a reference to the status of type <typeparamref name="TStatusType" /> that
         /// </summary>
         public AppliedStatusReference GetStatusReference<TStatusType>()
             where TStatusType : StatusBase
         {
             // Search for status reference
             for (int i = 0; i < data.Count; i++)
-            {
                 if (data[i].Status is TStatusType)
                     return data[i];
-            }
 
             Guard<EntityLogConfig>.Warning($"Status {typeof(TStatusType).FullName} not found .");
             return null;
         }
 
         /// <summary>
-        /// Deletes status reference from the list. Used internally to remove status if it's level is 0.
+        ///     Deletes status reference from the list. Used internally to remove status if it's level is 0.
         /// </summary>
         internal void DeleteStatusReference(AppliedStatusReference appliedStatusReference)
         {
             data.Remove(appliedStatusReference);
         }
-        
+
         /// <summary>
-        /// When frame is rendered, this method is called to handle status updates.
+        ///     When frame is rendered, this method is called to handle status updates.
         /// </summary>
         private async UniTask HandleFrameRendered()
         {
@@ -300,7 +306,7 @@ namespace FastUnityCreationKit.Status
                 if (reference.Status is ITemporaryStatus {HasExpired: true} temporaryStatus)
                     temporaryStatus.RemoveStatusFromComponent(this).Forget();
             }
-            
+
             // Loop through all statuses and handle
             // updating statuses.
             for (int i = data.Count - 1; i >= 0; i--)
@@ -310,8 +316,7 @@ namespace FastUnityCreationKit.Status
                 // Handle status update
                 // we need to wait for update to be processed to prevent 
                 // race conditions.
-                if (reference.Status)
-                    await reference.Status.OnUpdate(this);
+                if (reference.Status) await reference.Status.OnUpdate(this);
             }
         }
     }

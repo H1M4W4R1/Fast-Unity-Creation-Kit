@@ -8,7 +8,7 @@ using Unity.Burst;
 namespace FastUnityCreationKit.Identification.Identifiers
 {
     /// <summary>
-    /// Represents 16-bit non-unique identifier.
+    ///     Represents 16-bit non-unique identifier.
     /// </summary>
     [BurstCompile] [StructLayout(LayoutKind.Explicit)]
     public readonly struct ID16 : INumberIdentifier<ushort>, IEquatable<ID16>
@@ -17,11 +17,11 @@ namespace FastUnityCreationKit.Identification.Identifiers
         [FieldOffset(2)] public readonly byte isCreated;
         [FieldOffset(3)] private readonly byte reserved;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool IsCreated => isCreated == 1;
 
         /// <summary>
-        /// Creates new ID16 identifier with given value.
+        ///     Creates new ID16 identifier with given value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public ID16(ushort value)
         {
@@ -31,10 +31,14 @@ namespace FastUnityCreationKit.Identification.Identifiers
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(ID16 other)
-            => other.value == value && other.isCreated == isCreated;
+        {
+            return other.value == value && other.isCreated == isCreated;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj)
-            => obj is ID16 other && Equals(other);
+        {
+            return obj is ID16 other && Equals(other);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public override unsafe int GetHashCode()
         {
@@ -45,9 +49,12 @@ namespace FastUnityCreationKit.Identification.Identifiers
         }
 
         [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull]
-        public override string ToString() => $"{value:X4}";
+        public override string ToString()
+        {
+            return $"{value:X4}";
+        }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public ushort Value => value;
     }
 }

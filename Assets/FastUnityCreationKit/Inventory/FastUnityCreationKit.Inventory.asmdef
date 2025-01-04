@@ -1,8 +1,6 @@
 {
-	"name": "FastUnityCreationKit.Inventory",
-	"allowUnsafeCode": true,
-	"references": [
-		
-	]
-	
+  "name": "FastUnityCreationKit.Inventory",
+  "allowUnsafeCode": true,
+  "references": [
+  ]
 }

@@ -1,13 +1,13 @@
 ﻿using FastUnityCreationKit.Annotations.Info;
+using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.Core.Objects;
 using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Structure.Initialization;
-using FastUnityCreationKit.Unity.Interfaces.Interaction;
-using FastUnityCreationKit.Unity.Time.Enums;
-using FastUnityCreationKit.Core.Logging;
-using FastUnityCreationKit.Core.Objects;
 using FastUnityCreationKit.Unity.Events.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
+using FastUnityCreationKit.Unity.Interfaces.Interaction;
+using FastUnityCreationKit.Unity.Time.Enums;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,8 +15,8 @@ using UnityEngine;
 namespace FastUnityCreationKit.Unity
 {
     /// <summary>
-    /// Base class for all MonoBehaviours compatible with the FastUnityCreationKit.
-    /// Used to automatically handle interface processing.
+    ///     Base class for all MonoBehaviours compatible with the FastUnityCreationKit.
+    ///     Used to automatically handle interface processing.
     /// </summary>
     [SupportedFeature(typeof(ICreateCallback))]
     [SupportedFeature(typeof(IDestroyCallback))]
@@ -42,72 +42,67 @@ namespace FastUnityCreationKit.Unity
         protected const string GROUP_CONFIGURATION = "Configuration";
 
         /// <summary>
-        /// Check if the object uses the update mode
-        /// Used to render the update mode in the inspector.
-        /// Does not account for <see cref="IFixedUpdateCallback"/>
+        ///     Check if the object uses the update mode
+        ///     Used to render the update mode in the inspector.
+        ///     Does not account for <see cref="IFixedUpdateCallback" />
         /// </summary>
         protected bool HasAnyUpdateCallback => this is IUpdateCallback ||
                                                this is IPreUpdateCallback ||
                                                this is IPostUpdateCallback;
 
         /// <summary>
-        /// Check if the object raises any global events.
+        ///     Check if the object raises any global events.
         /// </summary>
         protected bool RaisesAnyGlobalEvent => RaisedGlobalEvents != CKGlobalEvents.None;
-        
+
         /// <summary>
-        /// State of the object. If true, the object is disabled.
+        ///     State of the object. If true, the object is disabled.
         /// </summary>
         // ReSharper disable once Unity.RedundantAttributeOnTarget
-        [HideInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        public bool IsDisabled { get; private set; }
+        [HideInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] public bool IsDisabled
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
-        /// State of the object. If true, the object is enabled.
-        /// Directly opposite of <see cref="IsDisabled"/>.
+        ///     State of the object. If true, the object is enabled.
+        ///     Directly opposite of <see cref="IsDisabled" />.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        public bool IsEnabled => !IsDisabled;
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] public bool IsEnabled
+            => !IsDisabled;
 
         /// <summary>
-        /// State of the object. If true, the object is destroyed.
+        ///     State of the object. If true, the object is destroyed.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        public bool IsDestroyed { get; private set; }
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] public bool IsDestroyed
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
-        /// Configure which global events are raised by this object.
-        /// By default <see cref="CKMonoBehaviour"/> raises no global events to avoid performance issues.
+        ///     Configure which global events are raised by this object.
+        ///     By default <see cref="CKMonoBehaviour" /> raises no global events to avoid performance issues.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
-        [ShowIf(nameof(RaisesAnyGlobalEvent))]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] [ShowIf(nameof(RaisesAnyGlobalEvent))]
         public CKGlobalEvents RaisedGlobalEvents { get; protected set; }
 
         /// <summary>
-        /// If true, the object will be updated even when disabled.
+        ///     If true, the object will be updated even when disabled.
         /// </summary>
-        [ShowInInspector]
-        [TitleGroup(GROUP_CONFIGURATION)]
-        [ShowIf(nameof(HasAnyUpdateCallback))]
+        [ShowInInspector] [TitleGroup(GROUP_CONFIGURATION)] [ShowIf(nameof(HasAnyUpdateCallback))]
         public virtual UpdateMode UpdateMode => UpdateMode.MonoBehaviour;
 
         /// <summary>
-        /// Mode of time used for updating the object.
+        ///     Mode of time used for updating the object.
         /// </summary>
-        [ShowInInspector]
-        [TitleGroup(GROUP_CONFIGURATION)]
-        [ShowIf(nameof(HasAnyUpdateCallback))]
+        [ShowInInspector] [TitleGroup(GROUP_CONFIGURATION)] [ShowIf(nameof(HasAnyUpdateCallback))]
         public virtual UpdateTime UpdateTimeConfig => UpdateTime.DeltaTime;
 
         /// <summary>
-        /// Avoid overriding the Awake method. Implement the <see cref="IInitializable"/> interface instead
-        /// and use the <see cref="IInitializable.OnInitialize"/> method.
+        ///     Avoid overriding the Awake method. Implement the <see cref="IInitializable" /> interface instead
+        ///     and use the <see cref="IInitializable.OnInitialize" /> method.
         /// </summary>
         protected virtual void Awake()
         {
@@ -126,7 +121,7 @@ namespace FastUnityCreationKit.Unity
 #if UNITY_EDITOR
                     Guard<ValidationLogConfig>.Warning(
                         $"Persistent object {name} is not on the root level. This may cause unexpected behavior." +
-                        $"Fail-safe triggered: moving object to root layer.");
+                        "Fail-safe triggered: moving object to root layer.");
 #endif
                 }
 
@@ -135,65 +130,24 @@ namespace FastUnityCreationKit.Unity
 
                 // Check if is temporary object.
                 if (this is ITemporaryObject)
-                {
                     // Log error in console if object is both persistent and temporary.
                     Guard<ValidationLogConfig>.Warning(
                         $"Object {name} is both persistent and temporary. This will cause severe issues!");
-                }
             }
 
             // Initialize the object if it implements the IInitializable interface.
-            if (this is IInitializable initializable)
-                initializable.Initialize();
+            if (this is IInitializable initializable) initializable.Initialize();
 
             // Register the object to the save system if it implements the ISaveableObject interface.
-            if (this is ISaveableObject saveableObject)
-                SaveAPI.RegisterSavableObject(saveableObject);
+            if (this is ISaveableObject saveableObject) SaveAPI.RegisterSavableObject(saveableObject);
 
             NotifyObjectWasCreated();
 
             // If this is both clickable and selectable print warning.
             if (this is IClickable and ISelectable)
-            {
                 Guard<ValidationLogConfig>.Warning(
                     $"Object {name} is both clickable and selectable. This may cause unexpected behavior.");
-            }
         }
-
-#region UNITY_EVENTS_IMPLEMENTATION
-
-        protected void OnEnable()
-        {
-            IsDisabled = false;
-            NotifyObjectWasEnabled();
-        }
-
-        protected void OnDisable()
-        {
-            IsDisabled = true;
-            NotifyObjectWasDisabled();
-        }
-
-        protected void OnDestroy()
-        {
-            NotifyObjectWasDestroyed();
-            IsDestroyed = true;
-
-            // Unregister the object from the save system if it implements the ISaveableObject interface.
-            if (this is ISaveableObject saveableObject)
-                SaveAPI.UnregisterSavableObject(saveableObject);
-
-            // Unregister this object from the object registry.
-            CKEventsManager.Instance.UnregisterFastMonoBehaviour(this);
-        }
-
-        protected void OnApplicationQuit()
-        {
-            if (this is IQuitCallback quitCallback)
-                quitCallback.OnQuit();
-        }
-
-#endregion
 
         internal static void HandlePreUpdate([NotNull] CKMonoBehaviour behaviour, float deltaTime)
         {
@@ -233,8 +187,7 @@ namespace FastUnityCreationKit.Unity
 
         protected virtual void NotifyObjectWasCreated()
         {
-            if (this is ICreateCallback createCallback)
-                createCallback.OnObjectCreated();
+            if (this is ICreateCallback createCallback) createCallback.OnObjectCreated();
 
             if ((RaisedGlobalEvents & CKGlobalEvents.ObjectCreatedEvent) > 0)
                 OnObjectCreatedEvent.TriggerEvent(this);
@@ -242,8 +195,7 @@ namespace FastUnityCreationKit.Unity
 
         protected virtual void NotifyObjectWasDestroyed()
         {
-            if (this is IDestroyCallback destroyCallback)
-                destroyCallback.OnObjectDestroyed();
+            if (this is IDestroyCallback destroyCallback) destroyCallback.OnObjectDestroyed();
 
             if ((RaisedGlobalEvents & CKGlobalEvents.ObjectDestroyedEvent) > 0)
                 OnObjectDestroyedEvent.TriggerEvent(this);
@@ -251,8 +203,7 @@ namespace FastUnityCreationKit.Unity
 
         protected virtual void NotifyObjectWasEnabled()
         {
-            if (this is IEnabledCallback enabledCallback)
-                enabledCallback.OnObjectEnabled();
+            if (this is IEnabledCallback enabledCallback) enabledCallback.OnObjectEnabled();
 
             if ((RaisedGlobalEvents & CKGlobalEvents.ObjectEnabledEvent) > 0)
                 OnObjectEnabledEvent.TriggerEvent(this);
@@ -260,8 +211,7 @@ namespace FastUnityCreationKit.Unity
 
         protected virtual void NotifyObjectWasDisabled()
         {
-            if (this is IDisabledCallback disabledCallback)
-                disabledCallback.OnObjectDisabled();
+            if (this is IDisabledCallback disabledCallback) disabledCallback.OnObjectDisabled();
 
             if ((RaisedGlobalEvents & CKGlobalEvents.ObjectDisabledEvent) > 0)
                 OnObjectDisabledEvent.TriggerEvent(this);
@@ -269,8 +219,7 @@ namespace FastUnityCreationKit.Unity
 
         protected virtual void NotifyObjectWasFixedUpdated()
         {
-            if (this is IFixedUpdateCallback fixedUpdateCallback)
-                fixedUpdateCallback.OnObjectFixedUpdated();
+            if (this is IFixedUpdateCallback fixedUpdateCallback) fixedUpdateCallback.OnObjectFixedUpdated();
 
             if ((RaisedGlobalEvents & CKGlobalEvents.ObjectFixedUpdateEvent) > 0)
                 OnObjectFixedUpdateEvent.TriggerEvent(this);
@@ -278,8 +227,7 @@ namespace FastUnityCreationKit.Unity
 
         protected virtual void NotifyObjectWasPreUpdated(float deltaTime)
         {
-            if (this is IPreUpdateCallback preUpdateCallback)
-                preUpdateCallback.OnBeforeObjectUpdated(deltaTime);
+            if (this is IPreUpdateCallback preUpdateCallback) preUpdateCallback.OnBeforeObjectUpdated(deltaTime);
 
             if ((RaisedGlobalEvents & CKGlobalEvents.ObjectPreUpdateEvent) > 0)
                 OnObjectPreUpdateEvent.TriggerEvent(this);
@@ -287,8 +235,7 @@ namespace FastUnityCreationKit.Unity
 
         protected virtual void NotifyObjectWasUpdated(float deltaTime)
         {
-            if (this is IUpdateCallback updateCallback)
-                updateCallback.OnObjectUpdated(deltaTime);
+            if (this is IUpdateCallback updateCallback) updateCallback.OnObjectUpdated(deltaTime);
 
             if ((RaisedGlobalEvents & CKGlobalEvents.ObjectUpdateEvent) > 0)
                 OnObjectUpdateEvent.TriggerEvent(this);
@@ -296,23 +243,59 @@ namespace FastUnityCreationKit.Unity
 
         protected virtual void NotifyObjectWasPostUpdated(float deltaTime)
         {
-            if (this is IPostUpdateCallback postUpdateCallback)
-                postUpdateCallback.OnAfterObjectUpdated(deltaTime);
+            if (this is IPostUpdateCallback postUpdateCallback) postUpdateCallback.OnAfterObjectUpdated(deltaTime);
 
             if ((RaisedGlobalEvents & CKGlobalEvents.ObjectPostUpdateEvent) > 0)
                 OnObjectPostUpdateEvent.TriggerEvent(this);
         }
 
         /// <summary>
-        /// Enable global event for this object.
+        ///     Enable global event for this object.
         /// </summary>
-        protected void EnableGlobalEvent(CKGlobalEvents globalEvent) =>
+        protected void EnableGlobalEvent(CKGlobalEvents globalEvent)
+        {
             RaisedGlobalEvents |= globalEvent;
+        }
 
         /// <summary>
-        /// Disable global event for this object.
+        ///     Disable global event for this object.
         /// </summary>
-        protected void DisableGlobalEvent(CKGlobalEvents globalEvent) =>
+        protected void DisableGlobalEvent(CKGlobalEvents globalEvent)
+        {
             RaisedGlobalEvents &= ~globalEvent;
+        }
+
+#region UNITY_EVENTS_IMPLEMENTATION
+
+        protected void OnEnable()
+        {
+            IsDisabled = false;
+            NotifyObjectWasEnabled();
+        }
+
+        protected void OnDisable()
+        {
+            IsDisabled = true;
+            NotifyObjectWasDisabled();
+        }
+
+        protected void OnDestroy()
+        {
+            NotifyObjectWasDestroyed();
+            IsDestroyed = true;
+
+            // Unregister the object from the save system if it implements the ISaveableObject interface.
+            if (this is ISaveableObject saveableObject) SaveAPI.UnregisterSavableObject(saveableObject);
+
+            // Unregister this object from the object registry.
+            CKEventsManager.Instance.UnregisterFastMonoBehaviour(this);
+        }
+
+        protected void OnApplicationQuit()
+        {
+            if (this is IQuitCallback quitCallback) quitCallback.OnQuit();
+        }
+
+#endregion
     }
 }

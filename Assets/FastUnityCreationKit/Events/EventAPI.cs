@@ -6,42 +6,51 @@ using JetBrains.Annotations;
 namespace FastUnityCreationKit.Events
 {
     /// <summary>
-    /// API used to trigger global events.
+    ///     API used to trigger global events.
     /// </summary>
     public static class EventAPI
     {
         /// <summary>
-        /// Trigger global event channel.
+        ///     Trigger global event channel.
         /// </summary>
         public static void TriggerEvent<TEventType>()
-            where TEventType : GlobalEventChannel<TEventType>, new() =>
+            where TEventType : GlobalEventChannel<TEventType>, new()
+        {
             GlobalEventChannel<TEventType>.TriggerEvent();
+        }
 
         /// <summary>
-        /// Trigger global event channel asynchronously.
+        ///     Trigger global event channel asynchronously.
         /// </summary>
         public static UniTask TriggerEventAsync<TEventType>()
-            where TEventType : GlobalEventChannel<TEventType>, new() =>
-            GlobalEventChannel<TEventType>.TriggerEventAsync();
+            where TEventType : GlobalEventChannel<TEventType>, new()
+        {
+            return GlobalEventChannel<TEventType>.TriggerEventAsync();
+        }
 
         /// <summary>
-        /// Trigger global event channel with data.
+        ///     Trigger global event channel with data.
         /// </summary>
         public static void TriggerEventWithData<TEventType, TChannelData>([NotNull] TChannelData data)
-            where TEventType : GlobalEventChannel<TEventType, TChannelData>, new() =>
+            where TEventType : GlobalEventChannel<TEventType, TChannelData>, new()
+        {
             GlobalEventChannel<TEventType, TChannelData>.TriggerEvent(data);
+        }
 
         /// <summary>
-        /// Trigger global event channel with data asynchronously.
+        ///     Trigger global event channel with data asynchronously.
         /// </summary>
         public static UniTask TriggerEventWithDataAsync<TEventType, TChannelData>([NotNull] TChannelData data)
-            where TEventType : GlobalEventChannel<TEventType, TChannelData>, new() =>
-            GlobalEventChannel<TEventType, TChannelData>.TriggerEventAsync(data);
+            where TEventType : GlobalEventChannel<TEventType, TChannelData>, new()
+        {
+            return GlobalEventChannel<TEventType, TChannelData>.TriggerEventAsync(data);
+        }
 
         /// <summary>
-        /// Trigger global event channel using specified type.
+        ///     Trigger global event channel using specified type.
         /// </summary>
-        public static void TriggerGenericEvent([NotNull] Type eventGenericType, 
+        public static void TriggerGenericEvent(
+            [NotNull] Type eventGenericType,
             [NotNull] params Type[] genericParams)
         {
             // Get method info
@@ -53,9 +62,10 @@ namespace FastUnityCreationKit.Events
         }
 
         /// <summary>
-        /// Trigger global event channel with data using specified type.
+        ///     Trigger global event channel with data using specified type.
         /// </summary>
-        public static void TriggerGenericEventWithData<TChannelData>([NotNull] Type eventGenericType,
+        public static void TriggerGenericEventWithData<TChannelData>(
+            [NotNull] Type eventGenericType,
             [NotNull] TChannelData data,
             [NotNull] params Type[] genericParams)
         {
@@ -68,9 +78,10 @@ namespace FastUnityCreationKit.Events
         }
 
         /// <summary>
-        /// Trigger global event channel asynchronously using specified type.
+        ///     Trigger global event channel asynchronously using specified type.
         /// </summary>
-        public static UniTask TriggerGenericEventAsync([NotNull] Type eventGenericType, 
+        public static UniTask TriggerGenericEventAsync(
+            [NotNull] Type eventGenericType,
             [NotNull] params Type[] genericParams)
         {
             // Get method info
@@ -82,9 +93,10 @@ namespace FastUnityCreationKit.Events
         }
 
         /// <summary>
-        /// Trigger global event channel with data asynchronously using specified type.
+        ///     Trigger global event channel with data asynchronously using specified type.
         /// </summary>
-        public static UniTask TriggerGenericEventWithDataAsync<TChannelData>([NotNull] Type eventGenericType,
+        public static UniTask TriggerGenericEventWithDataAsync<TChannelData>(
+            [NotNull] Type eventGenericType,
             [NotNull] TChannelData data,
             [NotNull] params Type[] genericParams)
         {

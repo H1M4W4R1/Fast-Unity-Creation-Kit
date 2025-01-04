@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Annotations.Addressables;
+using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Interfaces;
-using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -17,7 +17,7 @@ using Object = UnityEngine.Object;
 namespace FastUnityCreationKit.Data.Containers
 {
     /// <summary>
-    /// Storage for addressable definitions.
+    ///     Storage for addressable definitions.
     /// </summary>
     [AddressableGroup(DatabaseConstants.DATABASE_ADDRESSABLE_TAG)]
     public abstract class AddressableDatabase<TSelfSealed, TDataType> : AddressableDataContainer<TDataType>,
@@ -25,200 +25,49 @@ namespace FastUnityCreationKit.Data.Containers
         where TSelfSealed : AddressableDatabase<TSelfSealed, TDataType>, new()
         where TDataType : Object
     {
-        /// <summary>
-        /// Amount of times this database is preloaded.
-        /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_PREVIEW)]
-        [NonSerialized]
-        private int _preloadCount;
-
-        /// <summary>
-        /// Keys of the preloaded objects.
-        /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_PREVIEW)]
-        [NonSerialized]
-        private List<string> _preloadedObjectKeys = new List<string>();
-
-        /// <summary>
-        /// List of preloaded objects.
-        /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_PREVIEW)]
-        [NonSerialized]
-        private List<TDataType> _preloadedObjectsContainer = new List<TDataType>();
-
-        /// <summary>
-        /// Internal flag to check if the database is preloading.
-        /// </summary>
-        private bool _isPreloading;
-
-        /// <summary>
-        /// Handle for the preload operation.
-        /// </summary>
-        private AsyncOperationHandle<IList<TDataType>> _preloadOperationHandle;
-
         [ShowInInspector] [ReadOnly] private static TSelfSealed _instance;
         private static AsyncOperationHandle<TSelfSealed> _databaseInstanceAcquireHandle;
 
         /// <summary>
-        /// Check if the database is preloaded.
+        ///     Internal flag to check if the database is preloading.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_PREVIEW)]
-        public bool IsPreloaded => _preloadCount > 0;
+        private bool _isPreloading;
 
         /// <summary>
-        /// Amount of preloaded objects.
+        ///     Handle for the preload operation.
         /// </summary>
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_PREVIEW)]
-        public int PreloadedCount => _preloadedObjectsContainer.Count;
-
-        [NotNull] public TSelfSealed EnsurePreloaded()
-        {
-            if (!IsPreloaded)
-                Preload();
-
-            return (TSelfSealed) this;
-        }
-
-#if UNITY_EDITOR
-        [Button("Preload", ButtonSizes.Medium)]
-        [TitleGroup(GROUP_DEBUG)]
-        private void PreloadInEditor()
-        {
-            EnsurePreloaded();
-        }
-
-        [Button("Unload", ButtonSizes.Medium)]
-        [TitleGroup(GROUP_DEBUG)]
-        private void UnloadInEditor()
-        {
-            Unload();
-        }
-
-#endif
+        private AsyncOperationHandle<IList<TDataType>> _preloadOperationHandle;
 
         /// <summary>
-        /// Preload the database.
+        ///     Amount of times this database is preloaded.
         /// </summary>
-        public async void Preload(bool waitForComplete = true)
-        {
-            if (waitForComplete) await _Preload();
-            else _Preload().Forget();
-        }
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_PREVIEW)] [NonSerialized] private int _preloadCount;
 
         /// <summary>
-        /// Internal preload method. Used to prevent multiple preloads.
+        ///     Keys of the preloaded objects.
         /// </summary>
-        private async UniTask _Preload()
-        {
-            // If database is not yet preloaded and preload operation is not running
-            if (!IsPreloaded && !_isPreloading)
-            {
-                _isPreloading = true;
-
-                // Load resource locations to prevent exceptions being
-                // thrown left and right due to bad architecture of Addressables package.
-                IList<IResourceLocation> resourceLocations =
-                    await Addressables.LoadResourceLocationsAsync(addressableTags, MergeMode).Task;
-
-                // Update resource locations to only include objects of type TDataType
-                List<string> resourceKeys = resourceLocations.Where(IsValidLocation)
-                    .Select(location => location.PrimaryKey).ToList();
-
-                // Check if any objects were found
-                if (resourceLocations.Count == 0)
-                {
-                    Guard<ValidationLogConfig>.Warning($"No objects found in database " +
-                                                       $"{GetType().GetCompilableNiceFullName()}.");
-                    return;
-                }
-
-                // Load the objects if any were found
-                _preloadOperationHandle = Addressables.LoadAssetsAsync<TDataType>(resourceKeys,
-                    foundObject =>
-                    {
-                        // Check if the object is already in the container
-                        // to prevent duplicates during race conditions
-                        if(_preloadedObjectsContainer.Contains(foundObject)) return;
-                        
-                        // Add the object to the container 
-                        _preloadedObjectsContainer.Add(foundObject);
-                        _preloadedObjectKeys.Add(foundObject.name);
-                    }, MergeMode);
-
-
-                // Wait for the operation to complete if required
-                await _preloadOperationHandle.Task;
-                _isPreloading = false;
-            }
-
-            // Increase preload count 
-            _preloadCount++;
-            return;
-            
-            bool IsValidLocation([NotNull] IResourceLocation location, int index) =>
-                IsValidType(location.ResourceType);
-            
-            bool IsValidType([NotNull] Type type)
-            {
-                // For same class or value type
-                if(type == typeof(TDataType))
-                    return true;
-                
-                // For subclasses
-                if(type.IsSubclassOf(typeof(TDataType)))
-                    return true;
-                
-                return false;
-            }
-        }
-
-        public void Unload()
-        {
-            // Reduce preload count
-            _preloadCount--;
-            if (_preloadCount > 0) return;
-
-            // Unload the handle
-            if(_preloadOperationHandle.IsValid())
-                Addressables.Release(_preloadOperationHandle);
-            _preloadOperationHandle = default;
-
-            _preloadedObjectsContainer.Clear();
-            _preloadedObjectKeys.Clear();
-        }
-
-        [CanBeNull]
-        public TDataType GetElementAt(int index)
-        {
-            if (!IsPreloaded)
-            {
-                Guard<ValidationLogConfig>.Error($"Database {GetType().GetCompilableNiceFullName()} is not preloaded.");
-                return null;
-            }
-
-            // Check if index is within bounds
-            if (index < 0 || index >= _preloadedObjectsContainer.Count)
-            {
-                Guard<ValidationLogConfig>.Error(
-                    $"Index {index} is out of bounds for database {GetType().GetCompilableNiceFullName()}.");
-                return null;
-            }
-
-            return _preloadedObjectsContainer[index];
-        }
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_PREVIEW)] [NonSerialized]
+        private List<string> _preloadedObjectKeys = new();
 
         /// <summary>
-        /// Get the instance of the database.
+        ///     List of preloaded objects.
+        /// </summary>
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_PREVIEW)] [NonSerialized]
+        private List<TDataType> _preloadedObjectsContainer = new();
+
+        /// <summary>
+        ///     Check if the database is preloaded.
+        /// </summary>
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_PREVIEW)] public bool IsPreloaded => _preloadCount > 0;
+
+        /// <summary>
+        ///     Amount of preloaded objects.
+        /// </summary>
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_PREVIEW)] public int PreloadedCount
+            => _preloadedObjectsContainer.Count;
+
+        /// <summary>
+        ///     Get the instance of the database.
         /// </summary>
         public static TSelfSealed Instance
         {
@@ -252,5 +101,138 @@ namespace FastUnityCreationKit.Data.Containers
                 return _instance;
             }
         }
+
+        [NotNull] public TSelfSealed EnsurePreloaded()
+        {
+            if (!IsPreloaded) Preload();
+
+            return (TSelfSealed) this;
+        }
+
+        /// <summary>
+        ///     Preload the database.
+        /// </summary>
+        public async void Preload(bool waitForComplete = true)
+        {
+            if (waitForComplete)
+                await _Preload();
+            else
+                _Preload().Forget();
+        }
+
+        /// <summary>
+        ///     Internal preload method. Used to prevent multiple preloads.
+        /// </summary>
+        private async UniTask _Preload()
+        {
+            // If database is not yet preloaded and preload operation is not running
+            if (!IsPreloaded && !_isPreloading)
+            {
+                _isPreloading = true;
+
+                // Load resource locations to prevent exceptions being
+                // thrown left and right due to bad architecture of Addressables package.
+                IList<IResourceLocation> resourceLocations =
+                    await Addressables.LoadResourceLocationsAsync(addressableTags, MergeMode).Task;
+
+                // Update resource locations to only include objects of type TDataType
+                List<string> resourceKeys = resourceLocations.Where(IsValidLocation)
+                    .Select(location => location.PrimaryKey)
+                    .ToList();
+
+                // Check if any objects were found
+                if (resourceLocations.Count == 0)
+                {
+                    Guard<ValidationLogConfig>.Warning("No objects found in database " +
+                                                       $"{GetType().GetCompilableNiceFullName()}.");
+                    return;
+                }
+
+                // Load the objects if any were found
+                _preloadOperationHandle = Addressables.LoadAssetsAsync<TDataType>(resourceKeys,
+                    foundObject =>
+                    {
+                        // Check if the object is already in the container
+                        // to prevent duplicates during race conditions
+                        if (_preloadedObjectsContainer.Contains(foundObject)) return;
+
+                        // Add the object to the container 
+                        _preloadedObjectsContainer.Add(foundObject);
+                        _preloadedObjectKeys.Add(foundObject.name);
+                    }, MergeMode);
+
+
+                // Wait for the operation to complete if required
+                await _preloadOperationHandle.Task;
+                _isPreloading = false;
+            }
+
+            // Increase preload count 
+            _preloadCount++;
+            return;
+
+            bool IsValidLocation([NotNull] IResourceLocation location, int index)
+            {
+                return IsValidType(location.ResourceType);
+            }
+
+            bool IsValidType([NotNull] Type type)
+            {
+                // For same class or value type
+                if (type == typeof(TDataType)) return true;
+
+                // For subclasses
+                if (type.IsSubclassOf(typeof(TDataType))) return true;
+
+                return false;
+            }
+        }
+
+        public void Unload()
+        {
+            // Reduce preload count
+            _preloadCount--;
+            if (_preloadCount > 0) return;
+
+            // Unload the handle
+            if (_preloadOperationHandle.IsValid()) Addressables.Release(_preloadOperationHandle);
+            _preloadOperationHandle = default;
+
+            _preloadedObjectsContainer.Clear();
+            _preloadedObjectKeys.Clear();
+        }
+
+        [CanBeNull] public TDataType GetElementAt(int index)
+        {
+            if (!IsPreloaded)
+            {
+                Guard<ValidationLogConfig>.Error(
+                    $"Database {GetType().GetCompilableNiceFullName()} is not preloaded.");
+                return null;
+            }
+
+            // Check if index is within bounds
+            if (index < 0 || index >= _preloadedObjectsContainer.Count)
+            {
+                Guard<ValidationLogConfig>.Error(
+                    $"Index {index} is out of bounds for database {GetType().GetCompilableNiceFullName()}.");
+                return null;
+            }
+
+            return _preloadedObjectsContainer[index];
+        }
+
+#if UNITY_EDITOR
+        [Button("Preload", ButtonSizes.Medium)] [TitleGroup(GROUP_DEBUG)] private void PreloadInEditor()
+        {
+            EnsurePreloaded();
+        }
+
+        [Button("Unload", ButtonSizes.Medium)] [TitleGroup(GROUP_DEBUG)] private void UnloadInEditor()
+        {
+            Unload();
+        }
+
+#endif
     }
 }

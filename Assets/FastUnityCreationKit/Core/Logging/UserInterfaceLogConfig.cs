@@ -11,7 +11,7 @@ namespace FastUnityCreationKit.Core.Logging
         public override FileWriteInfo[] Files => new[]
         {
             new FileWriteInfo(
-                "Logs/UserInterface.log", 
+                "Logs/UserInterface.log",
                 LogLevel.Verbose
             ),
             new FileWriteInfo(

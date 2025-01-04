@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._04_FastMonoBehaviour_UpdateModes.Scripts
 {
@@ -8,7 +9,7 @@ namespace FastUnityCreationKit.Examples._04_FastMonoBehaviour_UpdateModes.Script
         public void OnObjectUpdated(float deltaTime)
         {
             // Logs message each frame with delta time.
-            UnityEngine.Debug.Log($"Update called on {name}.");
+            Debug.Log($"Update called on {name}.");
         }
     }
 }

@@ -2,6 +2,10 @@
 {
     public interface IPostprocessAllAssets
     {
-        void PostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths);
+        void PostprocessAllAssets(
+            string[] importedAssets,
+            string[] deletedAssets,
+            string[] movedAssets,
+            string[] movedFromAssetPaths);
     }
 }

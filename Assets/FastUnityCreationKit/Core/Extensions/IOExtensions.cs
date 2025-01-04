@@ -7,8 +7,8 @@ namespace FastUnityCreationKit.Core.Extensions
 {
     public static class IOExtensions
     {
-         /// <summary>
-        /// Read bytes from a file.
+        /// <summary>
+        ///     Read bytes from a file.
         /// </summary>
         public static (bool, byte[]) TryReadBytes(string path)
         {
@@ -20,7 +20,7 @@ namespace FastUnityCreationKit.Core.Extensions
                     Guard<SaveLogConfig>.Error($"File not read. '{path}' does not exist.");
                     return (false, Array.Empty<byte>());
                 }
-                
+
                 byte[] data = File.ReadAllBytes(path);
                 return (true, data);
             }
@@ -39,7 +39,7 @@ namespace FastUnityCreationKit.Core.Extensions
             catch (IOException)
             {
                 Guard<SaveLogConfig>.Error($"File not read. '{path}' cannot be read due to I/O issues. " +
-                                           $"File may be in use or a directory.");
+                                           "File may be in use or a directory.");
             }
             catch (UnauthorizedAccessException)
             {
@@ -47,7 +47,8 @@ namespace FastUnityCreationKit.Core.Extensions
             }
             catch (NotSupportedException)
             {
-                Guard<SaveLogConfig>.Error($"File not read. '{path}' cannot be read. Path is in an invalid format.");
+                Guard<SaveLogConfig>.Error(
+                    $"File not read. '{path}' cannot be read. Path is in an invalid format.");
             }
             catch (SecurityException)
             {
@@ -62,7 +63,7 @@ namespace FastUnityCreationKit.Core.Extensions
         }
 
         /// <summary>
-        /// Try to write bytes to a file.
+        ///     Try to write bytes to a file.
         /// </summary>
         public static bool TryWriteBytes(string path, byte[] bytes)
         {
@@ -97,7 +98,7 @@ namespace FastUnityCreationKit.Core.Extensions
             catch (IOException)
             {
                 Guard<SaveLogConfig>.Error($"File not saved. '{path}' cannot be saved due to I/O issues. " +
-                                           $"File may be in use or a directory.");
+                                           "File may be in use or a directory.");
             }
             catch (UnauthorizedAccessException)
             {
@@ -105,7 +106,8 @@ namespace FastUnityCreationKit.Core.Extensions
             }
             catch (NotSupportedException)
             {
-                Guard<SaveLogConfig>.Error($"File not saved. '{path}' cannot be saved. Path is in an invalid format.");
+                Guard<SaveLogConfig>.Error(
+                    $"File not saved. '{path}' cannot be saved. Path is in an invalid format.");
             }
             catch (SecurityException)
             {

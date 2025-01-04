@@ -5,11 +5,9 @@ using UnityEngine.Scripting;
 namespace FastUnityCreationKit.Unity.Events.Unity
 {
     /// <summary>
-    /// Called when an object is pre-updated.
+    ///     Called when an object is pre-updated.
     /// </summary>
-    [Preserve]
-    [UsedImplicitly]
-    public sealed class OnObjectPreUpdateEvent<TObjectType> :
+    [Preserve] [UsedImplicitly] public sealed class OnObjectPreUpdateEvent<TObjectType> :
         GlobalEventChannel<OnObjectPreUpdateEvent<TObjectType>, TObjectType>
         where TObjectType : CKMonoBehaviour
     {
@@ -17,8 +15,10 @@ namespace FastUnityCreationKit.Unity.Events.Unity
 
     public static class OnObjectPreUpdateEvent
     {
-        public static void TriggerEvent([NotNull] CKMonoBehaviour objectInstance) =>
+        public static void TriggerEvent([NotNull] CKMonoBehaviour objectInstance)
+        {
             EventAPI.TriggerGenericEventWithData(typeof(OnObjectPreUpdateEvent<>), objectInstance,
                 objectInstance.GetType());
+        }
     }
 }

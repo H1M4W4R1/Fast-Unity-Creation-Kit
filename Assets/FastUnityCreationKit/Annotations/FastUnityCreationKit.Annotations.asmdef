@@ -1,7 +1,6 @@
 {
-	"name": "FastUnityCreationKit.Annotations",
-	"allowUnsafeCode": true,
-	"references": [
-	]
-	
+  "name": "FastUnityCreationKit.Annotations",
+  "allowUnsafeCode": true,
+  "references": [
+  ]
 }

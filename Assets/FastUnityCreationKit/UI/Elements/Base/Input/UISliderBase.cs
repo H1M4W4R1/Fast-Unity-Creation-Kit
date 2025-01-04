@@ -6,13 +6,12 @@ using UnityEngine.UI;
 namespace FastUnityCreationKit.UI.Elements.Base.Input
 {
     /// <summary>
-    /// Represents a slider element.
+    ///     Represents a slider element.
     /// </summary>
-    [RequireComponent(typeof(Slider))]
-    public abstract class UISliderBase : UIObjectBase
+    [RequireComponent(typeof(Slider))] public abstract class UISliderBase : UIObjectBase
     {
         /// <summary>
-        /// Internal reference to the slider component.
+        ///     Internal reference to the slider component.
         /// </summary>
         [NotNull]
         // ReSharper disable once NullableWarningSuppressionIsUsed
@@ -32,39 +31,57 @@ namespace FastUnityCreationKit.UI.Elements.Base.Input
         }
 
         /// <summary>
-        /// Invoked when the slider value is changed.
+        ///     Invoked when the slider value is changed.
         /// </summary>
         /// <param name="value">New value.</param>
         protected abstract void OnValueChanged(float value);
 
         /// <summary>
-        /// Changes the interactable state of the slider.
+        ///     Changes the interactable state of the slider.
         /// </summary>
-        public void SetInteractable(bool interactable) => _slider.interactable = interactable;
+        public void SetInteractable(bool interactable)
+        {
+            _slider.interactable = interactable;
+        }
 
         /// <summary>
-        /// Sets the value of the slider.
+        ///     Sets the value of the slider.
         /// </summary>
         /// <param name="value">New value.</param>
-        public void SetValue(float value) =>_slider.value = value;
+        public void SetValue(float value)
+        {
+            _slider.value = value;
+        }
 
         /// <summary>
-        /// Sets the minimum value of the slider.
+        ///     Sets the minimum value of the slider.
         /// </summary>
-        public void SetMinValue(float value) => _slider.minValue = value;
+        public void SetMinValue(float value)
+        {
+            _slider.minValue = value;
+        }
 
 
         /// <summary>
-        /// Sets the maximum value of the slider.
+        ///     Sets the maximum value of the slider.
         /// </summary>
-        public void SetMaxValue(float value) => _slider.maxValue = value;
+        public void SetMaxValue(float value)
+        {
+            _slider.maxValue = value;
+        }
 
-        public void SimulateValueChange(float value) => _OnValueChanged(value);
+        public void SimulateValueChange(float value)
+        {
+            _OnValueChanged(value);
+        }
 
         /// <summary>
-        /// Gets the current value of the slider.
+        ///     Gets the current value of the slider.
         /// </summary>
         /// <returns>Current value.</returns>
-        public float GetValue() => _slider.value;
+        public float GetValue()
+        {
+            return _slider.value;
+        }
     }
 }

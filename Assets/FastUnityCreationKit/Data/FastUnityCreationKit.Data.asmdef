@@ -1,14 +1,13 @@
 {
-	"name": "FastUnityCreationKit.Data",
-	"allowUnsafeCode": true,
-	"references": [
-		"Unity.Addressables",
-		"Unity.ResourceManager",
-		"UniTask",
-		"FastUnityCreationKit.Annotations",
-		"FastUnityCreationKit.Core",
-		"FastUnityCreationKit.Structure",
-		"FastUnityCreationKit.Saving"
-	]
-	
+  "name": "FastUnityCreationKit.Data",
+  "allowUnsafeCode": true,
+  "references": [
+    "Unity.Addressables",
+    "Unity.ResourceManager",
+    "UniTask",
+    "FastUnityCreationKit.Annotations",
+    "FastUnityCreationKit.Core",
+    "FastUnityCreationKit.Structure",
+    "FastUnityCreationKit.Saving"
+  ]
 }

@@ -1,9 +1,9 @@
-﻿using FastUnityCreationKit.Annotations.Interfaces;
+﻿using System;
+using FastUnityCreationKit.Annotations.Interfaces;
 
 namespace FastUnityCreationKit.Annotations.Unity
 {
-    public sealed class CantMoveAttribute : System.Attribute, ICantMoveAssetAttribute
+    public sealed class CantMoveAttribute : Attribute, ICantMoveAssetAttribute
     {
-        
     }
 }

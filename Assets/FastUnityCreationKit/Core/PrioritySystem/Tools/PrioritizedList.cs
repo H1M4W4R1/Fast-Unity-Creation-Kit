@@ -6,16 +6,16 @@ using JetBrains.Annotations;
 namespace FastUnityCreationKit.Core.PrioritySystem.Tools
 {
     /// <summary>
-    /// Represents a list of prioritized objects.
-    /// Objects are automatically sorted by their priority when added to the list.
-    ///
-    /// Assumes that the priority 0 is the highest priority.
+    ///     Represents a list of prioritized objects.
+    ///     Objects are automatically sorted by their priority when added to the list.
+    ///     Assumes that the priority 0 is the highest priority.
     /// </summary>
     /// BUG: This may cause issues if cast to underlying types, especially interfaces
     /// TODO: Rework this as wrapper for List-T instead of inheritance
-    public class PrioritizedList<TPriorityObject> : List<TPriorityObject> where TPriorityObject : IPrioritySupport
+    public class PrioritizedList<TPriorityObject> : List<TPriorityObject>
+        where TPriorityObject : IPrioritySupport
     {
-        /// <inheritdoc cref="List{T}.Add"/>
+        /// <inheritdoc cref="List{T}.Add" />
         public new void Add([NotNull] TPriorityObject item)
         {
             // Loop through the list and insert the object at the correct position.
@@ -41,26 +41,39 @@ namespace FastUnityCreationKit.Core.PrioritySystem.Tools
 
         public new void Insert(int index, [NotNull] TPriorityObject item)
         {
-            throw new NotSupportedException("Use Add method to insert object at the correct position automatically.");
+            throw new NotSupportedException(
+                "Use Add method to insert object at the correct position automatically.");
         }
 
-        public new void Reverse() =>
+        public new void Reverse()
+        {
             throw new NotSupportedException("This is not supported for prioritized list.");
+        }
 
-        public new void Reverse(int index, int count) =>
+        public new void Reverse(int index, int count)
+        {
             throw new NotSupportedException("This is not supported for prioritized list.");
+        }
 
-        public new void Sort() =>
+        public new void Sort()
+        {
             throw new NotSupportedException("This is not supported for prioritized list.");
+        }
 
-        public new void Sort(Comparison<TPriorityObject> comparison) =>
+        public new void Sort(Comparison<TPriorityObject> comparison)
+        {
             throw new NotSupportedException("This is not supported for prioritized list.");
+        }
 
-        public new void Sort(IComparer<TPriorityObject> comparer) =>
+        public new void Sort(IComparer<TPriorityObject> comparer)
+        {
             throw new NotSupportedException("This is not supported for prioritized list.");
+        }
 
-        public new void Sort(int index, int count, IComparer<TPriorityObject> comparer) =>
+        public new void Sort(int index, int count, IComparer<TPriorityObject> comparer)
+        {
             throw new NotSupportedException("This is not supported for prioritized list.");
+        }
 
 #endregion
     }

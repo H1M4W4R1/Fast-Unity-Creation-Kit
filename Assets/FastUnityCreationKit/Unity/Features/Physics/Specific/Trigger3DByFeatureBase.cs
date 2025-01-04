@@ -7,18 +7,30 @@ using UnityEngine;
 namespace FastUnityCreationKit.Unity.Features.Physics.Specific
 {
     /// <summary>
-    /// Feature base for 3D triggers
+    ///     Feature base for 3D triggers
     /// </summary>
     public abstract class Trigger3DByFeatureBase<TTriggeringObject> : Trigger3DFeatureBase
     {
-        protected async UniTask OnTriggerEnteredBy([NotNull] Collider detectedCollider,
-            [NotNull] TTriggeringObject other) => await Task.CompletedTask;
+        protected async UniTask OnTriggerEnteredBy(
+            [NotNull] Collider detectedCollider,
+            [NotNull] TTriggeringObject other)
+        {
+            await Task.CompletedTask;
+        }
 
-        protected async UniTask OnTriggerExitedBy([NotNull] Collider detectedCollider,
-            [NotNull] TTriggeringObject other) => await Task.CompletedTask;
+        protected async UniTask OnTriggerExitedBy(
+            [NotNull] Collider detectedCollider,
+            [NotNull] TTriggeringObject other)
+        {
+            await Task.CompletedTask;
+        }
 
-        protected async UniTask OnTriggerStayedBy([NotNull] Collider detectedCollider,
-            [NotNull] TTriggeringObject other) => await Task.CompletedTask;
+        protected async UniTask OnTriggerStayedBy(
+            [NotNull] Collider detectedCollider,
+            [NotNull] TTriggeringObject other)
+        {
+            await Task.CompletedTask;
+        }
 
         protected sealed override async UniTask OnTriggerEnteredBy(Collider detectedCollider, GameObject other)
         {

@@ -6,19 +6,31 @@ using UnityEngine;
 namespace FastUnityCreationKit.Unity.Features.Physics.Specific
 {
     /// <summary>
-    /// Feature that listens for collision events.
+    ///     Feature that listens for collision events.
     /// </summary>
     public abstract class Collision2DWithFeatureBase<TOtherCollider> :
         Collision2DFeatureBase
     {
-        protected virtual async UniTask OnCollisionEnterWith([NotNull] Collision2D collision,
-            [NotNull] TOtherCollider other) => await UniTask.CompletedTask;
+        protected virtual async UniTask OnCollisionEnterWith(
+            [NotNull] Collision2D collision,
+            [NotNull] TOtherCollider other)
+        {
+            await UniTask.CompletedTask;
+        }
 
-        protected virtual async UniTask OnCollisionExitWith([NotNull] Collision2D collision,
-            [NotNull] TOtherCollider other) => await UniTask.CompletedTask;
+        protected virtual async UniTask OnCollisionExitWith(
+            [NotNull] Collision2D collision,
+            [NotNull] TOtherCollider other)
+        {
+            await UniTask.CompletedTask;
+        }
 
-        protected virtual async UniTask OnCollisionStayWith([NotNull] Collision2D collision,
-            [NotNull] TOtherCollider other) => await UniTask.CompletedTask;
+        protected virtual async UniTask OnCollisionStayWith(
+            [NotNull] Collision2D collision,
+            [NotNull] TOtherCollider other)
+        {
+            await UniTask.CompletedTask;
+        }
 
         protected sealed override async UniTask OnCollisionEnterWith(Collision2D collision, GameObject other)
         {

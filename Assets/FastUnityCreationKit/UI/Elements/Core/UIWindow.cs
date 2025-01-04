@@ -1,7 +1,7 @@
 ﻿using FastUnityCreationKit.Annotations.Addressables;
+using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.Unity.Interfaces.Interaction;
-using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -10,54 +10,33 @@ using UnityEngine.EventSystems;
 namespace FastUnityCreationKit.UI.Elements.Core
 {
     /// <summary>
-    /// Represents generic window. Can be for example your main menu or settings window.
+    ///     Represents generic window. Can be for example your main menu or settings window.
     /// </summary>
     [AddressableGroup(LocalConstants.UI_ADDRESSABLE_GROUP_TAG, LocalConstants.UI_WINDOWS_ADDRESSABLE_TAG)]
     [RequireComponent(typeof(Canvas), typeof(CanvasGroup))]
     public abstract class UIWindow : UIPanel, IClickable
     {
         /// <summary>
-        /// Database with all windows
-        /// </summary>
-        public UIWindowsDatabase Database => UIWindowsDatabase.Instance;
-
-        /// <summary>
-        /// Internal reference to Unity's Canvas component.
+        ///     Internal reference to Unity's Canvas component.
         /// </summary>
         // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] protected Canvas canvas = null!;
 
         /// <summary>
-        /// Internal reference to Unity's CanvasGroup component.
+        ///     Internal reference to Unity's CanvasGroup component.
         /// </summary>
         // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] protected CanvasGroup canvasGroup = null!;
 
         /// <summary>
-        /// Local reference to window stack.
+        ///     Local reference to window stack.
         /// </summary>
         [CanBeNull] protected WindowStack windowStack;
 
-        public override void Setup()
-        {
-            base.Setup();
-            canvas = GetComponent<Canvas>();
-            canvasGroup = GetComponent<CanvasGroup>();
-        }
-
         /// <summary>
-        /// Set window stack for window.
+        ///     Database with all windows
         /// </summary>
-        /// <param name="stack">Window stack to set.</param>
-        public void SetWindowStack([CanBeNull] WindowStack stack) =>
-            windowStack = stack;
-
-        /// <summary>
-        /// Set order of window in canvas.
-        /// </summary>
-        /// <param name="startOrder">Order to set.</param>
-        public void SetOrder(int startOrder) =>
-            canvas.sortingOrder = startOrder;
+        public UIWindowsDatabase Database => UIWindowsDatabase.Instance;
 
         public void OnClick(PointerEventData pointerData)
         {
@@ -77,6 +56,31 @@ namespace FastUnityCreationKit.UI.Elements.Core
             UIManager.Instance.SortWindows();
         }
 
+        public override void Setup()
+        {
+            base.Setup();
+            canvas = GetComponent<Canvas>();
+            canvasGroup = GetComponent<CanvasGroup>();
+        }
+
+        /// <summary>
+        ///     Set window stack for window.
+        /// </summary>
+        /// <param name="stack">Window stack to set.</param>
+        public void SetWindowStack([CanBeNull] WindowStack stack)
+        {
+            windowStack = stack;
+        }
+
+        /// <summary>
+        ///     Set order of window in canvas.
+        /// </summary>
+        /// <param name="startOrder">Order to set.</param>
+        public void SetOrder(int startOrder)
+        {
+            canvas.sortingOrder = startOrder;
+        }
+
         public void Close(bool notifyManager = true)
         {
             // Perform close operation.
@@ -93,19 +97,21 @@ namespace FastUnityCreationKit.UI.Elements.Core
             Destroy(gameObject);
 
             // Sort windows in manager as window was closed.
-            if (notifyManager)
-                UIManager.Instance.SortWindows();
+            if (notifyManager) UIManager.Instance.SortWindows();
 
             Guard<UserInterfaceLogConfig>.Info($"Window {GetType().GetCompilableNiceFullName()} closed.");
         }
 
         /// <summary>
-        /// Open child window of type TWindowType in current window stack.
+        ///     Open child window of type TWindowType in current window stack.
         /// </summary>
         /// <typeparam name="TWindowType">Type of window to open.</typeparam>
         /// <returns>Opened window or null if not found.</returns>
         [CanBeNull] public TWindowType OpenChildWindow<TWindowType>()
-            where TWindowType : UIWindow => UIManager.Instance.OpenWindow<TWindowType>(windowStack);
+            where TWindowType : UIWindow
+        {
+            return UIManager.Instance.OpenWindow<TWindowType>(windowStack);
+        }
 
         public override void AfterFirstRenderOrCreated()
         {

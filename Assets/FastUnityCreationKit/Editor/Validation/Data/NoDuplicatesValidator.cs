@@ -1,15 +1,22 @@
 ﻿using System.Collections;
 using FastUnityCreationKit.Annotations.Data;
+using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Editor.Validation.Abstract;
 using FastUnityCreationKit.Editor.Validation.Data;
-using FastUnityCreationKit.Core.Logging;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor.Validation;
 using Sirenix.Utilities;
 
-[assembly: RegisterValidator(typeof(NoDuplicatesValidator.InternalRootObjectValidator))]
-[assembly: RegisterValidator(typeof(NoDuplicatesValidator.InternalValueValidator))]
+[assembly:
+    RegisterValidator(
+        typeof(QuickAttributeBasedValidator<NoDuplicatesValidator, NoDuplicatesAttribute, IDataContainer>.
+            InternalRootObjectValidator))]
+[assembly:
+    RegisterValidator(
+        typeof(QuickAttributeBasedValidator<NoDuplicatesValidator, NoDuplicatesAttribute, IDataContainer>.
+            InternalValueValidator))]
+
 namespace FastUnityCreationKit.Editor.Validation.Data
 {
     public sealed class NoDuplicatesValidator :
@@ -34,7 +41,8 @@ namespace FastUnityCreationKit.Editor.Validation.Data
                 // Remove the duplicate item
                 if (foundDuplicate)
                 {
-                    Guard<ValidationLogConfig>.Error($"Duplicate item found in {value.GetType().GetCompilableNiceFullName()}: {list[i]}");
+                    Guard<ValidationLogConfig>.Error(
+                        $"Duplicate item found in {value.GetType().GetCompilableNiceFullName()}: {list[i]}");
                     list.RemoveAt(i);
                 }
             }

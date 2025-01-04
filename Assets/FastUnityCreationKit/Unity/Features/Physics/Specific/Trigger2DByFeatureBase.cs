@@ -7,18 +7,30 @@ using UnityEngine;
 namespace FastUnityCreationKit.Unity.Features.Physics.Specific
 {
     /// <summary>
-    /// Feature base for 2D triggers
+    ///     Feature base for 2D triggers
     /// </summary>
     public abstract class Trigger2DByFeatureBase<TTriggeringObject> : Trigger2DFeatureBase
     {
-        protected async UniTask OnTriggerEnteredBy([NotNull] Collider2D detectedCollider,
-            [NotNull] TTriggeringObject other) => await Task.CompletedTask;
+        protected async UniTask OnTriggerEnteredBy(
+            [NotNull] Collider2D detectedCollider,
+            [NotNull] TTriggeringObject other)
+        {
+            await Task.CompletedTask;
+        }
 
-        protected async UniTask OnTriggerExitedBy([NotNull] Collider2D detectedCollider,
-            [NotNull] TTriggeringObject other) => await Task.CompletedTask;
+        protected async UniTask OnTriggerExitedBy(
+            [NotNull] Collider2D detectedCollider,
+            [NotNull] TTriggeringObject other)
+        {
+            await Task.CompletedTask;
+        }
 
-        protected async UniTask OnTriggerStayedBy([NotNull] Collider2D detectedCollider,
-            [NotNull] TTriggeringObject other) => await Task.CompletedTask;
+        protected async UniTask OnTriggerStayedBy(
+            [NotNull] Collider2D detectedCollider,
+            [NotNull] TTriggeringObject other)
+        {
+            await Task.CompletedTask;
+        }
 
         protected sealed override async UniTask OnTriggerEnteredBy(Collider2D detectedCollider, GameObject other)
         {

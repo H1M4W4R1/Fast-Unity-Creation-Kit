@@ -9,32 +9,30 @@ using Unity.Mathematics;
 namespace FastUnityCreationKit.Identification.Identifiers
 {
     /// <summary>
-    /// Represents 64-bit non-unique identifier.
+    ///     Represents 64-bit non-unique identifier.
     /// </summary>
-    [BurstCompile]
-    [StructLayout(LayoutKind.Explicit)]
+    [BurstCompile] [StructLayout(LayoutKind.Explicit)]
     public readonly struct ID64 : INumberIdentifier<ulong>, IEquatable<ID64>
     {
         [FieldOffset(0)] public readonly uint4 vectorized; // 16B
-        
+
         [FieldOffset(0)] public readonly ulong value; // 8B
         [FieldOffset(8)] public readonly byte isCreated; // 1B
         [FieldOffset(9)] private readonly byte reserved0; // 1B
         [FieldOffset(10)] private readonly ushort reserved1; // 2B
         [FieldOffset(12)] private readonly uint reserved2; // 4B
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool IsCreated => isCreated == 1;
 
         /// <summary>
-        /// Creates new ID64 identifier with given value.
+        ///     Creates new ID64 identifier with given value.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ID64(ulong value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public ID64(ulong value)
         {
             // Overriden by remaining data
             vectorized = default;
-            
+
             this.value = value;
             isCreated = 1;
             reserved0 = 0;
@@ -42,18 +40,28 @@ namespace FastUnityCreationKit.Identification.Identifiers
             reserved2 = 0;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(ID64 other) => math.all(other.vectorized == vectorized);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(ID64 other)
+        {
+            return math.all(other.vectorized == vectorized);
+        }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj) => obj is ID64 other && Equals(other);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj)
+        {
+            return obj is ID64 other && Equals(other);
+        }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override int GetHashCode() => vectorized.GetHashCode();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] public override int GetHashCode()
+        {
+            return vectorized.GetHashCode();
+        }
 
-        [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull] public override string ToString() => $"{value:X16}";
-        
-        /// <inheritdoc/>
+        [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull]
+        public override string ToString()
+        {
+            return $"{value:X16}";
+        }
+
+        /// <inheritdoc />
         public ulong Value => value;
     }
 }

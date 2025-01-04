@@ -4,6 +4,5 @@ namespace FastUnityCreationKit.Examples._05_ExampleStatus
 {
     public sealed class ExampleBurningStatus : StatusBase
     {
-        
     }
 }

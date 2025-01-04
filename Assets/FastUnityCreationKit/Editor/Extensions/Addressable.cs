@@ -33,7 +33,8 @@ namespace FastUnityCreationKit.Editor.Extensions
         }
 
 
-        public static (string, AssetReference) GetAssetReference([NotNull] this Object obj,
+        public static (string, AssetReference) GetAssetReference(
+            [NotNull] this Object obj,
             [CanBeNull] Type targetType = null)
         {
             AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
@@ -74,7 +75,8 @@ namespace FastUnityCreationKit.Editor.Extensions
             return (null, null);
         }
 
-        public static bool SetAddressableGroup<TObject>(this TObject obj,
+        public static bool SetAddressableGroup<TObject>(
+            this TObject obj,
             string groupName,
             bool readOnly = false,
             params string[] labels)
@@ -88,7 +90,8 @@ namespace FastUnityCreationKit.Editor.Extensions
                 // Check if group exists, if not create it
                 AddressableAssetGroup group = settings.FindGroup(groupName);
                 if (!group)
-                    group = settings.CreateGroup(groupName, false, false, true, null, typeof(ContentUpdateGroupSchema),
+                    group = settings.CreateGroup(groupName, false, false, true, null,
+                        typeof(ContentUpdateGroupSchema),
                         typeof(BundledAssetGroupSchema));
 
                 // Get GUID of object
@@ -110,7 +113,8 @@ namespace FastUnityCreationKit.Editor.Extensions
                     modified = true;
                     e.ReadOnly = readOnly;
 
-                    NotifyAddressables(settings, group, e, AddressableAssetSettings.ModificationEvent.EntryCreated);
+                    NotifyAddressables(settings, group, e,
+                        AddressableAssetSettings.ModificationEvent.EntryCreated);
                 }
                 else if (e.parentGroup != group)
                 {
@@ -144,12 +148,16 @@ namespace FastUnityCreationKit.Editor.Extensions
             return false;
         }
 
-        private static void NotifyAddressables([NotNull] AddressableAssetSettings settings,
+        private static void NotifyAddressables(
+            [NotNull] AddressableAssetSettings settings,
             [NotNull] AddressableAssetGroup group,
             [NotNull] AddressableAssetEntry entry,
             AddressableAssetSettings.ModificationEvent evt)
         {
-            List<AddressableAssetEntry> mod = new List<AddressableAssetEntry> {entry};
+            List<AddressableAssetEntry> mod = new()
+            {
+                entry
+            };
 
             group.SetDirty(evt, mod, false, true);
             settings.SetDirty(evt, mod, true);

@@ -4,54 +4,52 @@ using Sirenix.OdinInspector;
 namespace FastUnityCreationKit.Unity.Actions
 {
     /// <summary>
-    /// Action with cooldown.
+    ///     Action with cooldown.
     /// </summary>
     public abstract class ActionBaseWithCooldown : ActionBase
     {
         private const string COOLDOWN_TO_STRING =
             "@" + nameof(CooldownTimer) + "." + nameof(ActionCooldown.ToString) + "()";
 
-        /// <summary>
-        /// Default cooldown time for the action set at
-        /// first initialization.
-        /// </summary>
-        [Unit(Units.Second)]
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup("Cooldown")]
-        protected abstract float DefaultCooldownTime { get; }
-
-        /// <summary>
-        /// Total cooldown time for the action (set after each execution).
-        /// Can be changed at runtime. Can be overriden to provide custom value.
-        /// </summary>
-        // ReSharper disable NullableWarningSuppressionIsUsed
-        [ShowInInspector]
-        [TitleGroup("Cooldown")]
-        [Unit(Units.Second)]
-        public virtual float CooldownTime
+        protected ActionBaseWithCooldown()
         {
-            get => (float) CooldownTimer!.TotalTime.TotalSeconds;
-            set => CooldownTimer!.SetTotalTime(TimeSpan.FromSeconds(value));
+            Initialize();
         }
 
         /// <summary>
-        /// Cooldown left for the action, returns 0 if cooldown has ended and
-        /// current cooldown time when action is on cooldown (timer is enabled).
+        ///     Default cooldown time for the action set at
+        ///     first initialization.
         /// </summary>
-        [Unit(Units.Second)]
-        [PropertyTooltip(COOLDOWN_TO_STRING)]
-        [ShowInInspector]
-        [ProgressBar(0, nameof(CooldownTime))]
-        public float CooldownLeft => CooldownTimer!.Enabled ? (float) CooldownTimer.RemainingTime.TotalSeconds : 0f;
-        // ReSharper restore NullableWarningSuppressionIsUsed
-
-        protected ActionBaseWithCooldown() => Initialize();
+        [Unit(Units.Second)] [ShowInInspector] [ReadOnly] [TitleGroup("Cooldown")]
+        protected abstract float DefaultCooldownTime { get; }
 
         private void Initialize()
         {
             // Create timer and assign it to the action.
             CooldownTimer = new ActionCooldown(this, DefaultCooldownTime);
         }
+
+        /// <summary>
+        ///     Total cooldown time for the action (set after each execution).
+        ///     Can be changed at runtime. Can be overriden to provide custom value.
+        /// </summary>
+        // ReSharper disable NullableWarningSuppressionIsUsed
+        [ShowInInspector] [TitleGroup("Cooldown")] [Unit(Units.Second)] public virtual float CooldownTime
+        {
+            get => (float) CooldownTimer!.TotalTime.TotalSeconds;
+            set => CooldownTimer!.SetTotalTime(TimeSpan.FromSeconds(value));
+        }
+
+        /// <summary>
+        ///     Cooldown left for the action, returns 0 if cooldown has ended and
+        ///     current cooldown time when action is on cooldown (timer is enabled).
+        /// </summary>
+        [Unit(Units.Second)]
+        [PropertyTooltip(COOLDOWN_TO_STRING)]
+        [ShowInInspector]
+        [ProgressBar(0, nameof(CooldownTime))]
+        public float CooldownLeft
+            => CooldownTimer!.Enabled ? (float) CooldownTimer.RemainingTime.TotalSeconds : 0f;
+        // ReSharper restore NullableWarningSuppressionIsUsed
     }
 }

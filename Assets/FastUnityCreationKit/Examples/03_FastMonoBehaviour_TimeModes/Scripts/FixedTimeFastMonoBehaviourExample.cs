@@ -8,10 +8,16 @@ namespace FastUnityCreationKit.Examples._03_FastMonoBehaviour_TimeModes.Scripts
 {
     public sealed class FixedUpdateFastMonoBehaviourExample : TimeMonoBehaviourExample, IFixedUpdateCallback
     {
-        [NotNull] protected override string GetMessage(float deltaTime) => $"Update called with deltaTime: {TimeAPI.FixedDeltaTime}";
-        
         public override UpdateTime UpdateTimeConfig => UpdateTime.RealtimeSinceStartup;
 
-        public void OnObjectFixedUpdated() => Debug.Log(GetMessage(TimeAPI.FixedDeltaTime));
+        public void OnObjectFixedUpdated()
+        {
+            Debug.Log(GetMessage(TimeAPI.FixedDeltaTime));
+        }
+
+        [NotNull] protected override string GetMessage(float deltaTime)
+        {
+            return $"Update called with deltaTime: {TimeAPI.FixedDeltaTime}";
+        }
     }
 }

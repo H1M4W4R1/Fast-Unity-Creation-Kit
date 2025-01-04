@@ -5,7 +5,7 @@ using UnityEngine;
 namespace FastUnityCreationKit.UI.Features
 {
     /// <summary>
-    /// Enforces constraints to limit the object position to the parent bounds.
+    ///     Enforces constraints to limit the object position to the parent bounds.
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
     public sealed class ConstrainedToParentFeature : CKFeatureBase<RectTransform>
@@ -14,6 +14,5 @@ namespace FastUnityCreationKit.UI.Features
         {
             FeaturedObject.FitIntoParent();
         }
-
     }
 }

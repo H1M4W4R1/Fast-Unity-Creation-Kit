@@ -2,6 +2,5 @@
 {
     public sealed class CollisionWithSourceBFeature : LogOnCollisionWithFeatureBase<CollisionSourceB>
     {
-        
     }
 }

@@ -8,7 +8,7 @@ using Unity.Burst;
 namespace FastUnityCreationKit.Identification.Identifiers
 {
     /// <summary>
-    /// Represents 32-bit non-unique identifier.
+    ///     Represents 32-bit non-unique identifier.
     /// </summary>
     [BurstCompile] [StructLayout(LayoutKind.Explicit)]
     public readonly struct ID32 : INumberIdentifier<uint>, IEquatable<ID32>
@@ -18,11 +18,11 @@ namespace FastUnityCreationKit.Identification.Identifiers
         [FieldOffset(5)] private readonly byte reserved0;
         [FieldOffset(6)] private readonly ushort reserved1;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool IsCreated => isCreated == 1;
 
         /// <summary>
-        /// Creates new ID32 identifier with given value.
+        ///     Creates new ID32 identifier with given value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public ID32(
             uint value)
@@ -34,10 +34,16 @@ namespace FastUnityCreationKit.Identification.Identifiers
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(
-            ID32 other) => other.value == value && other.isCreated == isCreated;
+            ID32 other)
+        {
+            return other.value == value && other.isCreated == isCreated;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(
-            object obj) => obj is ID32 other && Equals(other);
+            object obj)
+        {
+            return obj is ID32 other && Equals(other);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public override unsafe int GetHashCode()
         {
@@ -48,9 +54,12 @@ namespace FastUnityCreationKit.Identification.Identifiers
         }
 
         [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull]
-        public override string ToString() => $"{value:X8}";
+        public override string ToString()
+        {
+            return $"{value:X8}";
+        }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public uint Value => value;
     }
 }

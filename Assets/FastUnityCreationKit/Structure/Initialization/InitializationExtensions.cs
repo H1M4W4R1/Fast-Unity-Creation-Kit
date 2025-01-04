@@ -3,12 +3,12 @@
 namespace FastUnityCreationKit.Structure.Initialization
 {
     /// <summary>
-    /// Extensions for the initialization system.
+    ///     Extensions for the initialization system.
     /// </summary>
-    public static class InitializationExtensions 
+    public static class InitializationExtensions
     {
         /// <summary>
-        /// Initializes the object.
+        ///     Initializes the object.
         /// </summary>
         public static void Initialize<TInitializable>([NotNull] this TInitializable initializable)
             where TInitializable : IInitializable
@@ -16,6 +16,5 @@ namespace FastUnityCreationKit.Structure.Initialization
             // Ensure that the object is initialized
             initializable.EnsureInitialized();
         }
-        
     }
 }

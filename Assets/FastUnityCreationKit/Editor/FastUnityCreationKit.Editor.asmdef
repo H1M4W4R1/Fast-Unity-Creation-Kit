@@ -1,20 +1,22 @@
 {
-	"name": "FastUnityCreationKit.Editor",
-	"allowUnsafeCode": true,
-	"references": [
-		"Unity.Addressables",
-		"Unity.Addressables.Editor",
-		"Unity.Burst",
-		"Unity.Collections",
-		"Unity.Mathematics",
-		"Unity.Logging",
-		"Unity.ResourceManager",
-		"UniTask",
-		"FastUnityCreationKit.Annotations",
-		"FastUnityCreationKit.Core",
-		"FastUnityCreationKit.Data",
-		"FastUnityCreationKit.Identification",
-		"FastUnityCreationKit.Unity"	
-	],
-	"includePlatforms": ["Editor"]	
+  "name": "FastUnityCreationKit.Editor",
+  "allowUnsafeCode": true,
+  "references": [
+    "Unity.Addressables",
+    "Unity.Addressables.Editor",
+    "Unity.Burst",
+    "Unity.Collections",
+    "Unity.Mathematics",
+    "Unity.Logging",
+    "Unity.ResourceManager",
+    "UniTask",
+    "FastUnityCreationKit.Annotations",
+    "FastUnityCreationKit.Core",
+    "FastUnityCreationKit.Data",
+    "FastUnityCreationKit.Identification",
+    "FastUnityCreationKit.Unity"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
 }

@@ -1,13 +1,12 @@
-﻿using FastUnityCreationKit.UI.Elements.Abstract;
-using FastUnityCreationKit.Core.Logging;
+﻿using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.UI.Elements.Abstract;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace FastUnityCreationKit.UI.Elements.Base.Progress
 {
-    [RequireComponent(typeof(Image))]
-    public abstract class UISpriteFillProgressBase : UIProgress
+    [RequireComponent(typeof(Image))] public abstract class UISpriteFillProgressBase : UIProgress
     {
         // ReSharper disable once NullableWarningSuppressionIsUsed
         [NotNull] private Image _image = null!;
@@ -23,12 +22,14 @@ namespace FastUnityCreationKit.UI.Elements.Base.Progress
                 Guard<UserInterfaceLogConfig>.Warning(
                     "UISpriteFillProgressBase requires Image component to be of type Filled." +
                     $"Found unsupported type: {_image.type} on {name}. " +
-                    $"Changing image mode to Filled.");
+                    "Changing image mode to Filled.");
                 _image.type = Image.Type.Filled;
             }
         }
 
-        public override void Render(float dataContext) =>
+        public override void Render(float dataContext)
+        {
             _image.fillAmount = dataContext;
+        }
     }
 }

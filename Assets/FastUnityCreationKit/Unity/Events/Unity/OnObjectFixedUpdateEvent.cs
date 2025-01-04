@@ -4,9 +4,7 @@ using UnityEngine.Scripting;
 
 namespace FastUnityCreationKit.Unity.Events.Unity
 {
-    [Preserve]
-    [UsedImplicitly]
-    public sealed class OnObjectFixedUpdateEvent<TObjectType> :
+    [Preserve] [UsedImplicitly] public sealed class OnObjectFixedUpdateEvent<TObjectType> :
         GlobalEventChannel<OnObjectFixedUpdateEvent<TObjectType>, TObjectType>
         where TObjectType : CKMonoBehaviour
     {
@@ -14,8 +12,10 @@ namespace FastUnityCreationKit.Unity.Events.Unity
 
     public static class OnObjectFixedUpdateEvent
     {
-        public static void TriggerEvent([NotNull] CKMonoBehaviour objectInstance) =>
+        public static void TriggerEvent([NotNull] CKMonoBehaviour objectInstance)
+        {
             EventAPI.TriggerGenericEventWithData(typeof(OnObjectFixedUpdateEvent<>), objectInstance,
                 objectInstance.GetType());
+        }
     }
 }

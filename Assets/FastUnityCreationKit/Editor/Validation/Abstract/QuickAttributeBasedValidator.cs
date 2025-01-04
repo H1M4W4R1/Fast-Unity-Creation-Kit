@@ -10,10 +10,10 @@ namespace FastUnityCreationKit.Editor.Validation.Abstract
         where TAttribute : Attribute
     {
         public abstract void Validate(ValidationResult result, TValueType value);
-        
+
         /// <summary>
-        /// This internal class performs validation on root object that is of type <see cref="ScriptableObject"/>.
-        /// And that is of type has the attribute <see cref="TAttribute"/> attached to it.
+        ///     This internal class performs validation on root object that is of type <see cref="ScriptableObject" />.
+        ///     And that is of type has the attribute <see cref="TAttribute" /> attached to it.
         /// </summary>
         public sealed class InternalRootObjectValidator : RootObjectValidator<ScriptableObject>
         {
@@ -21,7 +21,7 @@ namespace FastUnityCreationKit.Editor.Validation.Abstract
             {
                 if (Value is not TValueType value) return;
                 if (Value.GetType().GetCustomAttribute<TAttribute>(true) == null) return;
-                
+
                 new TSelf().Validate(result, value);
             }
         }
@@ -33,11 +33,9 @@ namespace FastUnityCreationKit.Editor.Validation.Abstract
                 // Skip if value is null
                 if (Value == null) return;
                 if (Value.GetType().GetCustomAttribute<TAttribute>(true) == null) return;
-                
+
                 new TSelf().Validate(result, Value);
             }
         }
-
-
     }
 }

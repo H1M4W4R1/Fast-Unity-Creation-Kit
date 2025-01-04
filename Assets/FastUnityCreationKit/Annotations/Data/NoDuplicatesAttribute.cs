@@ -3,11 +3,9 @@
 namespace FastUnityCreationKit.Annotations.Data
 {
     /// <summary>
-    /// Secures container from having duplicates.
+    ///     Secures container from having duplicates.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class NoDuplicatesAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class)] public sealed class NoDuplicatesAttribute : Attribute
     {
-        
     }
 }

@@ -1,13 +1,12 @@
 {
-	"name": "FastUnityCreationKit.Economy",
-	"allowUnsafeCode": true,
-	"references": [
-		"Unity.Mathematics",
-		"UniTask",
-		"FastUnityCreationKit.Annotations",
-		"FastUnityCreationKit.Core",
-		"FastUnityCreationKit.Data",
-		"FastUnityCreationKit.Identification"
-	]
-	
+  "name": "FastUnityCreationKit.Economy",
+  "allowUnsafeCode": true,
+  "references": [
+    "Unity.Mathematics",
+    "UniTask",
+    "FastUnityCreationKit.Annotations",
+    "FastUnityCreationKit.Core",
+    "FastUnityCreationKit.Data",
+    "FastUnityCreationKit.Identification"
+  ]
 }

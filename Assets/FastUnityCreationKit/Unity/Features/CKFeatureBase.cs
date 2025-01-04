@@ -7,20 +7,19 @@ using UnityEngine;
 namespace FastUnityCreationKit.Unity.Features
 {
     /// <summary>
-    /// Base class for features that are attached to specific object.
+    ///     Base class for features that are attached to specific object.
     /// </summary>
     /// <remarks>
-    /// It is strongly recommended to add <see cref="RequireComponent"/> attribute to the derived class
-    /// where type is set to same as <see cref="TFeaturedObject"/>.
+    ///     It is strongly recommended to add <see cref="RequireComponent" /> attribute to the derived class
+    ///     where type is set to same as <see cref="TFeaturedObject" />.
     /// </remarks>
     public abstract class CKFeatureBase<TFeaturedObject> : CKFeatureBase, IInitializable
         where TFeaturedObject : Component
     {
         /// <summary>
-        /// Reference to the object this feature is attached to.
+        ///     Reference to the object this feature is attached to.
         /// </summary>
-        [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        [NotNull]
+        [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] [NotNull]
         // ReSharper disable once NullableWarningSuppressionIsUsed
         protected TFeaturedObject FeaturedObject { get; private set; } = null!;
 
@@ -32,33 +31,34 @@ namespace FastUnityCreationKit.Unity.Features
     }
 
     /// <summary>
-    /// Represents a feature of GameObject.
-    /// It can be as simple as UI object being able to snap or draggable to
-    /// more complex features like a camera that can follow a target
-    /// ending up on automatic physic supports.
+    ///     Represents a feature of GameObject.
+    ///     It can be as simple as UI object being able to snap or draggable to
+    ///     more complex features like a camera that can follow a target
+    ///     ending up on automatic physic supports.
     /// </summary>
     public abstract class CKFeatureBase : CKMonoBehaviour, IInitializable
     {
-        bool IInitializable.InternalInitializationStatusStorage { get; set; }
-
         /// <summary>
-        /// GameObject this feature is attached to.
+        ///     GameObject this feature is attached to.
         /// </summary>
         [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         // ReSharper disable once NullableWarningSuppressionIsUsed
-        [NotNull] protected GameObject GameObject { get; private set; } = null!;
+        [NotNull]
+        protected GameObject GameObject { [UsedImplicitly] get; private set; } = null!;
 
-        /// <summary>
-        /// Called when the initialization of the feature is completed.
-        /// </summary>
-        protected virtual void OnInitializeCompleted()
-        {
-        }
+        bool IInitializable.InternalInitializationStatusStorage { get; set; }
 
         public void OnInitialize()
         {
             GameObject = gameObject;
             OnInitializeCompleted();
+        }
+
+        /// <summary>
+        ///     Called when the initialization of the feature is completed.
+        /// </summary>
+        protected virtual void OnInitializeCompleted()
+        {
         }
 
 #region UPDATE_CONFIGURATION

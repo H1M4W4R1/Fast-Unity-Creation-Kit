@@ -5,23 +5,20 @@ using UnityEngine;
 namespace FastUnityCreationKit.UI.Context.Data.Text
 {
     /// <summary>
-    /// Provides raw string data to the renderer.
-    /// This can be used to quickly update e.g. Character Name which will be constant string stored
-    /// inside some other structure.
+    ///     Provides raw string data to the renderer.
+    ///     This can be used to quickly update e.g. Character Name which will be constant string stored
+    ///     inside some other structure.
     /// </summary>
     public sealed class RawStringContextProvider : StringContextBaseProvider
     {
         /// <summary>
-        /// Text that will be rendered.
+        ///     Text that will be rendered.
         /// </summary>
-        [TitleGroup(PROVIDER_CONFIGURATION)]
-        [ShowInInspector]
-        [SerializeField]
-        [NotNull]
+        [TitleGroup(PROVIDER_CONFIGURATION)] [ShowInInspector] [SerializeField] [NotNull]
         private string text = string.Empty;
 
         /// <summary>
-        /// Updates the text that will be rendered.
+        ///     Updates the text that will be rendered.
         /// </summary>
         /// <param name="newText">New text that will be rendered.</param>
         public void SetText([NotNull] string newText)
@@ -34,13 +31,13 @@ namespace FastUnityCreationKit.UI.Context.Data.Text
         {
             return text;
         }
-        
+
         // This handles text being edited within the editor
         // if UpdateText method is used to change text
         // all notifications will be handled automatically.
 #if UNITY_EDITOR
         [NotNull] private string _renderedText = string.Empty;
-        
+
         public void FixedUpdate()
         {
             // Check if text has changed and update it

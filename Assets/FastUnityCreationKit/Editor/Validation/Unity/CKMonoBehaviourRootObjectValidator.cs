@@ -6,6 +6,7 @@ using Sirenix.OdinInspector.Editor.Validation;
 using Sirenix.Serialization;
 
 [assembly: RegisterValidator(typeof(CKMonoBehaviourRootObjectValidator))]
+
 namespace FastUnityCreationKit.Editor.Validation.Unity
 {
     public sealed class CKMonoBehaviourRootObjectValidator : RootObjectValidator<CKMonoBehaviour>
@@ -13,14 +14,15 @@ namespace FastUnityCreationKit.Editor.Validation.Unity
         protected override void Validate(ValidationResult result)
         {
             // Get type
-            Type withType = this.Value.GetType();
+            Type withType = Value.GetType();
 
             // Check if type has any [OdinSerialize] fields
             foreach (FieldInfo field in withType.GetFields(BindingFlags.Instance | BindingFlags.Public |
                                                            BindingFlags.NonPublic))
             {
                 if (field.GetCustomAttributes(typeof(OdinSerializeAttribute), false).Length <=
-                    0) continue;
+                    0)
+                    continue;
                 result.AddError("CKMonoBehaviour cannot have any [OdinSerialize] fields.");
                 return;
             }
@@ -30,7 +32,8 @@ namespace FastUnityCreationKit.Editor.Validation.Unity
                                                                      BindingFlags.NonPublic))
             {
                 if (property.GetCustomAttributes(typeof(OdinSerializeAttribute), false).Length <=
-                    0) continue;
+                    0)
+                    continue;
                 result.AddError("CKMonoBehaviour cannot have any [OdinSerialize] properties.");
                 return;
             }

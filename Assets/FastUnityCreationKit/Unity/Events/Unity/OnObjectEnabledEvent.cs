@@ -5,11 +5,9 @@ using UnityEngine.Scripting;
 namespace FastUnityCreationKit.Unity.Events.Unity
 {
     /// <summary>
-    /// Called when an object is enabled.
+    ///     Called when an object is enabled.
     /// </summary>
-    [Preserve]
-    [UsedImplicitly]
-    public sealed class OnObjectEnabledEvent<TObjectType> :
+    [Preserve] [UsedImplicitly] public sealed class OnObjectEnabledEvent<TObjectType> :
         GlobalEventChannel<OnObjectEnabledEvent<TObjectType>, TObjectType>
         where TObjectType : CKMonoBehaviour
     {
@@ -17,8 +15,10 @@ namespace FastUnityCreationKit.Unity.Events.Unity
 
     public static class OnObjectEnabledEvent
     {
-        public static void TriggerEvent([NotNull] CKMonoBehaviour objectInstance) =>
+        public static void TriggerEvent([NotNull] CKMonoBehaviour objectInstance)
+        {
             EventAPI.TriggerGenericEventWithData(typeof(OnObjectEnabledEvent<>), objectInstance,
                 objectInstance.GetType());
+        }
     }
 }

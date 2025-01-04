@@ -6,12 +6,11 @@
     "Unity.Localization",
     "Unity.Mathematics",
     "Unity.ResourceManager",
-    "Unity.TextMeshPro",   
+    "Unity.TextMeshPro",
     "FastUnityCreationKit.Annotations",
     "FastUnityCreationKit.Core",
     "FastUnityCreationKit.Data",
     "FastUnityCreationKit.Unity",
     "FastUnityCreationKit.Structure"
-
   ]
 }

@@ -1,5 +1,5 @@
-﻿using FastUnityCreationKit.UI.Abstract;
-using FastUnityCreationKit.Core.Logging;
+﻿using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.UI.Abstract;
 using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEngine;
@@ -9,7 +9,7 @@ namespace FastUnityCreationKit.UI.Extensions
     public static class ElementBoundsExtensions
     {
         /// <summary>
-        /// Gets the distance between the specified UI object and the specified point.
+        ///     Gets the distance between the specified UI object and the specified point.
         /// </summary>
         /// <param name="uiObjectBase">UI object.</param>
         /// <param name="fromPoint">Point to get the distance from.</param>
@@ -18,13 +18,13 @@ namespace FastUnityCreationKit.UI.Extensions
         {
             // Get nearest point
             Vector2 nearestPoint = uiObjectBase.GetNearestPoint(fromPoint);
-           
+
             // Return the distance between the point and the nearest point
             return math.distance(nearestPoint, fromPoint);
         }
-        
+
         /// <summary>
-        /// Gets the nearest point on the element to the specified point.
+        ///     Gets the nearest point on the element to the specified point.
         /// </summary>
         /// <param name="uiObjectBase">UI object.</param>
         /// <param name="toPoint">Point to get the nearest point to.</param>
@@ -33,27 +33,27 @@ namespace FastUnityCreationKit.UI.Extensions
         {
             // Get rect transform
             RectTransform rectTransform = uiObjectBase.GetComponent<RectTransform>();
-            
+
             // Get bounds
             Rect rect = rectTransform.rect;
-            
+
             Vector2 position = rectTransform.position;
             Vector2 pivotOffset = (float2) rectTransform.pivot * (float2) rect.size;
-            
+
             // Get left bottom corner of the element
             position -= pivotOffset;
-            
+
             // Shift position to centre of rect
             position += rect.size / 2;
-            
-            Bounds bounds = new Bounds(position, rect.size);
-            
+
+            Bounds bounds = new(position, rect.size);
+
             // Return the nearest point (absolute position)
             return bounds.ClosestPoint(toPoint);
         }
-        
+
         /// <summary>
-        /// Checks if specified UI object is within the bounds of its parent.
+        ///     Checks if specified UI object is within the bounds of its parent.
         /// </summary>
         public static bool IsWithinParentBounds([NotNull] this UIObjectBase uiObjectBase)
         {
@@ -63,7 +63,7 @@ namespace FastUnityCreationKit.UI.Extensions
         }
 
         /// <summary>
-        /// Checks if specified UI object is within the bounds of its parent.
+        ///     Checks if specified UI object is within the bounds of its parent.
         /// </summary>
         public static bool IsWithinParentBounds([NotNull] this RectTransform rectTransform)
         {
@@ -74,16 +74,17 @@ namespace FastUnityCreationKit.UI.Extensions
         }
 
         /// <summary>
-        /// Checks if the specified UI object is within the bounds of specified rect transform.
+        ///     Checks if the specified UI object is within the bounds of specified rect transform.
         /// </summary>
-        public static bool IsWithinRectTransformBounds([NotNull] this RectTransform rectTransform,
+        public static bool IsWithinRectTransformBounds(
+            [NotNull] this RectTransform rectTransform,
             [NotNull] RectTransform otherRectTransform)
         {
             Rect targetRect = rectTransform.rect;
             Rect otherRect = otherRectTransform.rect;
 
-            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2)targetRect.size;
-            
+            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2) targetRect.size;
+
             // Get left bottom corner of the element
             Vector2 targetPosition = rectTransform.position;
             targetPosition -= pivotOffset;
@@ -103,7 +104,7 @@ namespace FastUnityCreationKit.UI.Extensions
         }
 
         /// <summary>
-        /// Fits the element into the bounds of the parent.
+        ///     Fits the element into the bounds of the parent.
         /// </summary>
         public static void FitIntoParent([NotNull] this UIObjectBase uiObjectBase)
         {
@@ -113,7 +114,7 @@ namespace FastUnityCreationKit.UI.Extensions
         }
 
         /// <summary>
-        /// Fits the element into the bounds of the parent.
+        ///     Fits the element into the bounds of the parent.
         /// </summary>
         public static void FitIntoParent([NotNull] this RectTransform rectTransform)
         {
@@ -123,11 +124,12 @@ namespace FastUnityCreationKit.UI.Extensions
             // Fit into parent
             rectTransform.FitIntoRectTransform(parent.GetComponent<RectTransform>());
         }
-        
+
         /// <summary>
-        /// This method fits the element into the bounds of the specified rect transform.
+        ///     This method fits the element into the bounds of the specified rect transform.
         /// </summary>
-        public static void FitIntoRectTransform([NotNull] this RectTransform rectTransform,
+        public static void FitIntoRectTransform(
+            [NotNull] this RectTransform rectTransform,
             [NotNull] RectTransform otherRectTransform)
         {
             // Get rect
@@ -146,8 +148,8 @@ namespace FastUnityCreationKit.UI.Extensions
                 return;
             }
 
-            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2)targetRect.size;
-            
+            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2) targetRect.size;
+
             // Get left bottom corner of the element
             Vector2 targetPosition = rectTransform.position;
             targetPosition -= pivotOffset;
@@ -173,7 +175,7 @@ namespace FastUnityCreationKit.UI.Extensions
         }
 
         /// <summary>
-        /// Fits the element into the bounds of the viewport.
+        ///     Fits the element into the bounds of the viewport.
         /// </summary>
         public static void FitIntoViewport([NotNull] this UIObjectBase uiObjectBaseBase)
         {
@@ -183,7 +185,7 @@ namespace FastUnityCreationKit.UI.Extensions
         }
 
         /// <summary>
-        /// Fits the element into the bounds of the viewport.
+        ///     Fits the element into the bounds of the viewport.
         /// </summary>
         public static void FitIntoViewport([NotNull] this RectTransform rectTransform)
         {
@@ -200,8 +202,8 @@ namespace FastUnityCreationKit.UI.Extensions
                 return;
             }
 
-            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2)targetRect.size;
-            
+            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2) targetRect.size;
+
             // Get left bottom corner of the element
             Vector2 targetPosition = rectTransform.position;
             targetPosition -= pivotOffset;
@@ -226,7 +228,7 @@ namespace FastUnityCreationKit.UI.Extensions
         }
 
         /// <summary>
-        /// Checks if the specified UI object is within the bounds of the viewport.
+        ///     Checks if the specified UI object is within the bounds of the viewport.
         /// </summary>
         public static bool IsWithinViewportBounds([NotNull] this UIObjectBase uiObjectBaseBase)
         {
@@ -238,13 +240,13 @@ namespace FastUnityCreationKit.UI.Extensions
         public static bool IsWithinViewportBounds([NotNull] this RectTransform rectTransform)
         {
             Rect targetRect = rectTransform.rect;
-            
-            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2)targetRect.size;
-            
+
+            Vector2 pivotOffset = (float2) rectTransform.pivot * (float2) targetRect.size;
+
             // Get left bottom corner of the element
             Vector2 targetPosition = rectTransform.position;
             targetPosition -= pivotOffset;
-            
+
             // Check if the draggable element is within the bounds of the viewport
             return targetPosition is {x: >= 0, y: >= 0} &&
                    targetPosition.x + targetRect.width <= Screen.width &&

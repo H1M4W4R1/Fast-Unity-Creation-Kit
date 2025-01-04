@@ -8,7 +8,7 @@ using Unity.Burst;
 namespace FastUnityCreationKit.Identification.Identifiers
 {
     /// <summary>
-    /// Simple 8-bit non-unique identifier.
+    ///     Simple 8-bit non-unique identifier.
     /// </summary>
     [BurstCompile] [StructLayout(LayoutKind.Explicit)]
     public readonly struct ID8 : INumberIdentifier<byte>, IEquatable<ID8>
@@ -16,11 +16,11 @@ namespace FastUnityCreationKit.Identification.Identifiers
         [FieldOffset(0)] public readonly byte value;
         [FieldOffset(1)] public readonly byte isCreated;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool IsCreated => isCreated == 1;
 
         /// <summary>
-        /// Creates new ID8 identifier with given value.
+        ///     Creates new ID8 identifier with given value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public ID8(byte value)
         {
@@ -29,10 +29,14 @@ namespace FastUnityCreationKit.Identification.Identifiers
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(ID8 other)
-            => other.value == value && other.isCreated == isCreated;
+        {
+            return other.value == value && other.isCreated == isCreated;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj)
-            => obj is ID8 other && Equals(other);
+        {
+            return obj is ID8 other && Equals(other);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public override unsafe int GetHashCode()
         {
@@ -43,9 +47,12 @@ namespace FastUnityCreationKit.Identification.Identifiers
         }
 
         [BurstDiscard] [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull]
-        public override string ToString() => $"{value:X2}";
+        public override string ToString()
+        {
+            return $"{value:X2}";
+        }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public byte Value => value;
     }
 }

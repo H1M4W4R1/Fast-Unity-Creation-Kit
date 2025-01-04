@@ -3,21 +3,21 @@ using FastUnityCreationKit.Annotations.Addressables;
 using FastUnityCreationKit.Annotations.Data;
 using FastUnityCreationKit.Annotations.Info;
 using FastUnityCreationKit.Annotations.Unity;
-using FastUnityCreationKit.Identification;
-using FastUnityCreationKit.Status.Interfaces;
 using FastUnityCreationKit.Core.Limits;
 using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.Identification;
+using FastUnityCreationKit.Status.Interfaces;
 
 namespace FastUnityCreationKit.Status.Abstract
 {
     /// <summary>
-    /// This class represents a core status that is used to store status data. <br/><br/>
-    /// It is strongly recommended to use <see cref="StatusContainer"/> to store status data.
-    /// Otherwise, you will need to implement low-level features from <see cref="SupportedFeatureAttribute"/>
-    /// list manually.
-    /// </summary> 
+    ///     This class represents a core status that is used to store status data. <br /><br />
+    ///     It is strongly recommended to use <see cref="StatusContainer" /> to store status data.
+    ///     Otherwise, you will need to implement low-level features from <see cref="SupportedFeatureAttribute" />
+    ///     list manually.
+    /// </summary>
     /// <remarks>
-    /// Supports int64 limits.
+    ///     Supports int64 limits.
     /// </remarks>
     [AutoCreatedObject(LocalConstants.STATUS_OBJECT_DIRECTORY)]
     [AddressableGroup(LocalConstants.STATUS_ADDRESSABLE_TAG)]
@@ -28,50 +28,62 @@ namespace FastUnityCreationKit.Status.Abstract
     public abstract class StatusBase : UniqueDefinitionBase
     {
         /// <summary>
-        /// Gets the database for the object.
+        ///     Gets the database for the object.
         /// </summary>
         public StatusDatabase Database => StatusDatabase.Instance;
-        
-        /// <summary>
-        /// Called when status is applied to the target when the target is not affected by the status. 
-        /// </summary>
-        public virtual async UniTask OnStatusApplied(StatusContainer context) =>
-            await UniTask.CompletedTask;
 
         /// <summary>
-        /// Called when status is removed from the target when the target is affected by the status.
+        ///     Called when status is applied to the target when the target is not affected by the status.
         /// </summary>
-        public virtual async UniTask OnStatusRemoved(StatusContainer context) =>
+        public virtual async UniTask OnStatusApplied(StatusContainer context)
+        {
             await UniTask.CompletedTask;
+        }
 
         /// <summary>
-        /// Called when status level is changed. For percentage status it's also known as 100% stack level change.
+        ///     Called when status is removed from the target when the target is affected by the status.
         /// </summary>
-        public virtual async UniTask OnStatusLevelChanged(StatusContainer context, long difference) =>
+        public virtual async UniTask OnStatusRemoved(StatusContainer context)
+        {
             await UniTask.CompletedTask;
+        }
 
         /// <summary>
-        /// Called when maximum percentage is reached.
-        /// Must support IWithMaxLimit, otherwise it will never be called.
+        ///     Called when status level is changed. For percentage status it's also known as 100% stack level change.
         /// </summary>
-        public virtual async UniTask OnMaxLimitReached(StatusContainer context) =>
+        public virtual async UniTask OnStatusLevelChanged(StatusContainer context, long difference)
+        {
             await UniTask.CompletedTask;
+        }
 
         /// <summary>
-        /// Called when minimum percentage is reached.
-        /// Must support IWithMinLimit, otherwise it will never be called.
+        ///     Called when maximum percentage is reached.
+        ///     Must support IWithMaxLimit, otherwise it will never be called.
         /// </summary>
-        public virtual async UniTask OnMinLimitReached(StatusContainer context) =>
+        public virtual async UniTask OnMaxLimitReached(StatusContainer context)
+        {
             await UniTask.CompletedTask;
-        
-        /// <summary>
-        /// Called when frame is updated.
-        /// </summary>
-        public virtual async UniTask OnUpdate(StatusContainer context) =>
-            await UniTask.CompletedTask;
+        }
 
         /// <summary>
-        /// Ensure limits for specified status reference.
+        ///     Called when minimum percentage is reached.
+        ///     Must support IWithMinLimit, otherwise it will never be called.
+        /// </summary>
+        public virtual async UniTask OnMinLimitReached(StatusContainer context)
+        {
+            await UniTask.CompletedTask;
+        }
+
+        /// <summary>
+        ///     Called when frame is updated.
+        /// </summary>
+        public virtual async UniTask OnUpdate(StatusContainer context)
+        {
+            await UniTask.CompletedTask;
+        }
+
+        /// <summary>
+        ///     Ensure limits for specified status reference.
         /// </summary>
         public LimitHit EnsureLimitsFor(AppliedStatusReference statusReference)
         {

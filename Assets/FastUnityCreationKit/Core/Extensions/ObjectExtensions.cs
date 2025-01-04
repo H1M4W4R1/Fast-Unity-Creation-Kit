@@ -20,7 +20,7 @@ namespace FastUnityCreationKit.Core.Extensions
         {
             MethodInfo methodInfo =
                 typeof(ObjectExtensions).GetMethod(nameof(CastTo), BindingFlags.Static | BindingFlags.Public);
-            Type[] genericArguments = new[] {type};
+            Type[] genericArguments = {type};
             MethodInfo genericMethodInfo = methodInfo?.MakeGenericMethod(genericArguments);
             return genericMethodInfo?.Invoke(null, new[] {o});
         }

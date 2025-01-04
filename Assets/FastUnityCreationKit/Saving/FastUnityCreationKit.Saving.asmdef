@@ -1,9 +1,8 @@
 {
-	"name": "FastUnityCreationKit.Saving",
-	"allowUnsafeCode": true,
-	"references": [		
-		"UniTask",
-		"FastUnityCreationKit.Core"
-	]
-	
+  "name": "FastUnityCreationKit.Saving",
+  "allowUnsafeCode": true,
+  "references": [
+    "UniTask",
+    "FastUnityCreationKit.Core"
+  ]
 }
