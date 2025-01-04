@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,7 @@ namespace FastUnityCreationKit.UI.Elements.Base.Input
         /// <summary>
         /// Internal reference to the toggle.
         /// </summary>
-        private Toggle _toggle;
+        [NotNull] private Toggle _toggle = null!;
 
         public override void Setup()
         {

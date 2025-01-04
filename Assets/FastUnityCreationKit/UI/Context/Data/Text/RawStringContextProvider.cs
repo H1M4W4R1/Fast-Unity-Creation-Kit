@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Context.Data.Text
@@ -16,19 +17,20 @@ namespace FastUnityCreationKit.UI.Context.Data.Text
         [TitleGroup(PROVIDER_CONFIGURATION)]
         [ShowInInspector]
         [SerializeField]
-        private string text;
+        [NotNull]
+        private string text = string.Empty;
 
         /// <summary>
         /// Updates the text that will be rendered.
         /// </summary>
         /// <param name="newText">New text that will be rendered.</param>
-        public void SetText(string newText)
+        public void SetText([NotNull] string newText)
         {
             text = newText;
             NotifyContextHasChanged();
         }
 
-        public override string Provide()
+        [NotNull] public override string Provide()
         {
             return text;
         }
@@ -37,7 +39,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Text
         // if UpdateText method is used to change text
         // all notifications will be handled automatically.
 #if UNITY_EDITOR
-        private string _renderedText;
+        [NotNull] private string _renderedText = string.Empty;
         
         public void FixedUpdate()
         {

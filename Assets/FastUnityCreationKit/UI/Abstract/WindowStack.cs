@@ -13,6 +13,7 @@ namespace FastUnityCreationKit.UI.Abstract
         /// <summary>
         /// List of windows in stack.
         /// </summary>
+        [NotNull]
         internal List<UIWindow> Windows { get; } = new List<UIWindow>();
 
         /// <summary>

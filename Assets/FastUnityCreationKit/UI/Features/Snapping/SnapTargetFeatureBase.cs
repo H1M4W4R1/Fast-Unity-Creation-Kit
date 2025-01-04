@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Interfaces;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 
 namespace FastUnityCreationKit.UI.Features.Snapping
@@ -29,14 +30,14 @@ namespace FastUnityCreationKit.UI.Features.Snapping
         /// </summary>
         /// <param name="snapObject">Object you wish to snap to.</param>
         /// <returns>True if it is possible to snap to the object, false otherwise</returns>
-        public virtual bool IsPossibleToSnap(SnapToFeatureBase<TSelf> snapObject) => !HasSnappedObject || MultipleSnapsPossible;
+        public virtual bool IsPossibleToSnap([NotNull] SnapToFeatureBase<TSelf> snapObject) => !HasSnappedObject || MultipleSnapsPossible;
         
-        public virtual void OnSnapBreak(SnapToFeatureBase<TSelf> objectBrokenFromSnap)
+        public virtual void OnSnapBreak([NotNull] SnapToFeatureBase<TSelf> objectBrokenFromSnap)
         {
             HasSnappedObject = false;
         }
 
-        public virtual void OnSnap(SnapToFeatureBase<TSelf> objectSnapped)
+        public virtual void OnSnap([NotNull] SnapToFeatureBase<TSelf> objectSnapped)
         {
             HasSnappedObject = true;
         }

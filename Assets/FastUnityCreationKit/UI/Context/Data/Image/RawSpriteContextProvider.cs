@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Context.Data.Image
@@ -10,6 +11,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Image
     {
         [SerializeField] [Required] [TitleGroup(PROVIDER_CONFIGURATION)]
         [Tooltip("Sprite that will be returned by this context.")]
+        [CanBeNull]
         private Sprite sprite;
         
         public override Sprite Provide() => sprite;

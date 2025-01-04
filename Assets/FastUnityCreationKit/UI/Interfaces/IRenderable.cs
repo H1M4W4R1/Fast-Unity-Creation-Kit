@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.Core.Logging;
+using JetBrains.Annotations;
 using Sirenix.Utilities;
 
 namespace FastUnityCreationKit.UI.Interfaces
@@ -37,6 +38,9 @@ namespace FastUnityCreationKit.UI.Interfaces
                 // If data context is not dirty and rendering is not enforced, do not render
                 if (!forceRender && !DataContext.IsDirty) return;
                 
+                // If data context is null, do not render
+                if(ReferenceEquals(DataContext.Context, null)) return;
+                
                 // Run internal rendering
                 Render(DataContext.Context);
                 Guard<UserInterfaceLogConfig>.Verbose($"Rendered {GetType().GetCompilableNiceFullName()} [was enforced: {forceRender}].");
@@ -50,7 +54,7 @@ namespace FastUnityCreationKit.UI.Interfaces
         /// <summary>
         /// Render this object
         /// </summary>
-        public void Render(TDataContextSealed dataContext);
+        public void Render([NotNull] TDataContextSealed dataContext);
     }
 
     /// <summary>

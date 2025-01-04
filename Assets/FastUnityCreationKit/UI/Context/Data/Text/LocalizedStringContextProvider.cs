@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.Core.Logging;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -14,24 +15,34 @@ namespace FastUnityCreationKit.UI.Context.Data.Text
     /// to access the localized string and set custom variables. Changes will be automatically
     /// reflected in the context.
     /// </summary>
-    public class LocalizedStringContextProvider : StringContextBaseProvider, IInitializable
+    public class LocalizedStringContextProvider : StringContextBaseProvider
     {
-        bool IInitializable.InternalInitializationStatusStorage { get; set; }
-        
-        [Required] [SerializeField] [TitleGroup(PROVIDER_CONFIGURATION)]
-        private LocalizedString localizedString;
+        [Required] [SerializeField] [TitleGroup(PROVIDER_CONFIGURATION)] [CanBeNull] private LocalizedString localizedString;
         
         /// <summary>
         /// Access to localized string.
         /// </summary>
+        [CanBeNull]
         public LocalizedString LocalizedString => localizedString;
         
         private string _cachedString;
 
-        public void OnInitialize()
+        protected override void Setup()
         {
+            base.Setup();
+            
             // Subscribe to string changed event
-            localizedString.StringChanged += OnStringChanged;
+            if(localizedString != null)
+                localizedString.StringChanged += OnStringChanged;
+        }
+
+        protected override void TearDown()
+        {
+            base.TearDown();
+            
+            // Unsubscribe from string changed event
+            if(localizedString != null)
+                localizedString.StringChanged -= OnStringChanged;
         }
 
         private void OnStringChanged(string value)
@@ -41,7 +52,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Text
             NotifyContextHasChanged();
         }
 
-        private string LocalizedText
+        [NotNull] private string LocalizedText
         {
             get
             {

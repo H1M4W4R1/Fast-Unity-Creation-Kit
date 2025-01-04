@@ -20,22 +20,22 @@ namespace FastUnityCreationKit.UI.Elements.Core
         /// Database with all windows
         /// </summary>
         public UIWindowsDatabase Database => UIWindowsDatabase.Instance;
-        
+
         /// <summary>
         /// Internal reference to Unity's Canvas component.
         /// </summary>
-        protected Canvas canvas;
-        
+        [NotNull] protected Canvas canvas = null!;
+
         /// <summary>
         /// Internal reference to Unity's CanvasGroup component.
         /// </summary>
-        protected CanvasGroup canvasGroup;
-        
+        [NotNull] protected CanvasGroup canvasGroup = null!;
+
         /// <summary>
         /// Local reference to window stack.
         /// </summary>
-        protected WindowStack windowStack;
-        
+        [CanBeNull] protected WindowStack windowStack;
+
         public override void Setup()
         {
             base.Setup();
@@ -60,16 +60,17 @@ namespace FastUnityCreationKit.UI.Elements.Core
         public void OnClick(PointerEventData pointerData)
         {
             // Check if window stack is not null.
-            if(windowStack == null) return;
-            
+            if (windowStack == null) return;
+
             // Check if window is not already on top of stack.
-            if(windowStack.Windows[^1] == this) return;
-            
+            if (windowStack.Windows[^1] == this) return;
+
             // Move window to top of stack.
             windowStack.Windows.Remove(this);
             windowStack.Windows.Add(this);
-            Guard<UserInterfaceLogConfig>.Info($"Window {GetType().GetCompilableNiceFullName()} moved to top of stack.");
-            
+            Guard<UserInterfaceLogConfig>.Info(
+                $"Window {GetType().GetCompilableNiceFullName()} moved to top of stack.");
+
             // Sort windows in manager as window was clicked.
             UIManager.Instance.SortWindows();
         }
@@ -88,11 +89,11 @@ namespace FastUnityCreationKit.UI.Elements.Core
 
             // Destroy window game object.
             Destroy(gameObject);
-            
+
             // Sort windows in manager as window was closed.
-            if(notifyManager)
+            if (notifyManager)
                 UIManager.Instance.SortWindows();
-            
+
             Guard<UserInterfaceLogConfig>.Info($"Window {GetType().GetCompilableNiceFullName()} closed.");
         }
 
@@ -114,7 +115,7 @@ namespace FastUnityCreationKit.UI.Elements.Core
         {
             // Do nothing by default.
         }
-        
+
         public virtual void OnWindowClosed()
         {
             // Do nothing by default.

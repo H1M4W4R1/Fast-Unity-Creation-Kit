@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.Core.Logging;
+using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <param name="uiObjectBase">UI object.</param>
         /// <param name="fromPoint">Point to get the distance from.</param>
         /// <returns>Distance between the UI object and the specified point.</returns>
-        public static float GetDistanceTo(this UIObjectBase uiObjectBase, Vector2 fromPoint)
+        public static float GetDistanceTo([NotNull] this UIObjectBase uiObjectBase, Vector2 fromPoint)
         {
             // Get nearest point
             Vector2 nearestPoint = uiObjectBase.GetNearestPoint(fromPoint);
@@ -28,7 +29,7 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <param name="uiObjectBase">UI object.</param>
         /// <param name="toPoint">Point to get the nearest point to.</param>
         /// <returns>Nearest point on the element to the specified point.</returns>
-        public static Vector2 GetNearestPoint(this UIObjectBase uiObjectBase, Vector2 toPoint)
+        public static Vector2 GetNearestPoint([NotNull] this UIObjectBase uiObjectBase, Vector2 toPoint)
         {
             // Get rect transform
             RectTransform rectTransform = uiObjectBase.GetComponent<RectTransform>();
@@ -54,7 +55,7 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Checks if specified UI object is within the bounds of its parent.
         /// </summary>
-        public static bool IsWithinParentBounds(this UIObjectBase uiObjectBase)
+        public static bool IsWithinParentBounds([NotNull] this UIObjectBase uiObjectBase)
         {
             // Get rect transform
             RectTransform rectTransform = uiObjectBase.GetComponent<RectTransform>();
@@ -64,7 +65,7 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Checks if specified UI object is within the bounds of its parent.
         /// </summary>
-        public static bool IsWithinParentBounds(this RectTransform rectTransform)
+        public static bool IsWithinParentBounds([NotNull] this RectTransform rectTransform)
         {
             // Get parent
             Transform parent = rectTransform.parent;
@@ -75,8 +76,8 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Checks if the specified UI object is within the bounds of specified rect transform.
         /// </summary>
-        public static bool IsWithinRectTransformBounds(this RectTransform rectTransform,
-            RectTransform otherRectTransform)
+        public static bool IsWithinRectTransformBounds([NotNull] this RectTransform rectTransform,
+            [NotNull] RectTransform otherRectTransform)
         {
             Rect targetRect = rectTransform.rect;
             Rect otherRect = otherRectTransform.rect;
@@ -104,7 +105,7 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Fits the element into the bounds of the parent.
         /// </summary>
-        public static void FitIntoParent(this UIObjectBase uiObjectBase)
+        public static void FitIntoParent([NotNull] this UIObjectBase uiObjectBase)
         {
             // Get rect transform
             RectTransform rectTransform = uiObjectBase.GetComponent<RectTransform>();
@@ -114,7 +115,7 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Fits the element into the bounds of the parent.
         /// </summary>
-        public static void FitIntoParent(this RectTransform rectTransform)
+        public static void FitIntoParent([NotNull] this RectTransform rectTransform)
         {
             // Get parent
             Transform parent = rectTransform.parent;
@@ -126,8 +127,8 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// This method fits the element into the bounds of the specified rect transform.
         /// </summary>
-        public static void FitIntoRectTransform(this RectTransform rectTransform,
-            RectTransform otherRectTransform)
+        public static void FitIntoRectTransform([NotNull] this RectTransform rectTransform,
+            [NotNull] RectTransform otherRectTransform)
         {
             // Get rect
             Rect targetRect = rectTransform.rect;
@@ -174,7 +175,7 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Fits the element into the bounds of the viewport.
         /// </summary>
-        public static void FitIntoViewport(this UIObjectBase uiObjectBaseBase)
+        public static void FitIntoViewport([NotNull] this UIObjectBase uiObjectBaseBase)
         {
             // Get rect transform
             RectTransform rectTransform = uiObjectBaseBase.GetComponent<RectTransform>();
@@ -184,7 +185,7 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Fits the element into the bounds of the viewport.
         /// </summary>
-        public static void FitIntoViewport(this RectTransform rectTransform)
+        public static void FitIntoViewport([NotNull] this RectTransform rectTransform)
         {
             // Get rect
             Rect targetRect = rectTransform.rect;
@@ -227,14 +228,14 @@ namespace FastUnityCreationKit.UI.Extensions
         /// <summary>
         /// Checks if the specified UI object is within the bounds of the viewport.
         /// </summary>
-        public static bool IsWithinViewportBounds(this UIObjectBase uiObjectBaseBase)
+        public static bool IsWithinViewportBounds([NotNull] this UIObjectBase uiObjectBaseBase)
         {
             // Get the rect transform
             RectTransform rectTransform = uiObjectBaseBase.RectTransform;
             return rectTransform.IsWithinViewportBounds();
         }
 
-        public static bool IsWithinViewportBounds(this RectTransform rectTransform)
+        public static bool IsWithinViewportBounds([NotNull] this RectTransform rectTransform)
         {
             Rect targetRect = rectTransform.rect;
             

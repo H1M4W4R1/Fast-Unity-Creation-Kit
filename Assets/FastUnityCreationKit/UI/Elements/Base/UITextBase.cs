@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Interfaces;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 
@@ -11,12 +12,12 @@ namespace FastUnityCreationKit.UI.Elements.Base
         /// <summary>
         /// Internal reference to the TextMeshProUGUI component.
         /// </summary>
-        private TextMeshProUGUI _textMeshProUGUI;
+        [NotNull] private TextMeshProUGUI _textMeshProUGUI = null!;
         
         /// <summary>
         /// Exposes the TextMeshProUGUI component for child classes to use.
         /// </summary>
-        protected TextMeshProUGUI Text => _textMeshProUGUI;
+        [NotNull] protected TextMeshProUGUI Text => _textMeshProUGUI;
 
         public override void Setup()
         {

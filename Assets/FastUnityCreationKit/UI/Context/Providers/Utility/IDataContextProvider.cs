@@ -1,18 +1,20 @@
-﻿namespace FastUnityCreationKit.UI.Context.Providers.Utility
+﻿using JetBrains.Annotations;
+
+namespace FastUnityCreationKit.UI.Context.Providers.Utility
 {
     public interface IDataContextProvider<out TDataContext> : IDataContextProvider
     {
         /// <summary>
         /// Provides the data context.
         /// </summary>
-        public TDataContext Provide();
+        [CanBeNull] public TDataContext Provide();
         
         /// <summary>
         /// Provides the data context at the specified index.
         /// </summary>
         /// <param name="index">Index of the data context.</param>
         /// <returns>Data context at the specified index.</returns>
-        public TDataContext ProvideAt(int index);
+        [CanBeNull] public TDataContext ProvideAt(int index);
 
         object IDataContextProvider.ProvideRaw() => Provide();
         object IDataContextProvider.ProvideAtRaw(int index) => ProvideAt(index);
@@ -28,13 +30,13 @@
         /// <summary>
         /// Provides the data context.
         /// </summary>
-        public object ProvideRaw();
+        [CanBeNull] public object ProvideRaw();
         
         /// <summary>
         /// Provides the data context at the specified index.
         /// </summary>
         /// <param name="index">Index of the data context.</param>
         /// <returns>Data context at the specified index.</returns>
-        public object ProvideAtRaw(int index);
+        [CanBeNull] public object ProvideAtRaw(int index);
     }
 }

@@ -76,7 +76,7 @@ namespace FastUnityCreationKit.UI.Abstract
         /// as is for now. The only faster way would be to cache the provider, but that would be
         /// pretty hard to implement and maintain in a reliable way.
         /// </remarks>
-        private TProviderType GetProviderByType<TProviderType>() 
+        [CanBeNull] private TProviderType GetProviderByType<TProviderType>() 
             where TProviderType : IDataContextProvider
         {
             // Try to get provider on this object or cascade to parents until root

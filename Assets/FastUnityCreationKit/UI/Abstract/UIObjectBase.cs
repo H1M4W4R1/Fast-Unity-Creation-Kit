@@ -3,6 +3,7 @@ using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
 using FastUnityCreationKit.Unity.Time.Enums;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Abstract
@@ -15,16 +16,17 @@ namespace FastUnityCreationKit.UI.Abstract
         /// <summary>
         /// Rect transform of this object.
         /// </summary>
-        public RectTransform RectTransform { get; private set; }
+        [NotNull]
+        public RectTransform RectTransform { get; private set; } = null!;
 
         public virtual void OnObjectCreated()
         {
             // Get rect transform
             RectTransform = GetComponent<RectTransform>();
-         
+
             // Register this object
             UIManager.Instance.RegisterUserInterfaceObject(this);
-            
+
             // Setup object
             Setup();
             Guard<UserInterfaceLogConfig>.Verbose($"UI object {name} has been set-up correctly.");
@@ -33,7 +35,8 @@ namespace FastUnityCreationKit.UI.Abstract
             if (this is IRenderable renderable)
             {
                 renderable.Render(true);
-                Guard<UserInterfaceLogConfig>.Verbose($"UI object {name} has been rendered correctly for the first time.");
+                Guard<UserInterfaceLogConfig>.Verbose(
+                    $"UI object {name} has been rendered correctly for the first time.");
             }
 
             // Call after first render
@@ -43,7 +46,7 @@ namespace FastUnityCreationKit.UI.Abstract
         public virtual void Setup()
         {
         }
-        
+
         public virtual void AfterFirstRenderOrCreated()
         {
         }
@@ -57,11 +60,11 @@ namespace FastUnityCreationKit.UI.Abstract
         {
             // Teardown object
             Teardown();
-            
+
             // Unregister this object
             UIManager.Instance.UnregisterUserInterfaceObject(this);
         }
-        
+
 #region UPDATE_CONFIGURATION
 
         // UI objects are always updated (even when disabled or when time is paused) and
@@ -70,6 +73,5 @@ namespace FastUnityCreationKit.UI.Abstract
         public override UpdateMode UpdateMode => UpdateMode.UpdateWhenDisabled | UpdateMode.UpdateWhenTimePaused;
 
 #endregion
-
     }
 }

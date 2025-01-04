@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Features.Snapping;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.UI.Interfaces
 {
@@ -15,6 +16,6 @@ namespace FastUnityCreationKit.UI.Interfaces
         /// <summary>
         /// Checks if it is possible to snap to the object.
         /// </summary>
-        bool IsPossibleToSnap(SnapToFeatureBase<TSelf> snapObject);
+        bool IsPossibleToSnap([NotNull] SnapToFeatureBase<TSelf> snapObject);
     }
 }

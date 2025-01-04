@@ -45,7 +45,6 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         /// <summary>
         /// Provides the data context.
         /// </summary>
-        [CanBeNull]
         public abstract TContextType Provide();
 
         /// <summary>
@@ -53,7 +52,6 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         /// </summary>
         /// <param name="index">Index of the data context.</param>
         /// <returns>Data context at the specified index.</returns>
-        [CanBeNull]
         public virtual TContextType ProvideAt(int index)
         {
             Guard<ValidationLogConfig>.Warning(

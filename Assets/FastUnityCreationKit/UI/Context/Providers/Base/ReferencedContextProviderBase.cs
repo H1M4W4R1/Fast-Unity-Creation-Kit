@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FastUnityCreationKit.UI.Context.Providers.Base
@@ -12,6 +13,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         [SerializeField]
         [TitleGroup(PROVIDER_CONFIGURATION)]
         [Required]
+        [CanBeNull]
         private DataContextProviderBase<TContextBase> providerReference;
 
         protected override void Setup()
@@ -34,7 +36,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         /// This method is invoked whenever context of the referenced provider changes.
         /// This will automatically update IsDirty flag and notify all subscribers.
         /// </summary>
-        private void OnContextChangedCallback(TContextBase context) =>
+        private void OnContextChangedCallback([CanBeNull] TContextBase context) =>
             NotifyContextHasChanged();
 
         /// <summary>

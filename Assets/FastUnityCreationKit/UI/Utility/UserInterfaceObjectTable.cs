@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using FastUnityCreationKit.UI.Abstract;
+using JetBrains.Annotations;
+using UnityEngine.Scripting;
 
 namespace FastUnityCreationKit.UI.Utility
 {
@@ -8,6 +10,7 @@ namespace FastUnityCreationKit.UI.Utility
     /// Represents a table of UI objects.
     /// </summary>
     /// <typeparam name="TUserInterfaceObject">Type of UI object.</typeparam>
+    [Preserve] [UsedImplicitly]
     internal sealed class UserInterfaceObjectTable<TUserInterfaceObject> : UserInterfaceObjectTable
         where TUserInterfaceObject : UIObjectBase
     {
@@ -18,7 +21,7 @@ namespace FastUnityCreationKit.UI.Utility
         {
         }
 
-        public TUserInterfaceObject this[int index]
+        [CanBeNull] public TUserInterfaceObject this[int index]
         {
             get
             {
@@ -43,22 +46,22 @@ namespace FastUnityCreationKit.UI.Utility
     /// </summary>
     internal abstract class UserInterfaceObjectTable 
     {
-        protected readonly Type mainTableType;
-        protected readonly List<UIObjectBase> objects = new List<UIObjectBase>();
+        [NotNull] protected readonly Type mainTableType;
+        [ItemNotNull] [NotNull] protected readonly List<UIObjectBase> objects = new List<UIObjectBase>();
         
         /// <summary>
         /// Type of table.
         /// </summary>
-        public Type TableType => mainTableType;
+        [NotNull] public Type TableType => mainTableType;
 
-        protected UserInterfaceObjectTable(Type tableType)
+        protected UserInterfaceObjectTable([NotNull] Type tableType)
         {
             mainTableType = tableType;
         }
 
         public int Count => objects.Count;
         
-        public void Add(UIObjectBase uiObjectBase)
+        public void Add([NotNull] UIObjectBase uiObjectBase)
         {
             #if UNITY_EDITOR
             if(uiObjectBase.GetType() != mainTableType)
@@ -70,7 +73,7 @@ namespace FastUnityCreationKit.UI.Utility
                 objects.Add(uiObjectBase);
         }
         
-        public void Remove(UIObjectBase uiObjectBase)
+        public void Remove([NotNull] UIObjectBase uiObjectBase)
         {
             objects.Remove(uiObjectBase);
         }

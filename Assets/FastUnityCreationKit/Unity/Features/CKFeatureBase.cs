@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.Unity.Time.Enums;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -19,7 +20,8 @@ namespace FastUnityCreationKit.Unity.Features
         /// Reference to the object this feature is attached to.
         /// </summary>
         [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        protected TFeaturedObject FeaturedObject { get; private set; }
+        [NotNull]
+        protected TFeaturedObject FeaturedObject { get; private set; } = null!;
 
         public new void OnInitialize()
         {
@@ -42,7 +44,7 @@ namespace FastUnityCreationKit.Unity.Features
         /// GameObject this feature is attached to.
         /// </summary>
         [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        protected GameObject GameObject { get; private set; }
+        [NotNull] protected GameObject GameObject { get; private set; } = null!;
 
         /// <summary>
         /// Called when the initialization of the feature is completed.

@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,12 +14,13 @@ namespace FastUnityCreationKit.UI.Elements.Base.Input
         /// <summary>
         /// Internal reference to the button.
         /// </summary>
-        private Button _button;
+        [NotNull]
+        private Button _button = null!;
 
         public override void Setup()
         {
             base.Setup();
-            
+
             _button = GetComponent<Button>();
             _button.onClick.AddListener(_OnClick);
         }
@@ -27,12 +29,12 @@ namespace FastUnityCreationKit.UI.Elements.Base.Input
         {
             OnClick();
         }
-        
+
         /// <summary>
         /// Event that is invoked when the button is clicked.
         /// </summary>
         protected abstract void OnClick();
-        
+
         /// <summary>
         /// Changes the interactable state of the button.
         /// </summary>

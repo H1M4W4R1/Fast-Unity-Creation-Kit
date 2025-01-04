@@ -1,4 +1,6 @@
-﻿namespace FastUnityCreationKit.UI.Context.Providers.Utility
+﻿using JetBrains.Annotations;
+
+namespace FastUnityCreationKit.UI.Context.Providers.Utility
 {
     /// <summary>
     /// Represents a data context info used to store data context and its provider.
@@ -6,10 +8,10 @@
     public readonly ref struct DataContextInfo<TDataContext>
     {
         public bool IsValid { get; }
-        public IDataContextProvider<TDataContext> Provider { get; }
-        public TDataContext Context { get; }
+        [CanBeNull] public IDataContextProvider<TDataContext> Provider { get; }
+        [CanBeNull] public TDataContext Context { get; }
 
-        public bool IsDirty => Provider.IsDirty;
+        public bool IsDirty => Provider?.IsDirty ?? false;
 
         public DataContextInfo(IDataContextProvider<TDataContext> provider, TDataContext context)
         {

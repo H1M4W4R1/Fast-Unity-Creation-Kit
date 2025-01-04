@@ -13,10 +13,11 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         /// Index to provide element from.
         /// </summary>
         public int Index { get; set; }
-        
+
         public override TContextType Provide()
         {
             // Try to acquire any ListProvider in the parent
+            // TODO: Make this cached
             ListContextProviderBase<TContextType> listProvider = GetComponentInParent<ListContextProviderBase<TContextType>>();
             
             // Ensure that the list provider is not null

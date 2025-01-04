@@ -26,11 +26,13 @@ namespace FastUnityCreationKit.UI
         /// <summary>
         /// List of window stacks.
         /// </summary>
-        private List<WindowStack> _windowStacks = new List<WindowStack>();
+        [ItemNotNull] [NotNull] private List<WindowStack> _windowStacks = new List<WindowStack>();
 
         /// <summary>
         /// List of object tables.
         /// </summary>
+        [ItemNotNull]
+        [NotNull]
         private List<UserInterfaceObjectTable> _objectTables = new List<UserInterfaceObjectTable>();
 
         /// <summary>
@@ -61,7 +63,7 @@ namespace FastUnityCreationKit.UI
         /// <param name="autoTransferToTop">Should the stack be transferred to top.</param>
         /// <typeparam name="TWindowType">Type of window to open.</typeparam>
         /// <returns>Opened window or null if not found.</returns> 
-        [CanBeNull] public TWindowType OpenWindow<TWindowType>(WindowStack inStack = null, bool autoTransferToTop = true)
+        [CanBeNull] public TWindowType OpenWindow<TWindowType>([CanBeNull] WindowStack inStack = null, bool autoTransferToTop = true)
             where TWindowType : UIWindow
         {
             TWindowType window = FindWindowPrefab<TWindowType>();

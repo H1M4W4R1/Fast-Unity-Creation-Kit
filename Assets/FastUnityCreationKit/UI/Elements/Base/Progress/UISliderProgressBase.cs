@@ -1,4 +1,5 @@
 ﻿using FastUnityCreationKit.UI.Elements.Abstract;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,12 +8,12 @@ namespace FastUnityCreationKit.UI.Elements.Base.Progress
     [RequireComponent(typeof(Slider))]
     public abstract class UISliderProgressBase : UIProgress
     {
-        private Slider _slider;
+        [NotNull] private Slider _slider = null!;
 
         public override void Setup()
         {
             base.Setup();
-            
+
             // Get the slider component and disable interaction - we can't modify
             // progress bar value directly.
             _slider = GetComponent<Slider>();

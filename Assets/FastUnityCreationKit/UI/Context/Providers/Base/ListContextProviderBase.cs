@@ -143,7 +143,7 @@ namespace FastUnityCreationKit.UI.Context.Providers.Base
         /// Provides a random element from the list.
         /// </summary>
         /// <returns>Random element from the list or default if not found.</returns>
-        public TContextType ProvideRandom() => 
+        [CanBeNull] public TContextType ProvideRandom() => 
             _elements.Count == 0 ? default : _elements[UnityEngine.Random.Range(0, _elements.Count)];
 
         public override TContextType ProvideAt(int index)

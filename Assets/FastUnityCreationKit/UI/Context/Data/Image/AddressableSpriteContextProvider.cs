@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -13,6 +14,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Image
     {
         [SerializeField] [Required] [TitleGroup(PROVIDER_CONFIGURATION)]
         [Tooltip("Reference to the sprite that will be returned by this context.")]
+        [CanBeNull]
         private AssetReferenceSprite spriteReference;
 
         /// <summary>
@@ -23,6 +25,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Image
         /// <summary>
         /// Cached sprite asset.
         /// </summary>
+        [CanBeNull]
         private Sprite _spriteCache;
 
         /// <summary>
@@ -33,6 +36,7 @@ namespace FastUnityCreationKit.UI.Context.Data.Image
         /// <summary>
         /// Current sprite asset. Also handles loading of the asset.
         /// </summary>
+        [CanBeNull]
         public Sprite Image
         {
             get

@@ -1,4 +1,5 @@
-﻿using UnityEngine.Device;
+﻿using JetBrains.Annotations;
+using UnityEngine.Device;
 
 namespace FastUnityCreationKit.UI.Context.Data.Text
 {
@@ -8,6 +9,6 @@ namespace FastUnityCreationKit.UI.Context.Data.Text
     /// </summary>
     public sealed class BuildVersionStringContextProvider : StringContextBaseProvider
     {
-        public override string Provide() => Application.version;
+        [NotNull] public override string Provide() => Application.version;
     }
 }

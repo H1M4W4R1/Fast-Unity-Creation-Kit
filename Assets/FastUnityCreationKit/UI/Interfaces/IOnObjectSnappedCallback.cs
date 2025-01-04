@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Features.Snapping;
+using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.UI.Interfaces
 {
@@ -11,7 +12,7 @@ namespace FastUnityCreationKit.UI.Interfaces
     public interface IOnObjectSnappedCallback<TSnapObject> 
         where TSnapObject : UIObjectBase, ISnapTarget<TSnapObject>
     {
-        public void OnSnapBreak(SnapToFeatureBase<TSnapObject> objectBrokenFromSnap);
-        public void OnSnap(SnapToFeatureBase<TSnapObject> objectSnapped);
+        public void OnSnapBreak([NotNull] SnapToFeatureBase<TSnapObject> objectBrokenFromSnap);
+        public void OnSnap([NotNull] SnapToFeatureBase<TSnapObject> objectSnapped);
     }
 }

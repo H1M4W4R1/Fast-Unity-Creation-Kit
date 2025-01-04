@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Elements.Abstract;
 using FastUnityCreationKit.Core.Logging;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ namespace FastUnityCreationKit.UI.Elements.Base.Progress
     [RequireComponent(typeof(Image))]
     public abstract class UISpriteFillProgressBase : UIProgress
     {
-        private Image _image;
+        [NotNull] private Image _image = null!;
 
         public override void Setup()
         {
@@ -26,9 +27,7 @@ namespace FastUnityCreationKit.UI.Elements.Base.Progress
             }
         }
 
-        public override void Render(float dataContext)
-        {
+        public override void Render(float dataContext) =>
             _image.fillAmount = dataContext;
-        }
     }
 }
