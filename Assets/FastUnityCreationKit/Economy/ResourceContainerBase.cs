@@ -124,29 +124,39 @@ namespace FastUnityCreationKit.Economy
         [HideInInspector] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] [ReadOnly] public int ResourceSpace
             => MaximumResourceStored - MinimumResourceStored;
 
-        protected virtual async UniTask OnResourceAddedAsync(int amount)
+        protected virtual async UniTask OnResourceAdded(int amount)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceRemovedAsync(int amount)
+        protected virtual async UniTask OnResourceRemoved(int amount)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceAddFailedAsync(int amount, int spaceLeft)
+        protected virtual async UniTask OnResourceAddFailed(int amount, int spaceLeft)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceRemoveFailedAsync(int amount, int amountLeft)
+        protected virtual async UniTask OnResourceRemoveFailed(int amount, int amountLeft)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceAmountChangedAsync(int oldAmount, int newAmount)
+        protected virtual async UniTask OnResourceAmountChanged(int oldAmount, int newAmount)
         {
             await UniTask.CompletedTask;
+        }
+        
+        protected UniTask OnMaxLimitReached()
+        {
+            return UniTask.CompletedTask;
+        }
+
+        protected UniTask OnMinLimitReached()
+        {
+            return UniTask.CompletedTask;
         }
 
         /// <summary>
@@ -165,8 +175,8 @@ namespace FastUnityCreationKit.Economy
             {
                 if (ReferenceEquals(Resource, null)) return amount;
 
-                await Resource.OnResourceAddFailedAsync(this, amount, SpaceLeft);
-                await OnResourceAddFailedAsync(amount, SpaceLeft);
+                await Resource.OnResourceAddFailed(this, amount, SpaceLeft);
+                await OnResourceAddFailed(amount, SpaceLeft);
                 return amount;
             }
 
@@ -182,10 +192,10 @@ namespace FastUnityCreationKit.Economy
             // Prevent null reference exception
             if (ReferenceEquals(Resource, null)) return 0;
 
-            await Resource.OnResourceAddedAsync(this, addedAmount);
-            await OnResourceAddedAsync(addedAmount);
-            await Resource.OnResourceChangedAsync(this, startAmount, Amount);
-            await OnResourceAmountChangedAsync(startAmount, Amount);
+            await Resource.OnResourceAdded(this, addedAmount);
+            await OnResourceAdded(addedAmount);
+            await Resource.OnResourceChanged(this, startAmount, Amount);
+            await OnResourceAmountChanged(startAmount, Amount);
 
             // Check if amount is equal to expected amount
             return Amount == expectedAmount ? 0 : expectedAmount - Amount;
@@ -217,8 +227,8 @@ namespace FastUnityCreationKit.Economy
             if (!HasEnough(amount) && !force)
             {
                 if (ReferenceEquals(Resource, null)) return amount;
-                await Resource.OnResourceRemoveFailedAsync(this, amount, AmountLeft);
-                await OnResourceRemoveFailedAsync(amount, AmountLeft);
+                await Resource.OnResourceRemoveFailed(this, amount, AmountLeft);
+                await OnResourceRemoveFailed(amount, AmountLeft);
                 return amount;
             }
 
@@ -234,10 +244,10 @@ namespace FastUnityCreationKit.Economy
             // Prevent null reference exception
             if (ReferenceEquals(Resource, null)) return 0;
 
-            await Resource.OnResourceRemovedAsync(this, removedAmount);
-            await OnResourceRemovedAsync(removedAmount);
-            await Resource.OnResourceChangedAsync(this, startAmount, Amount);
-            await OnResourceAmountChangedAsync(startAmount, Amount);
+            await Resource.OnResourceRemoved(this, removedAmount);
+            await OnResourceRemoved(removedAmount);
+            await Resource.OnResourceChanged(this, startAmount, Amount);
+            await OnResourceAmountChanged(startAmount, Amount);
 
             // Check if amount is equal to expected amount
             // expectedAmount will be always lower than Amount, so
@@ -259,8 +269,8 @@ namespace FastUnityCreationKit.Economy
             if (ReferenceEquals(Resource, null)) return;
 
             // Call events
-            await Resource.OnResourceChangedAsync(this, oldAmount, Amount);
-            await OnResourceAmountChangedAsync(oldAmount, Amount);
+            await Resource.OnResourceChanged(this, oldAmount, Amount);
+            await OnResourceAmountChanged(oldAmount, Amount);
         }
 
         /// <summary>
@@ -326,16 +336,6 @@ namespace FastUnityCreationKit.Economy
             return SpaceLeft >= amount;
         }
 
-        protected UniTask OnMaxLimitReachedAsync()
-        {
-            return UniTask.CompletedTask;
-        }
-
-        protected UniTask OnMinLimitReachedAsync()
-        {
-            return UniTask.CompletedTask;
-        }
-
         private void CheckLimitsWithoutEvents() => _ = CheckLimitsAndRaiseEvents(false);
 
         protected virtual async UniTask CheckLimitsAndRaiseEvents(bool withEvents = true)
@@ -349,8 +349,8 @@ namespace FastUnityCreationKit.Economy
                 Amount = MaximumResourceStored;
                 if (withEvents)
                 {
-                    await Resource.OnMaxLimitReachedAsync(this);
-                    await OnMaxLimitReachedAsync();
+                    await Resource.OnMaxLimitReached(this);
+                    await OnMaxLimitReached();
                 }
             }
 
@@ -360,8 +360,8 @@ namespace FastUnityCreationKit.Economy
                 Amount = MinimumResourceStored;
                 if (withEvents)
                 {
-                    await Resource.OnMinLimitReachedAsync(this);
-                    await OnMinLimitReachedAsync();
+                    await Resource.OnMinLimitReached(this);
+                    await OnMinLimitReached();
                 }
             }
         }

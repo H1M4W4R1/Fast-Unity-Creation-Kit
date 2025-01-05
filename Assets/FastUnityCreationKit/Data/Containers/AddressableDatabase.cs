@@ -106,7 +106,7 @@ namespace FastUnityCreationKit.Data.Containers
         /// <summary>
         /// Wait until the database is loaded.
         /// </summary>
-        public async UniTask WaitUntilLoadedAsync()
+        public async UniTask WaitUntilLoaded()
         {
             // If database is already preloaded, return
             if (IsPreloaded) return;

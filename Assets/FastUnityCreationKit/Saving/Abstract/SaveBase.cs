@@ -53,7 +53,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         ///     Called before save is saved. It can be used to update data before saving as it's
         ///     called before any data is written to disk.
         /// </summary>
-        protected virtual async UniTask BeforeSaveWrittenAsync()
+        protected virtual async UniTask BeforeSaveWritten()
         {
             await UniTask.CompletedTask;
         }
@@ -63,7 +63,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         ///     be populated with data from disk using <see cref="ISaveableObject" /> interface as
         ///     this event is called before any data is loaded.
         /// </summary>
-        protected virtual async UniTask BeforeSaveLoadedAsync()
+        protected virtual async UniTask BeforeSaveLoaded()
         {
             await UniTask.CompletedTask;
         }
@@ -71,7 +71,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         ///     Called when save is loaded.
         /// </summary>
-        protected virtual async UniTask OnSaveLoadedAsync()
+        protected virtual async UniTask OnSaveLoaded()
         {
             await UniTask.CompletedTask;
         }
@@ -79,7 +79,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         ///     Called when save failed to load.
         /// </summary>
-        protected virtual async UniTask OnSaveLoadFailedAsync()
+        protected virtual async UniTask OnSaveLoadFailed()
         {
             await UniTask.CompletedTask;
         }
@@ -87,7 +87,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         ///     Called when save is saved.
         /// </summary>
-        protected virtual async UniTask OnSaveWrittenAsync()
+        protected virtual async UniTask OnSaveWritten()
         {
             await UniTask.CompletedTask;
         }
@@ -95,7 +95,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         ///     Called when save failed to save.
         /// </summary>
-        protected virtual async UniTask OnSaveWriteFailedAsync()
+        protected virtual async UniTask OnSaveWriteFailed()
         {
             await UniTask.CompletedTask;
         }
@@ -110,7 +110,7 @@ namespace FastUnityCreationKit.Saving.Abstract
             {
                 Guard<SaveLogConfig>.Error(
                     $"Failed to cast {typeof(TSelfSealed).GetCompilableNiceFullName()} to {typeof(TSelfSealed).GetCompilableNiceFullName()}.");
-                await OnSaveWriteFailedAsync();
+                await OnSaveWriteFailed();
                 return false;
             }
 
@@ -118,12 +118,12 @@ namespace FastUnityCreationKit.Saving.Abstract
             if (string.IsNullOrEmpty(SaveDirectory))
             {
                 Guard<SaveLogConfig>.Error("Save directory is not set.");
-                await OnSaveWriteFailedAsync();
+                await OnSaveWriteFailed();
                 return false;
             }
 
             // Perform actions before save is saved
-            await BeforeSaveWrittenAsync();
+            await BeforeSaveWritten();
 
             // Invoke event for all scene objects
             SaveAPI.InvokeOnFileSaved(this);
@@ -153,7 +153,7 @@ namespace FastUnityCreationKit.Saving.Abstract
                 else
                 {
                     Guard<SaveLogConfig>.Error($"Failed to save {metadata.FileName}.");
-                    await OnSaveWriteFailedAsync();
+                    await OnSaveWriteFailed();
                     return false;
                 }
 
@@ -161,12 +161,12 @@ namespace FastUnityCreationKit.Saving.Abstract
                 if (!SaveAPI.WriteHeaderFile<TSelfSealed, TSerializationProvider>(GetSaveFilePath(HeaderName),
                         selfHeader))
                 {
-                    await OnSaveWriteFailedAsync();
+                    await OnSaveWriteFailed();
                     return false;
                 }
             }
 
-            await OnSaveWrittenAsync();
+            await OnSaveWritten();
             return true;
         }
 
@@ -229,7 +229,7 @@ namespace FastUnityCreationKit.Saving.Abstract
                 saveObj.SetupMetadata(); // We don't need to create new instances as they are loaded from disk
 
                 // Perform actions before save is loaded
-                await saveObj.BeforeSaveLoadedAsync();
+                await saveObj.BeforeSaveLoaded();
 
                 // Invoke event for all scene objects
                 SaveAPI.InvokeOnFileLoaded(saveObj);
@@ -239,11 +239,11 @@ namespace FastUnityCreationKit.Saving.Abstract
                 for (int index = 0; index < saveObj.Metadata.Count; index++)
                     await saveObj.GetOrLoadDataFor(saveObj.Metadata[index], false);
 
-                await saveObj.OnSaveLoadedAsync();
+                await saveObj.OnSaveLoaded();
             }
             else
             {
-                await saveObj.OnSaveLoadFailedAsync();
+                await saveObj.OnSaveLoadFailed();
             }
 
             // Return status and save object
