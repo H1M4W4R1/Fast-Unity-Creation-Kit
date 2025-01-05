@@ -76,10 +76,10 @@ namespace FastUnityCreationKit.Editor.Extensions
         }
 
         public static bool SetAddressableGroup<TObject>(
-            this TObject obj,
-            string groupName,
+            [NotNull] this TObject obj,
+            [NotNull] string groupName,
             bool readOnly = false,
-            params string[] labels)
+            [ItemNotNull] params string[] labels)
             where TObject : Object
         {
             AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;

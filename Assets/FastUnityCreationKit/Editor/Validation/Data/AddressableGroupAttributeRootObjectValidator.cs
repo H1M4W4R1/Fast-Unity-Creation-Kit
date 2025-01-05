@@ -8,19 +8,19 @@ using Sirenix.OdinInspector.Editor.Validation;
 using UnityEngine;
 
 [assembly: RegisterValidator(typeof(AddressableGroupAttributeRootObjectValidator))]
-
 namespace FastUnityCreationKit.Editor.Validation.Data
 {
-    // TODO: Same for GameObject prefabs
-    // TODO: Also add validators for AutoRegisterInAttribute
-    public sealed class AddressableGroupAttributeRootObjectValidator : RootObjectValidator<ScriptableObject>
+    public sealed class AddressableGroupAttributeRootObjectValidator : RootObjectValidator<Object>
     {
         protected override void Validate(ValidationResult result)
         {
-            // Check, if has AddressableGroupAttribute    
+            // Check, if object type has AddressableGroupAttribute    
             AddressableGroupAttribute attribute =
                 Value.GetType().GetCustomAttribute<AddressableGroupAttribute>(true);
             if (attribute == null) return;
+            
+            // Skip if value is null
+            if(!Value) return;
 
             // Ensure that the object is in the addressable group  
             AddressableGroupAttributeProcessor.TryUpdateAddressableGroup(Value);

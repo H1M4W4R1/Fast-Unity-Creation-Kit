@@ -44,6 +44,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
 
             // Ensure object is registered in specified databases
             foreach (AutoRegisterInAttribute registerAttribute in registerInAttribute)
+            {
                 if (obj.IsAddressable())
                 {
                     // Addressable object can only be registered in addressable database
@@ -70,6 +71,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
 
                     TryRegisterInContainer(obj, registerAttribute, SelfObjectReference);
                 }
+            }
         }
 
         private static void TryRegisterInContainer(
@@ -180,7 +182,7 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
             Type assetReferenceTType = typeof(AssetReferenceT<>).MakeGenericType(foundBaseClass);
             object assetReferenceT = reference.CastToReflected(assetReferenceTType);
 
-            // Create new KeyValuePair instance to be used in Contains and Add methods  
+            // Create new KeyValuePair instance to be used in Contains and Add methods   
             object[] parameters = {address, assetReferenceT};
             object kvp = Activator.CreateInstance(
                 typeof(AddressableReferenceEntry<>).MakeGenericType(foundBaseClass),
