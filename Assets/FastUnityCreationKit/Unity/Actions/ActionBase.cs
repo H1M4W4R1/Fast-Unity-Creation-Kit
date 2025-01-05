@@ -19,13 +19,11 @@ namespace FastUnityCreationKit.Unity.Actions
     [Serializable] [OnlySealed]
     public abstract class ActionBase
     {
-        private const string COOLDOWN_TIMER_WAS_SET = "@" + nameof(CooldownTimer) + " != null";
-
         /// <summary>
         ///     Timer to use for cooldown.
         /// </summary>
         [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_COOLDOWN)]
-        [ShowIf(COOLDOWN_TIMER_WAS_SET)] [CanBeNull]
+        [ShowIf(nameof(HasCooldown))] [CanBeNull]
         [field: SerializeField, HideInInspector]
         protected ActionCooldown CooldownTimer { get; set; }
 
@@ -133,7 +131,7 @@ namespace FastUnityCreationKit.Unity.Actions
         }
 
         [ShowInInspector]
-        [ShowIf(COOLDOWN_TIMER_WAS_SET)]
+        [ShowIf(nameof(HasCooldown))]
         [Button(nameof(ActionCooldown.Reset), ButtonSizes.Medium)]
         private void ResetCooldownInEditor()
         {
