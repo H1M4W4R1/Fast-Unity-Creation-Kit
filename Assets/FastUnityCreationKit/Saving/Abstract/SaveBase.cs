@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Core.Logging;
-using FastUnityCreationKit.Core.Serialization.Data;
 using FastUnityCreationKit.Core.Serialization.Interfaces;
 using FastUnityCreationKit.Core.Serialization.Providers;
 using FastUnityCreationKit.Saving.Interfaces;
@@ -11,6 +10,7 @@ using FastUnityCreationKit.Saving.Metadata;
 using FastUnityCreationKit.Saving.Utility;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using Sirenix.Utilities;
 using UnityEngine;
 using static FastUnityCreationKit.Core.Constants;
@@ -21,19 +21,14 @@ namespace FastUnityCreationKit.Saving.Abstract
     ///     Base class for save files.
     ///     Uses <see cref="OdinBinarySerializationProvider" /> for serialization.
     /// </summary>
-    [Serializable]
     public abstract class SaveBase<TSelfSealed> : SaveBase<TSelfSealed, OdinBinarySerializationProvider>
         where TSelfSealed : SaveBase<TSelfSealed>, new()
     {
-        protected SaveBase([NotNull] string directoryName) : base(directoryName)
-        {
-        }
     }
 
     /// <summary>
     ///     Base class for save files.
     /// </summary>
-    [Serializable]
     public abstract class SaveBase<TSelfSealed, TSerializationProvider> : SaveBase
         where TSelfSealed : SaveBase<TSelfSealed, TSerializationProvider>, new()
         where TSerializationProvider : ISerializationProvider, new()
@@ -43,7 +38,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         ///     Use <see cref="New" /> to create new instance of save file or
         ///     <see cref="Load" /> (alternatively: <see cref="TryLoad" />) to load existing save file.
         /// </summary>
-        protected SaveBase([NotNull] string directoryName) : base(directoryName)
+        protected SaveBase()
         {
         }
 
@@ -254,16 +249,14 @@ namespace FastUnityCreationKit.Saving.Abstract
             return (status, saveObj);
         }
     }
-    
-    [Serializable]
+
     public abstract class SaveBase
     {
 
         /// <summary>
         ///     Name of the save file, provided by user.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [Required] [TitleGroup(GROUP_CONFIGURATION)]
-        [field: SerializeField, HideInInspector]
+        [OdinSerialize] [ShowInInspector] [ReadOnly] [Required] [TitleGroup(GROUP_CONFIGURATION)]
         public string SaveName { get; set; }
 
         /// <summary>
@@ -285,8 +278,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         ///     This is main directory saves are stored in, should not end with '/'.
         /// </summary>
         [ShowInInspector] [ReadOnly] [Required] [TitleGroup(GROUP_CONFIGURATION)]
-        [field: SerializeField, HideInInspector]
-        public string SaveDirectory { get; protected set; }
+        public abstract string SaveDirectory { get; }
 
         /// <summary>
         ///     Name of the header file.
@@ -295,13 +287,11 @@ namespace FastUnityCreationKit.Saving.Abstract
         public virtual string HeaderName => SaveAPI.DEFAULT_HEADER_NAME;
 
         // Automatically set to current DateTime
-        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        [field: SerializeField, HideInInspector]
-        public UnityDateTime CreationDate { get; internal set; } = DateTime.UtcNow;
+        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
+        public DateTime CreationDate { get; internal set; } = DateTime.UtcNow;
 
-        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        [field: SerializeField, HideInInspector]
-        public UnityDateTime LastModified { get; internal set; } = DateTime.UtcNow;
+        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
+        public DateTime LastModified { get; internal set; } = DateTime.UtcNow;
 
         /// <summary>
         ///     Check if this save has data for specified save part.
@@ -477,11 +467,6 @@ namespace FastUnityCreationKit.Saving.Abstract
         [MethodImpl(MethodImplOptions.AggressiveInlining)] [NotNull] public string GetSaveFilePath(string fileName)
         {
             return $"{GetSaveFolder()}/{fileName}";
-        }
-
-        protected SaveBase([NotNull] string directoryName)
-        {
-            SaveDirectory = directoryName;
         }
     }
 }

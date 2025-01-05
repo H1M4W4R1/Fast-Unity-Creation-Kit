@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Unity.Time.Timers;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
-using UnityEngine;
+using Sirenix.Serialization;
 
 namespace FastUnityCreationKit.Unity.Actions
 {
@@ -14,7 +14,6 @@ namespace FastUnityCreationKit.Unity.Actions
     ///     <see cref="ActionBaseWithCooldown" /> instead.
     /// </summary>
     /// <seealso cref="ActionBaseWithCooldown" />
-    [Serializable]
     public abstract class ActionBase
     {
         protected const string GROUP_COOLDOWN = "Cooldown";
@@ -23,12 +22,12 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Timer to use for cooldown.
         /// </summary>
+        [OdinSerialize]
         [ShowInInspector]
         [ReadOnly]
         [TitleGroup(GROUP_COOLDOWN)]
         [ShowIf(COOLDOWN_TIMER_WAS_SET)]
         [CanBeNull]
-        [field: SerializeField, HideInInspector]
         protected ActionCooldown CooldownTimer { get; set; }
 
         /// <summary>
@@ -90,7 +89,6 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Cooldown for actions
         /// </summary>
-        [Serializable]
         public sealed class ActionCooldown : OneShotTimerBase
         {
             /// <summary>
@@ -113,8 +111,7 @@ namespace FastUnityCreationKit.Unity.Actions
             /// <summary>
             ///     Reference to action that owns this cooldown.
             /// </summary>
-            [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] [NotNull]
-            [field: SerializeReference, HideInInspector]
+            [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] [NotNull]
             private ActionBase OwnerReference { get; set; }
 
             protected override bool ResetTimeToFull => false;
