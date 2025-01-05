@@ -1,5 +1,4 @@
 ﻿using System;
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 
 namespace FastUnityCreationKit.Annotations.Editor
 {
