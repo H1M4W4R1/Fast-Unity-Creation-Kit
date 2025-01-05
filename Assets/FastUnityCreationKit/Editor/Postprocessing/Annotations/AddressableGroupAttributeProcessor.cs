@@ -6,6 +6,7 @@ using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Editor.Extensions;
 using FastUnityCreationKit.Editor.Postprocessing.Abstract;
 using JetBrains.Annotations;
+using UnityEditor;
 using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
@@ -27,6 +28,9 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
 
         internal static bool TryUpdateAddressableGroup([NotNull] Object obj)
         {
+            // Skip if value is not saved on disk (not a prefab)
+            if(!EditorUtility.IsPersistent(obj)) return false;
+            
             Type type = obj.GetType();
 
             // Check if object has AddressableGroupAttribute 

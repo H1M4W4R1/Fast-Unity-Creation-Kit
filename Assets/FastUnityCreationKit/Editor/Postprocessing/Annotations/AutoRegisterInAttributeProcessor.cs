@@ -36,6 +36,9 @@ namespace FastUnityCreationKit.Editor.Postprocessing.Annotations
 
         internal static void TryToRegisterInContainers([NotNull] Object obj)
         {
+            // Skip if value is not saved on disk (not a prefab)
+            if(!EditorUtility.IsPersistent(obj)) return;
+            
             Type type = obj.GetType();
 
             // Check if object has AutoRegisterInAttribute
