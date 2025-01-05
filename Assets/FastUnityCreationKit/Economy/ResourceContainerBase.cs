@@ -29,7 +29,7 @@ namespace FastUnityCreationKit.Economy
         /// <summary>
         ///     Resource that is stored in this container.
         /// </summary>
-        [CanBeNull] [ShowInInspector] [TitleGroup(GROUP_INFO)] [ReadOnly]
+        [CanBeNull]
         public ResourceBase Resource => ResourceDatabase.Instance.GetResource(Identifier);
         
         /// <summary>

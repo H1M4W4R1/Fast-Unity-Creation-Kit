@@ -32,7 +32,6 @@ namespace FastUnityCreationKit.Editor.Validation.Unity
                 $"{withType.GetNiceFullName()}";
 
             result.AddError(message);
-            Guard<ValidationLogConfig>.Error(message);
         }
 
         private int PerformOdinSerializeValidation(
