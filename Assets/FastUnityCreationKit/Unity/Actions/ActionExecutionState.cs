@@ -21,6 +21,15 @@ namespace FastUnityCreationKit.Unity.Actions
         Interrupted = 1 << 3,
         
         // Action execution was canceled by user.
-        Canceled = 1 << 4
+        Cancelled = 1 << 4,
+        
+        // Action is disabled and can't be executed
+        Disabled = 1 << 5,
+        
+        // Action can't be executed due to missing requirements
+        MissingRequirements = 1 << 6,
+        
+        // Action is not ready to be executed
+        NotReady = 1 << 7
     }
 }

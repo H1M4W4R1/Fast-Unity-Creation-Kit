@@ -129,6 +129,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         {
             RemainingTime += time;
             await OnTimePassed(-time);
+            await TryToFinish();
         }
         
         /// <summary>
@@ -148,6 +149,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             
             RemainingTime -= time;
             await OnTimePassed(time);
+            await TryToFinish();
         }
 
         /// <summary>
@@ -201,6 +203,9 @@ namespace FastUnityCreationKit.Unity.Time.Timers
 
             // Trigger events for the difference.
             await OnTimePassed(difference);
+            
+            // Check if timer has finished and act accordingly.
+            await TryToFinish();
         }
         
         /// <summary>
@@ -297,7 +302,14 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             double deltaTime = GetDeltaTime() * TimeScale;
             RemainingTime -= deltaTime;
             await OnTimePassed(deltaTime);
+            await TryToFinish();
+        }
 
+        /// <summary>
+        ///     Tries to finish the timer if it has elapsed.
+        /// </summary>
+        private async UniTask TryToFinish()
+        {
             // Check if timer has finished and act accordingly.
             if (HasFinished)
             {
