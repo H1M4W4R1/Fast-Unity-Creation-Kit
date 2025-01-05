@@ -1,9 +1,11 @@
 ﻿using FastUnityCreationKit.Economy;
+using FastUnityCreationKit.Unity;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 
 namespace FastUnityCreationKit.Examples._07_ResourceContainer
 {
-    public sealed class ExampleResourceContainerBehaviour : SerializedMonoBehaviour
+    public sealed class ExampleResourceContainerBehaviour : CKMonoBehaviour
     {
         [ShowInInspector]
         public ExampleResourceContainer ResourceContainer = null;

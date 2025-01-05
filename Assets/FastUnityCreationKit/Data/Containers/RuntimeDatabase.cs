@@ -10,9 +10,14 @@ namespace FastUnityCreationKit.Data.Containers
     /// <summary>
     ///     Runtime Database is used to store data that is created and destroyed during runtime.
     ///     It can be really helpful in terms of quickly gathering data that can be saved and loaded
-    ///     as this database implements ISaveableObject, which automatically registers and unregisters
-    ///     within SaveAPI.
+    ///     as this database implements <see cref="ISaveableObject"/>, which automatically registers
+    ///     and unregisters within SaveAPI.
     /// </summary>
+    /// <remarks>
+    ///     This database could be used to implement for example units storage for RTS genre games.
+    ///     Then you can quickly iterate through all units within <see cref="ISaveableObject.BeforeSaveSaved"/>
+    ///     method and write all units data to the save file.
+    /// </remarks>
     public abstract class RuntimeDatabase<TSelfSealed, TDataType> : DataContainerBase<TDataType>,
         ISingleton<TSelfSealed>, ISaveableObject
         where TSelfSealed : RuntimeDatabase<TSelfSealed, TDataType>, new()
