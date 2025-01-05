@@ -6,6 +6,7 @@ namespace FastUnityCreationKit.Unity.Actions
     /// <summary>
     ///     Action with cooldown.
     /// </summary>
+    [Serializable]
     public abstract class ActionBaseWithCooldown : ActionBase
     {
         private const string COOLDOWN_TO_STRING =
@@ -36,7 +37,7 @@ namespace FastUnityCreationKit.Unity.Actions
         // ReSharper disable NullableWarningSuppressionIsUsed
         [ShowInInspector] [TitleGroup("Cooldown")] [Unit(Units.Second)] public virtual float CooldownTime
         {
-            get => (float) CooldownTimer!.TotalTime.TotalSeconds;
+            get => (float) CooldownTimer!.TotalTime;
             set => CooldownTimer!.SetTotalTime(TimeSpan.FromSeconds(value));
         }
 

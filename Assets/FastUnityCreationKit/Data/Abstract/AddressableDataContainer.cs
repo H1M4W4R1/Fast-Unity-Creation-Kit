@@ -6,7 +6,6 @@ using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Data.Interfaces;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
@@ -19,6 +18,7 @@ namespace FastUnityCreationKit.Data.Abstract
     /// </summary>
     /// <typeparam name="TDataType">Type of data that is stored in the container.</typeparam>
     [NoDuplicates] [NoNullEntries] [OnlySealedElements]
+    [Serializable]
     public abstract class AddressableDataContainer<TDataType> : SerializedScriptableObject,
         IDataContainer<AddressableReferenceEntry<TDataType>>, IIndexableBy<AssetReferenceT<TDataType>, string>
         where TDataType : Object
@@ -35,8 +35,9 @@ namespace FastUnityCreationKit.Data.Abstract
         /// <summary>
         ///     Internal data container.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [OdinSerialize] [NonSerialized] [TitleGroup(GROUP_DEBUG, order: int.MaxValue)]
-        protected readonly AddressableDataContainerStorageObject internalContainer = new();
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, order: int.MaxValue)]
+        [SerializeField]
+        protected AddressableDataContainerStorageObject internalContainer = new();
 
         [ShowInInspector]
         [ReadOnly]
@@ -49,6 +50,7 @@ namespace FastUnityCreationKit.Data.Abstract
         /// <summary>
         ///     Internal data container storage object.
         /// </summary>
+        [Serializable]
         protected sealed class AddressableDataContainerStorageObject :
             DataContainerBase<AddressableReferenceEntry<TDataType>>,
             IIndexableBy<AssetReferenceT<TDataType>, string>

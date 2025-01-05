@@ -13,6 +13,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
     /// <summary>
     ///     Base class for timers.
     /// </summary>
+    [Serializable]
     public abstract class TimerBase : IDisposable
     {
         protected const string GROUP_CONFIGURATION = "Configuration";
@@ -22,7 +23,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         ///     Remaining time of the timer.
         /// </summary>
         // ReSharper disable once Unity.RedundantHideInInspectorAttribute, required for Odin
-        [OdinSerialize] [HideInInspector] private TimeSpan _remainingTime;
+        [SerializeField] [HideInInspector] private double _remainingTime;
 
         /// <summary>
         ///     Configure this timer with the total time specified in seconds.
@@ -36,15 +37,17 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </summary>
         protected TimerBase(TimeSpan totalTime)
         {
-            TotalTime = totalTime;
-            _remainingTime = totalTime;
+            TotalTime = totalTime.TotalSeconds;
+            _remainingTime = totalTime.TotalSeconds;
             CheckConfiguration();
         }
 
         /// <summary>
         ///     Enable or disable the timer.
         /// </summary>
-        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public bool Enabled
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] 
+        [field: SerializeField, HideInInspector]
+        public bool Enabled
         {
             get;
             private set;
@@ -53,7 +56,9 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     The time the timer is used to count down.
         /// </summary>
-        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] public TimeSpan TotalTime
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
+        [field: SerializeField, HideInInspector]
+        public double TotalTime
         {
             get;
             protected set;
@@ -76,7 +81,8 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         ///     when updating the timer - when global time scale is 0.5f and timer time scale
         ///     is 0.5f the timer will be updated at 0.25f (if it takes global time scale into account).
         /// </summary>
-        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] public float TimeScale
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)]
+        [field: SerializeField, HideInInspector] public float TimeScale
         {
             get;
             set;
@@ -110,13 +116,13 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     The time remaining until the timer finishes.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public TimeSpan RemainingTime => _remainingTime;
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public TimeSpan RemainingTime => TimeSpan.FromSeconds(_remainingTime);
 
         /// <summary>
         ///     True if the timer has finished.
         /// </summary>
         [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public bool HasFinished
-            => _remainingTime.Ticks <= 0;
+            => _remainingTime <= 0;
 
         public void Dispose()
         {
@@ -128,7 +134,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </summary>
         public async UniTask AddTime(TimeSpan time)
         {
-            _remainingTime += time;
+            _remainingTime += time.TotalSeconds;
             await OnTimePassed((float) -time.TotalSeconds);
         }
 
@@ -137,7 +143,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </summary>
         public async UniTask SubtractTime(TimeSpan time)
         {
-            _remainingTime -= time;
+            _remainingTime -= time.TotalSeconds;
             await OnTimePassed((float) time.TotalSeconds);
         }
 
@@ -177,13 +183,13 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             //
             // When time is larger than the remaining time, the difference will be negative.
             // So the time passed will be negative, which is correct.
-            TimeSpan difference = _remainingTime - time;
+            double difference = _remainingTime - time.TotalSeconds;
 
             // Set the new time.
-            _remainingTime = time;
+            _remainingTime = time.TotalSeconds;
 
             // Trigger events for the difference.
-            await OnTimePassed((float) difference.TotalSeconds);
+            await OnTimePassed((float) difference);
         }
 
         /// <summary>
@@ -192,7 +198,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </summary>
         public void SetTotalTime(TimeSpan time)
         {
-            TotalTime = time;
+            TotalTime = time.TotalSeconds;
         }
 
         /// <summary>
@@ -204,7 +210,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             if (Enabled) Stop(withEvents);
 
             // Reset the timer to full time or to zero. and trigger events.
-            _remainingTime = ResetTimeToFull || toFullTime ? TotalTime : TimeSpan.Zero;
+            _remainingTime = ResetTimeToFull || toFullTime ? TotalTime : 0d;
             if (withEvents) OnReset();
         }
 
@@ -261,7 +267,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             // Reduce timer time based on delta time
             // provided by time configuration.
             float deltaTime = GetDeltaTime() * TimeScale;
-            _remainingTime -= TimeSpan.FromSeconds(deltaTime);
+            _remainingTime -= deltaTime;
             await OnTimePassed(deltaTime);
 
             // Check if timer has finished and act accordingly.

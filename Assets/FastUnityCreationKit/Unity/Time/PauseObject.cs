@@ -14,7 +14,8 @@ namespace FastUnityCreationKit.Unity.Time
         /// <summary>
         ///     Identifier of the pause object.
         /// </summary>
-        [OdinSerialize] [ShowInInspector] [ReadOnly] public Snowflake128 Id { get; private set; }
+        [ShowInInspector] [ReadOnly] 
+        public Snowflake128 Id { get; private set; }
 
         /// <summary>
         ///     Creates a new pause object.

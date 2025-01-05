@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
@@ -30,9 +31,13 @@ namespace FastUnityCreationKit.Data.Containers
             Entry = (AssetReferenceT<TEntryType>) entry;
         }
 
-        [ShowInInspector] [ReadOnly] [OdinSerialize] public string Address { get; private set; }
+        [ShowInInspector] [ReadOnly] 
+        [field: SerializeField, HideInInspector]
+        public string Address { get; private set; }
 
-        [ShowInInspector] [ReadOnly] [OdinSerialize] public AssetReferenceT<TEntryType> Entry { get; private set; }
+        [ShowInInspector] [ReadOnly]
+        [field: SerializeField, HideInInspector]
+        public AssetReferenceT<TEntryType> Entry { get; private set; }
 
         public bool Equals(AddressableReferenceEntry<TEntryType> other)
         {

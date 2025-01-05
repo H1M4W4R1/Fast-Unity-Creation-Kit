@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Data.Interfaces;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Data.Abstract
 {
     /// <summary>
     ///     Represents a core data container that is used to store data of a specific type.
     /// </summary>
+    [Serializable]
     public abstract class DataContainerBase<TDataType> : IDataContainer<TDataType>
     {
         /// <summary>
         ///     Data storage.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [OdinSerialize] [NonSerialized] [Required]
-        protected readonly List<TDataType> data = new();
+        [ShowInInspector] [ReadOnly] [Required]
+        [SerializeField]
+        protected List<TDataType> data = new();
 
         public DataContainerBase()
         {
