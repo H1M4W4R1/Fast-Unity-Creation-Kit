@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.Economy;
 using FastUnityCreationKit.Unity;
+using FastUnityCreationKit.Unity.Actions;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
@@ -9,7 +10,7 @@ namespace FastUnityCreationKit.Examples._07_ResourceContainer
     {
         [ShowInInspector]
         public ExampleResourceContainer ResourceContainer = null;
-        
+
         [Button("Set-up resource container")]
         private void Start()
         {

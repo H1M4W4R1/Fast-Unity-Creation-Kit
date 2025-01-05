@@ -1,9 +1,11 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Unity.Time.Timers;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Unity.Actions
 {
@@ -14,6 +16,7 @@ namespace FastUnityCreationKit.Unity.Actions
     ///     <see cref="ActionBaseWithCooldown" /> instead.
     /// </summary>
     /// <seealso cref="ActionBaseWithCooldown" />
+    [Serializable] [OnlySealed]
     public abstract class ActionBase
     {
         protected const string GROUP_COOLDOWN = "Cooldown";
@@ -22,12 +25,9 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Timer to use for cooldown.
         /// </summary>
-        [OdinSerialize]
-        [ShowInInspector]
-        [ReadOnly]
-        [TitleGroup(GROUP_COOLDOWN)]
-        [ShowIf(COOLDOWN_TIMER_WAS_SET)]
-        [CanBeNull]
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_COOLDOWN)]
+        [ShowIf(COOLDOWN_TIMER_WAS_SET)] [CanBeNull]
+        [field: SerializeField, HideInInspector]
         protected ActionCooldown CooldownTimer { get; set; }
 
         /// <summary>
@@ -89,6 +89,7 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Cooldown for actions
         /// </summary>
+        [Serializable]
         public sealed class ActionCooldown : OneShotTimerBase
         {
             /// <summary>
@@ -111,7 +112,8 @@ namespace FastUnityCreationKit.Unity.Actions
             /// <summary>
             ///     Reference to action that owns this cooldown.
             /// </summary>
-            [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] [NotNull]
+            [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] [NotNull]
+            [field: SerializeReference, HideInInspector]
             private ActionBase OwnerReference { get; set; }
 
             protected override bool ResetTimeToFull => false;

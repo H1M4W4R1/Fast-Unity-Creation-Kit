@@ -1,11 +1,11 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Time.Enums;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Unity.Time.Timers
@@ -13,6 +13,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
     /// <summary>
     ///     Base class for timers.
     /// </summary>
+    [Serializable] [OnlySealed]
     public abstract class TimerBase : IDisposable
     {
         protected const string GROUP_CONFIGURATION = "Configuration";
@@ -22,41 +23,58 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         ///     Remaining time of the timer.
         /// </summary>
         // ReSharper disable once Unity.RedundantHideInInspectorAttribute, required for Odin
-        [OdinSerialize] [HideInInspector] private TimeSpan _remainingTime;
+        [SerializeField] [HideInInspector] [Unit(Units.Second)] 
+        private double _remainingTime;
 
+        /// <summary>
+        ///     Enable or disable the timer.
+        /// </summary>
+        [ReadOnly] [TitleGroup(GROUP_STATE)] [field: SerializeField, HideInInspector] 
+        public bool Enabled
+        {
+            get;
+            private set;
+        }
+        
+        /// <summary>
+        ///     The time the timer is used to count down.
+        /// </summary>
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] 
+        [field: SerializeField, HideInInspector]
+        public double TotalTime
+        {
+            get;
+            protected set;
+        }
+        
+        /// <summary>
+        ///     Time scale of the timer, also takes into account the global time scale
+        ///     when updating the timer - when global time scale is 0.5f and timer time scale
+        ///     is 0.5f the timer will be updated at 0.25f (if it takes global time scale into account).
+        /// </summary>
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] 
+        [field: SerializeField, HideInInspector]
+        public float TimeScale
+        {
+            get;
+            set;
+        } = 1f;
+        
         /// <summary>
         ///     Configure this timer with the total time specified in seconds.
         /// </summary>
-        protected TimerBase(float totalTimeSeconds) : this(TimeSpan.FromSeconds(totalTimeSeconds))
+        protected TimerBase([Unit(Units.Second)] double totalTimeSeconds)
         {
+            TotalTime = totalTimeSeconds;
+            _remainingTime = totalTimeSeconds;
+            CheckConfiguration();
         }
 
         /// <summary>
         ///     Configure this timer
         /// </summary>
-        protected TimerBase(TimeSpan totalTime)
+        protected TimerBase(TimeSpan totalTime) : this(totalTime.TotalSeconds)
         {
-            TotalTime = totalTime;
-            _remainingTime = totalTime;
-            CheckConfiguration();
-        }
-
-        /// <summary>
-        ///     Enable or disable the timer.
-        /// </summary>
-        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public bool Enabled
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        ///     The time the timer is used to count down.
-        /// </summary>
-        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] public TimeSpan TotalTime
-        {
-            get;
-            protected set;
         }
 
         /// <summary>
@@ -70,17 +88,6 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </summary>
         [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] [NotNull] public virtual string TimeFormat
             => @"hh\:mm\:ss";
-
-        /// <summary>
-        ///     Time scale of the timer, also takes into account the global time scale
-        ///     when updating the timer - when global time scale is 0.5f and timer time scale
-        ///     is 0.5f the timer will be updated at 0.25f (if it takes global time scale into account).
-        /// </summary>
-        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] public float TimeScale
-        {
-            get;
-            set;
-        } = 1f;
 
         /// <summary>
         ///     By default, the timer won't update when time is paused.
@@ -110,13 +117,14 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     The time remaining until the timer finishes.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public TimeSpan RemainingTime => _remainingTime;
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] [Unit(Units.Second)] 
+        public double RemainingTime => _remainingTime;
 
         /// <summary>
         ///     True if the timer has finished.
         /// </summary>
         [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public bool HasFinished
-            => _remainingTime.Ticks <= 0;
+            => _remainingTime <= 0;
 
         public void Dispose()
         {
@@ -126,10 +134,29 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     Used to add time to the timer (used to slow down the timer).
         /// </summary>
-        public async UniTask AddTime(TimeSpan time)
+        public async UniTask AddTime([Unit(Units.Second)] double time)
         {
             _remainingTime += time;
-            await OnTimePassed((float) -time.TotalSeconds);
+            await OnTimePassed(-time);
+        }
+        
+        /// <summary>
+        ///     Used to add time to the timer (used to slow down the timer).
+        /// </summary>
+        public async UniTask AddTime(TimeSpan time)
+        {
+            await AddTime(time.TotalSeconds);
+        }
+        
+        /// <summary>
+        ///     Subtract time from the timer (used to speed up the timer).
+        /// </summary>
+        public async UniTask SubtractTime([Unit(Units.Second)] double time)
+        {
+            if(time > _remainingTime) time = _remainingTime;
+            
+            _remainingTime -= time;
+            await OnTimePassed(time);
         }
 
         /// <summary>
@@ -137,8 +164,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </summary>
         public async UniTask SubtractTime(TimeSpan time)
         {
-            _remainingTime -= time;
-            await OnTimePassed((float) time.TotalSeconds);
+            await SubtractTime(time.TotalSeconds);
         }
 
         public async UniTask Advance(TimeSpan time)
@@ -146,9 +172,9 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             await SubtractTime(time);
         }
 
-        public async UniTask Advance(float time)
+        public async UniTask Advance([Unit(Units.Second)] double time)
         {
-            await SubtractTime(TimeSpan.FromSeconds(time));
+            await SubtractTime(time);
         }
 
         /// <summary>
@@ -167,32 +193,49 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             await SetRemainingTime(TimeSpan.Zero);
         }
 
-        /// <summary>
-        ///     Set the remaining time of the timer.
-        /// </summary>
-        public async UniTask SetRemainingTime(TimeSpan time)
+        public async UniTask SetRemainingTime([Unit(Units.Second)] double time)
         {
             // Compute the difference between the new time and the old time.
             // We do it in inverted fashion to handle it in OnTimePassed.
             //
             // When time is larger than the remaining time, the difference will be negative.
             // So the time passed will be negative, which is correct.
-            TimeSpan difference = _remainingTime - time;
+            double difference = _remainingTime - time;
+            
+            // If difference is larger than remaining time, set it to remaining time.
+            if(difference > _remainingTime) difference = _remainingTime;
 
             // Set the new time.
             _remainingTime = time;
 
             // Trigger events for the difference.
-            await OnTimePassed((float) difference.TotalSeconds);
+            await OnTimePassed(difference);
+        }
+        
+        /// <summary>
+        ///     Set the remaining time of the timer.
+        /// </summary>
+        public async UniTask SetRemainingTime(TimeSpan time)
+        {
+            await SetRemainingTime(time.TotalSeconds);
         }
 
+        /// <summary>
+        ///     Set the remaining time of the timer.
+        ///     Does not affect the total time of the timer.
+        /// </summary>
+        public void SetTotalTime([Unit(Units.Second)] double time)
+        {
+            SetTotalTime(TimeSpan.FromSeconds(time));
+        }
+        
         /// <summary>
         ///     Set the total time of the timer (used to reset the timer).
         ///     Does not affect the remaining time of current cycle.
         /// </summary>
         public void SetTotalTime(TimeSpan time)
         {
-            TotalTime = time;
+            TotalTime = time.TotalSeconds;
         }
 
         /// <summary>
@@ -204,7 +247,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             if (Enabled) Stop(withEvents);
 
             // Reset the timer to full time or to zero. and trigger events.
-            _remainingTime = ResetTimeToFull || toFullTime ? TotalTime : TimeSpan.Zero;
+            _remainingTime = ResetTimeToFull || toFullTime ? TotalTime : 0;
             if (withEvents) OnReset();
         }
 
@@ -260,8 +303,8 @@ namespace FastUnityCreationKit.Unity.Time.Timers
 
             // Reduce timer time based on delta time
             // provided by time configuration.
-            float deltaTime = GetDeltaTime() * TimeScale;
-            _remainingTime -= TimeSpan.FromSeconds(deltaTime);
+            double deltaTime = GetDeltaTime() * TimeScale;
+            _remainingTime -= deltaTime;
             await OnTimePassed(deltaTime);
 
             // Check if timer has finished and act accordingly.
@@ -305,7 +348,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     Called when time is reduced.
         /// </summary>
-        protected virtual UniTask OnTimePassed(float deltaTime)
+        protected virtual UniTask OnTimePassed([Unit(Units.Second)]  double deltaTime)
         {
             return UniTask.CompletedTask;
         }

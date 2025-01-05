@@ -34,10 +34,10 @@ namespace FastUnityCreationKit.Unity.Actions
         ///     Can be changed at runtime. Can be overriden to provide custom value.
         /// </summary>
         // ReSharper disable NullableWarningSuppressionIsUsed
-        [ShowInInspector] [TitleGroup("Cooldown")] [Unit(Units.Second)] public virtual float CooldownTime
+        [ShowInInspector] [TitleGroup("Cooldown")] [Unit(Units.Second)] public virtual double CooldownTime
         {
-            get => (float) CooldownTimer!.TotalTime.TotalSeconds;
-            set => CooldownTimer!.SetTotalTime(TimeSpan.FromSeconds(value));
+            get => (float) CooldownTimer!.TotalTime;
+            set => CooldownTimer!.SetTotalTime(value);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace FastUnityCreationKit.Unity.Actions
         [ShowInInspector]
         [ProgressBar(0, nameof(CooldownTime))]
         public float CooldownLeft
-            => CooldownTimer!.Enabled ? (float) CooldownTimer.RemainingTime.TotalSeconds : 0f;
+            => CooldownTimer!.Enabled ? (float) CooldownTimer.RemainingTime : 0f;
         // ReSharper restore NullableWarningSuppressionIsUsed
     }
 }
