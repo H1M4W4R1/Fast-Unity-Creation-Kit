@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using FastUnityCreationKit.Core.Extensions;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Editor.Validation.Unity;
 using FastUnityCreationKit.Unity;
@@ -16,13 +17,17 @@ namespace FastUnityCreationKit.Editor.Validation.Unity
 {
     public sealed class NoOdinSerializeOnCKMonoBehaviourRootObjectValidator : RootObjectValidator<CKMonoBehaviour>
     {
+        [CanBeNull] private ValidationResult _currentResult;
+
         protected override void Validate([NotNull] ValidationResult result)
         {
+            _currentResult = result;
+
             // Get type
             Type withType = Value.GetType();
 
-            // Check if type has ANY OdinSerializeAttribute
-            int count = PerformOdinSerializeValidation(result, withType);
+            int count = withType.PerformCascadeSearch(CheckOdinSerializeAttribute,
+                AddErrorWhenAttributeWasFound);
 
             // Check if count is 0, if not, add error as OdinSerialize is not allowed on CKMonoBehaviour
             if (count == 0) return;
@@ -32,73 +37,30 @@ namespace FastUnityCreationKit.Editor.Validation.Unity
                 $"{withType.GetNiceFullName()}";
 
             result.AddError(message);
+
+            _currentResult = null;
         }
 
-        private int PerformOdinSerializeValidation(
-            [NotNull] ValidationResult result,
-            [NotNull] Type type,
-            [CanBeNull] List<Type> verifiedTypes = null)
+        private bool CheckOdinSerializeAttribute([NotNull] MemberInfo memberInfo)
         {
-            // Initialize verified types
-            verifiedTypes ??= new List<Type>();
+            return memberInfo.GetCustomAttributes(typeof(OdinSerializeAttribute), false).Length != 0;
+        }
 
-            if (verifiedTypes.Any(vType => vType == type)) return 0;
-
-            // Add current type to verified types
-            verifiedTypes.Add(type);
-
-            // Check if type is class or struct, otherwise we ignore it
-            if (type is {IsClass: false, IsValueType: false}) return 0;
-
-            // Add all base classes to verified types            
-            Type bType = type.BaseType;
-            while (bType != null)
+        private void AddErrorWhenAttributeWasFound([NotNull] MemberInfo memberInfo)
+        {
+            if (_currentResult == null)
             {
-                // Add base type to verified types
-                verifiedTypes.Add(bType);
-                bType = bType.BaseType;
+                Guard<ValidationLogConfig>.Error("Current result is null, this should not happen.");
+                return;
             }
+            
+            // Check if member is property and has no setter
+            // those properties wouldn't be serialized anyway, so we can skip them
+            if(memberInfo is PropertyInfo { SetMethod: null }) return;
 
-            int counter = 0;
-
-            // Check all fields
-            foreach (FieldInfo field in type.GetFields(BindingFlags.Instance | BindingFlags.Public |
-                                                       BindingFlags.NonPublic))
-            {
-                // Check if field has OdinSerializeAttribute
-                if (field.GetCustomAttributes(typeof(OdinSerializeAttribute), false).Length > 0)
-                {
-                    result.AddError(
-                        $"Invalid [OdinSerialize] found in {field.GetNiceName()} field of {type.GetNiceFullName()} type.");
-                    counter++;
-                }
-
-                // Check internal type
-                counter += PerformOdinSerializeValidation(result, field.FieldType, verifiedTypes);
-            }
-
-            // Check all properties
-            foreach (PropertyInfo property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public |
-                                                                 BindingFlags.NonPublic))
-            {
-                // Skip properties without setter as they are read-only
-                // and attribute won't matter anyways
-                if(property.SetMethod == null) continue;
-                
-                // Check if property has OdinSerializeAttribute
-                if (property.GetCustomAttributes(typeof(OdinSerializeAttribute), false).Length > 0)
-                {
-                    result.AddError(
-                        $"Invalid [OdinSerialize] found in {property.GetNiceName()} property of {type.GetNiceFullName()} type.");
-                    counter++;
-                }
-
-                // Check property type
-                counter += PerformOdinSerializeValidation(result, property.PropertyType, verifiedTypes);
-            }
-
-            // Return counter
-            return counter;
+            if(memberInfo.DeclaringType == null) return;
+            _currentResult.AddError(
+                $"Non-allowed [OdinSerialize] found in {memberInfo.GetNiceName()} of {memberInfo.DeclaringType.GetNiceFullName()} type.");
         }
     }
 }

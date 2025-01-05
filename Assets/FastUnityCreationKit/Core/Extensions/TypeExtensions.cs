@@ -1,14 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using FastUnityCreationKit.Core.Extensions.Enums;
 using JetBrains.Annotations;
+using Sirenix.Serialization;
 using Sirenix.Utilities;
 
 namespace FastUnityCreationKit.Core.Extensions
 {
     public static class TypeExtensions
     {
+        /// <summary>
+        ///     Perform cascade search on the type - it scans all properties and fields
+        ///     of the type and all its base types for the specified attribute.
+        /// </summary>
+        /// <param name="onType">Type to perform search on</param>
+        /// <param name="memberSearchPredicate">Predicate to filter types, null means always true</param>
+        /// <param name="onFound">Action to perform when type is found, can be omitted</param>
+        /// <param name="foundTypes">List of found types</param>
+        /// <param name="skipCascadeOnTypeIfConditionsNotMet">Skip cascade search on type if conditions are not met</param>
+        /// <returns>Number of found types</returns>
+        public static int PerformCascadeSearch(
+            [NotNull] this Type onType,
+            [CanBeNull] Predicate<MemberInfo> memberSearchPredicate,
+            [CanBeNull] Action<MemberInfo> onFound,
+            [CanBeNull] List<Type> foundTypes = null,
+            bool skipCascadeOnTypeIfConditionsNotMet = true)
+        {
+            // Initialize variables
+            foundTypes ??= new List<Type>();
+            memberSearchPredicate ??= _ => true;
+            onFound ??= _ => { };
+
+            // Check if type is already found
+            if (foundTypes.Contains(onType)) return 0;
+
+            // Add current type to found types
+            foundTypes.Add(onType);
+
+            // Check if type is class or struct, otherwise we ignore it
+            if (onType is {IsClass: false, IsValueType: false}) return 0;
+
+            // Add all base classes to verified types            
+            Type bType = onType.BaseType;
+            while (bType != null)
+            {
+                // Add base type to verified types
+                if(!foundTypes.Contains(bType)) foundTypes.Add(bType);
+                bType = bType.BaseType;
+            }
+
+            int counter = 0;
+
+            // Check all fields
+            foreach (FieldInfo field in onType.GetFields(BindingFlags.Instance | BindingFlags.Public |
+                                                         BindingFlags.NonPublic))
+            {
+                // Check if conditions are met
+                if (memberSearchPredicate(field))
+                    onFound(field);
+                else if(skipCascadeOnTypeIfConditionsNotMet) continue;
+
+                // Increase counter by the result of the cascade search on field type
+                counter += PerformCascadeSearch(field.FieldType, memberSearchPredicate, onFound, foundTypes);
+            }
+
+            // Check all properties
+            foreach (PropertyInfo property in onType.GetProperties(BindingFlags.Instance | BindingFlags.Public |
+                                                                   BindingFlags.NonPublic))
+            {
+                // Check if conditions are met
+                if (memberSearchPredicate(property))
+                    onFound(property);
+                else if(skipCascadeOnTypeIfConditionsNotMet) continue;
+                    
+                // Increase counter by the result of the cascade search on property return type
+                counter += PerformCascadeSearch(property.PropertyType, memberSearchPredicate, onFound, foundTypes);
+            }
+
+            // Return counter
+            return counter;
+        }
+
         /// <summary>
         /// Gets nice name for the member
         /// e.g. GetNiceName() => "Get Nice Name"
