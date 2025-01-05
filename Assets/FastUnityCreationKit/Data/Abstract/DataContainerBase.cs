@@ -1,24 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using FastUnityCreationKit.Annotations.Editor;
 using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Data.Interfaces;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Data.Abstract
 {
     /// <summary>
     ///     Represents a core data container that is used to store data of a specific type.
     /// </summary>
-    [RequiresOdinSerialization]
-    public abstract class DataContainerBase<TDataType> : IDataContainer<TDataType>
+    [Serializable] [Polymorph]
+    public abstract class DataContainerBase<TDataType> : IDataContainer<TDataType>,
+        ISerializationCallbackReceiver
     {
         /// <summary>
-        ///     Data storage.
+        /// Serialized data of the container.
+        /// Data is serialized using Odin Serializer thus polymorphism is supported.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [OdinSerialize] [NonSerialized] [Required]
-        protected readonly List<TDataType> data = new();
+        [SerializeField] [HideInInspector] [ReadOnly] [BinaryData]
+        protected byte[] dataSerialized;
+        
+        /// <summary>
+        ///     Data storage. Not serialized as it's provided
+        ///     with custom serialization.
+        /// </summary>
+        [ShowInInspector] [ReadOnly] [NonSerialized] [Required]
+        protected List<TDataType> data = new();
 
         public DataContainerBase()
         {
@@ -85,6 +96,21 @@ namespace FastUnityCreationKit.Data.Abstract
         public virtual void RemoveAt(int index)
         {
             data.RemoveAt(index);
+        }
+
+        public void OnBeforeSerialize()
+        {
+            // Serialize internal container using Odin Serializer
+            dataSerialized = SerializationUtility.SerializeValue(data, DataFormat.Binary);
+        }
+
+        public void OnAfterDeserialize()
+        {
+            // Deserialize internal container using Odin Serializer
+            data = SerializationUtility.DeserializeValue<List<TDataType>>(dataSerialized, DataFormat.Binary);
+            
+            // Clear the serialized data to avoid consuming too much memory
+            dataSerialized = Array.Empty<byte>();
         }
     }
 }

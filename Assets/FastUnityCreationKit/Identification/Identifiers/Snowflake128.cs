@@ -5,6 +5,7 @@ using System.Text;
 using FastUnityCreationKit.Identification.Abstract.Identifiers;
 using JetBrains.Annotations;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Identification.Identifiers
 {
@@ -20,19 +21,19 @@ namespace FastUnityCreationKit.Identification.Identifiers
     ///     </ul>
     /// </summary>
     [StructLayout(LayoutKind.Explicit)] [Serializable]
-    public readonly struct Snowflake128 : IUniqueIdentifier, IEquatable<Snowflake128>
+    public struct Snowflake128 : IUniqueIdentifier, IEquatable<Snowflake128>
     {
         /// <summary>
         ///     Local counter for id creation
         /// </summary>
         private static uint idGeneratorCounter;
 
-        [FieldOffset(0)] public readonly int4 vectorized;
-        [FieldOffset(0)] public readonly long timestamp;
-        [FieldOffset(8)] public readonly uint identifierData;
-        [FieldOffset(12)] public readonly ushort additionalData;
-        [FieldOffset(14)] public readonly byte reserved;
-        [FieldOffset(15)] public readonly byte created;
+        [FieldOffset(0)] [SerializeField] [HideInInspector] private int4 vectorized;
+        [FieldOffset(0)] [SerializeField] [HideInInspector] private long timestamp;
+        [FieldOffset(8)] [SerializeField] [HideInInspector] private uint identifierData;
+        [FieldOffset(12)] [SerializeField] [HideInInspector] private ushort additionalData;
+        [FieldOffset(14)] [SerializeField] [HideInInspector] private byte reserved;
+        [FieldOffset(15)] [SerializeField] [HideInInspector] private byte created;
 
         /// <inheritdoc />
         public bool IsCreated => created == 1;

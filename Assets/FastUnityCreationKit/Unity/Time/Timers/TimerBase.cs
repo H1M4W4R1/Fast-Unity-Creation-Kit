@@ -7,6 +7,7 @@ using FastUnityCreationKit.Unity.Time.Enums;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Unity.Time.Timers
 {
@@ -16,20 +17,10 @@ namespace FastUnityCreationKit.Unity.Time.Timers
     [Serializable] [OnlySealed]
     public abstract class TimerBase : IDisposable
     {
-        protected const string GROUP_CONFIGURATION = "Configuration";
-        protected const string GROUP_STATE = "State";
-
-        /// <summary>
-        ///     Remaining time of the timer.
-        /// </summary>
-        // ReSharper disable once Unity.RedundantHideInInspectorAttribute, required for Odin
-        [SerializeField] [HideInInspector] [Unit(Units.Second)] 
-        private double _remainingTime;
-
         /// <summary>
         ///     Enable or disable the timer.
         /// </summary>
-        [ReadOnly] [TitleGroup(GROUP_STATE)] [field: SerializeField, HideInInspector] 
+        [ReadOnly] [TitleGroup(GROUP_INFO)] [field: SerializeField, HideInInspector] 
         public bool Enabled
         {
             get;
@@ -61,12 +52,18 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         } = 1f;
         
         /// <summary>
+        ///     The time remaining until the timer finishes.
+        /// </summary>
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_INFO)] [Unit(Units.Second)] 
+        public double RemainingTime { get; private set; }
+        
+        /// <summary>
         ///     Configure this timer with the total time specified in seconds.
         /// </summary>
         protected TimerBase([Unit(Units.Second)] double totalTimeSeconds)
         {
             TotalTime = totalTimeSeconds;
-            _remainingTime = totalTimeSeconds;
+            RemainingTime = totalTimeSeconds;
             CheckConfiguration();
         }
 
@@ -115,16 +112,10 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         public abstract bool DisposeOnElapsed { get; }
 
         /// <summary>
-        ///     The time remaining until the timer finishes.
-        /// </summary>
-        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] [Unit(Units.Second)] 
-        public double RemainingTime => _remainingTime;
-
-        /// <summary>
         ///     True if the timer has finished.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_STATE)] public bool HasFinished
-            => _remainingTime <= 0;
+        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_INFO)] public bool HasFinished
+            => RemainingTime <= 0;
 
         public void Dispose()
         {
@@ -136,7 +127,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </summary>
         public async UniTask AddTime([Unit(Units.Second)] double time)
         {
-            _remainingTime += time;
+            RemainingTime += time;
             await OnTimePassed(-time);
         }
         
@@ -153,9 +144,9 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </summary>
         public async UniTask SubtractTime([Unit(Units.Second)] double time)
         {
-            if(time > _remainingTime) time = _remainingTime;
+            if(time > RemainingTime) time = RemainingTime;
             
-            _remainingTime -= time;
+            RemainingTime -= time;
             await OnTimePassed(time);
         }
 
@@ -200,13 +191,13 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             //
             // When time is larger than the remaining time, the difference will be negative.
             // So the time passed will be negative, which is correct.
-            double difference = _remainingTime - time;
+            double difference = RemainingTime - time;
             
             // If difference is larger than remaining time, set it to remaining time.
-            if(difference > _remainingTime) difference = _remainingTime;
+            if(difference > RemainingTime) difference = RemainingTime;
 
             // Set the new time.
-            _remainingTime = time;
+            RemainingTime = time;
 
             // Trigger events for the difference.
             await OnTimePassed(difference);
@@ -247,7 +238,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             if (Enabled) Stop(withEvents);
 
             // Reset the timer to full time or to zero. and trigger events.
-            _remainingTime = ResetTimeToFull || toFullTime ? TotalTime : 0;
+            RemainingTime = ResetTimeToFull || toFullTime ? TotalTime : 0;
             if (withEvents) OnReset();
         }
 
@@ -304,7 +295,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             // Reduce timer time based on delta time
             // provided by time configuration.
             double deltaTime = GetDeltaTime() * TimeScale;
-            _remainingTime -= deltaTime;
+            RemainingTime -= deltaTime;
             await OnTimePassed(deltaTime);
 
             // Check if timer has finished and act accordingly.
@@ -394,7 +385,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
 
         [NotNull] public override string ToString()
         {
-            return _remainingTime.ToString(TimeFormat);
+            return RemainingTime.ToString(TimeFormat);
         }
     }
 }

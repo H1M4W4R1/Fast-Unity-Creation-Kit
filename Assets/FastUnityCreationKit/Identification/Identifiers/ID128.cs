@@ -5,17 +5,18 @@ using FastUnityCreationKit.Identification.Abstract.Identifiers;
 using JetBrains.Annotations;
 using Unity.Burst;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Identification.Identifiers
 {
     /// <summary>
     ///     Represents 128-bit non-unique identifier.
     /// </summary>
-    [BurstCompile] [StructLayout(LayoutKind.Explicit)]
-    public readonly struct ID128 : INumberIdentifier<uint4>, IEquatable<ID128>
+    [BurstCompile] [StructLayout(LayoutKind.Explicit)] [Serializable]
+    public struct ID128 : INumberIdentifier<uint4>, IEquatable<ID128>
     {
-        [FieldOffset(0)] public readonly uint4 value; // 16B -> 16B
-        [FieldOffset(16)] public readonly byte isCreated; // 1B -> 17B
+        [FieldOffset(0)] [SerializeField] [HideInInspector] private uint4 value; // 16B -> 16B
+        [FieldOffset(16)] [SerializeField] [HideInInspector] private byte isCreated; // 1B -> 17B
 
         /// <inheritdoc />
         public bool IsCreated => isCreated == 1;

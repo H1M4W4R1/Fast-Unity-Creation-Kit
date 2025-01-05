@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Core.Serialization.Interfaces;
 using FastUnityCreationKit.Core.Serialization.Providers;
@@ -50,6 +51,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         }
     }
 
+    [RequiresOdinSerialization] [Polymorph] // Must be odin-serialized to include polymorphism
     public abstract class SaveFileBase
     {
         /// <summary>

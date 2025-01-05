@@ -2,6 +2,7 @@
 {
     public sealed class Constants
     {
+        public const string GROUP_COOLDOWN = "Cooldown";
         public const string GROUP_DEBUG = "Debug";
         public const string GROUP_INFO = "Info";
         public const string GROUP_IDENTIFICATION = "Identification";

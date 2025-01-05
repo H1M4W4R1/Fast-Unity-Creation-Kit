@@ -1,4 +1,5 @@
 ﻿using System;
+using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Saving.Abstract;
 using FastUnityCreationKit.Saving.Utility;
 using JetBrains.Annotations;
@@ -27,6 +28,7 @@ namespace FastUnityCreationKit.Saving.Metadata
     /// <summary>
     ///     Save file metadata - base class for simple save file information.
     /// </summary>
+    [RequiresOdinSerialization] [Polymorph]
     public abstract class SaveFileMetadata
     {
         /// <summary>

@@ -1,14 +1,19 @@
-﻿using FastUnityCreationKit.Economy;
+﻿using System;
+using FastUnityCreationKit.Annotations.Editor;
+using FastUnityCreationKit.Economy;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Actions;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._07_ResourceContainer
 {
     public sealed class ExampleResourceContainerBehaviour : CKMonoBehaviour
     {
-        [ShowInInspector]
+        [ShowInInspector] [NoLabel] 
+        [field: SerializeField, HideInInspector]
+        [NamedSection("Resource container", 14)]
         public ExampleResourceContainer ResourceContainer = null;
 
         [Button("Set-up resource container")]

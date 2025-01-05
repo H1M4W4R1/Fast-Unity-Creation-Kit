@@ -5,22 +5,23 @@ using FastUnityCreationKit.Identification.Abstract.Identifiers;
 using JetBrains.Annotations;
 using Unity.Burst;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Identification.Identifiers
 {
     /// <summary>
     ///     Represents 64-bit non-unique identifier.
     /// </summary>
-    [BurstCompile] [StructLayout(LayoutKind.Explicit)]
-    public readonly struct ID64 : INumberIdentifier<ulong>, IEquatable<ID64>
+    [BurstCompile] [StructLayout(LayoutKind.Explicit)] [Serializable]
+    public struct ID64 : INumberIdentifier<ulong>, IEquatable<ID64>
     {
-        [FieldOffset(0)] public readonly uint4 vectorized; // 16B
+        [FieldOffset(0)] [SerializeField] [HideInInspector] private uint4 vectorized; // 16B
 
-        [FieldOffset(0)] public readonly ulong value; // 8B
-        [FieldOffset(8)] public readonly byte isCreated; // 1B
-        [FieldOffset(9)] private readonly byte reserved0; // 1B
-        [FieldOffset(10)] private readonly ushort reserved1; // 2B
-        [FieldOffset(12)] private readonly uint reserved2; // 4B
+        [FieldOffset(0)] [SerializeField] [HideInInspector] private ulong value; // 8B
+        [FieldOffset(8)] [SerializeField] [HideInInspector] private byte isCreated; // 1B
+        [FieldOffset(9)] [SerializeField] [HideInInspector] private byte reserved0; // 1B
+        [FieldOffset(10)] [SerializeField] [HideInInspector] private ushort reserved1; // 2B
+        [FieldOffset(12)] [SerializeField] [HideInInspector] private uint reserved2; // 4B
 
         /// <inheritdoc />
         public bool IsCreated => isCreated == 1;

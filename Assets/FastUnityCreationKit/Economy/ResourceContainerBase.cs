@@ -4,7 +4,6 @@ using FastUnityCreationKit.Core.Limits;
 using FastUnityCreationKit.Identification.Identifiers;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using Unity.Mathematics;
 using UnityEngine;
 using static FastUnityCreationKit.Core.Constants;
@@ -28,6 +27,12 @@ namespace FastUnityCreationKit.Economy
         public Snowflake128 Identifier { get; protected set; }
 
         /// <summary>
+        ///     Resource that is stored in this container.
+        /// </summary>
+        [CanBeNull] [ShowInInspector] [TitleGroup(GROUP_INFO)] [ReadOnly]
+        public ResourceBase Resource => ResourceDatabase.Instance.GetResource(Identifier);
+        
+        /// <summary>
         ///     Amount of resource stored currently in the container.
         ///     Does not take any limits into account.
         /// </summary>
@@ -36,8 +41,6 @@ namespace FastUnityCreationKit.Economy
         [OnValueChanged(nameof(CheckLimitsWithoutEvents))]
         [field: SerializeField, HideInInspector]
         public int Amount { get; internal set; }
-
-        [CanBeNull] public ResourceBase Resource => ResourceDatabase.Instance.GetResource(Identifier);
 
         public int ContainerMaxLimit =>
             (int) (this is IWithMaxLimit maxLimitContainer ? maxLimitContainer.MaxLimit : int.MaxValue);

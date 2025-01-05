@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Unity.Actions
 {
@@ -19,7 +20,6 @@ namespace FastUnityCreationKit.Unity.Actions
     [Serializable] [OnlySealed]
     public abstract class ActionBase
     {
-        protected const string GROUP_COOLDOWN = "Cooldown";
         private const string COOLDOWN_TIMER_WAS_SET = "@" + nameof(CooldownTimer) + " != null";
 
         /// <summary>

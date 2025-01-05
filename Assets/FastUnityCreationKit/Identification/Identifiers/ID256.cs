@@ -5,17 +5,18 @@ using FastUnityCreationKit.Identification.Abstract.Identifiers;
 using JetBrains.Annotations;
 using Unity.Burst;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Identification.Identifiers
 {
     /// <summary>
     ///     Represents 256-bit non-unique identifier.
     /// </summary>
-    [BurstCompile] [StructLayout(LayoutKind.Explicit)]
-    public readonly struct ID256 : INumberIdentifier<uint4x2>, IEquatable<ID256>
+    [BurstCompile] [StructLayout(LayoutKind.Explicit)] [Serializable]
+    public struct ID256 : INumberIdentifier<uint4x2>, IEquatable<ID256>
     {
-        [FieldOffset(0)] public readonly uint4x2 value; // 32B -> 32B
-        [FieldOffset(32)] public readonly byte isCreated; // 1B -> 33B
+        [FieldOffset(0)] [SerializeField] [HideInInspector] private uint4x2 value; // 32B -> 32B
+        [FieldOffset(32)] [SerializeField] [HideInInspector] private byte isCreated; // 1B -> 33B
 
 
         /// <inheritdoc />

@@ -1,9 +1,11 @@
-﻿using FastUnityCreationKit.Core.Limits;
+﻿using System;
+using FastUnityCreationKit.Core.Limits;
 using FastUnityCreationKit.Economy;
 using FastUnityCreationKit.Identification.Identifiers;
 
 namespace FastUnityCreationKit.Examples._07_ResourceContainer
 {
+    [Serializable]
     public sealed class ExampleResourceContainer : ResourceContainerBase,
         IWithMinLimit, IWithMaxLimit
     {

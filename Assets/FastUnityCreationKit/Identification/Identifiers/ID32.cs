@@ -4,19 +4,20 @@ using System.Runtime.InteropServices;
 using FastUnityCreationKit.Identification.Abstract.Identifiers;
 using JetBrains.Annotations;
 using Unity.Burst;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Identification.Identifiers
 {
     /// <summary>
     ///     Represents 32-bit non-unique identifier.
     /// </summary>
-    [BurstCompile] [StructLayout(LayoutKind.Explicit)]
-    public readonly struct ID32 : INumberIdentifier<uint>, IEquatable<ID32>
+    [BurstCompile] [StructLayout(LayoutKind.Explicit)] [Serializable]
+    public struct ID32 : INumberIdentifier<uint>, IEquatable<ID32>
     {
-        [FieldOffset(0)] public readonly uint value;
-        [FieldOffset(4)] public readonly byte isCreated;
-        [FieldOffset(5)] private readonly byte reserved0;
-        [FieldOffset(6)] private readonly ushort reserved1;
+        [FieldOffset(0)] [SerializeField] [HideInInspector] private uint value;
+        [FieldOffset(4)] [SerializeField] [HideInInspector] private byte isCreated;
+        [FieldOffset(5)]  [SerializeField] [HideInInspector]private byte reserved0;
+        [FieldOffset(6)]  [SerializeField] [HideInInspector]private ushort reserved1;
 
         /// <inheritdoc />
         public bool IsCreated => isCreated == 1;

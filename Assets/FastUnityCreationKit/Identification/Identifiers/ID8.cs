@@ -4,17 +4,18 @@ using System.Runtime.InteropServices;
 using FastUnityCreationKit.Identification.Abstract.Identifiers;
 using JetBrains.Annotations;
 using Unity.Burst;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Identification.Identifiers
 {
     /// <summary>
     ///     Simple 8-bit non-unique identifier.
     /// </summary>
-    [BurstCompile] [StructLayout(LayoutKind.Explicit)]
-    public readonly struct ID8 : INumberIdentifier<byte>, IEquatable<ID8>
+    [BurstCompile] [StructLayout(LayoutKind.Explicit)] [Serializable]
+    public struct ID8 : INumberIdentifier<byte>, IEquatable<ID8>
     {
-        [FieldOffset(0)] public readonly byte value;
-        [FieldOffset(1)] public readonly byte isCreated;
+        [FieldOffset(0)] [SerializeField] [HideInInspector] private byte value;
+        [FieldOffset(1)] [SerializeField] [HideInInspector] private byte isCreated;
 
         /// <inheritdoc />
         public bool IsCreated => isCreated == 1;

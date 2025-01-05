@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Core.Serialization.Interfaces;
 using FastUnityCreationKit.Core.Serialization.Providers;
@@ -250,6 +251,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         }
     }
 
+    [RequiresOdinSerialization] [Polymorph] // Must be serialized by Odin to prevent issues with polymorphism
     public abstract class SaveBase
     {
 
