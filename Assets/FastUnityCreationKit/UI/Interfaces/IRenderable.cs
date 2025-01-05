@@ -47,7 +47,11 @@ namespace FastUnityCreationKit.UI.Interfaces
             }
             else
             {
-                Guard<UserInterfaceLogConfig>.Error(
+                // Data context is not valid, rendering will be skipped
+                // this is debug-level log as it may be expected in some cases
+                // like progress without context provider (using IProgress) interface
+                // with UniTask as progress updater.
+                Guard<UserInterfaceLogConfig>.Debug(
                     $"Data context is not valid for {GetType().GetCompilableNiceFullName()}.");
             }
         }
