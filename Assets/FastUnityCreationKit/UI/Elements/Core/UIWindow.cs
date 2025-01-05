@@ -6,13 +6,14 @@ using JetBrains.Annotations;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.UI.Elements.Core
 {
     /// <summary>
     ///     Represents generic window. Can be for example your main menu or settings window.
     /// </summary>
-    [AddressableGroup(LocalConstants.UI_ADDRESSABLE_GROUP_TAG, LocalConstants.UI_WINDOWS_ADDRESSABLE_TAG)]
+    [AddressableGroup(UI_ADDRESSABLE_GROUP_TAG, UI_WINDOWS_ADDRESSABLE_TAG)]
     [RequireComponent(typeof(Canvas), typeof(CanvasGroup))]
     public abstract class UIWindow : UIPanel, IClickable
     {

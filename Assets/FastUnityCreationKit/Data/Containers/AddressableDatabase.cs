@@ -13,13 +13,14 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using Object = UnityEngine.Object;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Data.Containers
 {
     /// <summary>
     ///     Storage for addressable definitions.
     /// </summary>
-    [AddressableGroup(DatabaseConstants.DATABASE_ADDRESSABLE_TAG)]
+    [AddressableGroup(DATABASE_ADDRESSABLE_TAG)]
     public abstract class AddressableDatabase<TSelfSealed, TDataType> : AddressableDataContainer<TDataType>,
         IDatabase<TDataType>
         where TSelfSealed : AddressableDatabase<TSelfSealed, TDataType>, new()
@@ -102,16 +103,29 @@ namespace FastUnityCreationKit.Data.Containers
             }
         }
 
+        /// <summary>
+        /// Wait until the database is loaded.
+        /// </summary>
+        public async UniTask WaitUntilLoadedAsync()
+        {
+            // If database is already preloaded, return
+            if (IsPreloaded) return;
+            
+            // Run preload operation
+            if(!_isPreloading)
+                Preload();
+            
+            while (!_databaseInstanceAcquireHandle.IsDone)
+                await UniTask.Yield();
+        }
+        
         [NotNull] public TSelfSealed EnsurePreloaded()
         {
             // If database is already preloaded, return the instance
             if (IsPreloaded) return (TSelfSealed) this;
-            
+
             // Preload the database
-            UniTask preloadOperation = Preload();
-                
-            // Wait for the operation to complete, fail or be cancelled
-            while (preloadOperation.Status == UniTaskStatus.Pending) ;
+            Preload();
 
             return (TSelfSealed) this;
         }
@@ -119,28 +133,18 @@ namespace FastUnityCreationKit.Data.Containers
         /// <summary>
         ///     Preload the database.
         /// </summary>
-        public async UniTask Preload(bool waitForComplete = true)
-        {
-            if (waitForComplete)
-                await _Preload();
-            else
-                _Preload().Forget();
-        }
-
-        /// <summary>
-        ///     Internal preload method. Used to prevent multiple preloads.
-        /// </summary>
-        private async UniTask _Preload()
+        public void Preload(bool waitForComplete = true)
         {
             // If database is not yet preloaded and preload operation is not running
             if (!IsPreloaded && !_isPreloading)
             {
                 _isPreloading = true;
 
-                // Load resource locations to prevent exceptions being
+                // Load resource locations to prevent exceptions being 
                 // thrown left and right due to bad architecture of Addressables package.
-                IList<IResourceLocation> resourceLocations =
-                    await Addressables.LoadResourceLocationsAsync(addressableTags, MergeMode).Task;
+                IList<IResourceLocation> resourceLocations = Addressables
+                    .LoadResourceLocationsAsync(addressableTags, MergeMode)
+                    .WaitForCompletion();
 
                 // Update resource locations to only include objects of type TDataType
                 List<string> resourceKeys = resourceLocations.Where(IsValidLocation)
@@ -167,11 +171,15 @@ namespace FastUnityCreationKit.Data.Containers
                         _preloadedObjectsContainer.Add(foundObject);
                         _preloadedObjectKeys.Add(foundObject.name);
                     }, MergeMode);
-
+                
+                // Switch the flag off when the operation is completed
+                _preloadOperationHandle.Completed += handle =>
+                {
+                    _isPreloading = false;
+                };
 
                 // Wait for the operation to complete if required
-                await _preloadOperationHandle.Task;
-                _isPreloading = false;
+                if (waitForComplete) _preloadOperationHandle.WaitForCompletion();
             }
 
             // Increase preload count 
@@ -197,16 +205,25 @@ namespace FastUnityCreationKit.Data.Containers
 
         public void Unload()
         {
+            if (_preloadCount == 0) return;
+
             // Reduce preload count
             _preloadCount--;
             if (_preloadCount > 0) return;
 
             // Unload the handle
-            if (_preloadOperationHandle.IsValid()) Addressables.Release(_preloadOperationHandle);
+            if (_preloadOperationHandle.IsValid())
+            {
+                _preloadOperationHandle.WaitForCompletion();
+                Addressables.Release(_preloadOperationHandle);
+            }
+
             _preloadOperationHandle = default;
 
             _preloadedObjectsContainer.Clear();
             _preloadedObjectKeys.Clear();
+
+            _isPreloading = false;
         }
 
         [CanBeNull] public TDataType GetElementAt(int index)

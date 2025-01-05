@@ -13,6 +13,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using Sirenix.Utilities;
 using UnityEngine;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Saving.Abstract
 {
@@ -251,8 +252,6 @@ namespace FastUnityCreationKit.Saving.Abstract
 
     public abstract class SaveBase
     {
-        protected const string GROUP_DEBUG = "Debug";
-        protected const string GROUP_CONFIGURATION = "Configuration";
 
         /// <summary>
         ///     Name of the save file, provided by user.

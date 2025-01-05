@@ -1,17 +1,17 @@
 ﻿using FastUnityCreationKit.Annotations.Unity;
-using FastUnityCreationKit.Data;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Identification.Identifiers;
 using JetBrains.Annotations;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Economy
 {
-    [AutoCreatedObject(DatabaseConstants.DATABASE_DIRECTORY)]
+    [AutoCreatedObject(DATABASE_DIRECTORY)]
     public sealed class ResourceDatabase : AddressableDatabase<ResourceDatabase, ResourceBase>
     {
         public ResourceDatabase()
         {
-            addressableTags.Add(LocalConstants.RESOURCE_ADDRESSABLE_TAG);
+            addressableTags.Add(RESOURCE_ADDRESSABLE_TAG);
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace FastUnityCreationKit.Economy
             for (int i = 0; i < PreloadedCount; i++)
             {
                 ResourceBase resource = GetElementAt(i);
-                if (!resource) continue;
+                if (ReferenceEquals(resource, null)) continue;
 
                 // If resource has the same identifier
                 if (resource.Id == identifier) return resource;
@@ -48,8 +48,6 @@ namespace FastUnityCreationKit.Economy
             for (int i = 0; i < PreloadedCount; i++)
             {
                 ResourceBase resource = GetElementAt(i);
-                if (!resource) continue;
-
                 if (resource is TResource castedResource) return castedResource;
             }
 

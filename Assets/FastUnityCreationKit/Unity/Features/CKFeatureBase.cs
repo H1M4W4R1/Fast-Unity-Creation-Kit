@@ -3,6 +3,7 @@ using FastUnityCreationKit.Unity.Time.Enums;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Unity.Features
 {

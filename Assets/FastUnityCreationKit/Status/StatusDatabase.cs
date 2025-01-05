@@ -1,21 +1,21 @@
 ﻿using FastUnityCreationKit.Annotations.Unity;
-using FastUnityCreationKit.Data;
 using FastUnityCreationKit.Data.Containers;
 using FastUnityCreationKit.Identification.Identifiers;
 using FastUnityCreationKit.Status.Abstract;
 using JetBrains.Annotations;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Status
 {
     /// <summary>
     ///     Database for status.
     /// </summary>
-    [AutoCreatedObject(DatabaseConstants.DATABASE_DIRECTORY)]
+    [AutoCreatedObject(DATABASE_DIRECTORY)]
     public sealed class StatusDatabase : AddressableDatabase<StatusDatabase, StatusBase>
     {
         public StatusDatabase()
         {
-            addressableTags.Add(LocalConstants.STATUS_ADDRESSABLE_TAG);
+            addressableTags.Add(STATUS_ADDRESSABLE_TAG);
         }
 
         /// <summary>

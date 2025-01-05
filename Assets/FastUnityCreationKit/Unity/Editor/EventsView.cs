@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using FastUnityCreationKit.Core.Extensions;
-using FastUnityCreationKit.Core.Extensions.Enums;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Global;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
 using JetBrains.Annotations;
-using Sirenix.Utilities;
 
 namespace FastUnityCreationKit.Unity.Editor
 {

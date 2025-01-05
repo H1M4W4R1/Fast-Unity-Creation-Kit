@@ -5,7 +5,7 @@ using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Core.Limits;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Identification;
-using FastUnityCreationKit.Status.Interfaces;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Status.Abstract
 {
@@ -18,8 +18,8 @@ namespace FastUnityCreationKit.Status.Abstract
     /// <remarks>
     ///     Supports int64 limits.
     /// </remarks>
-    [AutoCreatedObject(LocalConstants.STATUS_OBJECT_DIRECTORY)]
-    [AddressableGroup(LocalConstants.STATUS_ADDRESSABLE_TAG)]
+    [AutoCreatedObject(STATUS_OBJECT_DIRECTORY)]
+    [AddressableGroup(STATUS_ADDRESSABLE_TAG)]
     [AutoRegisterIn(typeof(StatusDatabase))]
     public abstract class StatusBase : UniqueDefinitionBase
     {

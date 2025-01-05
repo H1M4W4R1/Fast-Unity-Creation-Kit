@@ -1,42 +1,16 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Core.Limits;
-using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Identification.Identifiers;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using Unity.Mathematics;
+using UnityEngine;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Economy
 {
-    /// <summary>
-    ///     This is an implementation of container for specific resource type.     
-    /// </summary>
-    /// <typeparam name="TResourceType">Type of resource that this container can store.</typeparam>
-    /// <remarks>
-    ///     Methods can be overriden to implement custom logic like health resource can't be taken
-    ///     if entity is invulnerable or can't be added if entity is dead.
-    /// </remarks>
-    public abstract class ResourceContainerBase<TResourceType> : ResourceContainerBase
-        where TResourceType : ResourceBase, new()
-    {
-        public ResourceContainerBase()
-        {
-            // Get resource from database
-            TResourceType resource = ResourceDatabase.Instance.GetResource<TResourceType>();
-            if (resource == null)
-            {
-                Guard<ValidationLogConfig>.Fatal(
-                    $"Resource of type {typeof(TResourceType).Name} was not found in the database.");
-                return;
-            }
-
-            // Assign container identifier to guarantee that resource is set
-            Identifier = resource.Id;
-        }
-    }
-
     /// <summary>
     ///     This is default implementation of a resource container.
     /// </summary>
@@ -44,86 +18,130 @@ namespace FastUnityCreationKit.Economy
     ///     Methods can be overriden to implement custom logic like health resource can't be taken
     ///     if entity is invulnerable or can't be added if entity is dead.
     /// </remarks>
-    public abstract class ResourceContainerBase
+    [Serializable] public abstract class ResourceContainerBase
     {
-        protected const string GROUP_INFO = "Info";
-
         /// <summary>
         ///     Resource identifier. This is used to get the resource from the database.
         /// </summary>
-        [OdinSerialize] [ShowInInspector] [TitleGroup(GROUP_INFO, order: int.MinValue)] [ReadOnly]
+        [ShowInInspector] [TitleGroup(GROUP_INFO, order: int.MinValue)] [ReadOnly]
+        [field: SerializeField, HideInInspector]
         public Snowflake128 Identifier { get; protected set; }
 
         /// <summary>
         ///     Amount of resource stored currently in the container.
         ///     Does not take any limits into account.
         /// </summary>
-        [OdinSerialize] [ShowInInspector] [TitleGroup(GROUP_INFO)] [ReadOnly] public long Amount
-        {
-            get;
-            internal set;
-        }
+        [ShowInInspector]
+        [TitleGroup(GROUP_INFO)]
+        [OnValueChanged(nameof(CheckLimitsWithoutEvents))]
+        [field: SerializeField, HideInInspector]
+        public int Amount { get; internal set; }
 
         [CanBeNull] public ResourceBase Resource => ResourceDatabase.Instance.GetResource(Identifier);
 
-        public long ContainerMaxLimit =>
-            (long) (this is IWithMaxLimit maxLimitContainer ? maxLimitContainer.MaxLimit : long.MaxValue);
+        public int ContainerMaxLimit =>
+            (int) (this is IWithMaxLimit maxLimitContainer ? maxLimitContainer.MaxLimit : int.MaxValue);
 
-        public long ContainerMinLimit =>
-            (long) (this is IWithMinLimit minLimitContainer ? minLimitContainer.MinLimit : 0);
+        public int ContainerMinLimit =>
+            (int) (this is IWithMinLimit minLimitContainer ? minLimitContainer.MinLimit : 0);
 
-        public long ResourceMaxLimit =>
-            (long) (Resource is IWithMaxLimit maxLimitResource ? maxLimitResource.MaxLimit : long.MaxValue);
+        public int ResourceMaxLimit =>
+            (int) (Resource is IWithMaxLimit maxLimitResource ? maxLimitResource.MaxLimit : int.MaxValue);
 
-        public long ResourceMinLimit =>
-            (long) (Resource is IWithMinLimit minLimitResource ? minLimitResource.MinLimit : 0);
+        public int ResourceMinLimit =>
+            (int) (Resource is IWithMinLimit minLimitResource ? minLimitResource.MinLimit : 0);
+
+        /// <summary>
+        /// Checks if the container or resource has a maximum limit.
+        /// </summary>
+        public bool HasMaxLimit => MaximumResourceStored < int.MaxValue;
+
+        /// <summary>
+        /// Checks if the container or resource has a minimum limit.
+        /// </summary>
+        public bool HasMinLimit => MinimumResourceStored != 0;
+
+        /// <summary>
+        /// Maximum amount of resource that can be stored in this container.
+        /// </summary>
+        [ShowInInspector] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] [ReadOnly] [ShowIf(nameof(HasMaxLimit))]
+        public int MaximumResourceStored => math.min(ResourceMaxLimit, ContainerMaxLimit);
+
+        /// <summary>
+        /// Minimum amount of resource that can be stored in this container.
+        /// </summary>
+        [ShowInInspector] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] [ReadOnly] [ShowIf(nameof(HasMinLimit))]
+        public int MinimumResourceStored
+        {
+            get
+            {
+                // We need to custom-handle minimum limit as with default value set to 0
+                // math.max would cause issues with negative values.
+                int limitedMinResource = (Resource is IWithMinLimit) ? ResourceMinLimit : int.MinValue;
+                int limitedMinContainer = (this is IWithMinLimit) ? ContainerMinLimit : int.MinValue;
+
+                return math.max(limitedMinResource, limitedMinContainer);
+            }
+        }
 
         /// <summary>
         ///     Space left in this container that takes into account both resource and container limits.
         /// </summary>
-        public long SpaceLeft => math.min(ResourceMaxLimit, ContainerMaxLimit) - Amount;
+        [HideInInspector]
+        [TitleGroup(GROUP_INFO)]
+        [ReadOnly]
+        [ShowIf(nameof(HasMaxLimit))]
+        [ProgressBar(min: 0, maxGetter: nameof(ResourceSpace))]
+        public int SpaceLeft => MaximumResourceStored - Amount;
 
         /// <summary>
         ///     Amount of resource left in this container that takes into account both resource and container limits.
         /// </summary>
-        public long AmountLeft => Amount - math.max(ResourceMinLimit, ContainerMinLimit);
+        [ShowInInspector]
+        [TitleGroup(GROUP_INFO)]
+        [ReadOnly]
+        [ProgressBar(min: 0, maxGetter: nameof(ResourceSpace))]
+        public int AmountLeft => Amount - MinimumResourceStored;
 
         /// <summary>
         ///     Checks if the container is empty (there is no resource).
         /// </summary>
-        public bool IsEmpty => Amount == 0;
-
-        /// <summary>
-        ///     Checks if the container has no resource left (container is at minimum limit)
-        /// </summary>
-        public bool HasAvailableResource => AmountLeft == 0;
+        [ShowInInspector] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] [ReadOnly] public bool IsEmpty
+            => Amount == MinimumResourceStored;
 
         /// <summary>
         ///     Checks if the container is full (is at maximum limit).
         /// </summary>
-        public bool IsFull => SpaceLeft == 0;
+        [ShowInInspector] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] [ReadOnly] public bool IsFull
+            => SpaceLeft == 0;
 
-        protected virtual async UniTask OnResourceAddedAsync(long amount)
+        /// <summary>
+        /// Total space in this container that can be used for resource.
+        /// </summary>
+        [HideInInspector] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] [ReadOnly] public int ResourceSpace
+            => MaximumResourceStored - MinimumResourceStored;
+
+        protected virtual async UniTask OnResourceAddedAsync(int amount)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceRemovedAsync(long amount)
+        protected virtual async UniTask OnResourceRemovedAsync(int amount)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceAddFailedAsync(long amount, long spaceLeft)
+        protected virtual async UniTask OnResourceAddFailedAsync(int amount, int spaceLeft)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceRemoveFailedAsync(long amount, long amountLeft)
+        protected virtual async UniTask OnResourceRemoveFailedAsync(int amount, int amountLeft)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceAmountChangedAsync(long oldAmount, long newAmount)
+        protected virtual async UniTask OnResourceAmountChangedAsync(int oldAmount, int newAmount)
         {
             await UniTask.CompletedTask;
         }
@@ -134,10 +152,10 @@ namespace FastUnityCreationKit.Economy
         /// <param name="amount">Amount of resource to add.</param>
         /// <param name="force">Force add resource even if it exceeds the limit.</param>
         /// <returns>Amount of resource that was NOT added.</returns>
-        public virtual async UniTask<long> Add(long amount, bool force = true)
+        public virtual async UniTask<int> Add(int amount, bool force = true)
         {
-            long startAmount = Amount;
-            long expectedAmount = Amount + amount;
+            int startAmount = Amount;
+            int expectedAmount = Amount + amount;
 
             // Check if amount exceeds max limit
             if (!HasSpaceFor(amount) && !force)
@@ -156,10 +174,10 @@ namespace FastUnityCreationKit.Economy
             await CheckLimitsAndRaiseEvents();
 
             // Get added amount and call events
-            long addedAmount = Amount - startAmount;
+            int addedAmount = Amount - startAmount;
 
             // Prevent null reference exception
-            if (ReferenceEquals(Resource, null)) return 0L;
+            if (ReferenceEquals(Resource, null)) return 0;
 
             await Resource.OnResourceAddedAsync(this, addedAmount);
             await OnResourceAddedAsync(addedAmount);
@@ -167,7 +185,7 @@ namespace FastUnityCreationKit.Economy
             await OnResourceAmountChangedAsync(startAmount, Amount);
 
             // Check if amount is equal to expected amount
-            return Amount == expectedAmount ? 0L : expectedAmount - Amount;
+            return Amount == expectedAmount ? 0 : expectedAmount - Amount;
         }
 
         /// <summary>
@@ -175,9 +193,9 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         /// <param name="amount">Amount of resource to take.</param>
         /// <returns>True if the resource was taken, otherwise false.</returns>
-        public virtual async UniTask<bool> TryTake(long amount)
+        public virtual async UniTask<bool> TryTake(int amount)
         {
-            long amountLeft = await Take(amount, false);
+            int amountLeft = await Take(amount, false);
             return amountLeft == 0;
         }
 
@@ -187,10 +205,10 @@ namespace FastUnityCreationKit.Economy
         /// <param name="amount">Amount of resource to take.</param>
         /// <param name="force">Force take resource even if it exceeds the limit.</param>
         /// <returns>Amount of resource that was NOT taken.</returns>
-        public virtual async UniTask<long> Take(long amount, bool force = true)
+        public virtual async UniTask<int> Take(int amount, bool force = true)
         {
-            long startAmount = Amount;
-            long expectedAmount = Amount - amount;
+            int startAmount = Amount;
+            int expectedAmount = Amount - amount;
 
             // Check if amount is less than min limit, if so, return false when force is false
             if (!HasEnough(amount) && !force)
@@ -208,10 +226,10 @@ namespace FastUnityCreationKit.Economy
             await CheckLimitsAndRaiseEvents();
 
             // Get removed amount and call events
-            long removedAmount = startAmount - Amount;
+            int removedAmount = startAmount - Amount;
 
             // Prevent null reference exception
-            if (ReferenceEquals(Resource, null)) return 0L;
+            if (ReferenceEquals(Resource, null)) return 0;
 
             await Resource.OnResourceRemovedAsync(this, removedAmount);
             await OnResourceRemovedAsync(removedAmount);
@@ -221,16 +239,16 @@ namespace FastUnityCreationKit.Economy
             // Check if amount is equal to expected amount
             // expectedAmount will be always lower than Amount, so
             // we invert subtraction to get positive value
-            return Amount == expectedAmount ? 0L : expectedAmount - Amount;
+            return Amount == expectedAmount ? 0 : expectedAmount - Amount;
         }
 
         /// <summary>
         ///     Sets the amount of resource in the container.
         /// </summary>
         /// <param name="amount">Amount of resource to set.</param>
-        public virtual async UniTask SetAmount(long amount)
+        public virtual async UniTask SetAmount(int amount)
         {
-            long oldAmount = Amount;
+            int oldAmount = Amount;
             Amount = amount;
             await CheckLimitsAndRaiseEvents();
 
@@ -264,7 +282,7 @@ namespace FastUnityCreationKit.Economy
         /// <param name="amount">Amount of resource to check.</param>
         /// <returns>True if the container has the resource, otherwise false.</returns>
         /// <remarks>Does not take limits into account!</remarks>
-        public virtual bool Has(long amount)
+        public virtual bool Has(int amount)
         {
             return Amount >= amount;
         }
@@ -275,7 +293,7 @@ namespace FastUnityCreationKit.Economy
         /// <param name="amount">Amount of resource to check.</param>
         /// <returns>True if the container has enough resource, otherwise false.</returns>
         /// <remarks>Takes limits into account!</remarks>
-        public virtual bool HasEnough(long amount)
+        public virtual bool HasEnough(int amount)
         {
             return AmountLeft >= amount;
         }
@@ -287,10 +305,10 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         /// <param name="amount">Amount of resource to check.</param>
         /// <returns>True if the container can store the resource, otherwise false.</returns>
-        public virtual bool CanStore(long amount)
+        public virtual bool CanStore(int amount)
         {
             // Get max limit for resource
-            long maxLimit = ResourceMaxLimit < ContainerMaxLimit ? ResourceMaxLimit : ContainerMaxLimit;
+            int maxLimit = ResourceMaxLimit < ContainerMaxLimit ? ResourceMaxLimit : ContainerMaxLimit;
             return amount <= maxLimit;
         }
 
@@ -300,7 +318,7 @@ namespace FastUnityCreationKit.Economy
         /// </summary>
         /// <param name="amount">Amount of resource to check.</param>
         /// <returns>True if the container has space for the resource, otherwise false.</returns>
-        public virtual bool HasSpaceFor(long amount)
+        public virtual bool HasSpaceFor(int amount)
         {
             return SpaceLeft >= amount;
         }
@@ -315,42 +333,42 @@ namespace FastUnityCreationKit.Economy
             return UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask CheckLimitsAndRaiseEvents()
+        private void CheckLimitsWithoutEvents() => _ = CheckLimitsAndRaiseEvents(false);
+
+        protected virtual async UniTask CheckLimitsAndRaiseEvents(bool withEvents = true)
         {
             // Check if resource is null
             if (ReferenceEquals(Resource, null)) return;
 
-            // Acquire limit information from referenced status
-            // Beware that this only ensures resource limits not container limits to prevent 
-            // events being raised with container limits.
-            LimitHit limitHit = Resource.CheckLimitsFor(this);
-            switch (limitHit)
+            // Check if resource is at max limit
+            if (Amount > MaximumResourceStored)
             {
-                // Check if max limit is reached
-                case LimitHit.UpperLimitHit: await Resource.OnMaxLimitReached(this); break;
-                case LimitHit.LowerLimitHit: await Resource.OnMinLimitReached(this); break;
-                case LimitHit.None: break;
-                default: throw new NotSupportedException();
+                Amount = MaximumResourceStored;
+                if (withEvents)
+                {
+                    await Resource.OnMaxLimitReachedAsync(this);
+                    await OnMaxLimitReachedAsync();
+                }
             }
 
-            // Check container limits and call container events
-            if (Amount > ContainerMaxLimit)
+            // Check if resource is at min limit
+            else if (Amount < MinimumResourceStored)
             {
-                Amount = ContainerMaxLimit;
-                await OnMaxLimitReachedAsync();
+                Amount = MinimumResourceStored;
+                if (withEvents)
+                {
+                    await Resource.OnMinLimitReachedAsync(this);
+                    await OnMinLimitReachedAsync();
+                }
             }
-            else if (Amount < ContainerMinLimit)
-            {
-                Amount = ContainerMinLimit;
-                await OnMinLimitReachedAsync();
-            }
+        }
 
-            // Ensure limits for resource again and update
-            // container amount without raising resource events
-            // as those were already raised.
-            if (Amount > ResourceMaxLimit)
-                Amount = ResourceMaxLimit;
-            else if (Amount < ResourceMinLimit) Amount = ResourceMinLimit;
+        protected ResourceContainerBase(Snowflake128 resourceIdentifier)
+        {
+            Identifier = resourceIdentifier;
+            Amount = (int) (this is IWithDefaultAmount withDefaultAmount
+                ? withDefaultAmount.DefaultAmount
+                : MinimumResourceStored);
         }
     }
 }

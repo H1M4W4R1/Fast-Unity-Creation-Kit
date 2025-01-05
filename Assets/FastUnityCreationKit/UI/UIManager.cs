@@ -10,6 +10,7 @@ using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.UI
 {

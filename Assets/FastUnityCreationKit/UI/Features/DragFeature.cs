@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.UI.Features
 {

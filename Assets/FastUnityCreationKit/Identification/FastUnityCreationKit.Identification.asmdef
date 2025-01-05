@@ -3,6 +3,7 @@
   "allowUnsafeCode": true,
   "references": [
     "Unity.Burst",
-    "Unity.Mathematics"
+    "Unity.Mathematics",
+    "FastUnityCreationKit.Core"
   ]
 }

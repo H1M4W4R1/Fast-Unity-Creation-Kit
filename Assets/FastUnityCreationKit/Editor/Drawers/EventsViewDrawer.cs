@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Text;
 using FastUnityCreationKit.Unity;
 using FastUnityCreationKit.Unity.Editor;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEditor;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Editor.Drawers
 {
+    [UsedImplicitly]
     public sealed class EventsViewDrawer : OdinValueDrawer<EventsView>
     {
         protected override void DrawPropertyLayout(GUIContent label)

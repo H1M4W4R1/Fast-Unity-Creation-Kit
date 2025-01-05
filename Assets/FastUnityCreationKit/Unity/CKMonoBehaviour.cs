@@ -4,7 +4,6 @@ using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Structure.Initialization;
 using FastUnityCreationKit.Unity.Editor;
-using FastUnityCreationKit.Unity.Interfaces.Callbacks;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Global;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
 using FastUnityCreationKit.Unity.Interfaces.Interaction;
@@ -12,6 +11,7 @@ using FastUnityCreationKit.Unity.Time.Enums;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Unity
 {
@@ -21,10 +21,6 @@ namespace FastUnityCreationKit.Unity
     /// </summary>
     public abstract class CKMonoBehaviour : MonoBehaviour
     {
-        protected const string GROUP_STATE = "State";
-        protected const string GROUP_DEBUG = "Debug";
-        protected const string GROUP_CONFIGURATION = "Configuration";
-
         /// <summary>
         ///     Check if the object uses the update mode
         ///     Used to render the update mode in the inspector.
@@ -81,7 +77,7 @@ namespace FastUnityCreationKit.Unity
 
 #if UNITY_EDITOR
         [ShowInInspector] [TitleGroup(GROUP_DEBUG)]
-        public EventsView EventsView = new();
+        public EventsView EventsView { get; }
 #endif
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.Identification.Identifiers;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Identification
 {
@@ -9,13 +10,11 @@ namespace FastUnityCreationKit.Identification
     /// </summary>
     public abstract class UniqueDefinitionBase : SerializedScriptableObject
     {
-        protected const string GROUP_ID = "Identification";
-
         /// <summary>
         ///     Definition identifier.
         /// </summary>
         // ReSharper disable once Unity.RedundantAttributeOnTarget
-        [OdinSerialize] [ShowInInspector] [TitleGroup(GROUP_ID)] public Snowflake128 Id { get; private set; } =
+        [OdinSerialize] [ShowInInspector] [TitleGroup(GROUP_IDENTIFICATION)] public Snowflake128 Id { get; private set; } =
             Snowflake128.New;
     }
 }

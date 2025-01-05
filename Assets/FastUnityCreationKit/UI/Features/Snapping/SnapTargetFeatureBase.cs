@@ -1,6 +1,7 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Interfaces;
 using Sirenix.OdinInspector;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.UI.Features.Snapping
 {

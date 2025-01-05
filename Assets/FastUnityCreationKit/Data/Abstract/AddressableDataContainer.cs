@@ -10,6 +10,7 @@ using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
+using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Data.Abstract
 {
@@ -22,10 +23,6 @@ namespace FastUnityCreationKit.Data.Abstract
         IDataContainer<AddressableReferenceEntry<TDataType>>, IIndexableBy<AssetReferenceT<TDataType>, string>
         where TDataType : Object
     {
-        protected const string GROUP_CONFIGURATION = "Configuration";
-        protected const string GROUP_DEBUG = "Debug";
-        protected const string GROUP_PREVIEW = "Preview";
-
         [Required]
         [SerializeField]
         [NotNull]
