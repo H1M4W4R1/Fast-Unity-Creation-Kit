@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FastUnityCreationKit.Core.Extensions.Enums;
 using JetBrains.Annotations;
 using Sirenix.Utilities;
 
@@ -22,66 +23,52 @@ namespace FastUnityCreationKit.Core.Extensions
                 if (interfaceName.StartsWith("I", StringComparison.Ordinal))
                     return interfaceName[1..].SplitPascalCase();
             }
-            
+
             return type.Name.SplitPascalCase();
         }
-        
-        /// <summary>
-        /// Get all interfaces that are of the same type as the root interface
-        /// Works only for interfaces in the same assembly to avoid performance issues.
-        /// </summary>
-        [NotNull] public static List<Type> GetSameAssemblyInterfacesByRootInterface(
-            [NotNull] this Type interfaceType,
-            bool skipGeneric = true,
-            [NotNull] params Type[] skipIfImplementsOrInherits)
-        {
-            // Get all types in the assembly
-            Type[] allTypes = interfaceType.Assembly.GetTypes();
-            
-            // Create a list to store the found interfaces
-            List<Type> foundInterfaces = new List<Type>();
-            
-            // Loop through all types
-            foreach (Type type in allTypes)
-            {
-                // Skip if the type is generic
-                if(skipGeneric && type.IsGenericType) continue;
-                
-                // Skip if interface is the same as the root interface
-                if (type == interfaceType) continue;
-                
-                // Skip if the type implements or inherits from the specified types
-                if (skipIfImplementsOrInherits.Length > 0)
-                {
-                    bool skip = false;
-                    for (int index = 0; index < skipIfImplementsOrInherits.Length; index++)
-                    {
-                        // Check if the type implements or inherits from the specified type
-                        Type skipType = skipIfImplementsOrInherits[index];
-                        if (!skipType.IsAssignableFrom(type)) continue;
-                        
-                        // Skip the type
-                        skip = true;
-                        break;
-                    }
 
-                    // Skip the type if needed
-                    if (skip) continue;
+        /// <summary>
+        ///     Get all interfaces of the specified type. It will return all interfaces
+        ///     that are inherit from the specified interface type.
+        /// </summary>
+        /// <param name="objectType">Type to get interfaces from</param>
+        /// <param name="interfaceType">Type of the interface</param>
+        /// <param name="searchMode">Defines search mode of interface</param>
+        /// <returns>List of interfaces</returns>
+        [NotNull] public static List<Type> GetInterfacesByType(
+            [NotNull] this Type objectType,
+            [NotNull] Type interfaceType,
+            TypeSearchMode searchMode = TypeSearchMode.All)
+        {
+            List<Type> foundInterfaces = new();
+
+            // Get all interfaces implemented by the class
+            Type[] interfaces = objectType.GetInterfaces();
+
+            // Loop through all interfaces
+            foreach (Type ifx in interfaces)
+            {
+                // Check if the interface is of desired type
+                switch (ifx.IsGenericType)
+                {
+                    // Skip generic interfaces if they are not allowed
+                    case true when (searchMode & TypeSearchMode.Generic) == 0:
+                    case false when (searchMode & TypeSearchMode.NonGeneric) == 0: continue;
                 }
-                
-                // Check if the type is an interface
-                if (!type.IsInterface) continue;
-                
-                // Check if the interface is of the desired type
-                if (!interfaceType.IsAssignableFrom(type)) continue;
-                
-                // Add the interface to the list
-                foundInterfaces.Add(type);
+
+                // Check if interface must be valid and non-generic
+                if (ifx.ContainsGenericParameters && (searchMode & TypeSearchMode.Valid) != 0) continue;
+
+                // Skip self type if it is not allowed
+                if (ifx == interfaceType && (searchMode & TypeSearchMode.IncludeSelf) == 0) continue;
+
+                // Check if the interface is of desired type
+                if (ifx.ImplementsOrInherits(interfaceType)) foundInterfaces.Add(ifx);
             }
-            
+
             return foundInterfaces;
         }
-        
+
         public static void CallGenericCascadeInterfaces<TMethodData>(
             [NotNull] this object obj,
             [NotNull] Type genericInterface,

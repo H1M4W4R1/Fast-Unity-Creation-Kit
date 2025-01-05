@@ -1,4 +1,5 @@
-﻿using FastUnityCreationKit.Unity.Events.Unity;
+﻿using FastUnityCreationKit.Core.Logging;
+using FastUnityCreationKit.Unity.Events.Unity;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Unity.Interfaces.Callbacks.Global
@@ -10,6 +11,8 @@ namespace FastUnityCreationKit.Unity.Interfaces.Callbacks.Global
         {
             if (behaviour is TObjectType castedBehaviour)
                 OnObjectPreUpdateEvent<TObjectType>.TriggerEvent(castedBehaviour);
+            else
+                Guard<ValidationLogConfig>.Error($"Behaviour {behaviour.GetType()} is not of type {typeof(TObjectType)}");
         }
     }
     
