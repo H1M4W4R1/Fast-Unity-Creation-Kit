@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Data.Interfaces;
 using Sirenix.OdinInspector;
@@ -10,6 +11,7 @@ namespace FastUnityCreationKit.Data.Abstract
     /// <summary>
     ///     Represents a core data container that is used to store data of a specific type.
     /// </summary>
+    [RequiresOdinSerialization]
     public abstract class DataContainerBase<TDataType> : IDataContainer<TDataType>
     {
         /// <summary>
