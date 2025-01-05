@@ -89,7 +89,7 @@ namespace FastUnityCreationKit.Unity.Actions
         ///     Cooldown for actions
         /// </summary>
         [Serializable]
-        public sealed class ActionCooldown : OneShotTimerBase
+        protected sealed class ActionCooldown : OneShotTimerBase
         {
             /// <summary>
             ///     Base constructor for cooldown timer.
