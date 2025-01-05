@@ -22,7 +22,7 @@ namespace FastUnityCreationKit.Unity.Actions
         /// </summary>
         [Unit(Units.Second)] [ShowInInspector] [ReadOnly] [TitleGroup("Cooldown")]
         protected abstract float DefaultCooldownTime { get; }
-
+        
         private void Initialize()
         {
             // Create timer and assign it to the action.

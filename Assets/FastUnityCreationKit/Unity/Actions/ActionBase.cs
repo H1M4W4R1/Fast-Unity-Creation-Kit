@@ -15,28 +15,60 @@ namespace FastUnityCreationKit.Unity.Actions
     ///     If you need to add cooldown to the action you can simply use
     ///     <see cref="ActionBaseWithCooldown" /> instead.
     /// </summary>
+    /// <remarks>
+    ///     <ul>
+    ///     <li>If you want to provide cooldown for the action, you can inherit from <see cref="ActionBaseWithCooldown" />.</li>
+    ///     <li>By default, action execution does not have any arguments, but you can pass them as custom
+    ///     properties in derived classes.</li>
+    ///     </ul>
+    /// </remarks>
     /// <seealso cref="ActionBaseWithCooldown" />
-    [Serializable] [OnlySealed]
-    public abstract class ActionBase
+    [Serializable] [OnlySealed] public abstract class ActionBase
     {
         /// <summary>
         ///     Timer to use for cooldown.
         /// </summary>
-        [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_COOLDOWN)]
-        [ShowIf(nameof(HasCooldown))] [CanBeNull]
+        /// <remarks>
+        ///     This is intentionally placed with <see cref="ActionBase"/> instead of <see cref="ActionBaseWithCooldown"/>
+        ///     to allow accessing cooldown timer from derived classes without having to cast to <see cref="ActionBaseWithCooldown"/>.
+        ///     <br/><br/>
+        ///     <b>TODO: Think about moving this to <see cref="ActionBaseWithCooldown"/>.</b>
+        /// </remarks>
+        [ShowInInspector]
+        [ReadOnly]
+        [TitleGroup(GROUP_COOLDOWN)]
+        [ShowIf(nameof(HasCooldown))]
+        [CanBeNull]
         [field: SerializeField, HideInInspector]
         protected ActionCooldown CooldownTimer { get; set; }
 
         /// <summary>
-        ///     Check if action has cooldown
+        ///     Check if action has cooldown.
         /// </summary>
         [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_COOLDOWN)] protected bool HasCooldown
             => CooldownTimer != null;
 
         /// <summary>
-        ///     Action event raised when action is executed.
+        ///     If <see cref="OnExecuted"/> returns one of these states, cooldown will start.
+        ///     By default, only successful or interrupted actions will trigger cooldown.
         /// </summary>
-        protected abstract UniTask OnExecuted();
+        [field: SerializeField, HideInInspector]
+        protected ActionExecutionState ExecutionStatesCausingCooldownToStart { get; set; }
+            = ActionExecutionState.Success | ActionExecutionState.Interrupted;
+
+        /// <summary>
+        ///     Action event raised when action is executed. Returns action execution state which
+        ///     represents how the action execution went.
+        /// </summary>
+        /// <remarks>
+        ///     It's possible to implement a custom timer for actions that have warmup (like whirlwind attack)
+        ///     or channeling (like channeled spells) and attaching to <see cref="TimerBase.OnTimePassed"/>
+        ///     event during this task to validate if action was interrupted or not by pooling for example for
+        ///     some sort of stunned status. <br /><br />
+        ///     If action is being warmed-up you can use <see cref="UniTask.Yield()"/> or
+        ///     <see cref="UniTask.NextFrame()"/> to wait for the warm-up to finish before executing the action.
+        /// </remarks>
+        protected abstract UniTask<ActionExecutionState> OnExecuted();
 
         /// <summary>
         ///     Event raised when action execution failed due to cooldown.
@@ -56,9 +88,17 @@ namespace FastUnityCreationKit.Unity.Actions
         }
 
         /// <summary>
-        ///     Execute action.
+        ///     Execute action. Returns state of action execution.
+        ///     <ul>
+        ///     <li>If action has cooldown, it will be checked and executed if not on cooldown.</li>
+        ///     <li>If action is on cooldown, <see cref="OnExecutedDuringCooldown"/> will be called and
+        ///     <see cref="ActionExecutionState.OnCooldown"/> will be returned. Otherwise, <see cref="OnExecuted"/>
+        ///     will be called and its result will be returned.</li>
+        ///     <li>If action execution was one of <see cref="ExecutionStatesCausingCooldownToStart"/>,
+        ///     cooldown will start.</li>
+        ///     </ul>
         /// </summary>
-        public async UniTask Execute()
+        public async UniTask<ActionExecutionState> Execute()
         {
             // Check if action has cooldown.
             // ReSharper disable once NullableWarningSuppressionIsUsed
@@ -66,14 +106,20 @@ namespace FastUnityCreationKit.Unity.Actions
             {
                 // Execute action during cooldown.
                 await OnExecutedDuringCooldown();
-                return;
+                return ActionExecutionState.OnCooldown;
             }
 
             // Execute action.
-            await OnExecuted();
+            ActionExecutionState state = await OnExecuted();
 
-            // Perform cooldown start if timer is present.
+            // Check if action execution state is one of the states that cause cooldown to start.
+            // If not, return the state to prevent cooldown from starting.
+            if ((state & ExecutionStatesCausingCooldownToStart) == 0) return state;
+
+            // Successful action executions can trigger cooldown.
             if (HasCooldown) CooldownTimer?.Run();
+
+            return state;
         }
 
         public UniTask Reset()
@@ -84,10 +130,10 @@ namespace FastUnityCreationKit.Unity.Actions
         }
 
         /// <summary>
-        ///     Cooldown for actions
+        ///     Cooldown timer for actions. This timer is used to prevent actions from being executed too often
+        ///     and to provide a delay between action executions.
         /// </summary>
-        [Serializable]
-        protected sealed class ActionCooldown : OneShotTimerBase
+        [Serializable] protected sealed class ActionCooldown : OneShotTimerBase
         {
             /// <summary>
             ///     Base constructor for cooldown timer.
@@ -109,7 +155,10 @@ namespace FastUnityCreationKit.Unity.Actions
             /// <summary>
             ///     Reference to action that owns this cooldown.
             /// </summary>
-            [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_CONFIGURATION)] [NotNull]
+            [ShowInInspector]
+            [ReadOnly]
+            [TitleGroup(GROUP_CONFIGURATION)]
+            [NotNull]
             [field: SerializeReference, HideInInspector]
             private ActionBase OwnerReference { get; set; }
 
@@ -130,9 +179,7 @@ namespace FastUnityCreationKit.Unity.Actions
             Execute().Forget();
         }
 
-        [ShowInInspector]
-        [ShowIf(nameof(HasCooldown))]
-        [Button(nameof(ActionCooldown.Reset), ButtonSizes.Medium)]
+        [ShowInInspector] [ShowIf(nameof(HasCooldown))] [Button(nameof(ActionCooldown.Reset), ButtonSizes.Medium)]
         private void ResetCooldownInEditor()
         {
             Reset().Forget();
