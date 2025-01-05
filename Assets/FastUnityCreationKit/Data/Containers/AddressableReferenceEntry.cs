@@ -3,11 +3,18 @@ using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
 namespace FastUnityCreationKit.Data.Containers
 {
+    /// <summary>
+    ///     Represents an addressable reference entry used to store AssetReference within
+    ///     containers by providing a string address the entry is assigned to, what allows
+    ///     to easily find and access the entry using address or in case of some internal
+    ///     methods ScriptableObject's name.
+    /// </summary>
     [Serializable]
     public sealed class AddressableReferenceEntry<TEntryType> : IEquatable<AddressableReferenceEntry<TEntryType>>
         where TEntryType : Object
@@ -30,9 +37,19 @@ namespace FastUnityCreationKit.Data.Containers
             Entry = (AssetReferenceT<TEntryType>) entry;
         }
 
-        [ShowInInspector] [ReadOnly] [OdinSerialize] public string Address { get; private set; }
+        /// <summary>
+        ///     Address assigned to the entry (aka. resource key).
+        /// </summary>
+        [ShowInInspector] [ReadOnly] 
+        [field: SerializeField, HideInInspector]
+        public string Address { get; private set; }
 
-        [ShowInInspector] [ReadOnly] [OdinSerialize] public AssetReferenceT<TEntryType> Entry { get; private set; }
+        /// <summary>
+        ///     Entry assigned to the address.
+        /// </summary>
+        [ShowInInspector] [ReadOnly]
+        [field: SerializeField, HideInInspector]
+        public AssetReferenceT<TEntryType> Entry { get; private set; }
 
         public bool Equals(AddressableReferenceEntry<TEntryType> other)
         {

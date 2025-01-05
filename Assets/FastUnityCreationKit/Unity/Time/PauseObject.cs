@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using FastUnityCreationKit.Identification.Identifiers;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine;
 
 namespace FastUnityCreationKit.Unity.Time
 {
@@ -14,7 +15,9 @@ namespace FastUnityCreationKit.Unity.Time
         /// <summary>
         ///     Identifier of the pause object.
         /// </summary>
-        [OdinSerialize] [ShowInInspector] [ReadOnly] public Snowflake128 Id { get; private set; }
+        [ShowInInspector] [ReadOnly] 
+        [field: SerializeField, HideInInspector]
+        public Snowflake128 Id { get; private set; }
 
         /// <summary>
         ///     Creates a new pause object.

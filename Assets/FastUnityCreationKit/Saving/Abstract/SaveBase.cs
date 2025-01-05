@@ -251,7 +251,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         }
     }
 
-    [RequiresOdinSerialization] [Polymorph] // Must be serialized by Odin to prevent issues with polymorphism
+    [NotAllowedInObjects] [RequiresOdinSerialization] [Polymorph] // Must be serialized by Odin to prevent issues with polymorphism
     public abstract class SaveBase
     {
 
@@ -266,12 +266,21 @@ namespace FastUnityCreationKit.Saving.Abstract
         ///     loaded from script and not from disk to prevent issues between different save versions.
         ///     Constructor should set up metadata.
         /// </summary>
+        [OdinSerialize] [HideInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
         protected virtual List<SaveFileMetadata> Metadata { get; set; } = new();
 
+        // Automatically set to current DateTime
+        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
+        public DateTime CreationDate { get; internal set; } = DateTime.UtcNow;
+
+        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
+        public DateTime LastModified { get; internal set; } = DateTime.UtcNow;
+        
         /// <summary>
         ///     Data of loaded save files. Those files are loaded from disk and stored locally
         ///     to prevent multiple disk reads and to allow easy access to data.
         /// </summary>
+        [field: NonSerialized]
         private List<SaveFileBase> FileData { get; } = new();
 
         /// <summary>
@@ -287,13 +296,6 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// </summary>
         [ShowInInspector] [ReadOnly] [Required] [TitleGroup(GROUP_CONFIGURATION)] [NotNull]
         public virtual string HeaderName => SaveAPI.DEFAULT_HEADER_NAME;
-
-        // Automatically set to current DateTime
-        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        public DateTime CreationDate { get; internal set; } = DateTime.UtcNow;
-
-        [OdinSerialize] [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)]
-        public DateTime LastModified { get; internal set; } = DateTime.UtcNow;
 
         /// <summary>
         ///     Check if this save has data for specified save part.

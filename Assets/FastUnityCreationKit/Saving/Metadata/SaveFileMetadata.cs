@@ -3,7 +3,13 @@ using FastUnityCreationKit.Annotations.Utility;
 using FastUnityCreationKit.Saving.Abstract;
 using FastUnityCreationKit.Saving.Utility;
 using JetBrains.Annotations;
+using Sirenix.Serialization;
 
+// TODO: Convert to Unity Serialization by making List of SaveFileMetadata a custom
+//     class 'SaveBaseMetadata' that inherits from List of SaveFileMetadata and that
+//     class will be serialized by Unity using ISerializationCallbackReceiver.
+//     This will allow to serialize the list of SaveFileMetadata without requiring this type
+//     to be odin-serialized.
 namespace FastUnityCreationKit.Saving.Metadata
 {
     /// <summary>
@@ -28,28 +34,27 @@ namespace FastUnityCreationKit.Saving.Metadata
     /// <summary>
     ///     Save file metadata - base class for simple save file information.
     /// </summary>
-    [RequiresOdinSerialization] [Polymorph]
-    public abstract class SaveFileMetadata
+    [RequiresOdinSerialization] [Polymorph] [NotAllowedInObjects] public abstract class SaveFileMetadata
     {
         /// <summary>
         ///     If true, the file will be automatically loaded on save file load.
         /// </summary>
-        public bool AutoLoad { get; set; }
+        [OdinSerialize] public bool AutoLoad { get; set; }
 
         /// <summary>
         ///     Name of file. Must match <see cref="SaveFileBase.FileName" />
         /// </summary>
-        public string FileName { get; [UsedImplicitly] set; }
+        [OdinSerialize] public string FileName { get; [UsedImplicitly] set; }
 
         /// <summary>
         ///     Date this metadata was created.
         /// </summary>
-        public DateTime CreationDate { get; internal set; } = DateTime.UtcNow;
+        [OdinSerialize] public DateTime CreationDate { get; internal set; } = DateTime.UtcNow;
 
         /// <summary>
         ///     Date this metadata was last modified.
         /// </summary>
-        public DateTime LastModified { [UsedImplicitly] get; internal set; } = DateTime.UtcNow;
+        [OdinSerialize] public DateTime LastModified { [UsedImplicitly] get; internal set; } = DateTime.UtcNow;
 
         /// <summary>
         ///     Tries to load save file from path.

@@ -17,12 +17,23 @@ namespace FastUnityCreationKit.Data.Abstract
     /// <summary>
     ///     This is a container that is auto-populated with data that is stored in an addressable asset group.
     /// </summary>
+    /// <remarks>
+    ///     This type contains <see cref="OdinSerializeAttribute"/> properties, however, it is not required to
+    ///     use <see cref="RequiresOdinSerializationAttribute"/> to mark it as Odin-serialized. This is because
+    ///     the type is derived from <see cref="SerializedScriptableObject"/> which is already serialized
+    ///     by Odin Serializer and as it's <see cref="ScriptableObject"/> it will exist in asset database and be
+    ///     automatically handled by the serialization system.
+    /// </remarks>
     /// <typeparam name="TDataType">Type of data that is stored in the container.</typeparam>
     [NoDuplicates] [NoNullEntries] [OnlySealedElements]
     public abstract class AddressableDataContainer<TDataType> : SerializedScriptableObject,
         IDataContainer<AddressableReferenceEntry<TDataType>>, IIndexableBy<AssetReferenceT<TDataType>, string>
         where TDataType : Object
     {
+        /// <summary>
+        ///     Addressable tags that are used to filter the addressable assets.
+        ///     Can be used with <see cref="MergeMode"/> to create interference or union of the data.
+        /// </summary>
         [Required]
         [SerializeField]
         [NotNull]
@@ -38,6 +49,10 @@ namespace FastUnityCreationKit.Data.Abstract
         [ShowInInspector] [ReadOnly] [OdinSerialize] [NonSerialized] [TitleGroup(GROUP_DEBUG, order: int.MaxValue)]
         protected readonly AddressableDataContainerStorageObject internalContainer = new();
 
+        /// <summary>
+        ///     Merge mode used to determine how the data is merged - union or intersection is the most common
+        ///     use case for this setting.
+        /// </summary>
         [ShowInInspector]
         [ReadOnly]
         [TitleGroup(GROUP_CONFIGURATION)]

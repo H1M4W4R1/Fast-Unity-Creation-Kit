@@ -51,7 +51,10 @@ namespace FastUnityCreationKit.Saving.Abstract
         }
     }
 
-    [RequiresOdinSerialization] [Polymorph] // Must be odin-serialized to include polymorphism
+    [NotAllowedInObjects]
+    [RequiresOdinSerialization]
+    [Polymorph]
+    // Must be odin-serialized to include polymorphism
     public abstract class SaveFileBase
     {
         /// <summary>
