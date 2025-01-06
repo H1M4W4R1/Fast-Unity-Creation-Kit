@@ -5,7 +5,7 @@ namespace FastUnityCreationKit.Input.Events
 {
     /// <summary>
     ///     Event called whenever a binding is reset on an input action.
-    ///     Called after <see cref="OnBindingChangedGlobalEvent"/>
+    ///     Called after <see cref="OnBindingChangeCompletedGlobalEvent"/>
     /// </summary>
     public sealed class OnBindingResetGlobalEvent : GlobalEventChannel<OnBindingResetGlobalEvent, BindingChangeData>
     {

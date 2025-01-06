@@ -4,19 +4,52 @@ using UnityEngine.InputSystem;
 
 namespace FastUnityCreationKit.Input.Events.Data
 {
-    public struct BindingChangeData
+    public readonly struct BindingChangeData
     {
-        [NotNull] public InputAction action;
-        public int bindingIndex;
-        public InputDeviceType allowedDevices;
+        /// <summary>
+        ///     Input action that had a binding changed.
+        /// </summary>
+        [NotNull] public readonly InputAction action;
+        
+        /// <summary>
+        ///     Index of the binding that was changed within the <see cref="action"/>
+        /// </summary>
+        public readonly int bindingIndex;
+        
+        /// <summary>
+        ///     Flags for all devices that were allowed to be used for the rebind.
+        /// </summary>
+        public readonly InputDeviceType allowedDevices;
+        
+        /// <summary>
+        ///     Old effective path of the binding (before the change). In case of duplicate bindings, this will be
+        ///     still the correct path.
+        ///     Can be <see cref="string.Empty"/> if done externally.
+        /// </summary>
+        [NotNull] public readonly string oldEffectivePath;
+        
+        /// <summary>
+        ///     New effective path of the binding (after the change). In case of duplicate bindings, this is the path
+        ///     binding was attempted to be changed to.
+        ///     Can be <see cref="string.Empty"/> if done externally.
+        /// </summary>
+        [NotNull] public readonly string newEffectivePath;
 
-        public BindingChangeData([NotNull] InputAction action, int bindingIndex, InputDeviceType allowedDevices)
+        /// <summary>
+        ///     Check if the binding is a composite binding.
+        /// </summary>
+        public bool IsComposite => action.bindings[bindingIndex].isComposite;
+        
+        public BindingChangeData([NotNull] InputAction action, int bindingIndex, InputDeviceType allowedDevices,
+            [NotNull] string oldEffectivePath, [NotNull] string newEffectivePath)
         {
             this.action = action;
             this.bindingIndex = bindingIndex;
             this.allowedDevices = allowedDevices;
+            this.oldEffectivePath = oldEffectivePath;
+            this.newEffectivePath = newEffectivePath;
         }
-
+        
         /// <summary>
         ///     This method can be called if rebind was not successful (due to user canceling the rebind process
         ///     or key duplication). It will start the rebind process again for the same action, binding index

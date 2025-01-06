@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Input.Enums;
 using FastUnityCreationKit.Input.Events;
@@ -67,14 +68,14 @@ namespace FastUnityCreationKit.Input
                 Guard<ValidationLogConfig>.Error("Cannot rebind with unknown allowed devices.");
                 return false;
             }
-            
+
             // Check if binding index is valid (within action bindings range)
             if (bindingIndex < 0 || bindingIndex >= action.bindings.Count)
             {
                 Guard<ValidationLogConfig>.Error($"Invalid binding index '{bindingIndex}' for '{action.name}'");
                 return false;
             }
-            
+
             if (action.bindings[bindingIndex].isComposite)
             {
                 int firstPartIndex = bindingIndex + 1;
@@ -103,6 +104,11 @@ namespace FastUnityCreationKit.Input
             _rebindingOperation?.Dispose();
             _rebindingOperation = null;
 
+            // Cache current binding override path
+            // to be able to reset it if binding has failed.
+            string oldEffectivePath = action.bindings[bindingIndex].effectivePath;
+            string oldBindingOverride = action.bindings[bindingIndex].overridePath;
+
             // Create new rebinding operation
             _rebindingOperation = action.PerformInteractiveRebinding(bindingIndex);
 
@@ -128,7 +134,7 @@ namespace FastUnityCreationKit.Input
 
             // Trigger global event for binding change started
             OnBindingChangeStartedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
-                allowedDevices));
+                allowedDevices, oldEffectivePath, action.bindings[bindingIndex].effectivePath));
 
             // Start rebind operation
             _rebindingOperation.Start();
@@ -142,7 +148,7 @@ namespace FastUnityCreationKit.Input
                 [NotNull] InputActionRebindingExtensions.RebindingOperation rebindingOperation)
             {
                 OnBindingChangeCancelledGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
-                    allowedDevices));
+                    allowedDevices, oldEffectivePath, action.bindings[bindingIndex].effectivePath));
                 _rebindingOperation?.Dispose();
                 _rebindingOperation = null;
             }
@@ -151,13 +157,27 @@ namespace FastUnityCreationKit.Input
             void OnOperationCompleted(
                 [NotNull] InputActionRebindingExtensions.RebindingOperation rebindingOperation)
             {
-                // TODO: Handle duplicates / conflicts within current actionMap
-                //     if duplicate is found create a new event to handle this scenario.
-                //     This will also affect the reset to default method as bindings may collide after reset.
-                //     For now we will assume that there are no duplicates and proceed with the rebind.
+                // Check for duplicates in the action map and handle them accordingly.
+                // We don't need to handle composites here as they are already handled
+                // by the method that is recursive.
+                if (SearchForDuplicate(action, bindingIndex, allCompositeParts))
+                {
+                    string newEffectivePath = action.bindings[bindingIndex].effectivePath;
 
-                OnBindingChangedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
-                    allowedDevices));
+                    // Reset binding to default if duplicate is found and notify for duplicate found.
+                    action.ApplyBindingOverride(bindingIndex, oldBindingOverride);
+                    OnBindingDuplicateFoundGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
+                        allowedDevices, oldEffectivePath, newEffectivePath));
+
+                    // Dispose rebinding operation and return.
+                    _rebindingOperation?.Dispose();
+                    _rebindingOperation = null;
+                    return;
+                }
+
+                // Trigger global event for binding change completed
+                OnBindingChangeCompletedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
+                    allowedDevices, oldEffectivePath, action.bindings[bindingIndex].effectivePath));
                 _rebindingOperation?.Dispose();
                 _rebindingOperation = null;
 
@@ -176,29 +196,129 @@ namespace FastUnityCreationKit.Input
         }
 
         /// <summary>
+        ///     Searches for duplicate bindings in the action map.
+        /// </summary>
+        public static bool SearchForDuplicate(
+            [NotNull] this InputAction action,
+            int bindingIndex,
+            bool allCompositeParts = false)
+        {
+            InputBinding newBinding = action.bindings[bindingIndex];
+            int currentIndex = -1;
+
+            // Search all bindings in the action map for duplicates
+            foreach (InputBinding binding in action.actionMap.bindings)
+            {
+                currentIndex++;
+
+                // For current action binding we need to handle composite bindings
+                // with different indexes.
+                if (binding.action == newBinding.action)
+                {
+                    if (binding.isPartOfComposite && currentIndex != bindingIndex)
+                    {
+                        if (binding.effectivePath == newBinding.effectivePath) return true;
+                    }
+                    else
+                        continue;
+                }
+
+                // Otherwise we can check for duplicates by just comparing effective path
+                if (binding.effectivePath == newBinding.effectivePath) return true;
+            }
+
+            // If we don't need to check all composite parts for duplicates
+            // we can just return false.
+            if (!allCompositeParts) return false;
+
+            // If we need to check all composite parts for duplicates
+            // we shall loop through all bindings in the action.
+            for (int i = 1; i < bindingIndex; i++)
+            {
+                if (action.bindings[i].effectivePath == newBinding.overridePath) return true;
+            }
+
+            // If we don't find any duplicates we can return false.
+            return false;
+        }
+
+        /// <summary>
         ///     Used to reset input action binding to default value.
         /// </summary>
-        public static bool ResetToDefault([NotNull] this InputAction action, [NotNull] string bindingName)
+        public static bool ResetToDefault(
+            [NotNull] this InputAction action,
+            [NotNull] string bindingName,
+            InputDeviceType allowedDevices = InputDeviceType.All)
         {
             // Get binding index from action and binding name
             if (!GetBindingFromAction(action, bindingName, out int bindingIndex)) return false;
+
+            // Create binding overrides dictionary to cache all bindings that will be reset
+            // to be able to revert them if duplicate is found.
+            //
+            // Key is always a binding index.
+            Dictionary<int, string> oldBindingOverrides = new();
+            Dictionary<int, string> oldBindingEffectivePaths = new();
 
             // Reset binding to default, for composite bindings remove all parts
             if (action.bindings[bindingIndex].isComposite)
             {
                 for (int i = bindingIndex + 1;
                      i < action.bindings.Count && action.bindings[i].isPartOfComposite;
-                     ++i)
+                     i++)
+                {
+                    oldBindingOverrides.Add(i, action.bindings[i].overridePath);
+                    oldBindingEffectivePaths.Add(i, action.bindings[i].effectivePath);
                     action.RemoveBindingOverride(i);
+                }
             }
             else
+            {
+                oldBindingOverrides.Add(bindingIndex, action.bindings[bindingIndex].overridePath);
+                oldBindingEffectivePaths.Add(bindingIndex, action.bindings[bindingIndex].effectivePath);
                 action.RemoveBindingOverride(bindingIndex);
+            }
 
-            // Execute global events on changed binding
-            BindingChangeData changeData = new(action, bindingIndex, InputDeviceType.Unknown);
+            // Check if any duplicates were created by resetting the binding
+            // if any duplicates were found, reset all bindings to previous state
+            // and notify for duplicate found.
+            if (SearchForDuplicate(action, bindingIndex))
+            {
+                // If duplicate was found, reset binding to override and notify for duplicate found
+                // perform for all bindings that were reset.
+                foreach (KeyValuePair<int, string> bindingOverride in oldBindingOverrides)
+                {
+                    // Get effective path by index
+                    string oldEffectivePath = oldBindingEffectivePaths[bindingOverride.Key];
+                    string newEffectivePath = action.bindings[bindingOverride.Key].effectivePath;
 
-            OnBindingChangedGlobalEvent.TriggerEvent(changeData);
-            OnBindingResetGlobalEvent.TriggerEvent(changeData);
+                    // Revert binding override
+                    action.ApplyBindingOverride(bindingOverride.Key, bindingOverride.Value);
+
+                    // Notify for duplicate found
+                    OnBindingDuplicateFoundGlobalEvent.TriggerEvent(new BindingChangeData(action,
+                        bindingOverride.Key,
+                        allowedDevices, oldEffectivePath, newEffectivePath));
+                }
+
+                return false;
+            }
+
+            // IF NO DUPLICATES WERE FOUND
+            // Raise events for all bindings that were reset
+            foreach (KeyValuePair<int, string> bindingOverride in oldBindingOverrides)
+            {
+                // Get effective path by index
+                string oldEffectivePath = oldBindingEffectivePaths[bindingOverride.Key];
+                string newEffectivePath = action.bindings[bindingOverride.Key].effectivePath;
+
+                // Notify for binding change completed
+                OnBindingChangeCompletedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingOverride.Key,
+                    allowedDevices, oldEffectivePath, newEffectivePath));
+                OnBindingResetGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingOverride.Key,
+                    allowedDevices, oldEffectivePath, newEffectivePath));
+            }
+
             return true;
         }
 
@@ -290,9 +410,10 @@ namespace FastUnityCreationKit.Input
         private static void NotifyActionBindingsChanged([NotNull] InputAction action)
         {
             // Notify for update of all bindings in the action asset
+            // TODO: Check if this event is not raised twice during rebind via InputAPI and remove it if so.
             for (int bindingIndex = 0; bindingIndex < action.bindings.Count; bindingIndex++)
-                OnBindingChangedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
-                    InputDeviceType.Unknown));
+                OnBindingChangeCompletedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
+                    InputDeviceType.Unknown, string.Empty, string.Empty));
         }
     }
 }
