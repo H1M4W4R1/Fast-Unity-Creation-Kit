@@ -46,7 +46,7 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Event raised when action execution has failed.
         /// </summary>
-        protected virtual UniTask OnExecutionFailed()
+        protected internal virtual UniTask OnExecutionFailed()
         {
             return UniTask.CompletedTask;
         }
@@ -54,7 +54,7 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Event raised when action execution was interrupted by other action or event.
         /// </summary>
-        protected virtual UniTask OnExecutionInterrupted()
+        protected internal virtual UniTask OnExecutionInterrupted()
         {
             return UniTask.CompletedTask;
         }
@@ -62,7 +62,7 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Event raised when action execution was successful.
         /// </summary>
-        protected virtual UniTask OnExecutionSuccess()
+        protected internal virtual UniTask OnExecutionSuccess()
         {
             return UniTask.CompletedTask;
         }
@@ -70,7 +70,7 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Event raised when action execution started.
         /// </summary>
-        protected virtual UniTask OnExecutionStarted()
+        protected internal virtual UniTask OnExecutionStarted()
         {
             return UniTask.CompletedTask;
         }
@@ -78,7 +78,7 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Event raised when action execution finished.
         /// </summary>
-        protected virtual UniTask OnExecutionFinished()
+        protected internal virtual UniTask OnExecutionFinished()
         {
             return UniTask.CompletedTask;
         }
@@ -87,7 +87,7 @@ namespace FastUnityCreationKit.Unity.Actions
         ///     Event raised when action execution was cancelled by user.
         /// </summary>
         /// <returns></returns>
-        protected virtual UniTask OnExecutionCancelled()
+        protected internal virtual UniTask OnExecutionCancelled()
         {
             return UniTask.CompletedTask;
         }
@@ -95,16 +95,16 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Event raised when action execution failed due to missing requirements.
         /// </summary>
-        protected virtual UniTask OnMissingRequirements()
+        protected internal virtual UniTask OnMissingRequirements()
         {
             return UniTask.CompletedTask;
         }
 
         /// <summary>
         ///     Event raised when action is not ready to be executed. Do not mistake this with
-        ///     <see cref="OnExecutedDuringCooldown"/>
+        ///     <see cref="ActionBaseWithCooldown.OnExecutedDuringCooldown"/>
         /// </summary>
-        protected virtual UniTask OnActionNotReady()
+        protected internal virtual UniTask OnActionNotReady()
         {
             return UniTask.CompletedTask;
         }
@@ -112,25 +112,7 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Event raised when action is disabled and can't be executed.
         /// </summary>
-        protected virtual UniTask OnActionDisabled()
-        {
-            return UniTask.CompletedTask;
-        }
-
-        /// <summary>
-        ///     Event raised when action execution failed due to cooldown.
-        ///     Raised only for actions that inherit from <see cref="ActionBaseWithCooldown" />.
-        /// </summary>
-        protected virtual UniTask OnExecutedDuringCooldown()
-        {
-            return UniTask.CompletedTask;
-        }
-        
-        /// <summary>
-        ///     Event raised when action cooldown has ended.
-        ///     Raised only for actions that inherit from <see cref="ActionBaseWithCooldown" />.
-        /// </summary>
-        protected virtual UniTask OnCooldownComplete()
+        protected internal virtual UniTask OnActionDisabled()
         {
             return UniTask.CompletedTask;
         }
@@ -174,15 +156,17 @@ namespace FastUnityCreationKit.Unity.Actions
                 case ActionExecutionState.Disabled: await OnActionDisabled(); break;
                 case ActionExecutionState.NotReady: await OnActionNotReady(); break;
                 case ActionExecutionState.MissingRequirements: await OnMissingRequirements(); break;
-                case ActionExecutionState.OnCooldown: await OnExecutedDuringCooldown(); break;
+                case ActionExecutionState.OnCooldown:
+                    if (this is ActionBaseWithCooldown withCooldown) await withCooldown.OnExecutedDuringCooldown();
+                    break;
                 case ActionExecutionState.Interrupted: await OnExecutionInterrupted(); break;
                 case ActionExecutionState.Cancelled: await OnExecutionCancelled(); break;
                 case ActionExecutionState.Success: await OnExecutionSuccess(); break;
                 case ActionExecutionState.Failed: await OnExecutionFailed(); break;
-     
+
                 default: break;
             }
-            
+
             // Finish action execution
             await OnExecutionFinished();
             return actionState;

@@ -55,6 +55,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         ///     The time remaining until the timer finishes.
         /// </summary>
         [ShowInInspector] [ReadOnly] [TitleGroup(GROUP_INFO)] [Unit(Units.Second)] 
+        [field: SerializeField, HideInInspector]
         public double RemainingTime { get; private set; }
         
         /// <summary>
@@ -183,9 +184,30 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// </remarks>
         public async UniTask Finish()
         {
-            await SetRemainingTime(TimeSpan.Zero);
+            await SetRemainingTimeSilent(TimeSpan.Zero);
+        }
+        
+        /// <summary>
+        ///     Same as <see cref="Finish"/>, but does not raise <see cref="OnTimePassed"/> event.
+        /// </summary>
+        public async UniTask FinishSilent()
+        {
+            await SetRemainingTimeSilent(TimeSpan.Zero);
         }
 
+        /// <summary>
+        ///     Set the remaining time of the timer without raising
+        ///     <see cref="OnTimePassed"/> event.
+        /// </summary>
+        public async UniTask SetRemainingTimeSilent([Unit(Units.Second)] double time)
+        {
+            // Set the new time.
+            RemainingTime = time;
+            
+            // Check if timer has finished and act accordingly.
+            await TryToFinish();
+        }
+        
         public async UniTask SetRemainingTime([Unit(Units.Second)] double time)
         {
             // Compute the difference between the new time and the old time.
@@ -206,6 +228,15 @@ namespace FastUnityCreationKit.Unity.Time.Timers
             
             // Check if timer has finished and act accordingly.
             await TryToFinish();
+        }
+        
+        /// <summary>
+        ///     Set the remaining time of the timer without raising
+        ///     <see cref="OnTimePassed"/> event.
+        /// </summary>
+        public async UniTask SetRemainingTimeSilent(TimeSpan time)
+        {
+            await SetRemainingTimeSilent(time.TotalSeconds);
         }
         
         /// <summary>

@@ -29,7 +29,9 @@ namespace FastUnityCreationKit.Unity.Actions
         // Action can't be executed due to missing requirements
         MissingRequirements = 1 << 6,
         
-        // Action is not ready to be executed
+        // Action is not ready to be executed, don't confuse with
+        // OnCooldown, which is raised when action is executed during cooldown.
+        // This is more like a validation state (action is missing some data, etc.)
         NotReady = 1 << 7
     }
 }

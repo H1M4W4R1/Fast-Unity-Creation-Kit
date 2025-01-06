@@ -16,6 +16,28 @@ namespace FastUnityCreationKit.Examples._09_Actions
             return UniTask.FromResult(ActionExecutionState.Success);
         }
 
-        
+        protected override UniTask OnCooldownStarted()
+        {
+            Debug.Log("Cooldown started");
+            return UniTask.CompletedTask;
+        }
+
+        protected override UniTask OnCooldownTimePassed(double deltaTime)
+        {
+            // Debug.Log($"Cooldown time passed {deltaTime}");
+            return UniTask.CompletedTask;
+        }
+
+        protected override UniTask OnCooldownComplete()
+        {
+            Debug.Log("Cooldown complete");
+            return UniTask.CompletedTask;
+        }
+
+        protected override UniTask OnExecutedDuringCooldown()
+        {
+            Debug.Log("Executed during cooldown");
+            return UniTask.CompletedTask;
+        }
     }
 }

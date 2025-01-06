@@ -92,12 +92,43 @@ namespace FastUnityCreationKit.Unity.Actions
             
             // Check if action execution state is one of the states that should trigger cooldown.
             if ((actionState & ExecutionStatesCausingCooldownToStart) != 0)
-            {
                 CooldownTimer.Run();
-            }
 
             // Return action state.
             return actionState;
+        }
+        
+        
+        /// <summary>
+        ///     Event raised when action execution failed due to cooldown.
+        /// </summary>
+        protected internal virtual UniTask OnExecutedDuringCooldown()
+        {
+            return UniTask.CompletedTask;
+        }
+        
+        /// <summary>
+        ///     Event raised when cooldown time changes by <see cref="deltaTime"/>
+        /// </summary>
+        protected internal virtual UniTask OnCooldownTimePassed([Unit(Units.Second)] double deltaTime)
+        {
+            return UniTask.CompletedTask;
+        }
+
+        /// <summary>
+        ///     Event raised when action cooldown has ended.
+        /// </summary>
+        protected internal virtual UniTask OnCooldownComplete()
+        {
+            return UniTask.CompletedTask;
+        }
+        
+        /// <summary>
+        ///     Event raised when action cooldown has started.
+        /// </summary>
+        protected virtual UniTask OnCooldownStarted()
+        {
+            return UniTask.CompletedTask;
         }
 
         /// <summary>
@@ -138,9 +169,18 @@ namespace FastUnityCreationKit.Unity.Actions
             public override bool RestartOnElapsed => false;
             public override bool DisposeOnElapsed => false;
 
+            protected override async UniTask OnStarted()
+            {
+                await OwnerReference.OnCooldownStarted();
+            }
+
+            protected override async UniTask OnTimePassed(double deltaTime)
+            {
+                await OwnerReference.OnCooldownTimePassed(deltaTime);
+            }
+            
             protected override async UniTask OnCompleted()
             {
-                // Call base method.
                 await OwnerReference.OnCooldownComplete();
             }
         }
@@ -153,8 +193,9 @@ namespace FastUnityCreationKit.Unity.Actions
             // Check if action is on cooldown.
             if(CooldownLeft <= 0) return UniTask.CompletedTask;
             
-            // Finish cooldown timer.
-            CooldownTimer?.Finish();
+            // Finish cooldown timer silently
+            // to prevent OnTimePassed event from being called.
+            CooldownTimer?.FinishSilent();
             return UniTask.CompletedTask;
         }
 
