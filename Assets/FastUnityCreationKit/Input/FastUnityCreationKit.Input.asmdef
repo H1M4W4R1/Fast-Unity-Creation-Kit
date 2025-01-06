@@ -2,6 +2,7 @@
   "name": "FastUnityCreationKit.Input",
   "allowUnsafeCode": true,
   "references": [
+    "Unity.InputSystem",
     "UniTask",
     "FastUnityCreationKit.Annotations",
     "FastUnityCreationKit.Core",

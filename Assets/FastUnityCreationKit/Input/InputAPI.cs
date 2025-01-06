@@ -18,7 +18,7 @@ namespace FastUnityCreationKit.Input
         ///     Rebinding operation that is already in progress.
         /// </summary>
         private static InputActionRebindingExtensions.RebindingOperation _rebindingOperation;
-        
+
         /// <summary>
         ///     Initializes the input API. Call this method at the start of the application
         ///     to ensure that input system is properly initialized.
@@ -27,14 +27,14 @@ namespace FastUnityCreationKit.Input
         {
             // Attach to input system action change event
             InputSystem.onActionChange += OnInputActionChanged;
-            
+
             // Ensure that rebinding operation is disposed when application quits
             Application.quitting += () =>
             {
                 _rebindingOperation?.Cancel();
                 _rebindingOperation?.Dispose();
                 _rebindingOperation = null;
-                
+
                 // Unsubscribe from input system action change event
                 InputSystem.onActionChange -= OnInputActionChanged;
             };
@@ -49,8 +49,32 @@ namespace FastUnityCreationKit.Input
             InputDeviceType allowedDevices = InputDeviceType.All)
         {
             // Get binding index from action and binding name
-            if (!GetBindingFromAction(action, bindingName, out int bindingIndex)) return false;
+            return GetBindingFromAction(action, bindingName, out int bindingIndex) &&
+                   Rebind(action, bindingIndex, allowedDevices);
+        }
 
+        /// <summary>
+        ///     Starts to rebind the provided action with the provided binding index.
+        /// </summary>
+        public static bool Rebind(
+            [NotNull] this InputAction action,
+            int bindingIndex,
+            InputDeviceType allowedDevices = InputDeviceType.All)
+        {
+            // Check if device type is unknown, this is not allowed for rebind
+            if ((allowedDevices & InputDeviceType.Unknown) != 0)
+            {
+                Guard<ValidationLogConfig>.Error("Cannot rebind with unknown allowed devices.");
+                return false;
+            }
+            
+            // Check if binding index is valid (within action bindings range)
+            if (bindingIndex < 0 || bindingIndex >= action.bindings.Count)
+            {
+                Guard<ValidationLogConfig>.Error($"Invalid binding index '{bindingIndex}' for '{action.name}'");
+                return false;
+            }
+            
             if (action.bindings[bindingIndex].isComposite)
             {
                 int firstPartIndex = bindingIndex + 1;
@@ -103,11 +127,12 @@ namespace FastUnityCreationKit.Input
             _rebindingOperation = _rebindingOperation.OnComplete(OnOperationCompleted);
 
             // Trigger global event for binding change started
-            OnBindingChangeStartedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex));
-            
+            OnBindingChangeStartedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
+                allowedDevices));
+
             // Start rebind operation
             _rebindingOperation.Start();
-            
+
             return;
 
 #region REBIND_EVENTS
@@ -116,7 +141,8 @@ namespace FastUnityCreationKit.Input
             void OnOperationCancelled(
                 [NotNull] InputActionRebindingExtensions.RebindingOperation rebindingOperation)
             {
-                OnBindingChangeCancelledGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex));
+                OnBindingChangeCancelledGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
+                    allowedDevices));
                 _rebindingOperation?.Dispose();
                 _rebindingOperation = null;
             }
@@ -129,8 +155,9 @@ namespace FastUnityCreationKit.Input
                 //     if duplicate is found create a new event to handle this scenario.
                 //     This will also affect the reset to default method as bindings may collide after reset.
                 //     For now we will assume that there are no duplicates and proceed with the rebind.
-                
-                OnBindingChangedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex));
+
+                OnBindingChangedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
+                    allowedDevices));
                 _rebindingOperation?.Dispose();
                 _rebindingOperation = null;
 
@@ -168,7 +195,7 @@ namespace FastUnityCreationKit.Input
                 action.RemoveBindingOverride(bindingIndex);
 
             // Execute global events on changed binding
-            BindingChangeData changeData = new(action, bindingIndex);
+            BindingChangeData changeData = new(action, bindingIndex, InputDeviceType.Unknown);
 
             OnBindingChangedGlobalEvent.TriggerEvent(changeData);
             OnBindingResetGlobalEvent.TriggerEvent(changeData);
@@ -244,8 +271,7 @@ namespace FastUnityCreationKit.Input
         /// </summary>
         private static void OnInputActionChanged(object obj, InputActionChange change)
         {
-            if (change != InputActionChange.BoundControlsChanged)
-                return;
+            if (change != InputActionChange.BoundControlsChanged) return;
 
             // Notify for update of all bindings in the action map
             switch (obj)
@@ -254,19 +280,19 @@ namespace FastUnityCreationKit.Input
                 case InputActionMap actionMap: NotifyActionMapBindingsChanged(actionMap); break;
             }
         }
-        
+
         private static void NotifyActionMapBindingsChanged([NotNull] InputActionMap actionMap)
         {
             // Notify for update of all bindings in the action map
-            foreach (InputAction action in actionMap.actions)
-                NotifyActionBindingsChanged(action);
+            foreach (InputAction action in actionMap.actions) NotifyActionBindingsChanged(action);
         }
 
         private static void NotifyActionBindingsChanged([NotNull] InputAction action)
         {
             // Notify for update of all bindings in the action asset
             for (int bindingIndex = 0; bindingIndex < action.bindings.Count; bindingIndex++)
-                OnBindingChangedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex));
+                OnBindingChangedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
+                    InputDeviceType.Unknown));
         }
     }
 }

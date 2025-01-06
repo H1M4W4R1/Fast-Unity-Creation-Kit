@@ -12,6 +12,8 @@ namespace FastUnityCreationKit.Input.Enums
         Touch = 1 << 3,
         Pointer = 1 << 4,
         
+        // Indicate that change was made externally and InputDeviceType is unknown.
+        Unknown = 1 << 30,
         All = 0xFFFFFFFF
     }
 }
