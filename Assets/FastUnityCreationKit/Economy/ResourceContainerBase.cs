@@ -124,37 +124,37 @@ namespace FastUnityCreationKit.Economy
         [HideInInspector] [TitleGroup(GROUP_DEBUG, Order = int.MaxValue)] [ReadOnly] public int ResourceSpace
             => MaximumResourceStored - MinimumResourceStored;
 
-        protected virtual async UniTask OnResourceAdded(int amount)
+        [UsedImplicitly] protected virtual async UniTask OnResourceAdded(int amount)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceRemoved(int amount)
+        [UsedImplicitly] protected virtual async UniTask OnResourceRemoved(int amount)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceAddFailed(int amount, int spaceLeft)
+        [UsedImplicitly] protected virtual async UniTask OnResourceAddFailed(int amount, int spaceLeft)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceRemoveFailed(int amount, int amountLeft)
+        [UsedImplicitly] protected virtual async UniTask OnResourceRemoveFailed(int amount, int amountLeft)
         {
             await UniTask.CompletedTask;
         }
 
-        protected virtual async UniTask OnResourceAmountChanged(int oldAmount, int newAmount)
+        [UsedImplicitly] protected virtual async UniTask OnResourceAmountChanged(int oldAmount, int newAmount)
         {
             await UniTask.CompletedTask;
         }
         
-        protected UniTask OnMaxLimitReached()
+        [UsedImplicitly] protected UniTask OnMaxLimitReached()
         {
             return UniTask.CompletedTask;
         }
 
-        protected UniTask OnMinLimitReached()
+        [UsedImplicitly] protected UniTask OnMinLimitReached()
         {
             return UniTask.CompletedTask;
         }

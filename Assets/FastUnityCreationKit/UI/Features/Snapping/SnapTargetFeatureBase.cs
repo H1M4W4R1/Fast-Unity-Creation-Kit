@@ -1,5 +1,6 @@
 ﻿using FastUnityCreationKit.UI.Abstract;
 using FastUnityCreationKit.UI.Interfaces;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using static FastUnityCreationKit.Core.Constants;
 
@@ -14,12 +15,12 @@ namespace FastUnityCreationKit.UI.Features.Snapping
         IOnObjectSnappedCallback<TSelf>
         where TSelf : SnapTargetFeatureBase<TSelf>, ISnapTarget<TSelf>, new()
     {
-        public virtual void OnSnapBreak(SnapToFeatureBase<TSelf> objectBrokenFromSnap)
+        [UsedImplicitly] public virtual void OnSnapBreak(SnapToFeatureBase<TSelf> objectBrokenFromSnap)
         {
             HasSnappedObject = false;
         }
 
-        public virtual void OnSnap(SnapToFeatureBase<TSelf> objectSnapped)
+        [UsedImplicitly] public virtual void OnSnap(SnapToFeatureBase<TSelf> objectSnapped)
         {
             HasSnappedObject = true;
         }

@@ -53,7 +53,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         ///     Called before save is saved. It can be used to update data before saving as it's
         ///     called before any data is written to disk.
         /// </summary>
-        protected virtual async UniTask BeforeSaveWritten()
+        [UsedImplicitly] protected internal virtual async UniTask BeforeSaveWritten()
         {
             await UniTask.CompletedTask;
         }
@@ -63,7 +63,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         ///     be populated with data from disk using <see cref="ISaveableObject" /> interface as
         ///     this event is called before any data is loaded.
         /// </summary>
-        protected virtual async UniTask BeforeSaveLoaded()
+        [UsedImplicitly] protected internal virtual async UniTask BeforeSaveLoaded()
         {
             await UniTask.CompletedTask;
         }
@@ -71,7 +71,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         ///     Called when save is loaded.
         /// </summary>
-        protected virtual async UniTask OnSaveLoaded()
+        [UsedImplicitly] protected internal virtual async UniTask OnSaveLoaded()
         {
             await UniTask.CompletedTask;
         }
@@ -79,7 +79,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         ///     Called when save failed to load.
         /// </summary>
-        protected virtual async UniTask OnSaveLoadFailed()
+        [UsedImplicitly] protected internal virtual async UniTask OnSaveLoadFailed()
         {
             await UniTask.CompletedTask;
         }
@@ -87,7 +87,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         ///     Called when save is saved.
         /// </summary>
-        protected virtual async UniTask OnSaveWritten()
+        [UsedImplicitly] protected internal virtual async UniTask OnSaveWritten()
         {
             await UniTask.CompletedTask;
         }
@@ -95,7 +95,7 @@ namespace FastUnityCreationKit.Saving.Abstract
         /// <summary>
         ///     Called when save failed to save.
         /// </summary>
-        protected virtual async UniTask OnSaveWriteFailed()
+        [UsedImplicitly] protected internal virtual async UniTask OnSaveWriteFailed()
         {
             await UniTask.CompletedTask;
         }

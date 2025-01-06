@@ -57,7 +57,7 @@ namespace FastUnityCreationKit.Unity.Features
         /// <summary>
         ///     Called when the initialization of the feature is completed.
         /// </summary>
-        protected virtual void OnInitializeCompleted()
+        [UsedImplicitly] protected internal virtual void OnInitializeCompleted()
         {
         }
 

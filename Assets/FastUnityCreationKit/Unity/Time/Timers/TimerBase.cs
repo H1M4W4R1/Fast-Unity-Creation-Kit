@@ -358,7 +358,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     Called when timer has elapsed.
         /// </summary>
-        protected virtual UniTask OnCompleted()
+        [UsedImplicitly] protected internal virtual UniTask OnCompleted()
         {
             return UniTask.CompletedTask;
         }
@@ -366,7 +366,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     Called when timer has started.
         /// </summary>
-        protected virtual UniTask OnStarted()
+        [UsedImplicitly] protected internal virtual UniTask OnStarted()
         {
             return UniTask.CompletedTask;
         }
@@ -374,7 +374,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     Called when timer has stopped.
         /// </summary>
-        protected virtual UniTask OnStopped()
+        [UsedImplicitly] protected internal virtual UniTask OnStopped()
         {
             return UniTask.CompletedTask;
         }
@@ -382,7 +382,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     Called when time is reduced.
         /// </summary>
-        protected virtual UniTask OnTimePassed([Unit(Units.Second)]  double deltaTime)
+        [UsedImplicitly] protected internal virtual UniTask OnTimePassed([Unit(Units.Second)]  double deltaTime)
         {
             return UniTask.CompletedTask;
         }
@@ -390,7 +390,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     Called when timer is reset.
         /// </summary>
-        protected virtual UniTask OnReset()
+        [UsedImplicitly] protected internal virtual UniTask OnReset()
         {
             return UniTask.CompletedTask;
         }
@@ -398,7 +398,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     Called when timer is configured for the first time.
         /// </summary>
-        protected virtual UniTask OnSetup()
+        [UsedImplicitly] protected internal virtual UniTask OnSetup()
         {
             return UniTask.CompletedTask;
         }

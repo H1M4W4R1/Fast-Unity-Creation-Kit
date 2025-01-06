@@ -53,7 +53,7 @@ namespace FastUnityCreationKit.Unity.Time.Timers
         /// <summary>
         ///     If timer was completed stop it.
         /// </summary>
-        protected override UniTask OnCompleted()
+        protected internal override UniTask OnCompleted()
         {
             return UniTask.CompletedTask;
         }

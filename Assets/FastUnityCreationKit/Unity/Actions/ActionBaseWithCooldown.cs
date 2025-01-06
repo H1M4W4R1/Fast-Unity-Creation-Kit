@@ -126,7 +126,7 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         ///     Event raised when action cooldown has started.
         /// </summary>
-        protected virtual UniTask OnCooldownStarted()
+        [UsedImplicitly] protected internal virtual UniTask OnCooldownStarted()
         {
             return UniTask.CompletedTask;
         }
@@ -169,17 +169,17 @@ namespace FastUnityCreationKit.Unity.Actions
             public override bool RestartOnElapsed => false;
             public override bool DisposeOnElapsed => false;
 
-            protected override async UniTask OnStarted()
+            protected internal override async UniTask OnStarted()
             {
                 await OwnerReference.OnCooldownStarted();
             }
 
-            protected override async UniTask OnTimePassed(double deltaTime)
+            protected internal override async UniTask OnTimePassed(double deltaTime)
             {
                 await OwnerReference.OnCooldownTimePassed(deltaTime);
             }
             
-            protected override async UniTask OnCompleted()
+            protected internal override async UniTask OnCompleted()
             {
                 await OwnerReference.OnCooldownComplete();
             }

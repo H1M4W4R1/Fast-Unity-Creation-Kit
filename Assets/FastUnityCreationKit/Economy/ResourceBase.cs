@@ -15,12 +15,12 @@ namespace FastUnityCreationKit.Economy
     {
         [NotNull] public ResourceDatabase Database => ResourceDatabase.Instance;
 
-        public virtual UniTask OnResourceAdded([NotNull] ResourceContainerBase containerBase, int amount)
+        [UsedImplicitly] protected internal virtual UniTask OnResourceAdded([NotNull] ResourceContainerBase containerBase, int amount)
         {
             return UniTask.CompletedTask;
         }
 
-        public virtual UniTask OnResourceAddFailed(
+        [UsedImplicitly] protected internal virtual UniTask OnResourceAddFailed(
             [NotNull] ResourceContainerBase containerBase,
             int amount,
             int spaceLeft)
@@ -28,12 +28,12 @@ namespace FastUnityCreationKit.Economy
             return UniTask.CompletedTask;
         }
 
-        public virtual UniTask OnResourceRemoved([NotNull] ResourceContainerBase containerBase, int amount)
+        [UsedImplicitly] protected internal virtual UniTask OnResourceRemoved([NotNull] ResourceContainerBase containerBase, int amount)
         {
             return UniTask.CompletedTask;
         }
 
-        public virtual UniTask OnResourceRemoveFailed(
+        [UsedImplicitly] protected internal virtual UniTask OnResourceRemoveFailed(
             [NotNull] ResourceContainerBase containerBase,
             long amount,
             long availableAmount)
@@ -41,7 +41,7 @@ namespace FastUnityCreationKit.Economy
             return UniTask.CompletedTask;
         }
 
-        public virtual UniTask OnResourceChanged(
+        [UsedImplicitly] protected internal virtual UniTask OnResourceChanged(
             [NotNull] ResourceContainerBase containerBase,
             int oldAmount,
             int newAmount)
@@ -49,12 +49,12 @@ namespace FastUnityCreationKit.Economy
             return UniTask.CompletedTask;
         }
 
-        public virtual UniTask OnMaxLimitReached([NotNull] ResourceContainerBase containerBase)
+        [UsedImplicitly] protected internal virtual UniTask OnMaxLimitReached([NotNull] ResourceContainerBase containerBase)
         {
             return UniTask.CompletedTask;
         }
 
-        public virtual UniTask OnMinLimitReached([NotNull] ResourceContainerBase containerBase)
+        [UsedImplicitly] protected internal virtual UniTask OnMinLimitReached([NotNull] ResourceContainerBase containerBase)
         {
             return UniTask.CompletedTask;
         }

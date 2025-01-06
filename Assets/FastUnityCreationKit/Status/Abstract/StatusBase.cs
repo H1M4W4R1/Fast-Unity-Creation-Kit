@@ -5,6 +5,7 @@ using FastUnityCreationKit.Annotations.Unity;
 using FastUnityCreationKit.Core.Limits;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Identification;
+using JetBrains.Annotations;
 using static FastUnityCreationKit.Core.Constants;
 
 namespace FastUnityCreationKit.Status.Abstract
@@ -31,7 +32,7 @@ namespace FastUnityCreationKit.Status.Abstract
         /// <summary>
         ///     Called when status is applied to the target when the target is not affected by the status.
         /// </summary>
-        public virtual async UniTask OnStatusApplied(StatusContainer context)
+        [UsedImplicitly] protected internal virtual async UniTask OnStatusApplied(StatusContainer context)
         {
             await UniTask.CompletedTask;
         }
@@ -39,7 +40,7 @@ namespace FastUnityCreationKit.Status.Abstract
         /// <summary>
         ///     Called when status is removed from the target when the target is affected by the status.
         /// </summary>
-        public virtual async UniTask OnStatusRemoved(StatusContainer context)
+        [UsedImplicitly] protected internal virtual async UniTask OnStatusRemoved(StatusContainer context)
         {
             await UniTask.CompletedTask;
         }
@@ -47,7 +48,7 @@ namespace FastUnityCreationKit.Status.Abstract
         /// <summary>
         ///     Called when status level is changed. For percentage status it's also known as 100% stack level change.
         /// </summary>
-        public virtual async UniTask OnStatusLevelChanged(StatusContainer context, long difference)
+        [UsedImplicitly] protected internal virtual async UniTask OnStatusLevelChanged(StatusContainer context, long difference)
         {
             await UniTask.CompletedTask;
         }
@@ -56,7 +57,7 @@ namespace FastUnityCreationKit.Status.Abstract
         ///     Called when maximum percentage is reached.
         ///     Must support IWithMaxLimit, otherwise it will never be called.
         /// </summary>
-        public virtual async UniTask OnMaxLimitReached(StatusContainer context)
+        [UsedImplicitly] protected internal virtual async UniTask OnMaxLimitReached(StatusContainer context)
         {
             await UniTask.CompletedTask;
         }
@@ -65,7 +66,7 @@ namespace FastUnityCreationKit.Status.Abstract
         ///     Called when minimum percentage is reached.
         ///     Must support IWithMinLimit, otherwise it will never be called.
         /// </summary>
-        public virtual async UniTask OnMinLimitReached(StatusContainer context)
+        [UsedImplicitly] protected internal virtual async UniTask OnMinLimitReached(StatusContainer context)
         {
             await UniTask.CompletedTask;
         }
@@ -73,7 +74,7 @@ namespace FastUnityCreationKit.Status.Abstract
         /// <summary>
         ///     Called when frame is updated.
         /// </summary>
-        public virtual async UniTask OnUpdate(StatusContainer context)
+        [UsedImplicitly] protected internal virtual async UniTask OnUpdate(StatusContainer context)
         {
             await UniTask.CompletedTask;
         }
