@@ -11,6 +11,7 @@ namespace FastUnityCreationKit.Unity.Actions
     /// <summary>
     ///     Action with cooldown.
     /// </summary>
+    [Serializable]
     public abstract class ActionBaseWithCooldown : ActionBase
     {
         private const string COOLDOWN_TO_STRING =
@@ -42,8 +43,8 @@ namespace FastUnityCreationKit.Unity.Actions
 
         protected ActionBaseWithCooldown()
         {
-            Initialize();
             CooldownTimer = new ActionCooldown(this, 0f);
+            Initialize();
         }
 
         /// <summary>
@@ -85,9 +86,18 @@ namespace FastUnityCreationKit.Unity.Actions
         
         protected internal override async UniTask<ActionExecutionState> TryPerformExecution()
         {
-            return CooldownTimer.Enabled
-                ? ActionExecutionState.OnCooldown
-                : await PerformExecution();
+            if(CooldownTimer.Enabled) return ActionExecutionState.OnCooldown;
+
+            ActionExecutionState actionState = await base.TryPerformExecution();
+            
+            // Check if action execution state is one of the states that should trigger cooldown.
+            if ((actionState & ExecutionStatesCausingCooldownToStart) != 0)
+            {
+                CooldownTimer.Run();
+            }
+
+            // Return action state.
+            return actionState;
         }
 
         /// <summary>
