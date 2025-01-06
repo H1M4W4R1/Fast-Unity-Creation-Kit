@@ -6,6 +6,7 @@
     "Unity.Burst",
     "Unity.Collections",
     "Unity.Mathematics",
+    "Unity.Localization",
     "Unity.Logging",
     "Unity.ResourceManager",
     "UniTask"

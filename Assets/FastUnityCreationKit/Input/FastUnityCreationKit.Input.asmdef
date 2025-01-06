@@ -1,0 +1,12 @@
+{
+  "name": "FastUnityCreationKit.Input",
+  "allowUnsafeCode": true,
+  "references": [
+    "UniTask",
+    "FastUnityCreationKit.Annotations",
+    "FastUnityCreationKit.Core",
+    "FastUnityCreationKit.Events",
+    "FastUnityCreationKit.Structure",
+    "FastUnityCreationKit.Saving"
+  ]
+}
