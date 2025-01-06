@@ -42,7 +42,52 @@ namespace FastUnityCreationKit.Input
         }
 
         /// <summary>
+        ///     Used to rebind the provided action with default binding (at index 0).
+        /// </summary>
+        public static bool Rebind(
+            [NotNull] this InputActionReference reference,
+            InputDeviceType allowedDevices = InputDeviceType.All)
+        {
+            InputAction action = reference.action;
+            return action != null && action.Rebind(allowedDevices);
+        }
+
+        /// <summary>
+        ///     Used to rebind the provided action with default binding (at index 0).
+        /// </summary>
+        public static bool Rebind(
+            [NotNull] this InputAction action,
+            InputDeviceType allowedDevices = InputDeviceType.All)
+        {
+            // Get action bindings count
+            if (action.bindings.Count != 1)
+            {
+                Guard<ValidationLogConfig>.Error($"Cannot rebind action '{action.name}' with multiple bindings. " +
+                                                 $"You need to specify binding name or index.");
+                return false;
+            }
+
+            // Rebind action
+            return action.Rebind(0, allowedDevices);
+        }
+
+        /// <summary>
+        ///     Used to rebind the provided action with the provided binding name.
+        ///     Requires map to be disabled before rebind.
+        /// </summary>
+        public static bool Rebind(
+            [NotNull] this InputActionReference reference,
+            [NotNull] string bindingName,
+            InputDeviceType allowedDevices = InputDeviceType.All)
+        {
+            // Get action from reference
+            InputAction action = reference.action;
+            return action != null && action.Rebind(bindingName, allowedDevices);
+        }
+
+        /// <summary>
         ///     Starts to rebind the provided action with the provided binding name.
+        ///     Requires map to be disabled before rebind.
         /// </summary>
         public static bool Rebind(
             [NotNull] this InputAction action,
@@ -55,7 +100,22 @@ namespace FastUnityCreationKit.Input
         }
 
         /// <summary>
+        ///     Starts to rebind the provided action with the provided binding name.
+        ///     Requires map to be disabled before rebind.
+        /// </summary>
+        public static bool Rebind(
+            [NotNull] this InputActionReference reference,
+            int bindingIndex,
+            InputDeviceType allowedDevices = InputDeviceType.All)
+        {
+            // Get action from reference
+            InputAction action = reference.action;
+            return action != null && action.Rebind(bindingIndex, allowedDevices);
+        }
+
+        /// <summary>
         ///     Starts to rebind the provided action with the provided binding index.
+        ///     Requires map to be disabled before rebind.
         /// </summary>
         public static bool Rebind(
             [NotNull] this InputAction action,
@@ -112,22 +172,24 @@ namespace FastUnityCreationKit.Input
             // Create new rebinding operation
             _rebindingOperation = action.PerformInteractiveRebinding(bindingIndex);
 
-            // Handle controls check using allowed devices
-            if ((allowedDevices & InputDeviceType.Keyboard) == 0)
-                _rebindingOperation = _rebindingOperation.WithControlsExcluding("<Keyboard>");
-            if ((allowedDevices & InputDeviceType.Mouse) == 0)
-                _rebindingOperation = _rebindingOperation.WithControlsExcluding("<Mouse>");
-            if ((allowedDevices & InputDeviceType.Gamepad) == 0)
-                _rebindingOperation = _rebindingOperation.WithControlsExcluding("<Gamepad>");
-            if ((allowedDevices & InputDeviceType.Touch) == 0)
+            // Run through allowed device enum
+            // we're skipping unknown device as it's internal value
+            for (byte i = 0; i < 31; i++)
             {
-                _rebindingOperation = _rebindingOperation.WithControlsExcluding("<Touch>");
-                _rebindingOperation = _rebindingOperation.WithControlsExcluding("<Touchscreen>");
+                // Get enum value
+                InputDeviceType deviceType = (InputDeviceType) (1 << i);
+                
+                // Get device name
+                string deviceName = deviceType.ToString();
+                
+                // Check if device name should be skipped as enum value is not defined
+                if (string.IsNullOrEmpty(deviceName)) continue;
+                
+                // If device is not allowed, exclude it
+                if ((allowedDevices & deviceType) == 0)
+                    _rebindingOperation = _rebindingOperation.WithControlsExcluding($"<{deviceName}>");
             }
-
-            if ((allowedDevices & InputDeviceType.Pointer) == 0)
-                _rebindingOperation = _rebindingOperation.WithControlsExcluding("<Pointer>");
-
+            
             // Handle rebind operation events
             _rebindingOperation = _rebindingOperation.OnCancel(OnOperationCancelled);
             _rebindingOperation = _rebindingOperation.OnComplete(OnOperationCompleted);
@@ -164,8 +226,10 @@ namespace FastUnityCreationKit.Input
                 {
                     string newEffectivePath = action.bindings[bindingIndex].effectivePath;
 
-                    // Reset binding to default if duplicate is found and notify for duplicate found.
-                    action.ApplyBindingOverride(bindingIndex, oldBindingOverride);
+                    // Reset binding to default if duplicate is found and old binding was set.
+                    if (oldBindingOverride != null) action.ApplyBindingOverride(bindingIndex, oldBindingOverride);
+
+                    // Notify for duplicate found
                     OnBindingDuplicateFoundGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
                         allowedDevices, oldEffectivePath, newEffectivePath));
 
@@ -193,6 +257,22 @@ namespace FastUnityCreationKit.Input
             }
 
 #endregion
+        }
+
+        /// <summary>
+        ///     Searches for duplicate bindings in the action map.
+        /// </summary>
+        public static bool SearchForDuplicate(
+            [NotNull] this InputActionReference reference,
+            [NotNull] string bindingName,
+            bool allCompositeParts = false)
+        {
+            // Get action from reference
+            InputAction action = reference.action;
+
+            // Get binding from action
+            if (!GetBindingFromAction(action, bindingName, out int bindingIndex)) return false;
+            return action != null && action.SearchForDuplicate(bindingIndex, allCompositeParts);
         }
 
         /// <summary>
@@ -246,13 +326,49 @@ namespace FastUnityCreationKit.Input
         ///     Used to reset input action binding to default value.
         /// </summary>
         public static bool ResetToDefault(
+            [NotNull] this InputActionReference reference,
+            [NotNull] string bindingName,
+            InputDeviceType allowedDevices = InputDeviceType.All)
+        {
+            // Get action from reference
+            InputAction action = reference.action;
+            return action != null && action.ResetToDefault(bindingName, allowedDevices);
+        }
+
+        /// <summary>
+        ///     Used to reset input action binding to default value.
+        /// </summary>
+        public static bool ResetToDefault(
+            [NotNull] this InputActionReference reference,
+            int bindingIndex,
+            InputDeviceType allowedDevices = InputDeviceType.All)
+        {
+            // Get action from reference
+            InputAction action = reference.action;
+            return action != null && action.ResetToDefault(bindingIndex, allowedDevices);
+        }
+
+        /// <summary>
+        ///     Used to reset input action binding to default value.
+        /// </summary>
+        public static bool ResetToDefault(
             [NotNull] this InputAction action,
             [NotNull] string bindingName,
             InputDeviceType allowedDevices = InputDeviceType.All)
         {
-            // Get binding index from action and binding name
-            if (!GetBindingFromAction(action, bindingName, out int bindingIndex)) return false;
+            // Get binding from action
+            return GetBindingFromAction(action, bindingName, out int bindingIndex) &&
+                   action.ResetToDefault(bindingIndex, allowedDevices);
+        }
 
+        /// <summary>
+        ///     Used to reset input action binding to default value.
+        /// </summary>
+        public static bool ResetToDefault(
+            [NotNull] this InputAction action,
+            int bindingIndex,
+            InputDeviceType allowedDevices = InputDeviceType.All)
+        {
             // Create binding overrides dictionary to cache all bindings that will be reset
             // to be able to revert them if duplicate is found.
             //
@@ -292,8 +408,9 @@ namespace FastUnityCreationKit.Input
                     string oldEffectivePath = oldBindingEffectivePaths[bindingOverride.Key];
                     string newEffectivePath = action.bindings[bindingOverride.Key].effectivePath;
 
-                    // Revert binding override
-                    action.ApplyBindingOverride(bindingOverride.Key, bindingOverride.Value);
+                    // Revert binding override if it was set
+                    if (bindingOverride.Value != null)
+                        action.ApplyBindingOverride(bindingOverride.Key, bindingOverride.Value);
 
                     // Notify for duplicate found
                     OnBindingDuplicateFoundGlobalEvent.TriggerEvent(new BindingChangeData(action,

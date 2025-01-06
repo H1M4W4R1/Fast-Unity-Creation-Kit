@@ -2,6 +2,7 @@
   "name": "FastUnityCreationKit.Examples",
   "allowUnsafeCode": true,
   "references": [
+    "Unity.InputSystem",
     "UniTask",
     "FastUnityCreationKit.Annotations",
     "FastUnityCreationKit.Crafting",
@@ -15,6 +16,7 @@
     "FastUnityCreationKit.Structure",
     "FastUnityCreationKit.UI",
     "FastUnityCreationKit.Unity",
-    "FastUnityCreationKit.Core"
+    "FastUnityCreationKit.Core",
+    "FastUnityCreationKit.Input"
   ]
 }
