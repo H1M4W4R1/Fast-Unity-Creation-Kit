@@ -18,6 +18,9 @@ namespace FastUnityCreationKit.Examples._10_InputSystem
 
         public void OnObjectCreated()
         {
+            // Initialize input system
+            InputAPI.Initialize();
+            
             inputActionAsset.Disable();
             inputActionAsset.FindAction("Key1").performed += context => Debug.Log("Key1 pressed");
             inputActionAsset.FindAction("Key2").performed += context => Debug.Log("Key2 pressed");
