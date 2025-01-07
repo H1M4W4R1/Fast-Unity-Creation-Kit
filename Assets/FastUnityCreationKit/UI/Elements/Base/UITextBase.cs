@@ -7,7 +7,7 @@ using UnityEngine;
 namespace FastUnityCreationKit.UI.Elements.Base
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
-    public abstract class UITextBase : UIObjectWithContextBase<string>, IRenderable<string>
+    public abstract class UITextBase : UIObjectWithContextBase<string>
     {
         /// <summary>
         ///     Internal reference to the TextMeshProUGUI component.
@@ -20,7 +20,7 @@ namespace FastUnityCreationKit.UI.Elements.Base
         /// </summary>
         [NotNull] protected TextMeshProUGUI Text => _textMeshProUGUI;
 
-        public virtual void Render(string dataContext)
+        public override void Render(string dataContext)
         {
             _textMeshProUGUI.text = dataContext;
         }

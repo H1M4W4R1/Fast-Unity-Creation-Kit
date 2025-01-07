@@ -10,7 +10,7 @@ namespace FastUnityCreationKit.UI.Elements.Base
     ///     Represents generic sprite renderer. Can be for example your icon or image.
     /// </summary>
     [RequireComponent(typeof(Image))]
-    public abstract class UISpriteBase : UIObjectWithContextBase<Sprite>, IRenderable<Sprite>
+    public abstract class UISpriteBase : UIObjectWithContextBase<Sprite>
     {
         /// <summary>
         ///     Cached reference to Unity's Image component.
@@ -23,7 +23,7 @@ namespace FastUnityCreationKit.UI.Elements.Base
         /// </summary>
         [NotNull] protected Image Image => _image;
 
-        public virtual void Render(Sprite dataContext)
+        public override void Render(Sprite dataContext)
         {
             _image.sprite = dataContext;
         }

@@ -37,8 +37,13 @@ namespace FastUnityCreationKit.UI.Interfaces
                 // If data context is not dirty and rendering is not enforced, do not render
                 if (!forceRender && !DataContext.IsDirty) return;
 
-                // If data context is null, do not render
-                if (ReferenceEquals(DataContext.Context, null)) return;
+                // If data context is null, notify object that data is null
+                // and skip rendering
+                if (ReferenceEquals(DataContext.Context, null))
+                {
+                    OnNullDataContext();
+                    return;
+                }
 
                 // Run internal rendering
                 Render(DataContext.Context);
@@ -53,6 +58,9 @@ namespace FastUnityCreationKit.UI.Interfaces
                 // with UniTask as progress updater.
                 Guard<UserInterfaceLogConfig>.Debug(
                     $"Data context is not valid for {GetType().GetCompilableNiceFullName()}.");
+
+                // Perform invalid data context handling
+                OnInvalidDataContext();
             }
         }
 
@@ -60,6 +68,23 @@ namespace FastUnityCreationKit.UI.Interfaces
         ///     Render this object
         /// </summary>
         public void Render([NotNull] TDataContextSealed dataContext);
+
+        /// <summary>
+        ///     This method is called when data context is not valid
+        /// </summary>
+        public void OnInvalidDataContext()
+        {
+            // Do nothing by default
+        }
+
+        /// <summary>
+        ///     This method is called when data context is valid, however provided data is null.
+        ///     This can happen when e.g. index is out of bounds.
+        /// </summary>
+        public void OnNullDataContext()
+        {
+            // Do nothing by default
+        }
     }
 
     /// <summary>

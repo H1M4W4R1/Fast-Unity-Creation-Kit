@@ -2,6 +2,7 @@
 using FastUnityCreationKit.UI.Context.Providers.Base;
 using FastUnityCreationKit.UI.Context.Providers.Utility;
 using FastUnityCreationKit.UI.Interfaces;
+using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
 using JetBrains.Annotations;
 using Sirenix.Utilities;
 
@@ -10,7 +11,8 @@ namespace FastUnityCreationKit.UI.Abstract
     /// <summary>
     ///     Represents a UI object with context.
     /// </summary>
-    public abstract class UIObjectWithContextBase<TDataContext> : UIObjectBase
+    public abstract class UIObjectWithContextBase<TDataContext> : UIObjectBase, IRenderable<TDataContext>,
+        IOnObjectDisabledCallback, IOnObjectEnabledCallback
         where TDataContext : notnull
     {
         /// <summary>
@@ -26,9 +28,25 @@ namespace FastUnityCreationKit.UI.Abstract
             base.OnObjectCreated();
         }
 
+        public void OnObjectEnabled()
+        {
+            // Attach provider when object is enabled
+            // to allow updates on enabled objects
+            AttachProvider();
+        }
+
         public override void OnObjectDestroyed()
         {
             base.OnObjectDestroyed();
+
+            // Ensure provider is detached
+            DetachProvider();
+        }
+
+        public void OnObjectDisabled()
+        {
+            // Detach provider when object is disabled
+            // to prevent updates on disabled objects
             DetachProvider();
         }
 
@@ -125,9 +143,10 @@ namespace FastUnityCreationKit.UI.Abstract
             DataContextProvider.OnContextChanged -= HandleContextHasChanged;
         }
 
-        private void HandleContextHasChanged(TDataContext context)
+        private void HandleContextHasChanged([CanBeNull] TDataContext context)
         {
-            if (this is IRenderable<TDataContext> renderable) renderable.Render(true);
+            // Call to base render method that has internal validation.
+            ((IRenderable<TDataContext>) this).Render(true);
         }
 
         private void HandleProviderDestroyed()
@@ -144,6 +163,33 @@ namespace FastUnityCreationKit.UI.Abstract
 
             // We don't assign provider here to prevent issues with provider
             // acquiring, GetProvider() will automatically assign it if needed
+        }
+
+        /// <summary>
+        ///     Render this object with provided data.
+        /// </summary>
+        /// <param name="dataContext">Data to render</param>
+        public virtual void Render(TDataContext dataContext)
+        {
+            // Do nothing by default
+        }
+
+        /// <summary>
+        ///     This method is called when data is valid, however provided data is null.
+        ///     This can happen when e.g. index is out of bounds.
+        /// </summary>
+        public virtual void OnNullDataContext()
+        {
+            // Do nothing by default
+        }
+
+        /// <summary>
+        ///     This method is called when data context is not valid
+        ///     and rendering is skipped.
+        /// </summary>
+        public virtual void OnInvalidDataContext()
+        {
+            // Do nothing by default
         }
     }
 }
