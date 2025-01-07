@@ -4,7 +4,7 @@ using Sirenix.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace FastUnityCreationKit.Structure.Singleton
+namespace FastUnityCreationKit.Core.Singleton
 {
     /// <summary>
     ///     Represents a singleton that is a <see cref="MonoBehaviour" />.

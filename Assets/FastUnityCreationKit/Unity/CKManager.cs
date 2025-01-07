@@ -1,5 +1,5 @@
 ﻿using FastUnityCreationKit.Core.Logging;
-using FastUnityCreationKit.Structure.Singleton;
+using FastUnityCreationKit.Core.Singleton;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Unity

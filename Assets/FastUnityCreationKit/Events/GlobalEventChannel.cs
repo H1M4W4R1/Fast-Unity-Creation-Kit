@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Core.Singleton;
 using FastUnityCreationKit.Events.Abstract;
-using FastUnityCreationKit.Structure.Singleton;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Events

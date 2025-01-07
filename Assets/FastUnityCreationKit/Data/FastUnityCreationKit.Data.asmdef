@@ -7,7 +7,6 @@
     "UniTask",
     "FastUnityCreationKit.Annotations",
     "FastUnityCreationKit.Core",
-    "FastUnityCreationKit.Structure",
     "FastUnityCreationKit.Saving"
   ]
 }

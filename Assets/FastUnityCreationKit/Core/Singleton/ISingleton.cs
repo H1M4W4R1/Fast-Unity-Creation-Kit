@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using Sirenix.Utilities;
 using Object = UnityEngine.Object;
 
-namespace FastUnityCreationKit.Structure.Singleton
+namespace FastUnityCreationKit.Core.Singleton
 {
     /// <summary>
     ///     Represents a singleton object - an object that has only one instance.

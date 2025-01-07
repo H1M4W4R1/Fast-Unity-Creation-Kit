@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using FastUnityCreationKit.Structure.Singleton;
+using FastUnityCreationKit.Core.Singleton;
 using FastUnityCreationKit.Unity.Events;
 using FastUnityCreationKit.Unity.Time;
 using FastUnityCreationKit.Unity.Time.Enums;

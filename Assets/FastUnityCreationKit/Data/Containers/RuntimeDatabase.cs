@@ -1,8 +1,8 @@
-﻿using FastUnityCreationKit.Data.Abstract;
+﻿using FastUnityCreationKit.Core.Singleton;
+using FastUnityCreationKit.Data.Abstract;
 using FastUnityCreationKit.Data.Interfaces;
 using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
-using FastUnityCreationKit.Structure.Singleton;
 using JetBrains.Annotations;
 
 namespace FastUnityCreationKit.Data.Containers

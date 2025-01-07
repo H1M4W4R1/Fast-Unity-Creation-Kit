@@ -1,8 +1,8 @@
 ﻿using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Core.Objects;
+using FastUnityCreationKit.Core.Singleton;
 using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
-using FastUnityCreationKit.Structure.Singleton;
 using FastUnityCreationKit.Unity.Editor;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Global;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;

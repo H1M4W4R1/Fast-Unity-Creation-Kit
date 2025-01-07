@@ -3,6 +3,6 @@
   "allowUnsafeCode": true,
   "references": [
     "UniTask",
-    "FastUnityCreationKit.Structure"
+    "FastUnityCreationKit.Core"
   ]
 }
