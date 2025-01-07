@@ -1,5 +1,4 @@
 ﻿using FastUnityCreationKit.Data.Abstract;
-using FastUnityCreationKit.Saving.Abstract;
 using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
 using FastUnityCreationKit.Structure.Singleton;
@@ -10,43 +9,28 @@ namespace FastUnityCreationKit.Data.Containers
     /// <summary>
     ///     Runtime Database is used to store data that is created and destroyed during runtime.
     ///     It can be really helpful in terms of quickly gathering data that can be saved and loaded
-    ///     as this database implements <see cref="ISaveableObject"/>, which automatically registers
+    ///     when this database implements <see cref="ISaveableObject"/>, which automatically registers
     ///     and unregisters within SaveAPI.
     /// </summary>
     /// <remarks>
     ///     This database could be used to implement for example units storage for RTS genre games.
     ///     Then you can quickly iterate through all units within <see cref="ISaveableObject.BeforeSaveSaved"/>
-    ///     method and write all units data to the save file.
+    ///     method and write all units data to the save file by implementing <see cref="ISaveableObject"/>.
     /// </remarks>
     public abstract class RuntimeDatabase<TSelfSealed, TDataType> : DataContainerBase<TDataType>,
-        ISingleton<TSelfSealed>, ISaveableObject
+        ISingleton<TSelfSealed>
         where TSelfSealed : RuntimeDatabase<TSelfSealed, TDataType>, new()
     {
         protected RuntimeDatabase()
         {
-            SaveAPI.RegisterSavableObject(this);
+            if(this is ISaveableObject saveableObject)
+                SaveAPI.RegisterSavableObject(saveableObject);
         }
 
         /// <summary>
         ///     Singleton instance.
         /// </summary>
         [NotNull] public static TSelfSealed Instance => ISingleton<TSelfSealed>.GetInstance();
-
-        /// <summary>
-        ///     Called before the save is saved.
-        /// </summary>
-        public virtual void BeforeSaveSaved(SaveBase toSave)
-        {
-            // Do nothing by default
-        }
-
-        /// <summary>
-        ///     Called after the save is loaded.
-        /// </summary>
-        public virtual void AfterSaveLoaded(SaveBase fromSave)
-        {
-            // Do nothing by default
-        }
 
         /// <summary>
         ///     Register data to the database.
@@ -66,7 +50,8 @@ namespace FastUnityCreationKit.Data.Containers
 
         ~RuntimeDatabase()
         {
-            SaveAPI.UnregisterSavableObject(this);
+            if(this is ISaveableObject saveableObject)
+                SaveAPI.UnregisterSavableObject(saveableObject);
         }
     }
 }
