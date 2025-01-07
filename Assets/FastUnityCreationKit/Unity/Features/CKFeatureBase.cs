@@ -1,4 +1,4 @@
-﻿using FastUnityCreationKit.Structure.Initialization;
+﻿using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
 using FastUnityCreationKit.Unity.Time.Enums;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
@@ -14,7 +14,7 @@ namespace FastUnityCreationKit.Unity.Features
     ///     It is strongly recommended to add <see cref="RequireComponent" /> attribute to the derived class
     ///     where type is set to same as <see cref="TFeaturedObject" />.
     /// </remarks>
-    public abstract class CKFeatureBase<TFeaturedObject> : CKFeatureBase, IInitializable
+    public abstract class CKFeatureBase<TFeaturedObject> : CKFeatureBase
         where TFeaturedObject : Component
     {
         /// <summary>
@@ -24,10 +24,10 @@ namespace FastUnityCreationKit.Unity.Features
         // ReSharper disable once NullableWarningSuppressionIsUsed
         protected TFeaturedObject FeaturedObject { get; private set; } = null!;
 
-        public new void OnInitialize()
+        public override void OnObjectInitialized()
         {
             FeaturedObject = GetComponent<TFeaturedObject>();
-            base.OnInitialize();
+            base.OnObjectInitialized();
         }
     }
 
@@ -37,7 +37,7 @@ namespace FastUnityCreationKit.Unity.Features
     ///     more complex features like a camera that can follow a target
     ///     ending up on automatic physic supports.
     /// </summary>
-    public abstract class CKFeatureBase : CKMonoBehaviour, IInitializable
+    public abstract class CKFeatureBase : CKMonoBehaviour, IOnObjectInitializedCallback
     {
         /// <summary>
         ///     GameObject this feature is attached to.
@@ -46,9 +46,7 @@ namespace FastUnityCreationKit.Unity.Features
         // ReSharper disable once NullableWarningSuppressionIsUsed
         protected GameObject GameObject { [UsedImplicitly] get; private set; } = null!;
 
-        bool IInitializable.InternalInitializationStatusStorage { get; set; }
-
-        public void OnInitialize()
+        public virtual void OnObjectInitialized()
         {
             GameObject = gameObject;
             OnInitializeCompleted();

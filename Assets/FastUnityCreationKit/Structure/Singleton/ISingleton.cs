@@ -53,9 +53,26 @@ namespace FastUnityCreationKit.Structure.Singleton
             // ReSharper disable once NullableWarningSuppressionIsUsed
             return Instance!;
         }
+
+        /// <summary>
+        ///     Checks if the current object is the same instance as the singleton.
+        ///     Compares current object with <see cref="GetInstance"/> result.
+        /// </summary>
+        bool ISingleton.CheckIfSameInstance()
+        {
+            if(this is TSelf self)
+                return Equals(self, GetInstance());
+            
+            return false;
+        }
     }
 
     public interface ISingleton
     {
+        /// <summary>
+        ///     Checks if the object is the same instance as the singleton.
+        ///     This is used to check if the object is the same instance as the singleton.
+        /// </summary>
+        public bool CheckIfSameInstance() => false;
     }
 }

@@ -2,7 +2,7 @@
 using FastUnityCreationKit.Core.Objects;
 using FastUnityCreationKit.Saving.Interfaces;
 using FastUnityCreationKit.Saving.Utility;
-using FastUnityCreationKit.Structure.Initialization;
+using FastUnityCreationKit.Structure.Singleton;
 using FastUnityCreationKit.Unity.Editor;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Global;
 using FastUnityCreationKit.Unity.Interfaces.Callbacks.Local;
@@ -79,16 +79,34 @@ namespace FastUnityCreationKit.Unity
         [ShowInInspector] [TitleGroup(GROUP_DEBUG)]
         public EventsView EventsView { get; }
 #endif
+        
+        /// <summary>
+        ///     True if the object was created (set after <see cref="IOnObjectCreatedCallback"/>
+        ///     and <see cref="IOnObjectCreatedGlobalCallback"/> are called).
+        /// </summary>
+        protected bool Created { get; private set; }
 
         /// <summary>
-        ///     Avoid overriding the Awake method. Implement the <see cref="IInitializable" /> interface instead
-        ///     and use the <see cref="IInitializable.OnInitialize" /> method.
+        ///     Avoid overriding the Awake method. Implement the <see cref="IOnObjectInitializedCallback" /> or
+        ///     <see cref="IOnObjectCreatedCallback"/> instead.
         /// </summary>
         protected virtual void Awake()
         {
-            // Register this object to the object registry.
-            CKEventsManager.Instance.RegisterFastMonoBehaviour(this);
-
+            // Validate singleton implementation
+            if (this is ISingleton singleton)
+            {
+                if (!singleton.CheckIfSameInstance())
+                {
+                    Guard<ValidationLogConfig>.Warning(
+                        $"Singleton {name} is not the same instance as the singleton instance. " +
+                        "Removing the singleton instance.");
+                    
+                    // Destroy the object
+                    Destroy(gameObject);
+                    return;
+                }
+            }
+  
             // Check if supports persistent interface.
             if (this is IPersistentObject)
             {
@@ -115,14 +133,23 @@ namespace FastUnityCreationKit.Unity
                         $"Object {name} is both persistent and temporary. This will cause severe issues!");
             }
 
-            // Initialize the object if it implements the IInitializable interface.
-            if (this is IInitializable initializable) initializable.Initialize();
+            // Handle object initialization events
+            if (this is IOnObjectInitializedCallback initializable) 
+                initializable.OnObjectInitialized();
+            
+            if (this is IOnObjectInitializedGlobalCallback globalInitializable)
+                globalInitializable.TriggerOnObjectInitializedEvent(this);
 
-            // Register the object to the save system if it implements the ISaveableObject interface.
-            if (this is ISaveableObject saveableObject) SaveAPI.RegisterSavableObject(saveableObject);
-
+            // Notify object was created to the object.
             NotifyObjectWasCreated();
-
+            
+            // Register this object to the object registry, this is done after creation
+            // to ensure proper handling of update events.
+            CKEventsManager.Instance.RegisterFastMonoBehaviour(this);
+            
+            // Register the object to the save system if implements necessary interface.
+            if (this is ISaveableObject saveableObject) SaveAPI.RegisterSavableObject(saveableObject);
+            
             // If this is both clickable and selectable print warning.
             if (this is IClickable and ISelectable)
                 Guard<ValidationLogConfig>.Warning(
@@ -176,6 +203,8 @@ namespace FastUnityCreationKit.Unity
 
             if (this is IOnObjectCreatedGlobalCallback globalCreateCallback)
                 globalCreateCallback.TriggerOnObjectCreatedEvent(this);
+
+            Created = true;
         }
 
         private void NotifyObjectWasDestroyed()
@@ -253,6 +282,9 @@ namespace FastUnityCreationKit.Unity
 
         protected void OnDestroy()
         {
+            // Skip if object is not created
+            if (!Created) return;
+            
             NotifyObjectWasDestroyed();
             IsDestroyed = true;
 
