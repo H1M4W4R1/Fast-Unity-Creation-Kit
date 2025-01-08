@@ -7,6 +7,6 @@
     "FastUnityCreationKit.Core",
     "FastUnityCreationKit.Events",
     "FastUnityCreationKit.Identification",
-    "FastUnityCreationKit.Saving",
+    "FastUnityCreationKit.Saving"
   ]
 }
