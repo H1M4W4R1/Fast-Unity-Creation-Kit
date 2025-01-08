@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using FastUnityCreationKit.Core.Logging;
 using FastUnityCreationKit.Input.Enums;
 using FastUnityCreationKit.Input.Events;
@@ -15,6 +16,15 @@ namespace FastUnityCreationKit.Input
     /// </summary>
     public static class InputAPI
     {
+        private const string ESCAPE = "<Keyboard>/escape";
+        private const string ANY_KEY = "<Keyboard>/anyKey";
+
+        /// <summary>
+        ///     If set to true, the rebind operation will be cancelled if the device is not allowed.
+        ///     Otherwise, the rebind operation will continue and the device will be ignored.
+        /// </summary>
+        public static bool CancelIfDeviceIsNotAllowed { get; set; } = true;
+        
         /// <summary>
         ///     Rebinding operation that is already in progress.
         /// </summary>
@@ -170,29 +180,13 @@ namespace FastUnityCreationKit.Input
             string oldBindingOverride = action.bindings[bindingIndex].overridePath;
 
             // Create new rebinding operation
-            _rebindingOperation = action.PerformInteractiveRebinding(bindingIndex);
-
-            // Run through allowed device enum
-            // we're skipping unknown device as it's internal value
-            for (byte i = 0; i < 31; i++)
-            {
-                // Get enum value
-                InputDeviceType deviceType = (InputDeviceType) (1 << i);
-                
-                // Get device name
-                string deviceName = deviceType.ToString();
-                
-                // Check if device name should be skipped as enum value is not defined
-                if (string.IsNullOrEmpty(deviceName)) continue;
-                
-                // If device is not allowed, exclude it
-                if ((allowedDevices & deviceType) == 0)
-                    _rebindingOperation = _rebindingOperation.WithControlsExcluding($"<{deviceName}>");
-            }
-            
-            // Handle rebind operation events
-            _rebindingOperation = _rebindingOperation.OnCancel(OnOperationCancelled);
-            _rebindingOperation = _rebindingOperation.OnComplete(OnOperationCompleted);
+            _rebindingOperation = action.PerformInteractiveRebinding(bindingIndex)
+                .OnCancel(OnOperationCancelled)
+                .OnComplete(OnOperationCompleted)
+                .OnPotentialMatch(OnPotentialMatch)
+                .WithControlsExcluding(ANY_KEY) // Fix Unity Input System being a shit
+                .WithControlsExcluding(ESCAPE) // also same as above to allow thing below to work properly
+                .WithCancelingThrough(ESCAPE); // Always use ESC as cancel button
 
             // Trigger global event for binding change started
             OnBindingChangeStartedGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
@@ -204,6 +198,56 @@ namespace FastUnityCreationKit.Input
             return;
 
 #region REBIND_EVENTS
+
+            void OnPotentialMatch([NotNull] InputActionRebindingExtensions.RebindingOperation rebindingOperation)
+            {
+                // Skip logic if we don't need to cancel the operation
+                // to save on computation time
+                if (!CancelIfDeviceIsNotAllowed) return;
+                
+                // Get current binding override path
+                string newEffectivePath = action.bindings[bindingIndex].effectivePath;
+
+                Regex regex = new(@"(\<[^\<\>]*\>)|(\/[^\/]*\/)");
+                MatchCollection matches = regex.Matches(newEffectivePath);
+
+                // Get first match
+                string deviceName = matches.Count > 0 ? matches[0].Value : string.Empty;
+                deviceName = deviceName.Trim('/', '<', '>');
+
+                // Check if device name should be skipped as enum value is not defined
+                if (string.IsNullOrEmpty(deviceName))
+                {
+                    _rebindingOperation?.Cancel();
+                    _rebindingOperation?.Dispose();
+                    _rebindingOperation = null;
+                    return;
+                }
+
+                // Check if is one of non-allowed input devices
+                for (byte i = 0; i < 31; i++)
+                {
+                    // Get enum value
+                    InputDeviceType deviceType = (InputDeviceType) (1 << i);
+
+                    // Get device name from enum value
+                    string localDeviceName = deviceType.ToString();
+
+                    // Check if device name should be skipped as enum value is not defined
+                    if (string.IsNullOrEmpty(localDeviceName)) continue;
+
+                    // If device is not allowed, cancel rebind operation and return
+                    if ((allowedDevices & deviceType) != 0) continue;
+                    if (!string.Equals(localDeviceName, deviceName, StringComparison.InvariantCultureIgnoreCase))
+                        continue;
+
+                    // If device is not allowed cancel rebind operation and return
+                    _rebindingOperation?.Cancel();
+                    _rebindingOperation?.Dispose();
+                    _rebindingOperation = null;
+                    return;
+                }
+            }
 
             // Handle operation cancelled event
             void OnOperationCancelled(
@@ -227,8 +271,10 @@ namespace FastUnityCreationKit.Input
                     string newEffectivePath = action.bindings[bindingIndex].effectivePath;
 
                     // Reset binding to default if duplicate is found and old binding was set.
-                    if (oldBindingOverride != null) action.ApplyBindingOverride(bindingIndex, oldBindingOverride);
-                    else action.RemoveBindingOverride(bindingIndex);
+                    if (oldBindingOverride != null)
+                        action.ApplyBindingOverride(bindingIndex, oldBindingOverride);
+                    else
+                        action.RemoveBindingOverride(bindingIndex);
 
                     // Notify for duplicate found
                     OnBindingDuplicateFoundGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
@@ -410,8 +456,10 @@ namespace FastUnityCreationKit.Input
                     string newEffectivePath = action.bindings[bindingOverride.Key].effectivePath;
 
                     // Revert binding override if it was set
-                    if (bindingOverride.Value != null) action.ApplyBindingOverride(bindingOverride.Key, bindingOverride.Value);
-                    else action.RemoveBindingOverride(bindingOverride.Key);
+                    if (bindingOverride.Value != null)
+                        action.ApplyBindingOverride(bindingOverride.Key, bindingOverride.Value);
+                    else
+                        action.RemoveBindingOverride(bindingOverride.Key);
 
                     // Notify for duplicate found
                     OnBindingDuplicateFoundGlobalEvent.TriggerEvent(new BindingChangeData(action,
