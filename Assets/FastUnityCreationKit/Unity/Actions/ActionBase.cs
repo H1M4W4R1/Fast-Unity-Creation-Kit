@@ -133,12 +133,6 @@ namespace FastUnityCreationKit.Unity.Actions
 
         /// <summary>
         ///     Execute action. Returns state of action execution.
-        ///     <ul>
-        ///     <li>If action has cooldown, it will be checked and executed if not on cooldown.</li>
-        ///     <li>If action is on cooldown, <see cref="OnExecutedDuringCooldown"/> will be called and
-        ///     <see cref="ActionExecutionState.OnCooldown"/> will be returned. Otherwise, <see cref="PerformExecution"/>
-        ///     will be called and its result will be returned.</li>
-        ///     </ul>
         /// </summary>
         public virtual async UniTask<ActionExecutionState> Execute()
         {

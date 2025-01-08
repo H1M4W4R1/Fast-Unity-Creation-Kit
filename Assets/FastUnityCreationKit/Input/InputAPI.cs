@@ -228,6 +228,7 @@ namespace FastUnityCreationKit.Input
 
                     // Reset binding to default if duplicate is found and old binding was set.
                     if (oldBindingOverride != null) action.ApplyBindingOverride(bindingIndex, oldBindingOverride);
+                    else action.RemoveBindingOverride(bindingIndex);
 
                     // Notify for duplicate found
                     OnBindingDuplicateFoundGlobalEvent.TriggerEvent(new BindingChangeData(action, bindingIndex,
@@ -409,8 +410,8 @@ namespace FastUnityCreationKit.Input
                     string newEffectivePath = action.bindings[bindingOverride.Key].effectivePath;
 
                     // Revert binding override if it was set
-                    if (bindingOverride.Value != null)
-                        action.ApplyBindingOverride(bindingOverride.Key, bindingOverride.Value);
+                    if (bindingOverride.Value != null) action.ApplyBindingOverride(bindingOverride.Key, bindingOverride.Value);
+                    else action.RemoveBindingOverride(bindingOverride.Key);
 
                     // Notify for duplicate found
                     OnBindingDuplicateFoundGlobalEvent.TriggerEvent(new BindingChangeData(action,

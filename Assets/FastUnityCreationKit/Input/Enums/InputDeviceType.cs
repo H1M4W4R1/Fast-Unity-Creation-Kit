@@ -26,6 +26,6 @@ namespace FastUnityCreationKit.Input.Enums
 
         // Indicate that change was made externally and InputDeviceType is unknown.
         Unknown = (uint) 1 << 31,
-        All = 0xFFFFFFFF
+        All = 0xFFFFFFFF & ~Unknown
     }
 }
