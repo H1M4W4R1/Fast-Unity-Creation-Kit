@@ -1,30 +1,28 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using FastUnityCreationKit.Unity.Actions;
+using FastUnityCreationKit.Unity.Actions.Interfaces.Callbacks;
+using FastUnityCreationKit.Unity.Actions.Interfaces.Results;
+using FastUnityCreationKit.Unity.Actions.Results;
 using UnityEngine;
 
 namespace FastUnityCreationKit.Examples._09_Actions
 {
     [Serializable]
-    public sealed class ExampleAction : ActionBaseWithCooldown
+    public sealed class ExampleAction : ActionBaseWithCooldown, IActionIsOnCooldownCallback,
+        IActionExecutedSuccessfullyCallback
     {
         protected override float DefaultCooldownTime => 5f;
         
-        protected override UniTask<ActionExecutionState> PerformExecution()
+        protected override UniTask<IActionResult> PerformExecution()
         {
             Debug.Log("Action executed");
-            return UniTask.FromResult(ActionExecutionState.Success);
+            return UniTask.FromResult<IActionResult>(new DefaultActionSuccessResult());
         }
 
         protected override UniTask OnCooldownStarted()
         {
             Debug.Log("Cooldown started");
-            return UniTask.CompletedTask;
-        }
-
-        protected override UniTask OnCooldownTimePassed(double deltaTime)
-        {
-            // Debug.Log($"Cooldown time passed {deltaTime}");
             return UniTask.CompletedTask;
         }
 
@@ -34,9 +32,15 @@ namespace FastUnityCreationKit.Examples._09_Actions
             return UniTask.CompletedTask;
         }
 
-        protected override UniTask OnExecutedDuringCooldown()
+        public UniTask OnExecutedWhenOnCooldown()
         {
-            Debug.Log("Executed during cooldown");
+            Debug.Log("Executed when on cooldown");
+            return UniTask.CompletedTask;
+        }
+
+        public UniTask OnExecuted()
+        {
+            Debug.Log("Executed successfully");
             return UniTask.CompletedTask;
         }
     }

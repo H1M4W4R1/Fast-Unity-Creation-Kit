@@ -1,5 +1,9 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using FastUnityCreationKit.Unity.Actions.Interfaces.Configuration;
+using FastUnityCreationKit.Unity.Actions.Interfaces.Results;
+using FastUnityCreationKit.Unity.Actions.Interfaces.Results.Markers;
+using FastUnityCreationKit.Unity.Actions.Results;
 using FastUnityCreationKit.Unity.Time.Timers;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
@@ -33,14 +37,6 @@ namespace FastUnityCreationKit.Unity.Actions
         [field: SerializeField, HideInInspector]
         protected ActionCooldown CooldownTimer { get; set; }
 
-        /// <summary>
-        ///     If <see cref="ActionBase.PerformExecution"/> returns one of these states, cooldown will start.
-        ///     By default, only successful or interrupted actions will trigger cooldown.
-        /// </summary>
-        [field: SerializeField, HideInInspector]
-        protected ActionExecutionState ExecutionStatesCausingCooldownToStart { get; set; }
-            = ActionExecutionState.Success | ActionExecutionState.Interrupted;
-
         protected ActionBaseWithCooldown()
         {
             CooldownTimer = new ActionCooldown(this, 0f);
@@ -65,7 +61,6 @@ namespace FastUnityCreationKit.Unity.Actions
         ///     Total cooldown time for the action (set after each execution).
         ///     Can be changed at runtime. Can be overriden to provide custom value.
         /// </summary>
-        // ReSharper disable NullableWarningSuppressionIsUsed
         [ShowInInspector] [TitleGroup("Cooldown")] [Unit(Units.Second)] public virtual double CooldownTime
         {
             get => (float) CooldownTimer.TotalTime;
@@ -81,32 +76,36 @@ namespace FastUnityCreationKit.Unity.Actions
         [ShowInInspector]
         [ProgressBar(0, nameof(CooldownTime))]
         public float CooldownLeft
-            => CooldownTimer!.Enabled ? (float) CooldownTimer.RemainingTime : 0f;
-        // ReSharper restore NullableWarningSuppressionIsUsed
-        
-        protected internal override async UniTask<ActionExecutionState> TryPerformExecution()
-        {
-            if(CooldownTimer.Enabled) return ActionExecutionState.OnCooldown;
+            => CooldownTimer.Enabled ? (float) CooldownTimer.RemainingTime : 0f;
 
-            ActionExecutionState actionState = await base.TryPerformExecution();
+        public override async UniTask<IActionResult> Execute()
+        {
+            // Check if action is on cooldown and return cooldown result if it is.
+            if (CooldownTimer.Enabled)
+            {
+                // Get cooldown result based on action configuration.
+                IActionIsOnCooldown result = this is IWithCooldownResult withCooldownResult
+                    ? withCooldownResult.GetResult()
+                    : new DefaultActionIsOnCooldownResult();
+
+                // Perform result callback on action as this is not handled within ActionBase Execute method.
+                await result.TryPerformCallbackOn(this);
+                
+                // Return cooldown result.
+                return result; 
+            }
+
+            // Execute internal action logic.
+            IActionResult actionResult = await base.Execute();
             
-            // Check if action execution state is one of the states that should trigger cooldown.
-            if ((actionState & ExecutionStatesCausingCooldownToStart) != 0)
+            // Check if result should start a timer
+            if(actionResult is IStartCooldown)
                 CooldownTimer.Run();
-
+         
             // Return action state.
-            return actionState;
+            return actionResult;
         }
-        
-        
-        /// <summary>
-        ///     Event raised when action execution failed due to cooldown.
-        /// </summary>
-        protected internal virtual UniTask OnExecutedDuringCooldown()
-        {
-            return UniTask.CompletedTask;
-        }
-        
+
         /// <summary>
         ///     Event raised when cooldown time changes by <see cref="deltaTime"/>
         /// </summary>
@@ -188,15 +187,14 @@ namespace FastUnityCreationKit.Unity.Actions
         /// <summary>
         /// Instantly finish this action calling all necessary methods.
         /// </summary>
-        public UniTask EndCooldown()
+        public async UniTask EndCooldown()
         {
             // Check if action is on cooldown.
-            if(CooldownLeft <= 0) return UniTask.CompletedTask;
+            if(CooldownLeft <= 0) return;
             
             // Finish cooldown timer silently
             // to prevent OnTimePassed event from being called.
-            CooldownTimer?.FinishSilent();
-            return UniTask.CompletedTask;
+            await CooldownTimer.FinishSilent();
         }
 
 #if UNITY_EDITOR
