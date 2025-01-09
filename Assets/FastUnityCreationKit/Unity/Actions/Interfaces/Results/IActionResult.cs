@@ -34,6 +34,6 @@ namespace FastUnityCreationKit.Unity.Actions.Interfaces.Results
     /// </summary>
     public interface IActionResult
     {
-        internal UniTask TryPerformCallbackOn(ActionBase action);
+        internal UniTask TryPerformCallbackOn([NotNull] ActionBase action);
     }
 }
